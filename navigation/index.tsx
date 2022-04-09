@@ -3,21 +3,24 @@
  * https://reactnavigation.org/docs/getting-started
  *
  */
-import { FontAwesome } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ColorSchemeName, Pressable } from 'react-native';
+import { ColorSchemeName, Image } from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
-import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import HomeStack from './homeStack';
+import MarketStack from './marketStack';
+import ProfileStack from './profileStack';
+import C2cStack from './c2cStack';
+import TradeStack from './tradeStack';
+import styled from "styled-components"
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -53,55 +56,77 @@ function RootNavigator() {
  */
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
+const Icon = styled(Image)`
+  width:75px;
+  height:49px;
+  margin-top:20px;
+`
+
 function BottomTabNavigator() {
   const colorScheme = useColorScheme();
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="Home"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
-      }}>
+        tabBarActiveTintColor: Colors[colorScheme].tint
+      }}
+    >
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneScreen}
-        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate('Modal')}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}>
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
+        name="Home"
+        component={HomeStack}
+        options={({ navigation }: RootTabScreenProps<"Home">) => ({
+          title: "",
+          tabBarIcon: ({ focused }) => (
+            focused ? <Icon source={require("../assets/images/global/home-blue.png")} /> : <Icon source={require("../assets/images/global/home-gray.png")} />
           ),
+          headerShown: false
         })}
       />
       <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoScreen}
-        options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
+        name="Market"
+        component={MarketStack}
+        options={({ navigation }: RootTabScreenProps<"Market">) => ({
+          title: "",
+          tabBarIcon: ({ focused }) => (
+            focused ? <Icon source={require("../assets/images/global/home-blue.png")} /> : <Icon source={require("../assets/images/global/home-gray.png")} />
+          ),
+          headerShown: false
+        })}
+      />
+      <BottomTab.Screen
+        name="Trade"
+        component={TradeStack}
+        options={({ navigation }: RootTabScreenProps<"Trade">) => ({
+          title: "",
+          tabBarIcon: ({ focused }) => (
+            focused ? <Icon source={require("../assets/images/global/home-blue.png")} /> : <Icon source={require("../assets/images/global/home-gray.png")} />
+          ),
+          headerShown: false
+        })}
+      />
+      <BottomTab.Screen
+        name="C2c"
+        component={C2cStack}
+        options={({ navigation }: RootTabScreenProps<"C2c">) => ({
+          title: "",
+          tabBarIcon: ({ focused }) => (
+            focused ? <Icon source={require("../assets/images/global/home-blue.png")} /> : <Icon source={require("../assets/images/global/home-gray.png")} />
+          ),
+          headerShown: false
+        })}
+      />
+      <BottomTab.Screen
+        name="Profile"
+        component={ProfileStack}
+        options={({ navigation }: RootTabScreenProps<"Profile">) => ({
+          title: "",
+          tabBarIcon: ({ focused }) => (
+            focused ? <Icon source={require("../assets/images/global/home-blue.png")} /> : <Icon source={require("../assets/images/global/home-gray.png")} />
+          ),
+          headerShown: false
+        })}
       />
     </BottomTab.Navigator>
   );
-}
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
 }
