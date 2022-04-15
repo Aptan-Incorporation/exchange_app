@@ -70,7 +70,7 @@ function BottomTabNavigator() {
       initialRouteName="Home"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
-        tabBarStyle:{backgroundColor:"#18222D"}
+        tabBarStyle:{backgroundColor:"#242D37"}
       }}
     >
       <BottomTab.Screen
@@ -90,7 +90,7 @@ function BottomTabNavigator() {
         options={({ navigation }: RootTabScreenProps<"Market">) => ({
           title: "",
           tabBarIcon: ({ focused }) => (
-            focused ? <Icon source={require("../assets/images/global/home-blue.png")} /> : <Icon source={require("../assets/images/global/home-gray.png")} />
+            focused ? <Icon source={require("../assets/images/global/market-blue.png")} /> : <Icon source={require("../assets/images/global/market-gray.png")} />
           ),
           headerShown: false
         })}
@@ -101,7 +101,7 @@ function BottomTabNavigator() {
         options={({ navigation }: RootTabScreenProps<"Trade">) => ({
           title: "",
           tabBarIcon: ({ focused }) => (
-            focused ? <Icon source={require("../assets/images/global/home-blue.png")} /> : <Icon source={require("../assets/images/global/home-gray.png")} />
+            focused ? <Icon source={require("../assets/images/global/trade-blue.png")} /> : <Icon source={require("../assets/images/global/trade-gray.png")} />
           ),
           headerShown: false
         })}
@@ -112,7 +112,7 @@ function BottomTabNavigator() {
         options={({ navigation }: RootTabScreenProps<"C2c">) => ({
           title: "",
           tabBarIcon: ({ focused }) => (
-            focused ? <Icon source={require("../assets/images/global/home-blue.png")} /> : <Icon source={require("../assets/images/global/home-gray.png")} />
+            focused ? <Icon source={require("../assets/images/global/c2c-blue.png")} /> : <Icon source={require("../assets/images/global/c2c-gray.png")} />
           ),
           headerShown: false
         })}
@@ -123,7 +123,7 @@ function BottomTabNavigator() {
         options={({ navigation }: RootTabScreenProps<"Profile">) => ({
           title: "",
           tabBarIcon: ({ focused }) => (
-            focused ? <Icon source={require("../assets/images/global/home-blue.png")} /> : <Icon source={require("../assets/images/global/home-gray.png")} />
+            focused ? <Icon source={require("../assets/images/global/wallet-blue.png")} /> : <Icon source={require("../assets/images/global/wallet-gray.png")} />
           ),
           headerShown: false
         })}

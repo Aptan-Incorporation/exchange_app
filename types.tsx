@@ -23,6 +23,8 @@ export type RootStackParamList = {
   C2cScreen:undefined;
   ProfileScreen:undefined;
   Login:undefined;
+  Member:undefined;
+  Register:undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
