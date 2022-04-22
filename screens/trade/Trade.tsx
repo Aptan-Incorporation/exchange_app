@@ -1,9 +1,14 @@
 import * as React from "react";
-import { Text, TouchableOpacity, TouchableOpacityBase, View, Image, ScrollView } from "react-native"
+import { Text, TouchableOpacity, TouchableOpacityBase, View, Image, ScrollView, Dimensions } from "react-native"
+import { PickerView } from '@ant-design/react-native';
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
 import { useState } from "react";
+import { init } from 'klinecharts'
+
+const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get('window').width;
 
 const Container = styled(View)`
     display: flex ;
@@ -93,23 +98,22 @@ display: flex;
 flex-direction: row;
 width: 100%;
 justify-content: space-between;
-margin-left: 16px;
-margin-right: 16px;
 margin-top: 24px;
 `;
 
 const TradeHeaderLeftContainer = styled(View)`
 display: flex;
 flex-direction: row;
-width: 60%;
-justify-content: flex-start;
+/* justify-content: flex-start; */
+align-items: center;
+margin-left: 16px;
 `;
 
 const TradeHeaderRightContainer = styled(View)`
 display: flex;
 flex-direction: row;
-width: 60%;
 justify-content: flex-end;
+margin-right: 16px;
 `;
 
 const TradeHeaderTitleText = styled(Text)`
@@ -119,61 +123,231 @@ line-height: 24px;
 color: ${props => props.theme.color.White};
 `;
 
-const TradeHeaderFluctuationRiseContainer = styled(View)`
-width: 53px;
-height: 20px;
-background-color: ${props => props.theme.color.Secondary};
-opacity: 0.16;
-border-radius: 2px;
+const TradeHeaderFluctuationRiseText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 20px;
+color: ${props => props.theme.color.Secondary};
+background-color: rgba(47, 178, 100, 0.3);
+margin-left: 12px;
 `;
 
-const TradeHeaderFluctuationRiseText = styled(Text)`
+const TradeHeaderFluctuationFallText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 20px;
+color: ${props => props.theme.color.SecondaryLight};
+background-color: rgba(251, 76, 81, 0.3);
+margin-left: 12px;
+`;
+
+const TradeHeaderPositionButton = styled(TouchableOpacity)`
+width: 51px;
+height: 26px;
+border-radius: 4px;
+background-color: ${props => props.theme.color.DarkGray};
+margin-right: 8px;
+justify-content: center;
+align-items: center;
+`;
+
+const TradeHeaderLeverageButton = styled(TouchableOpacity)`
+width: 51px;
+height: 26px;
+border-radius: 4px;
+background-color: ${props => props.theme.color.DarkGray};
+justify-content: center;
+align-items: center;
+`;
+
+const TradeHeaderButtonText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 15px;
+color: ${props => props.theme.color.White};
+`;
+
+// Trade Page Style
+const TradeContainer = styled(ScrollView)`
+display: flex;
+flex-direction: column;
+width: 100%;
+padding-top: 25px;
+padding-left: 16px;
+padding-right: 16px;
+`;
+
+const TradeRowContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+width: 100%;
+`;
+
+// Trade Page Table Style
+const TradeTableContainer = styled(View)`
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+width: 50%;
+padding-right: 8px;
+`;
+
+const TradeTableTopTitleContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+`;
+
+const TradeTableTopTitleText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 18px;
+color: ${props => props.theme.color.MidGray};
+`;
+
+const TradeTableBuyContainer = styled(View)`
+display: flex;
+flex-direction: column;
+margin-top: 8px;
+`;
+
+const TradeTableRowContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+`;
+
+const TradeTableBuyPriceText = styled(Text)`
 font-weight: 400;
 font-size: 12px;
 line-height: 15px;
 color: ${props => props.theme.color.Secondary};
 `;
 
-const TradeHeaderFluctuationFallContainer = styled(View)`
-width: 53px;
-height: 20px;
-background-color: ${props => props.theme.color.SecondaryLight};
-opacity: 0.16;
-border-radius: 2px;
+const TradeTableNumberText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 15px;
+color: ${props => props.theme.color.ExtraLightGray};
 `;
 
-const TradeHeaderFluctuationFallText = styled(Text)`
+const TradeTableBottomTitleContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: center;
+`;
+
+const TradeTableBottomTitlePriceRiseText = styled(Text)`
+font-weight: 700;
+font-size: 16px;
+line-height: 20px;
+color: ${props => props.theme.color.Secondary};
+`;
+
+const TradeTableBottomTitlePriceFallText = styled(Text)`
+font-weight: 700;
+font-size: 16px;
+line-height: 20px;
+color: ${props => props.theme.color.SecondaryLight};
+`;
+
+const TradeTableBottomTitleOwnValueText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 15px;
+color: ${props => props.theme.color.ExtraLightGray};
+`;
+
+const TradeTableSellContainer = styled(View)`
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+margin-bottom: 8px;
+`;
+
+const TradeTableSellPriceText = styled(Text)`
 font-weight: 400;
 font-size: 12px;
 line-height: 15px;
 color: ${props => props.theme.color.SecondaryLight};
 `;
 
-const TradeHeaderPositionButton = styled(TouchableOpacity)``; // Input Select
-
-const TradeHeaderLeverageButton = styled(TouchableOpacity)``; // Input Select
-
-const TradeHeaderLButtonText = styled(Text)``; // Input Select
-
-// Trade Page Style
-const TradeContainer = styled(ScrollView)``;
-
 // Trade Page Function Style
-const TradeFunctionContainer = styled(View)``;
+const TradeFunctionContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+width: 50%;
+padding-left: 8px;
+`;
 
-const TradeFunctionDetailColumnContainer = styled(View)``;
 
-const TradeFunctionColumnContainer = styled(View)``;
+const TradeFunctionColumnContainer = styled(View)`
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+`;
 
-const TradeFunctionPositionButtonContainer = styled(View)``;
+const TradeFunctionPositionButtonContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: center;
+`;
 
-const TradeFunctionPositionButton = styled(TouchableOpacity)``;
+const TradeFunctionOpenPositionButton = styled(TouchableOpacity)`
+width: 50%;
+height: 30px;
+border: 1px solid ${props => props.theme.color.DarkGray};
+border-top-left-radius: 4px;
+border-bottom-left-radius: 4px;
+justify-content: center;
+align-items: center;
+`;
 
-const TradeFunctionPositionButtonClicked = styled(TouchableOpacity)``;
+const TradeFunctionOpenPositionButtonClicked = styled(TouchableOpacity)`
+width: 50%;
+height: 30px;
+background-color: ${props => props.theme.color.DarkGray};
+border-top-left-radius: 4px;
+border-bottom-left-radius: 4px;
+justify-content: center;
+align-items: center;
+`;
 
-const TradeFunctionPositionButtonText = styled(Text)``;
+const TradeFunctionClosePositionButton = styled(TouchableOpacity)`
+width: 50%;
+height: 30px;
+border: 1px solid ${props => props.theme.color.DarkGray};
+border-top-right-radius: 4px;
+border-bottom-right-radius: 4px;
+justify-content: center;
+align-items: center;
+`;
 
-const TradeFunctionPositionButtonClickedText = styled(Text)``;
+const TradeFunctionClosePositionButtonClicked = styled(TouchableOpacity)`
+width: 50%;
+height: 30px;
+background-color: ${props => props.theme.color.DarkGray};
+border-top-right-radius: 4px;
+border-bottom-right-radius: 4px;
+justify-content: center;
+align-items: center;
+`;
+
+const TradeFunctionPositionButtonText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 18px;
+color: ${props => props.theme.color.MidGray};
+`;
+
+const TradeFunctionPositionButtonClickedText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 18px;
+color: ${props => props.theme.color.White};
+`;
 
 const TradeFunctionPriceOption = styled(TouchableOpacity)``; // Input Select
 
@@ -292,15 +466,66 @@ const GraphClosePositionButton = styled(TouchableOpacity)``;
 
 const GraphButtonText = styled(Text)``;
 
-// array
+
+// Trade Page Array
+const BuyTable = [
+    { id: 0, price: 41254.50, number: 0.104, timeStamp: "" },
+    { id: 1, price: 41254.00, number: 0.079, timeStamp: "" },
+    { id: 2, price: 41253.50, number: 0.868, timeStamp: "" },
+    { id: 3, price: 41253.00, number: 0.260, timeStamp: "" },
+    { id: 4, price: 41252.50, number: 0.260, timeStamp: "" },
+    { id: 5, price: 41252.00, number: 0.013, timeStamp: "" },
+    { id: 6, price: 41251.50, number: 0.295, timeStamp: "" },
+    { id: 7, price: 41251.00, number: 0.019, timeStamp: "" }
+];
+
+const SellTable = [
+    { id: 0, price: 41254.50, number: 0.295, timeStamp: "" },
+    { id: 1, price: 41254.25, number: 0.019, timeStamp: "" },
+    { id: 2, price: 41254.00, number: 0.323, timeStamp: "" },
+    { id: 3, price: 41253.75, number: 0.019, timeStamp: "" },
+    { id: 4, price: 41253.50, number: 0.760, timeStamp: "" },
+    { id: 5, price: 41253.25, number: 0.656, timeStamp: "" },
+    { id: 6, price: 41253.00, number: 0.781, timeStamp: "" },
+    { id: 7, price: 41252.75, number: 0.781, timeStamp: "" }
+];
+
+const priceOptionArray = [
+    [
+        {
+            label: '限價',
+            value: '限價'
+        },
+        {
+            label: '市價',
+            value: '市價'
+        }
+    ]
+]
 
 
 const TradeScreen = ({
     navigation
 }: RootStackScreenProps<"TradeScreen">) => {
 
+    // Swap Page
     const [swapIndex, setSwapIndex] = useState(0);
+
+    // Value is Positive
     const [isPositive, setIsPositive] = useState(true);
+
+    // Function Button
+    const [positionView, setPositionView] = useState('All');
+    const [leverageView, setLeverageView] = useState('1');
+    const [swapBuyPosition, setSwapBuyPosition] = useState('Open');
+    const [buyType, setBuyType] = useState('Limit');
+    const [swapCurrency, setSwapCurrency] = useState(0);
+    const [buyNumber, setBuyNumber] = useState('');
+
+    // Position Detail 
+    const [swapPositionView, setSwapPositionView] = useState(0);
+
+    const [selectedLanguage, setSelectedLanguage] = useState();
 
     const insets = useSafeAreaInsets();
     return (
@@ -332,23 +557,93 @@ const TradeScreen = ({
                                 <TradeHeaderTitleText>BTCUSDT</TradeHeaderTitleText>
                                 {
                                     isPositive === true ?
-                                        <TradeHeaderFluctuationRiseContainer>
-                                            <TradeHeaderFluctuationRiseText>+2.90%</TradeHeaderFluctuationRiseText>
-                                        </TradeHeaderFluctuationRiseContainer> :
-                                        <TradeHeaderFluctuationRiseContainer>
-                                            <TradeHeaderFluctuationFallText>-2.90%</TradeHeaderFluctuationFallText>
-                                        </TradeHeaderFluctuationRiseContainer>
+                                        <TradeHeaderFluctuationRiseText>+2.90%</TradeHeaderFluctuationRiseText>
+                                        :
+                                        <TradeHeaderFluctuationFallText>-2.90%</TradeHeaderFluctuationFallText>
                                 }
                             </TradeHeaderLeftContainer>
                             <TradeHeaderRightContainer>
-                                <TradeHeaderPositionButton>
-                                    <TradeHeaderLButtonText>全倉</TradeHeaderLButtonText>
+                                <TradeHeaderPositionButton onPress={() => { positionView }}>
+                                    <TradeHeaderButtonText>全倉</TradeHeaderButtonText>
                                 </TradeHeaderPositionButton>
-                                <TradeHeaderLeverageButton>
-                                    <TradeHeaderLButtonText>1X</TradeHeaderLButtonText>
+                                <TradeHeaderLeverageButton onPress={() => { leverageView }}>
+                                    <TradeHeaderButtonText>1X</TradeHeaderButtonText>
                                 </TradeHeaderLeverageButton>
                             </TradeHeaderRightContainer>
                         </TradeHeaderContainer>
+                        <TradeContainer>
+                            <TradeRowContainer>
+                                <TradeTableContainer>
+                                    <TradeTableTopTitleContainer>
+                                        <TradeTableTopTitleText>價格</TradeTableTopTitleText>
+                                        <TradeTableTopTitleText>數量</TradeTableTopTitleText>
+                                    </TradeTableTopTitleContainer>
+                                    <TradeTableTopTitleContainer>
+                                        <TradeTableTopTitleText>(USDT)</TradeTableTopTitleText>
+                                        <TradeTableTopTitleText>(BTC)</TradeTableTopTitleText>
+                                    </TradeTableTopTitleContainer>
+                                    <TradeTableSellContainer>
+                                        {
+                                            SellTable.map((x, i) => {
+                                                return (
+                                                    <TradeTableRowContainer>
+                                                        <TradeTableSellPriceText>{x.price}</TradeTableSellPriceText>
+                                                        <TradeTableNumberText>{x.number}</TradeTableNumberText>
+                                                    </TradeTableRowContainer>
+                                                )
+                                            })
+                                        }
+                                    </TradeTableSellContainer>
+                                    <TradeTableBottomTitleContainer>
+                                        {
+                                            isPositive === true ?
+                                                <TradeTableBottomTitlePriceRiseText>41,254.50</TradeTableBottomTitlePriceRiseText> :
+                                                <TradeTableBottomTitlePriceFallText>41,254.50</TradeTableBottomTitlePriceFallText>
+                                        }
+                                    </TradeTableBottomTitleContainer>
+                                    <TradeTableBottomTitleContainer>
+                                        <TradeTableBottomTitleOwnValueText>57,648.39</TradeTableBottomTitleOwnValueText>
+                                    </TradeTableBottomTitleContainer>
+                                    <TradeTableBuyContainer>
+                                        {
+                                            BuyTable.map((x, i) => {
+                                                return (
+                                                    <TradeTableRowContainer>
+                                                        <TradeTableBuyPriceText>{x.price}</TradeTableBuyPriceText>
+                                                        <TradeTableNumberText>{x.number}</TradeTableNumberText>
+                                                    </TradeTableRowContainer>
+                                                )
+                                            })
+                                        }
+                                    </TradeTableBuyContainer>
+                                </TradeTableContainer>
+                                <TradeFunctionContainer>
+                                    <TradeFunctionColumnContainer>
+                                        {
+                                            swapBuyPosition === 'Open' ?
+                                                <TradeFunctionPositionButtonContainer>
+                                                    <TradeFunctionOpenPositionButtonClicked onPress={() => { }}>
+                                                        <TradeFunctionPositionButtonClickedText>開倉</TradeFunctionPositionButtonClickedText>
+                                                    </TradeFunctionOpenPositionButtonClicked>
+                                                    <TradeFunctionClosePositionButton onPress={() => { }}>
+                                                        <TradeFunctionPositionButtonText>平倉</TradeFunctionPositionButtonText>
+                                                    </TradeFunctionClosePositionButton>
+                                                </TradeFunctionPositionButtonContainer> :
+                                                <TradeFunctionPositionButtonContainer>
+                                                    <TradeFunctionOpenPositionButton onPress={() => { }}>
+                                                        <TradeFunctionPositionButtonText>開倉</TradeFunctionPositionButtonText>
+                                                    </TradeFunctionOpenPositionButton>
+                                                    <TradeFunctionClosePositionButtonClicked onPress={() => { }}>
+                                                        <TradeFunctionPositionButtonClickedText>平倉</TradeFunctionPositionButtonClickedText>
+                                                    </TradeFunctionClosePositionButtonClicked>
+                                                </TradeFunctionPositionButtonContainer>
+                                        }
+                                        
+                                        
+                                    </TradeFunctionColumnContainer>
+                                </TradeFunctionContainer>
+                            </TradeRowContainer>
+                        </TradeContainer>
                     </MainSwapPageContainer> :
                     <MainSwapPageContainer>
 
