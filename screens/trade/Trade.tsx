@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Text, TouchableOpacity, TouchableOpacityBase, View, Image, ScrollView, Dimensions } from "react-native"
-import { PickerView } from '@ant-design/react-native';
+import { Text, TextInput, TouchableOpacity, TouchableOpacityBase, View, Image, ScrollView, Dimensions } from "react-native"
+import { Slider } from '@miblanchard/react-native-slider';
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
@@ -349,31 +349,183 @@ line-height: 18px;
 color: ${props => props.theme.color.White};
 `;
 
-const TradeFunctionPriceOption = styled(TouchableOpacity)``; // Input Select
+const TradeFunctionPriceOption = styled(TouchableOpacity)`
+height: 36px;
+border-radius: 4px;
+background-color: #242D37;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding-left: 12px;
+padding-right: 8px;
+`; // Input Select
 
-const TradeFunctionPriceInput = styled(TouchableOpacity)``; // Input Text
+const TradeFunctionPriceOptionText = styled(Text)`
+font-weight: 500;
+font-size: 13px;
+line-height: 20px;
+color: ${props => props.theme.color.White};
+`;
 
-const TradeFunctionCurrencyButton = styled(TouchableOpacity)``;
+const TradeFunctionPriceOptionIcon = styled(Image)`
+width: 20px;
+height: 20px;
+`;
 
-const TradeFunctionCurrencyButtonClicked = styled(TouchableOpacity)``;
+const TradeFunctionPriceInputContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+`;
 
-const TradeFunctionCurrencyButtonText = styled(TouchableOpacity)``;
+const TradeFunctionPriceInputRightContainer = styled(View)`
+height: 36px;
+width: 30%;
+border-top-right-radius: 4px;
+border-bottom-right-radius: 4px;
+background-color: #242D37;
+justify-content: center;
+align-items: center;
+`;
 
-const TradeFunctionCurrencyuttonClickedText = styled(TouchableOpacity)``;
+const TradeFunctionPriceInputRightText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 15px;
+color: ${props => props.theme.color.ExtraLightGray};
+`;
 
-const TradeFunctionCurrencyInput = styled(TouchableOpacity)``;
+const TradeFunctionCurrencyButtonContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: center;
+`;
 
-const TradeFunctionPositionViewContainer = styled(View)``;
+const TradeFunctionLeftCurrencyButton = styled(TouchableOpacity)`
+width: 50%;
+height: 30px;
+border: 1px solid ${props => props.theme.color.DarkGray};
+border-top-left-radius: 4px;
+border-bottom-left-radius: 4px;
+justify-content: center;
+align-items: center;
+`;
 
-const TradeFunctionPositionViewTitleText = styled(Text)``;
+const TradeFunctionLeftCurrencyButtonClicked = styled(TouchableOpacity)`
+width: 50%;
+height: 30px;
+background-color: ${props => props.theme.color.DarkGray};
+border-top-left-radius: 4px;
+border-bottom-left-radius: 4px;
+justify-content: center;
+align-items: center;
+`;
 
-const TradeFunctionPositionViewValueText = styled(Text)``;
+const TradeFunctionRightCurrencyButton = styled(TouchableOpacity)`
+width: 50%;
+height: 30px;
+border: 1px solid ${props => props.theme.color.DarkGray};
+border-top-right-radius: 4px;
+border-bottom-right-radius: 4px;
+justify-content: center;
+align-items: center;
+`;
 
-const TradeFunctionBuyButton = styled(TouchableOpacity)``;
+const TradeFunctionRightCurrencyButtonClicked = styled(TouchableOpacity)`
+width: 50%;
+height: 30px;
+background-color: ${props => props.theme.color.DarkGray};
+border-top-right-radius: 4px;
+border-bottom-right-radius: 4px;
+justify-content: center;
+align-items: center;
+`;
 
-const TradeFunctionSellButton = styled(TouchableOpacity)``;
+const TradeFunctionCurrencyButtonText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 18px;
+color: ${props => props.theme.color.MidGray};
+`;
 
-const TradeFunctionBuySellButtonText = styled(TouchableOpacity)``;
+const TradeFunctionCurrencyButtonClickedText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 18px;
+color: ${props => props.theme.color.White};
+`;
+
+const TradeFunctionNumberInputContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+`;
+
+const TradeFunctionNumberInputRightContainer = styled(View)`
+height: 36px;
+width: 30%;
+border-top-right-radius: 4px;
+border-bottom-right-radius: 4px;
+background-color: #242D37;
+justify-content: center;
+align-items: center;
+`;
+
+const TradeFunctionNumberInputRightText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 15px;
+color: ${props => props.theme.color.ExtraLightGray};
+`;
+
+const TradeFunctionPositionViewContainer = styled(View)`
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: space-between;
+`;
+
+const TradeFunctionPositionViewTitleText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 18px;
+color: ${props => props.theme.color.MidGray};
+`;
+
+const TradeFunctionPositionViewValueText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 15px;
+color: ${props => props.theme.color.White};
+`;
+
+
+const TradeFunctionBuyButton = styled(TouchableOpacity)`
+width: 45%;
+height: 38px;
+border-radius: 4px;
+background-color: ${props => props.theme.color.Secondary};
+align-items: center;
+justify-content: center;
+`;
+
+const TradeFunctionSellButton = styled(TouchableOpacity)`
+width: 45%;
+height: 38px;
+border-radius: 4px;
+background-color: ${props => props.theme.color.SecondaryLight};
+align-items: center;
+justify-content: center;
+`;
+
+const TradeFunctionBuySellButtonText = styled(Text)`
+font-weight: 500;
+font-size: 14px;
+line-height: 22px;
+color: ${props => props.theme.color.White};
+`;
 
 // Trade Page Position Header Style
 
@@ -490,17 +642,22 @@ const SellTable = [
     { id: 7, price: 41252.75, number: 0.781, timeStamp: "" }
 ];
 
+const MyPosition = {
+    BTC: '0.179',
+    USDT: '57649.86'
+};
+
 const priceOptionArray = [
-    [
-        {
-            label: '限價',
-            value: '限價'
-        },
-        {
-            label: '市價',
-            value: '市價'
-        }
-    ]
+
+    {
+        label: '限價',
+        value: 'Limit'
+    },
+    {
+        label: '市價',
+        value: 'Market'
+    }
+
 ]
 
 
@@ -519,8 +676,10 @@ const TradeScreen = ({
     const [leverageView, setLeverageView] = useState('1');
     const [swapBuyPosition, setSwapBuyPosition] = useState('Open');
     const [buyType, setBuyType] = useState('Limit');
+    const [buyPrice, setBuyPrice] = useState('');
     const [swapCurrency, setSwapCurrency] = useState(0);
-    const [buyNumber, setBuyNumber] = useState('');
+    const [buyNumber, setBuyNumber] = useState("");
+    const [sliderNum, setSliderNum] = useState(0);
 
     // Position Detail 
     const [swapPositionView, setSwapPositionView] = useState(0);
@@ -622,28 +781,116 @@ const TradeScreen = ({
                                         {
                                             swapBuyPosition === 'Open' ?
                                                 <TradeFunctionPositionButtonContainer>
-                                                    <TradeFunctionOpenPositionButtonClicked onPress={() => { }}>
+                                                    <TradeFunctionOpenPositionButtonClicked onPress={() => { setSwapBuyPosition('Open') }}>
                                                         <TradeFunctionPositionButtonClickedText>開倉</TradeFunctionPositionButtonClickedText>
                                                     </TradeFunctionOpenPositionButtonClicked>
-                                                    <TradeFunctionClosePositionButton onPress={() => { }}>
+                                                    <TradeFunctionClosePositionButton onPress={() => { setSwapBuyPosition('Close') }}>
                                                         <TradeFunctionPositionButtonText>平倉</TradeFunctionPositionButtonText>
                                                     </TradeFunctionClosePositionButton>
                                                 </TradeFunctionPositionButtonContainer> :
                                                 <TradeFunctionPositionButtonContainer>
-                                                    <TradeFunctionOpenPositionButton onPress={() => { }}>
+                                                    <TradeFunctionOpenPositionButton onPress={() => { setSwapBuyPosition('Open') }}>
                                                         <TradeFunctionPositionButtonText>開倉</TradeFunctionPositionButtonText>
                                                     </TradeFunctionOpenPositionButton>
-                                                    <TradeFunctionClosePositionButtonClicked onPress={() => { }}>
+                                                    <TradeFunctionClosePositionButtonClicked onPress={() => { setSwapBuyPosition('Close') }}>
                                                         <TradeFunctionPositionButtonClickedText>平倉</TradeFunctionPositionButtonClickedText>
                                                     </TradeFunctionClosePositionButtonClicked>
                                                 </TradeFunctionPositionButtonContainer>
                                         }
-                                        
-                                        
+                                        <TradeFunctionPriceOption>
+                                            <TradeFunctionPriceOptionText>現價</TradeFunctionPriceOptionText>
+                                            <TradeFunctionPriceOptionIcon source={require("../../assets/images/trade/dropdown.png")} />
+                                        </TradeFunctionPriceOption>
+                                        <TradeFunctionPriceInputContainer>
+                                            <TextInput
+                                                placeholder={"價格"}
+                                                value={buyPrice}
+                                                onChangeText={buyPrice => setBuyPrice(buyPrice)}
+                                                placeholderTextColor={'#8D97A2'}
+                                                autoCorrect={false}
+                                                keyboardType={"decimal-pad"}
+                                                style={{ backgroundColor: '#242D37', width: '70%', height: 36, color: '#F4F5F6', borderTopLeftRadius: 4, borderBottomLeftRadius: 4, paddingLeft: 12 }}
+                                            />
+                                            <TradeFunctionPriceInputRightContainer>
+                                                <TradeFunctionPriceInputRightText>USDT</TradeFunctionPriceInputRightText>
+                                            </TradeFunctionPriceInputRightContainer>
+                                        </TradeFunctionPriceInputContainer>
+                                        {
+                                            swapCurrency === 0 ?
+                                                <TradeFunctionCurrencyButtonContainer>
+                                                    <TradeFunctionLeftCurrencyButtonClicked onPress={() => { setSwapCurrency(0) }}>
+                                                        <TradeFunctionCurrencyButtonClickedText>BTC</TradeFunctionCurrencyButtonClickedText>
+                                                    </TradeFunctionLeftCurrencyButtonClicked>
+                                                    <TradeFunctionRightCurrencyButton onPress={() => { setSwapCurrency(1) }}>
+                                                        <TradeFunctionCurrencyButtonText>USDT</TradeFunctionCurrencyButtonText>
+                                                    </TradeFunctionRightCurrencyButton>
+                                                </TradeFunctionCurrencyButtonContainer> :
+                                                <TradeFunctionCurrencyButtonContainer>
+                                                    <TradeFunctionLeftCurrencyButton onPress={() => { setSwapCurrency(0) }}>
+                                                        <TradeFunctionCurrencyButtonText>BTC</TradeFunctionCurrencyButtonText>
+                                                    </TradeFunctionLeftCurrencyButton>
+                                                    <TradeFunctionRightCurrencyButtonClicked onPress={() => { setSwapCurrency(1) }}>
+                                                        <TradeFunctionCurrencyButtonClickedText>USDT</TradeFunctionCurrencyButtonClickedText>
+                                                    </TradeFunctionRightCurrencyButtonClicked>
+                                                </TradeFunctionCurrencyButtonContainer>
+                                        }
+                                        <TradeFunctionNumberInputContainer>
+                                            <TextInput
+                                                placeholder={"數量"}
+                                                value={buyNumber}
+                                                onChangeText={buyNumber => setBuyNumber(buyNumber)}
+                                                placeholderTextColor={'#8D97A2'}
+                                                autoCorrect={false}
+                                                keyboardType={"decimal-pad"}
+                                                style={{ backgroundColor: '#242D37', width: '70%', height: 36, color: '#F4F5F6', borderTopLeftRadius: 4, borderBottomLeftRadius: 4, paddingLeft: 12 }}
+                                            />
+                                            {
+                                                swapCurrency === 0 ?
+                                                    <TradeFunctionNumberInputRightContainer>
+                                                        <TradeFunctionNumberInputRightText>BTC</TradeFunctionNumberInputRightText>
+                                                    </TradeFunctionNumberInputRightContainer> :
+                                                    <TradeFunctionNumberInputRightContainer>
+                                                        <TradeFunctionNumberInputRightText>USDT</TradeFunctionNumberInputRightText>
+                                                    </TradeFunctionNumberInputRightContainer>
+                                            }
+
+                                        </TradeFunctionNumberInputContainer>
+                                        <Slider
+                                            value={sliderNum}
+                                            onValueChange={() => setSliderNum(sliderNum)}
+                                            minimumValue={0}
+                                            maximumValue={100}
+                                            minimumTrackTintColor={'#F4F5F6'}
+                                            maximumTrackTintColor={'#333C47'}
+                                            containerStyle={{ alignContent: 'center', justifyContent: 'center' }}
+                                            thumbImage={require("../../assets/images/trade/indicator.png")}
+                                            thumbStyle={{ justifyContent: 'center' }}
+                                            thumbTouchSize={{ width: 20, height: 20 }}
+                                            trackClickable={true}
+                                            thumbTintColor={'#F4F5F6'}
+                                            trackMarks={[25, 50, 75]}
+                                        />
+                                        <TradeFunctionPositionViewContainer>
+                                            <TradeFunctionPositionViewTitleText>可用</TradeFunctionPositionViewTitleText>
+                                            <TradeFunctionPositionViewValueText>{MyPosition.USDT} USDT</TradeFunctionPositionViewValueText>
+                                        </TradeFunctionPositionViewContainer>
+                                        <TradeFunctionPositionViewContainer>
+                                            <TradeFunctionPositionViewTitleText>可用</TradeFunctionPositionViewTitleText>
+                                            <TradeFunctionPositionViewValueText>{MyPosition.BTC} BTC</TradeFunctionPositionViewValueText>
+                                        </TradeFunctionPositionViewContainer>
+                                        <TradeFunctionPositionViewContainer>
+                                            <TradeFunctionBuyButton onPress={() => { }}>
+                                                <TradeFunctionBuySellButtonText>開倉買入</TradeFunctionBuySellButtonText>
+                                            </TradeFunctionBuyButton>
+                                            <TradeFunctionSellButton onPress={() => { }}>
+                                                <TradeFunctionBuySellButtonText>開倉賣出</TradeFunctionBuySellButtonText>
+                                            </TradeFunctionSellButton>
+                                        </TradeFunctionPositionViewContainer>
                                     </TradeFunctionColumnContainer>
                                 </TradeFunctionContainer>
                             </TradeRowContainer>
                         </TradeContainer>
+
                     </MainSwapPageContainer> :
                     <MainSwapPageContainer>
 
