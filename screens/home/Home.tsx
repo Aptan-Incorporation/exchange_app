@@ -1,11 +1,11 @@
-import { Text, View, TouchableOpacity, Image } from "react-native";
+import { Text, View, TouchableOpacity, Image,ScrollView } from "react-native";
 import styled from "styled-components";
 import { RootStackScreenProps } from "../../types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as React from "react";
 import { useState } from "react";
 
-const Container = styled(View)`
+const Container = styled(ScrollView)`
   display: flex;
   flex-direction: column;
   background: #18222d;
