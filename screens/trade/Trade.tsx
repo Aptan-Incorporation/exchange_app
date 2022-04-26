@@ -2,6 +2,7 @@ import * as React from "react";
 import { Text, TextInput, TouchableOpacity, TouchableOpacityBase, View, Image, ScrollView, Dimensions } from "react-native"
 import { Slider } from '@miblanchard/react-native-slider';
 import Modal from "react-native-modal";
+import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
@@ -173,6 +174,7 @@ const TradeContainer = styled(ScrollView)`
 display: flex;
 flex-direction: column;
 width: 100%;
+height: 100%;
 padding-top: 25px;
 padding-left: 16px;
 padding-right: 16px;
@@ -294,6 +296,7 @@ const TradeFunctionPositionButtonContainer = styled(View)`
 display: flex;
 flex-direction: row;
 justify-content: center;
+align-items: flex-end;
 `;
 
 const TradeFunctionOpenPositionButton = styled(TouchableOpacity)`
@@ -557,27 +560,109 @@ border-radius: 8px;
 `;
 
 // Trade Page Position Header Style
+const TradePositionHeaderContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: flex-start;
+height: 40px;
+padding-top: 25px;
+`;
 
-const TradePositionHeaderContainer = styled(View)``;
+const TradePositionHeaderRowContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: flex-start;
+align-items: flex-start;
+padding-top: 4px;
+`;
 
-const TradePositionHeaderInlineContainer = styled(View)``;
+const TradePositionHeaderColumnContainer = styled(View)`
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+align-items: center;
+`;
 
-const TradePositionHeaderSwapButton = styled(TouchableOpacity)``;
+const TradePositionHeaderLeftSwapButton = styled(TouchableOpacity)`
+height: 32px;
+width: 57px;
+border: none;
+`;
 
-const TradePositionHeaderSwapButtonClicked = styled(TouchableOpacity)``;
+const TradePositionHeaderLeftSwapButtonClicked = styled(TouchableOpacity)`
+height: 32px;
+width: 57px;
+border-bottom-width: 2px;
+border-bottom-color: ${props => props.theme.color.Primary};
+`;
 
-const TradePositionHeaderSwapButtonText = styled(Text)``;
+const TradePositionHeaderRightSwapButton = styled(TouchableOpacity)`
+height: 32px;
+width: 57px;
+border: none;
+margin-left: 25px;
+`;
 
-const TradePositionHeaderSwapButtonTextClicked = styled(Text)``;
+const TradePositionHeaderRightSwapButtonClicked = styled(TouchableOpacity)`
+height: 32px;
+width: 57px;
+border-bottom-width: 2px;
+border-bottom-color: ${props => props.theme.color.Primary};
+margin-left: 25px;
+`;
 
-const TradePositionHeaderHistoryIcon = styled(Image)``; // Contain with TouchableOpacity
+const TradePositionHeaderSwapButtonText = styled(Text)`
+font-weight: 500;
+font-size: 14px;
+line-height: 22px;
+color: ${props => props.theme.color.LightMidGray};
+`;
 
-const TradePositionHeaderHistoryText = styled(Text)``; // Contain with TouchableOpacity
+const TradePositionHeaderSwapButtonTextClicked = styled(Text)`
+font-weight: 500;
+font-size: 14px;
+line-height: 22px;
+color: ${props => props.theme.color.White};
+`;
+
+const TradePositionLine = styled(Text)`
+height: 1px;
+background-color: #242D37;
+margin-top: 20px;
+`;
+
+const TradePositionHeaderHistoryIcon = styled(Image)`
+width: 24px;
+height: 24px;
+`; // Contain with TouchableOpacity
+
+const TradePositionHeaderHistoryButton = styled(TouchableOpacity)`
+flex-direction: row;
+align-items: center;
+height: 32px;
+border: none;
+`; // Contain with TouchableOpacity
+
+const TradePositionHeaderHistoryText = styled(Text)`
+font-weight: 500;
+font-size: 14px;
+line-height: 22px;
+color: ${props => props.theme.color.White};
+`; // Contain with TouchableOpacity
 
 // Trade Page Position Style
-const TradePositionContainer = styled(View)``;
+const TradePositionContainer = styled(View)`
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+`;
 
-const TradePositionBackgroundImage = styled(Image)``;
+const TradePositionBackgroundImage = styled(Image)`
+width: 99px;
+height: 135px;
+`;
 
 
 
@@ -716,15 +801,15 @@ const TradeScreen = ({
     }
 
     const buyTypeChange = () => {
-        if (buyType === 'Limit'){
+        if (buyType === 'Limit') {
             return "限價委託";
-        } else if (buyType === 'Market'){
+        } else if (buyType === 'Market') {
             return "市價委託";
-        } else if (buyType === 'Market_Stop'){
+        } else if (buyType === 'Market_Stop') {
             return "市價止損";
-        } else if (buyType === 'Limit_Stop'){
+        } else if (buyType === 'Limit_Stop') {
             return "限價止損";
-        } else if (buyType === 'Market_Value'){
+        } else if (buyType === 'Market_Value') {
             return "止盈";
         } else {
             return "限價止盈";
@@ -744,18 +829,18 @@ const TradeScreen = ({
             {
                 swapIndex === 0 ?
                     <SwapContainer insets={insets.top}>
-                        <SwapTradeButtonClicked onPress={() => {setSwapIndex(0)}}>
+                        <SwapTradeButtonClicked onPress={() => { setSwapIndex(0) }}>
                             <SwapButtonClickedText>交易</SwapButtonClickedText>
                         </SwapTradeButtonClicked>
-                        <SwapGraphButton onPress={() => {setSwapIndex(1)}}>
+                        <SwapGraphButton onPress={() => { setSwapIndex(1) }}>
                             <SwapButtonText>走勢圖</SwapButtonText>
                         </SwapGraphButton>
                     </SwapContainer> :
                     <SwapContainer insets={insets.top}>
-                        <SwapTradeButton onPress={() => {setSwapIndex(0)}}>
+                        <SwapTradeButton onPress={() => { setSwapIndex(0) }}>
                             <SwapButtonText>交易</SwapButtonText>
                         </SwapTradeButton>
-                        <SwapGraphButtonClicked onPress={() => {setSwapIndex(1)}}>
+                        <SwapGraphButtonClicked onPress={() => { setSwapIndex(1) }}>
                             <SwapButtonClickedText>走勢圖</SwapButtonClickedText>
                         </SwapGraphButtonClicked>
                     </SwapContainer>
@@ -796,11 +881,17 @@ const TradeScreen = ({
                                     <TradeTableSellContainer>
                                         {
                                             SellTable.map((x, i) => {
+                                                let percent = Number((1 - (x.number)).toPrecision());
                                                 return (
-                                                    <TradeTableRowContainer>
-                                                        <TradeTableSellPriceText>{x.price}</TradeTableSellPriceText>
-                                                        <TradeTableNumberText>{x.number}</TradeTableNumberText>
-                                                    </TradeTableRowContainer>
+                                                
+                                                    <LinearGradient colors={['transparent', 'rgba(251, 76, 81, 0.2)']} start={{x: percent, y: 0.0}} end={{x: percent, y: 0.0}}>
+                                                        <TradeTableRowContainer>
+
+                                                            <TradeTableSellPriceText>{x.price}</TradeTableSellPriceText>
+                                                            <TradeTableNumberText>{x.number}</TradeTableNumberText>
+
+                                                        </TradeTableRowContainer>
+                                                    </LinearGradient>
                                                 )
                                             })
                                         }
@@ -818,11 +909,14 @@ const TradeScreen = ({
                                     <TradeTableBuyContainer>
                                         {
                                             BuyTable.map((x, i) => {
+                                                let percent = Number((1 - (x.number)).toPrecision());
                                                 return (
+                                                    <LinearGradient colors={['transparent', 'rgba(47, 178, 100, 0.2)']} start={{x: percent, y: 0.0}} end={{x: percent, y: 0.0}}>
                                                     <TradeTableRowContainer>
                                                         <TradeTableBuyPriceText>{x.price}</TradeTableBuyPriceText>
                                                         <TradeTableNumberText>{x.number}</TradeTableNumberText>
                                                     </TradeTableRowContainer>
+                                                    </LinearGradient>
                                                 )
                                             })
                                         }
@@ -941,56 +1035,92 @@ const TradeScreen = ({
                                     </TradeFunctionColumnContainer>
                                 </TradeFunctionContainer>
                             </TradeRowContainer>
+                            {
+                                swapPositionView === 0 ?
+                                    <TradePositionHeaderContainer>
+                                        <TradePositionHeaderRowContainer>
+                                            <TradePositionHeaderLeftSwapButtonClicked onPress={() => { setSwapPositionView(0) }}>
+                                                <TradePositionHeaderSwapButtonTextClicked>當前持倉</TradePositionHeaderSwapButtonTextClicked>
+                                            </TradePositionHeaderLeftSwapButtonClicked>
+                                            <TradePositionHeaderRightSwapButton onPress={() => { setSwapPositionView(1) }}>
+                                                <TradePositionHeaderSwapButtonText>當前委託</TradePositionHeaderSwapButtonText>
+                                            </TradePositionHeaderRightSwapButton>
+                                        </TradePositionHeaderRowContainer>
+                                        <TradePositionHeaderHistoryButton>
+                                            <TradePositionHeaderHistoryIcon source={require("../../assets/images/trade/order.png")} />
+                                            <TradePositionHeaderHistoryText>歷史訂單</TradePositionHeaderHistoryText>
+                                        </TradePositionHeaderHistoryButton>
+                                    </TradePositionHeaderContainer> :
+                                    <TradePositionHeaderContainer>
+                                        <TradePositionHeaderRowContainer>
+                                            <TradePositionHeaderLeftSwapButton onPress={() => { setSwapPositionView(0) }}>
+                                                <TradePositionHeaderSwapButtonText>當前持倉</TradePositionHeaderSwapButtonText>
+                                            </TradePositionHeaderLeftSwapButton>
+                                            <TradePositionHeaderRightSwapButtonClicked onPress={() => { setSwapPositionView(1) }}>
+                                                <TradePositionHeaderSwapButtonTextClicked>當前委託</TradePositionHeaderSwapButtonTextClicked>
+                                            </TradePositionHeaderRightSwapButtonClicked>
+                                        </TradePositionHeaderRowContainer>
+                                        <TradePositionHeaderHistoryButton>
+                                            <TradePositionHeaderHistoryIcon source={require("../../assets/images/trade/order.png")} />
+                                            <TradePositionHeaderHistoryText>歷史訂單</TradePositionHeaderHistoryText>
+                                        </TradePositionHeaderHistoryButton>
+                                    </TradePositionHeaderContainer>
+                            }
+                            <TradePositionLine></TradePositionLine>
+                            {
+                                swapPositionView === 0 ?
+                                    <TradePositionContainer>
+                                        <TradePositionBackgroundImage source={require("../../assets/images/trade/norecord.png")} />
+                                    </TradePositionContainer> :
+                                    <TradePositionContainer>
+                                        <TradePositionBackgroundImage source={require("../../assets/images/trade/norecord.png")} />
+                                    </TradePositionContainer>
+                            }
 
-
-                            
                         </TradeContainer>
-                        
+
                         {/* Buy Type Modal */}
-                        <Modal 
-                        isVisible={isBuyTypeModalVisible}
-                        deviceHeight={windowHeight}
-                        deviceWidth={windowWidth}
-                        animationInTiming={500}
-                        animationOutTiming={700}
-                        backdropOpacity={0.7}
-                        onBackdropPress={() => setIsBuyTypeModalVisible(false)}
-                        onSwipeComplete={() => setIsBuyTypeModalVisible(false)}
-                        swipeDirection={['down']}
-                        style={{ margin: 40, justifyContent: 'center' }}
-                        hideModalContentWhileAnimating={true}
-                      >
-                        <View style={{ backgroundColor: '#18222D', borderRadius: 15, padding: 40 }}>
-                            
-                           
-                               <BuyTypeModalPickerButton onPress={() => {setBuyType('Limit'), setIsBuyTypeModalVisible(false)}}>
-                                   <BuyTypeModalPickerButtonText>限價委託</BuyTypeModalPickerButtonText>
-                               </BuyTypeModalPickerButton>
-                               <BuyTypeModalLineText></BuyTypeModalLineText>
-                               <BuyTypeModalPickerButton onPress={() => {setBuyType('Market'), setIsBuyTypeModalVisible(false)}}>
-                                   <BuyTypeModalPickerButtonText>市價委託</BuyTypeModalPickerButtonText>
-                               </BuyTypeModalPickerButton>
-                               <BuyTypeModalLineText></BuyTypeModalLineText>
-                               <BuyTypeModalPickerButton onPress={() => {setBuyType('Market_Stop'), setIsBuyTypeModalVisible(false)}}>
-                                   <BuyTypeModalPickerButtonText>市價止損</BuyTypeModalPickerButtonText>
-                               </BuyTypeModalPickerButton>
-                               <BuyTypeModalLineText></BuyTypeModalLineText>
-                               <BuyTypeModalPickerButton onPress={() => {setBuyType('Limit_Stop'), setIsBuyTypeModalVisible(false)}}>
-                                   <BuyTypeModalPickerButtonText>限價止損</BuyTypeModalPickerButtonText>
-                               </BuyTypeModalPickerButton>
-                               <BuyTypeModalLineText></BuyTypeModalLineText>
-                               <BuyTypeModalPickerButton onPress={() => {setBuyType('Market_Value'), setIsBuyTypeModalVisible(false)}}>
-                                   <BuyTypeModalPickerButtonText>止盈</BuyTypeModalPickerButtonText>
-                               </BuyTypeModalPickerButton>
-                               <BuyTypeModalLineText></BuyTypeModalLineText>
-                               <BuyTypeModalPickerButton onPress={() => {setBuyType('Limit_Value'), setIsBuyTypeModalVisible(false)}}>
-                                   <BuyTypeModalPickerButtonText>現價止盈</BuyTypeModalPickerButtonText>
-                               </BuyTypeModalPickerButton>
-                               <BuyTypeModalPickerCancelButton onPress={() => {setIsBuyTypeModalVisible(false)}}>
-                                   <BuyTypeModalPickerButtonText>取消</BuyTypeModalPickerButtonText>
-                               </BuyTypeModalPickerCancelButton>
-                           
-                        </View>
+                        <Modal
+                            isVisible={isBuyTypeModalVisible}
+                            deviceHeight={windowHeight}
+                            deviceWidth={windowWidth}
+                            animationInTiming={500}
+                            animationOutTiming={700}
+                            backdropOpacity={0.7}
+                            onBackdropPress={() => setIsBuyTypeModalVisible(false)}
+                            onSwipeComplete={() => setIsBuyTypeModalVisible(false)}
+                            swipeDirection={['down']}
+                            style={{ margin: 40, justifyContent: 'center' }}
+                            hideModalContentWhileAnimating={true}
+                        >
+                            <View style={{ backgroundColor: '#18222D', borderRadius: 15, padding: 40 }}>
+                                <BuyTypeModalPickerButton onPress={() => { setBuyType('Limit'), setIsBuyTypeModalVisible(false) }}>
+                                    <BuyTypeModalPickerButtonText>限價委託</BuyTypeModalPickerButtonText>
+                                </BuyTypeModalPickerButton>
+                                <BuyTypeModalLineText></BuyTypeModalLineText>
+                                <BuyTypeModalPickerButton onPress={() => { setBuyType('Market'), setIsBuyTypeModalVisible(false) }}>
+                                    <BuyTypeModalPickerButtonText>市價委託</BuyTypeModalPickerButtonText>
+                                </BuyTypeModalPickerButton>
+                                <BuyTypeModalLineText></BuyTypeModalLineText>
+                                <BuyTypeModalPickerButton onPress={() => { setBuyType('Market_Stop'), setIsBuyTypeModalVisible(false) }}>
+                                    <BuyTypeModalPickerButtonText>市價止損</BuyTypeModalPickerButtonText>
+                                </BuyTypeModalPickerButton>
+                                <BuyTypeModalLineText></BuyTypeModalLineText>
+                                <BuyTypeModalPickerButton onPress={() => { setBuyType('Limit_Stop'), setIsBuyTypeModalVisible(false) }}>
+                                    <BuyTypeModalPickerButtonText>限價止損</BuyTypeModalPickerButtonText>
+                                </BuyTypeModalPickerButton>
+                                <BuyTypeModalLineText></BuyTypeModalLineText>
+                                <BuyTypeModalPickerButton onPress={() => { setBuyType('Market_Value'), setIsBuyTypeModalVisible(false) }}>
+                                    <BuyTypeModalPickerButtonText>止盈</BuyTypeModalPickerButtonText>
+                                </BuyTypeModalPickerButton>
+                                <BuyTypeModalLineText></BuyTypeModalLineText>
+                                <BuyTypeModalPickerButton onPress={() => { setBuyType('Limit_Value'), setIsBuyTypeModalVisible(false) }}>
+                                    <BuyTypeModalPickerButtonText>限價止盈</BuyTypeModalPickerButtonText>
+                                </BuyTypeModalPickerButton>
+                                <BuyTypeModalPickerCancelButton onPress={() => { setIsBuyTypeModalVisible(false) }}>
+                                    <BuyTypeModalPickerButtonText>取消</BuyTypeModalPickerButtonText>
+                                </BuyTypeModalPickerCancelButton>
+                            </View>
                         </Modal>
                     </MainSwapPageContainer> :
                     <MainSwapPageContainer>
