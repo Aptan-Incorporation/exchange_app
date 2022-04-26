@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as React from "react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 const Container = styled(View)`
   display: flex;

@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { RootStackScreenProps } from "../../types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as React from "react";
-import { useState } from "react";
+import { useState,useEffect,useContext } from "react";
+import { PriceContext } from "../../App" 
 
 const Container = styled(ScrollView)`
   display: flex;
@@ -88,7 +89,7 @@ const ColumnText = styled(Text)`
 const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
   const insets = useSafeAreaInsets();
   const [index, setIndex] = useState(0);
-
+  const {btcPrice,btcRate,btcAmt,ethPrice,ethRate,ethAmt,dogePrice,dogeRate,dogeAmt} = useContext(PriceContext)
   return (
     <Container>
       <Header insets={insets.top}>
@@ -110,10 +111,10 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
           </GrayHeader>
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 16 }}>
             <View>
-              <PriceText>41,254.50</PriceText>
-              <USDText>≈ 41,254.50 USD</USDText>
+              <PriceText>{btcPrice}</PriceText>
+              <USDText>≈ {btcPrice} USD</USDText>
             </View>
-            <PercentText>+2.90%</PercentText>
+            {parseFloat(btcRate) > 0 ? <PercentText>{"+"+btcRate}%</PercentText> : <RedPercentText>{"-"+btcRate}%</RedPercentText>}
           </View>
         </View>
         <View style={{ width: "100%", borderRadius: 8, backgroundColor: "#242D37", marginTop: 16 }}>
@@ -123,10 +124,10 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
           </GrayHeader>
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 16 }}>
             <View>
-              <PriceText>3,112.60</PriceText>
-              <USDText>≈ 3,112.60 USD</USDText>
+              <PriceText>{ethPrice}</PriceText>
+              <USDText>≈ {ethPrice} USD</USDText>
             </View>
-            <PercentText>+1.98%</PercentText>
+            {parseFloat(ethRate) > 0 ? <PercentText>{"+"+ethRate}%</PercentText> : <RedPercentText>{"-"+ethRate}%</RedPercentText>}
           </View>
         </View>
         <View style={{ width: "100%", borderRadius: 8, backgroundColor: "#242D37", marginTop: 16 }}>
@@ -136,10 +137,10 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
           </GrayHeader>
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 16 }}>
             <View>
-              <PriceText>0.14082</PriceText>
-              <USDText>≈ 0.14082 USD</USDText>
+               <PriceText>{dogePrice}</PriceText>
+              <USDText>≈ {dogePrice} USD</USDText>
             </View>
-            <RedPercentText>-0.01%</RedPercentText>
+            {parseFloat(dogeRate) > 0 ? <PercentText>{"+"+dogeRate}%</PercentText> : <RedPercentText>{"-"+dogeRate}%</RedPercentText>}
           </View>
         </View>
         <View style={{ display: "flex", flexDirection: "row", width: "100%", height: 33, borderBottomWidth: 1, borderBottomColor: "#242D37", marginTop: 24 }}>
@@ -157,60 +158,108 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
             <TouchableOpacity style={{ height: 33,marginLeft:24 }}  onPress={()=>{setIndex(1)}}>
               <Text style={{ fontSize: 14, color: "#BCC2C8", fontWeight: "500" }}>跌幅榜</Text>
             </TouchableOpacity>}
-          {index === 2 ?
+          {/* {index === 2 ?
             <TouchableOpacity style={{ height: 33, borderBottomWidth: 2, borderBottomColor: "#608FBE" ,marginLeft:24}}  onPress={()=>{setIndex(2)}}>
               <Text style={{ fontSize: 14, color: "white", fontWeight: "500" }}>24H成交量榜</Text>
             </TouchableOpacity> :
             <TouchableOpacity style={{ height: 33,marginLeft:24 }}  onPress={()=>{setIndex(2)}}>
               <Text style={{ fontSize: 14, color: "#BCC2C8", fontWeight: "500" }}>24H成交量榜</Text>
-            </TouchableOpacity>}
+            </TouchableOpacity>} */}
         </View>
         <View>
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 12 }}>
             <ColumnText>交易對</ColumnText>
             <View style={{ display: "flex", flexDirection: "row" }}>
-              <ColumnText style={{ marginRight: 40 }}>價格/交易量</ColumnText>
+              <ColumnText style={{ marginRight: 40 }}>價格/24hr交易量</ColumnText>
               <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
                 <ColumnText>24H漲跌</ColumnText>
               </View>
             </View>
           </View>
-          <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 12, alignItems: "center" }}>
+          { index === 0 && parseFloat(btcRate) > 0 &&
+            <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 12, alignItems: "center" }}>
             <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>BTCUSDT</Text>
             <View style={{ display: "flex", flexDirection: "row" }}>
               <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>41,254.50</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>3.82B USDT</Text>
+                <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{btcPrice}</Text>
+                <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{btcAmt}</Text>
               </View>
               <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#2FB364", borderRadius: 4, alignItems: "center" }}>
-                <Text style={{ color: "white" }}>+2.90%</Text>
+                <Text style={{ color: "white" }}>+{btcRate}%</Text>
               </View>
             </View>
-          </View>
+           </View>
+          }
+          { index === 1 && parseFloat(btcRate) < 0 &&
+            <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 12, alignItems: "center" }}>
+            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>BTCUSDT</Text>
+            <View style={{ display: "flex", flexDirection: "row" }}>
+              <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+                <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{btcPrice}</Text>
+                <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{btcAmt}</Text>
+              </View>
+              <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#FB4C51", borderRadius: 4, alignItems: "center" }}>
+                <Text style={{ color: "white" }}>-{btcRate}%</Text>
+              </View>
+            </View>
+           </View>
+          }
+          { index === 0 && parseFloat(ethRate) > 0 &&
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 24, alignItems: "center" }}>
-            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>BTCUSDT</Text>
+            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>ETHUSDT</Text>
             <View style={{ display: "flex", flexDirection: "row" }}>
               <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>41,254.50</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>3.82B USDT</Text>
+                <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{ethPrice}</Text>
+                <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{ethAmt}</Text>
               </View>
               <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#2FB364", borderRadius: 4, alignItems: "center" }}>
-                <Text style={{ color: "white" }}>+2.90%</Text>
+                <Text style={{ color: "white" }}>+{ethRate}%</Text>
               </View>
             </View>
           </View>
+          }
+          { index === 1 && parseFloat(ethRate) < 0 &&
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 24, alignItems: "center" }}>
-            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>BTCUSDT</Text>
+            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>ETHUSDT</Text>
             <View style={{ display: "flex", flexDirection: "row" }}>
               <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>41,254.50</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>3.82B USDT</Text>
+                <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{ethPrice}</Text>
+                <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{ethAmt}</Text>
               </View>
-              <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#2FB364", borderRadius: 4, alignItems: "center" }}>
-                <Text style={{ color: "white" }}>+2.90%</Text>
+              <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#FB4C51", borderRadius: 4, alignItems: "center" }}>
+                <Text style={{ color: "white" }}>-{ethRate}%</Text>
               </View>
             </View>
           </View>
+          }
+          { index === 0 && parseFloat(dogeRate) > 0 &&
+          <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 24, alignItems: "center" }}>
+            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>DogeUSDT</Text>
+            <View style={{ display: "flex", flexDirection: "row" }}>
+              <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+                <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{dogePrice}</Text>
+                <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{dogeAmt}</Text>
+              </View>
+              <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#2FB364", borderRadius: 4, alignItems: "center" }}>
+          <Text style={{ color: "white" }}>+{dogeRate}%</Text>
+              </View>
+            </View>
+          </View>
+          }
+          { index === 1 && parseFloat(dogeRate) < 0 &&
+          <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 24, alignItems: "center" }}>
+            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>DogeUSDT</Text>
+            <View style={{ display: "flex", flexDirection: "row" }}>
+              <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+                <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{dogePrice}</Text>
+                <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{dogeAmt}</Text>
+              </View>
+              <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#FB4C51", borderRadius: 4, alignItems: "center" }}>
+                <Text style={{ color: "white" }}>+{dogeRate}%</Text>
+              </View>
+            </View>
+          </View>
+          }
 
         </View>
       </View>
