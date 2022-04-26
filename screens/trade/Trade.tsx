@@ -92,6 +92,8 @@ const MainSwapPageContainer = styled(View)`
 display: flex;
 flex-direction: column;
 width: 100%;
+padding-left: 16px;
+padding-right: 16px;
 `;
 
 //Trade Page Header Style
@@ -108,14 +110,12 @@ display: flex;
 flex-direction: row;
 /* justify-content: flex-start; */
 align-items: center;
-margin-left: 16px;
 `;
 
 const TradeHeaderRightContainer = styled(View)`
 display: flex;
 flex-direction: row;
 justify-content: flex-end;
-margin-right: 16px;
 `;
 
 const TradeHeaderTitleText = styled(Text)`
@@ -176,8 +176,6 @@ flex-direction: column;
 width: 100%;
 height: 100%;
 padding-top: 25px;
-padding-left: 16px;
-padding-right: 16px;
 `;
 
 const TradeRowContainer = styled(View)`
@@ -668,30 +666,104 @@ height: 135px;
 
 
 // Graph Page Header Style
-const GraphHeaderContainer = styled(View)``;
+const GraphHeaderContainer = styled(View)`
+display: flex;
+flex-direction: column;
+margin-top: 13px;
+`;
 
-const GraphHeaderTopRowContainer = styled(View)``;
+const GraphHeaderTopRowContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: flex-start;
+align-items: center;
+padding-bottom: 13px;
+`;
 
-const GraphHeaderBottomRowContainer = styled(View)``;
+const GraphHeaderBottomRowContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+`;
 
-const GraphHeaderBigTitleText = styled(Text)``;
+const GraphHeaderBottomRowColumnContainer = styled(View)`
+display: flex;
+flex-direction: column;
+`;
 
-const GraphHeaderFluctuationRiseText = styled(Text)``;
+const GraphHeaderBottomInlineRowContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+`;
 
-const GraphHeaderFluctuationFallText = styled(Text)``;
+const GraphHeaderBigTitleText = styled(Text)`
+font-weight: 700;
+font-size: 20px;
+line-height: 24px;
+color: ${props => props.theme.color.White};
+`;
 
-const GraphHeaderTitlePriceText = styled(Text)``;
+const GraphHeaderFluctuationRiseText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 20px;
+color: ${props => props.theme.color.Secondary};
+background-color: rgba(47, 178, 100, 0.3);
+margin-left: 12px;
+`;
 
-const GraphHeaderBottomColumnContainer = styled(View)``;
+const GraphHeaderFluctuationFallText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 20px;
+color: ${props => props.theme.color.SecondaryLight};
+background-color: rgba(251, 76, 81, 0.3);
+margin-left: 12px;
+`;
 
-const GraphHeaderSmallTitleText = styled(Text)``;
+const GraphHeaderTitleRisePriceText = styled(Text)`
+font-weight: 700;
+font-size: 32px;
+line-height: 40px;
+color: ${props => props.theme.color.Secondary};
+`;
 
-const GraphHeaderSmallValueText = styled(Text)``;
+const GraphHeaderTitleFallPriceText = styled(Text)`
+font-weight: 700;
+font-size: 32px;
+line-height: 40px;
+color: ${props => props.theme.color.SecondaryLight};
+`;
+
+const GraphHeaderSmallTitleText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 18px;
+color: ${props => props.theme.color.MidGray};
+margin-right: 8px;
+`;
+
+const GraphHeaderSmallValueText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 15px;
+color: ${props => props.theme.color.White};
+`;
 
 // Graph Page Style
-const GraphContainer = styled(ScrollView)``;
+const GraphContainer = styled(ScrollView)`
+display: flex;
+flex-direction: column;
+width: 100%;
+height: 100%;
+padding-top: 25px;
+`;
 
-const GraphContentContainer = styled(View)``;
+const GraphContentContainer = styled(View)`
+height: 50%;
+`;
 
 // Graph Page Detail Buy Style
 const GraphDetailContainer = styled(View)``;
@@ -1124,7 +1196,46 @@ const TradeScreen = ({
                         </Modal>
                     </MainSwapPageContainer> :
                     <MainSwapPageContainer>
-
+                        <GraphHeaderContainer>
+                            <GraphHeaderTopRowContainer>
+                                <GraphHeaderBigTitleText>BTCUSDT</GraphHeaderBigTitleText>
+                                {
+                                    isPositive === true ?
+                                    <GraphHeaderFluctuationRiseText>+2.90%</GraphHeaderFluctuationRiseText> :
+                                    <GraphHeaderFluctuationFallText>-2.90%</GraphHeaderFluctuationFallText>
+                                }
+                            </GraphHeaderTopRowContainer>
+                            <GraphHeaderBottomRowContainer>
+                                {
+                                    isPositive === true ?
+                                    <GraphHeaderTitleRisePriceText>41,254.50</GraphHeaderTitleRisePriceText> : 
+                                    <GraphHeaderTitleFallPriceText>41,254.50</GraphHeaderTitleFallPriceText>
+                                }
+                                <GraphHeaderBottomRowColumnContainer>
+                                    <GraphHeaderBottomInlineRowContainer>
+                                    <GraphHeaderSmallTitleText>標記價格</GraphHeaderSmallTitleText>
+                                    <GraphHeaderSmallValueText>57,648.39</GraphHeaderSmallValueText>
+                                    </GraphHeaderBottomInlineRowContainer>
+                                    <GraphHeaderBottomInlineRowContainer>
+                                    <GraphHeaderSmallTitleText>指數價格</GraphHeaderSmallTitleText>
+                                    <GraphHeaderSmallValueText>57,607.26</GraphHeaderSmallValueText>
+                                    </GraphHeaderBottomInlineRowContainer>
+                                    <GraphHeaderBottomInlineRowContainer>
+                                    <GraphHeaderSmallTitleText>資金費率</GraphHeaderSmallTitleText>
+                                    <GraphHeaderSmallValueText>0.0193%</GraphHeaderSmallValueText>
+                                    </GraphHeaderBottomInlineRowContainer>
+                                </GraphHeaderBottomRowColumnContainer>
+                            </GraphHeaderBottomRowContainer>
+                        </GraphHeaderContainer>
+                        <GraphContainer>
+                            <GraphContentContainer>
+                                
+                            </GraphContentContainer>
+                            <GraphDetailContainer>
+                                <GraphDetailBuyContainer></GraphDetailBuyContainer>
+                                <GraphDetailPriceRowContainer></GraphDetailPriceRowContainer>
+                            </GraphDetailContainer>
+                        </GraphContainer>
                     </MainSwapPageContainer>
             }
 
