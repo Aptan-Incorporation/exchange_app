@@ -7,7 +7,6 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
 import { useState } from "react";
-import { init } from 'klinecharts'
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -92,8 +91,6 @@ const MainSwapPageContainer = styled(View)`
 display: flex;
 flex-direction: column;
 width: 100%;
-padding-left: 16px;
-padding-right: 16px;
 `;
 
 //Trade Page Header Style
@@ -103,6 +100,8 @@ flex-direction: row;
 width: 100%;
 justify-content: space-between;
 margin-top: 24px;
+padding-left: 16px;
+padding-right: 16px;
 `;
 
 const TradeHeaderLeftContainer = styled(View)`
@@ -176,6 +175,8 @@ flex-direction: column;
 width: 100%;
 height: 100%;
 padding-top: 25px;
+padding-left: 16px;
+padding-right: 16px;
 `;
 
 const TradeRowContainer = styled(View)`
@@ -670,6 +671,8 @@ const GraphHeaderContainer = styled(View)`
 display: flex;
 flex-direction: column;
 margin-top: 13px;
+padding-left: 16px;
+padding-right: 16px;
 `;
 
 const GraphHeaderTopRowContainer = styled(View)`
@@ -762,21 +765,55 @@ padding-top: 25px;
 `;
 
 const GraphContentContainer = styled(View)`
-height: 50%;
+`;
+
+const GraphTempImage = styled(Image)`
+height: 400px;
+width: 420px;
 `;
 
 // Graph Page Detail Buy Style
-const GraphDetailContainer = styled(View)``;
+const GraphDetailContainer = styled(View)`
+display: flex;
+flex-direction: column;
+padding-top: 28px;
+padding-right: 16px;
+padding-left: 16px;
+`;
 
-const GraphDetailTitleText = styled(Text)``;
+const GraphDetailTitleText = styled(Text)`
+font-weight: 600;
+font-size: 16px;
+line-height: 24px;
+color: ${props => props.theme.color.White};
+`;
 
-const GraphDetailBuyContainer = styled(View)``;
+const GraphDetailBuyContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+`;
 
-const GraphDetailBuyTitleText = styled(Text)``;
+const GraphDetailBuyTitleText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 18px;
+color: ${props => props.theme.color.MidGray};
+`;
 
-const GraphDetailBuyPriceTitleText = styled(Text)``;
+const GraphDetailBuyPriceTitleText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 15px;
+color: ${props => props.theme.color.SecondaryLight};
+`;
 
-const GraphDetailBuyDetailText = styled(Text)``;
+const GraphDetailBuyDetailText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 15px;
+color: ${props => props.theme.color.ExtraLightGray};
+`;
 
 // Graph Detail Price Container Style
 const GraphDetailPriceRowContainer = styled(View)``;
@@ -833,18 +870,29 @@ const MyPosition = {
     USDT: '57649.86'
 };
 
-const priceOptionArray = [
+// Graph Page Array
 
-    {
-        label: '限價',
-        value: 'Limit'
-    },
-    {
-        label: '市價',
-        value: 'Market'
-    }
+const SellArray = [
+    { id: 0, price: '41254.50', number: 0.104, total: 0.104, timeStamp: "" },
+    { id: 1, price: '41254.00', number: 0.079, total: 0.104, timeStamp: "" },
+    { id: 2, price: '41253.50', number: 0.868, total: 0.104, timeStamp: "" },
+    { id: 3, price: '41253.00', number: 0.260, total: 0.104, timeStamp: "" },
+    { id: 4, price: '41252.50', number: 0.260, total: 0.104, timeStamp: "" },
+    { id: 5, price: '41252.00', number: 0.013, total: 0.104, timeStamp: "" },
+    { id: 6, price: '41251.50', number: 0.295, total: 0.104, timeStamp: "" },
+    { id: 7, price: '41251.00', number: 0.019, total: 0.104, timeStamp: "" }
+];
 
-]
+const BuyArray = [
+    { id: 0, price: '41254.50', number: 0.295, total: 0.104, timeStamp: "" },
+    { id: 1, price: '41254.25', number: 0.019, total: 0.104, timeStamp: "" },
+    { id: 2, price: '41254.00', number: 0.323, total: 0.104, timeStamp: "" },
+    { id: 3, price: '41253.75', number: 0.019, total: 0.104, timeStamp: "" },
+    { id: 4, price: '41253.50', number: 0.760, total: 0.104, timeStamp: "" },
+    { id: 5, price: '41253.25', number: 0.656, total: 0.104, timeStamp: "" },
+    { id: 6, price: '41253.00', number: 0.781, total: 0.104, timeStamp: "" },
+    { id: 7, price: '41252.75', number: 0.781, total: 0.104, timeStamp: "" }
+];
 
 
 const TradeScreen = ({
@@ -1229,11 +1277,31 @@ const TradeScreen = ({
                         </GraphHeaderContainer>
                         <GraphContainer>
                             <GraphContentContainer>
-                                
+                                <GraphTempImage source={require("../../assets/images/trade/bg.png")}/>
                             </GraphContentContainer>
                             <GraphDetailContainer>
-                                <GraphDetailBuyContainer></GraphDetailBuyContainer>
-                                <GraphDetailPriceRowContainer></GraphDetailPriceRowContainer>
+                                <GraphDetailTitleText>掛單簿</GraphDetailTitleText>
+                                <GraphDetailBuyContainer>
+                                    <GraphDetailBuyTitleText>價格</GraphDetailBuyTitleText>
+                                    <GraphDetailBuyTitleText>數量</GraphDetailBuyTitleText>
+                                    <GraphDetailBuyTitleText>合計</GraphDetailBuyTitleText>
+                                </GraphDetailBuyContainer>
+                                <GraphDetailBuyContainer>
+                                    <GraphDetailBuyTitleText>(USDT)</GraphDetailBuyTitleText>
+                                    <GraphDetailBuyTitleText>(BTC)</GraphDetailBuyTitleText>
+                                    <GraphDetailBuyTitleText>(BTC)</GraphDetailBuyTitleText>
+                                </GraphDetailBuyContainer>
+                                {
+                                    SellArray.map((x, i) => {
+                                        return (
+                                            <GraphDetailBuyContainer>
+                                            <GraphDetailBuyPriceTitleText>{x.price}</GraphDetailBuyPriceTitleText>
+                                            <GraphDetailBuyDetailText>{x.number}</GraphDetailBuyDetailText>
+                                            <GraphDetailBuyDetailText>{x.total}</GraphDetailBuyDetailText>
+                                            </GraphDetailBuyContainer>
+                                        )
+                                    })
+                                }
                             </GraphDetailContainer>
                         </GraphContainer>
                     </MainSwapPageContainer>
