@@ -10,6 +10,7 @@ export const Theme = {
     DarkRed:"#A60008",
     Secondary:"#2FB264",
     White: "#FFFFFF",
-    Primary: "#6699CC"
+    Primary: "#6699CC",
+    PrimaryDark: "#3D6A97"
   },
 };

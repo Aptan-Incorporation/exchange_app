@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
 import { useState } from "react";
+import GraphPage from "../../components/trade/GraphPage"
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -531,33 +532,6 @@ line-height: 22px;
 color: ${props => props.theme.color.White};
 `;
 
-// Buy Type Picker Modal
-
-const BuyTypeModalPickerButton = styled(TouchableOpacity)`
-height: 50px;
-justify-content: center;
-align-items: center;
-`;
-
-const BuyTypeModalPickerButtonText = styled(Text)`
-font-weight: 300;
-font-size: 20px;
-color: ${props => props.theme.color.ExtraLightGray};
-`;
-
-const BuyTypeModalLineText = styled(Text)`
-background-color: #242D37;
-height: 2px;
-`;
-
-const BuyTypeModalPickerCancelButton = styled(TouchableOpacity)`
-justify-content: center;
-align-items: center;
-background-color: #242D37;
-margin-top: 30px;
-padding: 20px;
-border-radius: 8px;
-`;
 
 // Trade Page Position Header Style
 const TradePositionHeaderContainer = styled(View)`
@@ -635,21 +609,21 @@ margin-top: 20px;
 const TradePositionHeaderHistoryIcon = styled(Image)`
 width: 24px;
 height: 24px;
-`; // Contain with TouchableOpacity
+`;
 
 const TradePositionHeaderHistoryButton = styled(TouchableOpacity)`
 flex-direction: row;
 align-items: center;
 height: 32px;
 border: none;
-`; // Contain with TouchableOpacity
+`;
 
 const TradePositionHeaderHistoryText = styled(Text)`
 font-weight: 500;
 font-size: 14px;
 line-height: 22px;
 color: ${props => props.theme.color.White};
-`; // Contain with TouchableOpacity
+`;
 
 // Trade Page Position Style
 const TradePositionContainer = styled(View)`
@@ -665,294 +639,162 @@ height: 135px;
 `;
 
 
+// Modal Style
 
 
-// Graph Page Header Style
-const GraphHeaderContainer = styled(View)`
-display: flex;
-flex-direction: column;
-margin-top: 13px;
-padding-left: 16px;
-padding-right: 16px;
-padding-bottom: 12px;
-`;
-
-const GraphHeaderTopRowContainer = styled(View)`
-display: flex;
-flex-direction: row;
-justify-content: flex-start;
-align-items: center;
-padding-bottom: 13px;
-`;
-
-const GraphHeaderBottomRowContainer = styled(View)`
+// Modal Global Style
+const ModalHeaderContainer = styled(View)`
 display: flex;
 flex-direction: row;
 justify-content: space-between;
-align-items: center;
+padding-top: 10px;
 `;
 
-const GraphHeaderBottomRowColumnContainer = styled(View)`
-display: flex;
-flex-direction: column;
-`;
-
-const GraphHeaderBottomInlineRowContainer = styled(View)`
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-`;
-
-const GraphHeaderBigTitleText = styled(Text)`
-font-weight: 700;
-font-size: 20px;
-line-height: 24px;
-color: ${props => props.theme.color.White};
-`;
-
-const GraphHeaderFluctuationRiseText = styled(Text)`
-font-weight: 400;
-font-size: 12px;
-line-height: 20px;
-color: ${props => props.theme.color.Secondary};
-background-color: rgba(47, 178, 100, 0.3);
-margin-left: 12px;
-`;
-
-const GraphHeaderFluctuationFallText = styled(Text)`
-font-weight: 400;
-font-size: 12px;
-line-height: 20px;
-color: ${props => props.theme.color.SecondaryLight};
-background-color: rgba(251, 76, 81, 0.3);
-margin-left: 12px;
-`;
-
-const GraphHeaderTitleRisePriceText = styled(Text)`
-font-weight: 700;
-font-size: 32px;
-line-height: 40px;
-color: ${props => props.theme.color.Secondary};
-`;
-
-const GraphHeaderTitleFallPriceText = styled(Text)`
-font-weight: 700;
-font-size: 32px;
-line-height: 40px;
-color: ${props => props.theme.color.SecondaryLight};
-`;
-
-const GraphHeaderSmallTitleText = styled(Text)`
-font-weight: 400;
-font-size: 12px;
-line-height: 18px;
-color: ${props => props.theme.color.MidGray};
-margin-right: 8px;
-`;
-
-const GraphHeaderSmallValueText = styled(Text)`
-font-weight: 400;
-font-size: 12px;
-line-height: 15px;
-color: ${props => props.theme.color.White};
-`;
-
-// Graph Page Style
-const GraphContainer = styled(ScrollView)`
-display: flex;
-flex-direction: column;
-width: 100%;
-`;
-
-const GraphContentContainer = styled(View)`
-padding-top: 12px;
-`;
-
-const GraphTempImage = styled(Image)`
-height: 400px;
-width: 420px;
-`;
-
-// Graph Page Detail Buy Style
-const GraphDetailContainer = styled(View)`
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-padding-left: 16px;
-padding-right: 16px;
-`;
-
-const GraphDetailTitleText = styled(Text)`
+const ModalHedaerTitleText = styled(Text)`
 font-weight: 600;
 font-size: 16px;
-line-height: 24px;
-color: ${props => props.theme.color.White};
-padding-top: 24px;
-padding-left: 16px;
-padding-right: 16px;
-margin-bottom: 16px;
-`;
-
-const GraphDetailBuyContainer = styled(View)`
-display: flex;
-flex-direction: column;
-justify-content: space-between;
-`;
-
-const GraphDetailRowContainer = styled(View)`
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-padding-left: 16px;
-padding-right: 16px;
-`;
-
-const GraphDetailColumnContainer = styled(View)`
-display: flex;
-flex-direction: column;
-`;
-
-const GraphDetailBuyRightTitleText = styled(Text)`
-font-weight: 400;
-font-size: 12px;
-line-height: 18px;
-text-align: right;
-color: ${props => props.theme.color.MidGray};
-`;
-
-const GraphDetailBuyLeftTitleText = styled(Text)`
-font-weight: 400;
-font-size: 12px;
-line-height: 18px;
-text-align: left;
-color: ${props => props.theme.color.MidGray};
-`;
-
-const GraphDetailBuyMiddleTitleText = styled(Text)`
-font-weight: 400;
-font-size: 12px;
-line-height: 18px;
-text-align: center;
-padding-left: 10px;
-color: ${props => props.theme.color.MidGray};
-`;
-
-const GraphDetailBuyPriceTitleText = styled(Text)`
-font-weight: 400;
-font-size: 12px;
-line-height: 15px;
-color: ${props => props.theme.color.SecondaryLight};
-`;
-
-const GraphDetailBuyDetailText = styled(Text)`
-font-weight: 400;
-font-size: 12px;
-line-height: 15px;
-color: ${props => props.theme.color.ExtraLightGray};
-`;
-
-// Graph Detail Price Container Style
-const GraphDetailPriceRowContainer = styled(View)`
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-padding-top: 8px;
-padding-left: 16px;
-padding-right: 16px;
-padding-bottom: 8px;
-`;
-
-const GraphDetailPriceColumnContainer = styled(View)`
-display: flex;
-flex-direction: column;
-`;
-
-const GraphDetailPriceRightTitleText = styled(Text)`
-font-weight: 400;
-font-size: 12px;
-line-height: 18px;
-color: ${props => props.theme.color.MidGray};
-text-align: right;
-`;
-
-const GraphDetailPriceLeftTitleText = styled(Text)`
-font-weight: 400;
-font-size: 12px;
-line-height: 18px;
-color: ${props => props.theme.color.MidGray};
-text-align: left;
-`;
-
-const GraphDetailLatestPriceText = styled(Text)`
-font-weight: 700;
-font-size: 16px;
-line-height: 20px;
-color: ${props => props.theme.color.Secondary};
-`;
-
-const GraphDetailIndexPriceText = styled(Text)`
-font-weight: 700;
-font-size: 16px;
-line-height: 20px;
+line-height: 24px
 color: ${props => props.theme.color.White};
 `;
 
-// Graph Page Detail Sell Style
-const GraphDetailSellContainer = styled(View)`
-display: flex;
-flex-direction: column;
-justify-content: space-between;
+const ModalSelectedImage = styled(Image)`
+width: 28px;
+height: 28px;
 `;
 
-const GraphDetailSellPriceText = styled(Text)`
-font-weight: 400;
-font-size: 12px;
-line-height: 15px;
-color: ${props => props.theme.color.Secondary};
+const ModalLeftCancelButton = styled(Image)`
+width: 28px;
+height: 28px;
 `;
 
-const GraphDetailSellDetailText = styled(Text)`
-font-weight: 400;
-font-size: 12px;
-line-height: 15px;
-color: ${props => props.theme.color.White};
+const ModalEmptyDiv = styled(View)`
+width: 28px;
+height: 28px;
 `;
 
-//Graph Detail Button
-
-const GraphButtonContainer = styled(View)`
-display: flex;
+const ModalConfirmButton = styled(TouchableOpacity)`
+height: 44px;
 flex-direction: row;
-justify-content: space-between;
-padding-top: 24px;
-padding-right: 16px;
-padding-left: 16px;
-margin-bottom: 500px;
-`;
-
-const GraphOpenPositionButton = styled(TouchableOpacity)`
-width: 45%;
-height: 40px;
-border-radius: 4px;
 justify-content: center;
 align-items: center;
-background-color: ${props => props.theme.color.Secondary};
+background-color: ${props => props.theme.color.PrimaryDark};
+margin-top: 32px;
 `;
 
-const GraphClosePositionButton = styled(TouchableOpacity)`
-width: 45%;
-height: 40px;
-border-radius: 4px;
-justify-content: center;
-align-items: center;
-background-color: ${props => props.theme.color.SecondaryLight};
-`;
-
-const GraphButtonText = styled(Text)`
+const ModalConfirmButtonText = styled(Text)`
 font-weight: 500;
 font-size: 14px;
 line-height: 22px;
 color: ${props => props.theme.color.White};
+`;
+
+
+// Position View Modal 擔保資產模式
+const PositionViewModalButton = styled(TouchableOpacity)`
+height: 44px;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+background-color: ${props => props.theme.color.DarkGray};
+margin-top: 24px;
+padding-left: 16px;
+padding-right: 16px;
+`;
+
+const PositionViewModalButtonText = styled(Text)`
+font-weight: 500;
+font-size: 14px;
+line-height: 22px;
+color: ${props => props.theme.color.White};
+`;
+
+const PositionViewModalDetailText = styled(Text)`
+font-weight: 500;
+font-size: 13px;
+line-height: 20px;
+color: ${props => props.theme.color.LightMidGray};
+margin-top: 8px;
+`;
+
+
+// Leverage View Modal 槓桿比例
+const LeverageViewModalRowContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+background-color: ${props => props.theme.color.DarkGray};
+margin-top: 26px;
+padding: 12px 10px 12px 10px;
+`;
+
+const LeverageViewModalRemoveImage = styled(Image)`
+width: 24px;
+height: 24px;
+`;
+
+const LeverageViewModalAddImage = styled(Image)`
+width: 24px;
+height: 24px;
+`;
+
+const LeverageViewModalLeverageText = styled(Text)`
+font-weight: 600;
+font-size: 14px;
+line-height: 18px;
+color: ${props => props.theme.color.White};
+`;
+
+const LeverageViewModalSliderContainer = styled(View)`
+margin-top: 24px
+`;
+
+const LeverageViewModalNotificationImage = styled(Image)`
+width: 24px;
+height: 24px;
+`;
+
+const LeverageViewModalDetailText = styled(Text)`
+font-weight: 500;
+font-size: 13px;
+line-height: 20px;
+color: ${props => props.theme.color.LightMidGray};
+`;
+
+// Buy Type Modal 下單類型
+const BuyTypeTitleContainer = styled(View)`
+justify-content: center;
+align-items: center;
+padding-top: 10px;
+padding-bottom: 10px;
+`;
+
+const BuyTypeModalTitleText = styled(Text)`
+font-weight: 600;
+font-size: 16px;
+line-height: 24px;
+color: ${props => props.theme.color.White};
+`;
+
+const BuyTypeModalPickerButton = styled(TouchableOpacity)`
+height: 50px;
+flex-direction: row
+justify-content: space-between;
+align-items: center;
+padding-top: 16px;
+padding-bottom: 16px;
+`;
+
+const BuyTypeModalPickerButtonText = styled(Text)`
+font-weight: 300;
+font-size: 20px;
+color: ${props => props.theme.color.ExtraLightGray};
+`;
+
+const BuyTypeModalLineText = styled(Text)`
+background-color: #242D37;
+;
+height: 2px;
 `;
 
 
@@ -984,29 +826,72 @@ const MyPosition = {
     USDT: '57649.86'
 };
 
-// Graph Page Array
 
-const SellArray = [
-    { id: 0, price: '41254.50', number: 0.104, total: 0.104, timeStamp: "" },
-    { id: 1, price: '41254.00', number: 0.079, total: 0.104, timeStamp: "" },
-    { id: 2, price: '41253.50', number: 0.868, total: 0.104, timeStamp: "" },
-    { id: 3, price: '41253.00', number: 0.260, total: 0.104, timeStamp: "" },
-    { id: 4, price: '41252.50', number: 0.260, total: 0.104, timeStamp: "" },
-    { id: 5, price: '41252.00', number: 0.013, total: 0.104, timeStamp: "" },
-    { id: 6, price: '41251.50', number: 0.295, total: 0.104, timeStamp: "" },
-    { id: 7, price: '41251.00', number: 0.019, total: 0.104, timeStamp: "" }
-];
+//Slider 
+const ThumbImage = styled(Image)`width: 20px; height: 20px`;
 
-const BuyArray = [
-    { id: 0, price: '41254.50', number: 0.295, total: 0.104, timeStamp: "" },
-    { id: 1, price: '41254.25', number: 0.019, total: 0.104, timeStamp: "" },
-    { id: 2, price: '41254.00', number: 0.323, total: 0.104, timeStamp: "" },
-    { id: 3, price: '41253.75', number: 0.019, total: 0.104, timeStamp: "" },
-    { id: 4, price: '41253.50', number: 0.760, total: 0.104, timeStamp: "" },
-    { id: 5, price: '41253.25', number: 0.656, total: 0.104, timeStamp: "" },
-    { id: 6, price: '41253.00', number: 0.781, total: 0.104, timeStamp: "" },
-    { id: 7, price: '41252.75', number: 0.781, total: 0.104, timeStamp: "" }
-];
+const DEFAULT_VALUE = 0;
+
+const CustomThumb = (() => {
+    return (
+        <ThumbImage source={require("../../assets/images/trade/indicator.png")} />
+    );
+});
+
+const SliderContainer = (props: {
+    children: React.ReactElement;
+    sliderValue?: Array<number>;
+    trackMarks?: Array<number>;
+}) => {
+    const { sliderValue, trackMarks } = props;
+    const [value, setValue] = React.useState(
+        sliderValue ? sliderValue : DEFAULT_VALUE,
+    );
+    let renderTrackMarkComponent: React.ReactNode;
+
+    if (trackMarks?.length && (!Array.isArray(value) || value?.length === 1)) {
+        renderTrackMarkComponent = (index: number) => {
+            const currentMarkValue = trackMarks[index];
+            const currentSliderValue =
+                value || (Array.isArray(value) && value[0]) || 0;
+            const style =
+                currentMarkValue > Math.max(currentSliderValue)
+                    ? { width: 8, height: 12, backgroundColor: '#333C47' }
+                    : { width: 8, height: 12, backgroundColor: '#DEDDE3' }
+            return <View style={style} />;
+        };
+    }
+
+    const renderChildren = () => {
+        return React.Children.map(
+            props.children,
+            (child: React.ReactElement) => {
+                if (!!child && child.type === Slider) {
+                    return React.cloneElement(child, {
+                        onValueChange: setValue,
+                        renderTrackMarkComponent,
+                        trackMarks,
+                        value,
+                    });
+                }
+
+                return child;
+            },
+        );
+    };
+
+    return (
+        <View>
+            <View>
+                <Text>{Array.isArray(value) ? value.join(' - ') : value}</Text>
+            </View>
+            {renderChildren()}
+
+        </View>
+    );
+};
+
+
 
 
 const TradeScreen = ({
@@ -1014,7 +899,7 @@ const TradeScreen = ({
 }: RootStackScreenProps<"TradeScreen">) => {
 
     const insets = useSafeAreaInsets();
-    
+
     // Swap Page
     const [swapIndex, setSwapIndex] = useState(0);
 
@@ -1022,9 +907,11 @@ const TradeScreen = ({
     const [isPositive, setIsPositive] = useState(true);
 
     // Function Button
-    const [positionView, setPositionView] = useState('All');
+    const [positionView, setPositionView] = useState('Full');
     const [leverageView, setLeverageView] = useState('1');
     const [swapBuyPosition, setSwapBuyPosition] = useState('Open');
+    const [isPositionViewVisible, setIsPositionViewVisible] = useState(false);
+    const [isLeverageViewVisible, setIsLeverageViewVisible] = useState(false);
     const [isBuyTypeModalVisible, setIsBuyTypeModalVisible] = useState(false);
     const [buyType, setBuyType] = useState('Limit');
     const [buyPrice, setBuyPrice] = useState('');
@@ -1036,27 +923,46 @@ const TradeScreen = ({
         setIsBuyTypeModalVisible(!isBuyTypeModalVisible);
     }
 
+    const togglePositionViewModal = () => {
+        setIsPositionViewVisible(!isPositionViewVisible);
+    }
+
+    const toggleLeverageViewModal = () => {
+        setIsLeverageViewVisible(!isLeverageViewVisible);
+    }
+
     const buyTypeChange = () => {
         if (buyType === 'Limit') {
-            return "限價委託";
+            return "限價";
         } else if (buyType === 'Market') {
-            return "市價委託";
-        } else if (buyType === 'Market_Stop') {
-            return "市價止損";
-        } else if (buyType === 'Limit_Stop') {
-            return "限價止損";
-        } else if (buyType === 'Market_Value') {
-            return "止盈";
+            return "市價";
+        } else if (buyType === 'Plan_Limit') {
+            return "計畫限價";
+        } else if (buyType === 'Plan_Market') {
+            return "計畫市價";
         } else {
-            return "限價止盈";
+            return "";
         }
-    }
+    };
+
+    const positionViewChange = () => {
+        if (positionView === 'Full') {
+            return "全倉";
+        } else if (positionView === 'Each') {
+            return "逐倉";
+        } else {
+            return "";
+        }
+    };
+
+
+
 
 
 
     // Position Detail 
     const [swapPositionView, setSwapPositionView] = useState(0);
-   
+
     return (
         <Container>
             {
@@ -1092,11 +998,11 @@ const TradeScreen = ({
                                 }
                             </TradeHeaderLeftContainer>
                             <TradeHeaderRightContainer>
-                                <TradeHeaderPositionButton onPress={() => { positionView }}>
-                                    <TradeHeaderButtonText>全倉</TradeHeaderButtonText>
+                                <TradeHeaderPositionButton onPress={() => { togglePositionViewModal() }}>
+                                    <TradeHeaderButtonText>{positionViewChange()}</TradeHeaderButtonText>
                                 </TradeHeaderPositionButton>
-                                <TradeHeaderLeverageButton onPress={() => { leverageView }}>
-                                    <TradeHeaderButtonText>1X</TradeHeaderButtonText>
+                                <TradeHeaderLeverageButton onPress={() => { toggleLeverageViewModal() }}>
+                                    <TradeHeaderButtonText>{leverageView}X</TradeHeaderButtonText>
                                 </TradeHeaderLeverageButton>
                             </TradeHeaderRightContainer>
                         </TradeHeaderContainer>
@@ -1309,201 +1215,193 @@ const TradeScreen = ({
                                         <TradePositionBackgroundImage source={require("../../assets/images/trade/norecord.png")} />
                                     </TradePositionContainer>
                             }
-
                         </TradeContainer>
-
-                        {/* Buy Type Modal */}
-                        <Modal
-                            isVisible={isBuyTypeModalVisible}
-                            deviceHeight={windowHeight}
-                            deviceWidth={windowWidth}
-                            animationInTiming={500}
-                            animationOutTiming={700}
-                            backdropOpacity={0.7}
-                            onBackdropPress={() => setIsBuyTypeModalVisible(false)}
-                            onSwipeComplete={() => setIsBuyTypeModalVisible(false)}
-                            swipeDirection={['down']}
-                            style={{ margin: 40, justifyContent: 'center' }}
-                            hideModalContentWhileAnimating={true}
-                        >
-                            <View style={{ backgroundColor: '#18222D', borderRadius: 15, padding: 40 }}>
-                                <BuyTypeModalPickerButton onPress={() => { setBuyType('Limit'), setIsBuyTypeModalVisible(false) }}>
-                                    <BuyTypeModalPickerButtonText>限價委託</BuyTypeModalPickerButtonText>
-                                </BuyTypeModalPickerButton>
-                                <BuyTypeModalLineText></BuyTypeModalLineText>
-                                <BuyTypeModalPickerButton onPress={() => { setBuyType('Market'), setIsBuyTypeModalVisible(false) }}>
-                                    <BuyTypeModalPickerButtonText>市價委託</BuyTypeModalPickerButtonText>
-                                </BuyTypeModalPickerButton>
-                                <BuyTypeModalLineText></BuyTypeModalLineText>
-                                <BuyTypeModalPickerButton onPress={() => { setBuyType('Market_Stop'), setIsBuyTypeModalVisible(false) }}>
-                                    <BuyTypeModalPickerButtonText>市價止損</BuyTypeModalPickerButtonText>
-                                </BuyTypeModalPickerButton>
-                                <BuyTypeModalLineText></BuyTypeModalLineText>
-                                <BuyTypeModalPickerButton onPress={() => { setBuyType('Limit_Stop'), setIsBuyTypeModalVisible(false) }}>
-                                    <BuyTypeModalPickerButtonText>限價止損</BuyTypeModalPickerButtonText>
-                                </BuyTypeModalPickerButton>
-                                <BuyTypeModalLineText></BuyTypeModalLineText>
-                                <BuyTypeModalPickerButton onPress={() => { setBuyType('Market_Value'), setIsBuyTypeModalVisible(false) }}>
-                                    <BuyTypeModalPickerButtonText>止盈</BuyTypeModalPickerButtonText>
-                                </BuyTypeModalPickerButton>
-                                <BuyTypeModalLineText></BuyTypeModalLineText>
-                                <BuyTypeModalPickerButton onPress={() => { setBuyType('Limit_Value'), setIsBuyTypeModalVisible(false) }}>
-                                    <BuyTypeModalPickerButtonText>限價止盈</BuyTypeModalPickerButtonText>
-                                </BuyTypeModalPickerButton>
-                                <BuyTypeModalPickerCancelButton onPress={() => { setIsBuyTypeModalVisible(false) }}>
-                                    <BuyTypeModalPickerButtonText>取消</BuyTypeModalPickerButtonText>
-                                </BuyTypeModalPickerCancelButton>
-                            </View>
-                        </Modal>
                     </MainSwapPageContainer> :
-                    <MainSwapPageContainer>
-                        <GraphHeaderContainer>
-                            <GraphHeaderTopRowContainer>
-                                <GraphHeaderBigTitleText>BTCUSDT</GraphHeaderBigTitleText>
-                                {
-                                    isPositive === true ?
-                                        <GraphHeaderFluctuationRiseText>+2.90%</GraphHeaderFluctuationRiseText> :
-                                        <GraphHeaderFluctuationFallText>-2.90%</GraphHeaderFluctuationFallText>
-                                }
-                            </GraphHeaderTopRowContainer>
-                            <GraphHeaderBottomRowContainer>
-                                {
-                                    isPositive === true ?
-                                        <GraphHeaderTitleRisePriceText>41,254.50</GraphHeaderTitleRisePriceText> :
-                                        <GraphHeaderTitleFallPriceText>41,254.50</GraphHeaderTitleFallPriceText>
-                                }
-                                <GraphHeaderBottomRowColumnContainer>
-                                    <GraphHeaderBottomInlineRowContainer>
-                                        <GraphHeaderSmallTitleText>標記價格</GraphHeaderSmallTitleText>
-                                        <GraphHeaderSmallValueText>57,648.39</GraphHeaderSmallValueText>
-                                    </GraphHeaderBottomInlineRowContainer>
-                                    <GraphHeaderBottomInlineRowContainer>
-                                        <GraphHeaderSmallTitleText>指數價格</GraphHeaderSmallTitleText>
-                                        <GraphHeaderSmallValueText>57,607.26</GraphHeaderSmallValueText>
-                                    </GraphHeaderBottomInlineRowContainer>
-                                    <GraphHeaderBottomInlineRowContainer>
-                                        <GraphHeaderSmallTitleText>資金費率</GraphHeaderSmallTitleText>
-                                        <GraphHeaderSmallValueText>0.0193%</GraphHeaderSmallValueText>
-                                    </GraphHeaderBottomInlineRowContainer>
-                                </GraphHeaderBottomRowColumnContainer>
-                            </GraphHeaderBottomRowContainer>
-                        </GraphHeaderContainer>
-
-                        <GraphContainer>
-                            <GraphContentContainer>
-                                <GraphTempImage source={require("../../assets/images/trade/bg.png")} />
-                            </GraphContentContainer>
-                            <GraphDetailTitleText>掛單簿</GraphDetailTitleText>
-                            <GraphDetailRowContainer>
-                                <GraphDetailColumnContainer>
-                                    <GraphDetailBuyLeftTitleText>價格</GraphDetailBuyLeftTitleText>
-                                    <GraphDetailBuyLeftTitleText>(USDT)</GraphDetailBuyLeftTitleText>
-                                </GraphDetailColumnContainer>
-                                <GraphDetailColumnContainer>
-                                    <GraphDetailBuyMiddleTitleText>數量</GraphDetailBuyMiddleTitleText>
-                                    <GraphDetailBuyMiddleTitleText>(BTC)</GraphDetailBuyMiddleTitleText>
-                                </GraphDetailColumnContainer>
-                                <GraphDetailColumnContainer>
-                                    <GraphDetailBuyRightTitleText>合計</GraphDetailBuyRightTitleText>
-                                    <GraphDetailBuyRightTitleText>(BTC)</GraphDetailBuyRightTitleText>
-                                </GraphDetailColumnContainer>
-                            </GraphDetailRowContainer>
-
-                            <GraphDetailContainer>
-                                <GraphDetailBuyContainer>
-
-                                    {
-                                        SellArray.map((x, i) => {
-                                            return (
-                                                <GraphDetailBuyContainer>
-                                                    <GraphDetailBuyPriceTitleText>{x.price}</GraphDetailBuyPriceTitleText>
-                                                </GraphDetailBuyContainer>
-                                            )
-                                        })
-                                    }
-                                </GraphDetailBuyContainer>
-                                <GraphDetailBuyContainer>
-                                    {
-                                        SellArray.map((x, i) => {
-                                            return (
-                                                <GraphDetailBuyContainer>
-                                                    <GraphDetailBuyDetailText>{x.number}</GraphDetailBuyDetailText>
-                                                </GraphDetailBuyContainer>
-                                            )
-                                        })
-                                    }
-                                </GraphDetailBuyContainer>
-                                <GraphDetailBuyContainer>
-                                    {
-                                        SellArray.map((x, i) => {
-                                            return (
-                                                <GraphDetailBuyContainer>
-                                                    <GraphDetailBuyDetailText>{x.total}</GraphDetailBuyDetailText>
-                                                </GraphDetailBuyContainer>
-                                            )
-                                        })
-                                    }
-                                </GraphDetailBuyContainer>
-
-                            </GraphDetailContainer>
-                            <GraphDetailPriceRowContainer>
-                                <GraphDetailPriceColumnContainer>
-                                    <GraphDetailPriceLeftTitleText>最新價</GraphDetailPriceLeftTitleText>
-                                    <GraphDetailLatestPriceText>41254.50</GraphDetailLatestPriceText>
-                                </GraphDetailPriceColumnContainer>
-                                <GraphDetailPriceColumnContainer>
-                                    <GraphDetailPriceRightTitleText>指數價</GraphDetailPriceRightTitleText>
-                                    <GraphDetailIndexPriceText>57,647.48</GraphDetailIndexPriceText>
-                                </GraphDetailPriceColumnContainer>
-                            </GraphDetailPriceRowContainer>
-                            <GraphDetailContainer>
-                                <GraphDetailSellContainer>
-                                    {
-                                        SellArray.map((x, i) => {
-                                            return (
-                                                <GraphDetailSellContainer>
-                                                    <GraphDetailSellPriceText>{x.price}</GraphDetailSellPriceText>
-                                                </GraphDetailSellContainer>
-                                            )
-                                        })
-                                    }
-                                </GraphDetailSellContainer>
-                                <GraphDetailSellContainer>
-                                    {
-                                        SellArray.map((x, i) => {
-                                            return (
-                                                <GraphDetailSellContainer>
-                                                    <GraphDetailSellDetailText>{x.number}</GraphDetailSellDetailText>
-                                                </GraphDetailSellContainer>
-                                            )
-                                        })
-                                    }
-                                </GraphDetailSellContainer>
-                                <GraphDetailSellContainer>
-                                    {
-                                        SellArray.map((x, i) => {
-                                            return (
-                                                <GraphDetailSellContainer>
-                                                    <GraphDetailSellDetailText>{x.total}</GraphDetailSellDetailText>
-                                                </GraphDetailSellContainer>
-                                            )
-                                        })
-                                    }
-                                </GraphDetailSellContainer>
-                            </GraphDetailContainer>
-                            <GraphButtonContainer>
-                                <GraphOpenPositionButton>
-                                    <GraphButtonText>開倉</GraphButtonText>
-                                </GraphOpenPositionButton>
-                                <GraphClosePositionButton>
-                                    <GraphButtonText>平倉</GraphButtonText>
-                                </GraphClosePositionButton>
-                            </GraphButtonContainer>
-                        </GraphContainer>
-                    </MainSwapPageContainer>
+                    <GraphPage />
             }
 
+            {/* Position View Modal 擔保資產模式*/}
+            <Modal
+                isVisible={isPositionViewVisible}
+                deviceHeight={windowHeight}
+                deviceWidth={windowWidth}
+                animationInTiming={500}
+                animationOutTiming={700}
+                backdropOpacity={0.7}
+                onBackdropPress={() => setIsPositionViewVisible(false)}
+                onSwipeComplete={() => setIsPositionViewVisible(false)}
+                swipeDirection={['down']}
+                style={{ justifyContent: 'flex-end', margin: 0 }}
+                hideModalContentWhileAnimating={true}
+            >
+                <View style={{ backgroundColor: '#242D37', borderTopLeftRadius: 8, borderTopRightRadius: 8, paddingLeft: 16, paddingRight: 16, paddingBottom: 30 }}>
+                    <ModalHeaderContainer>
+                        <TouchableOpacity onPress={() => { setIsPositionViewVisible(false) }}>
+                            <ModalLeftCancelButton source={require("../../assets/images/trade/cancel.png")} />
+                        </TouchableOpacity>
+                        <ModalHedaerTitleText>擔保資產模式</ModalHedaerTitleText>
+                        <ModalEmptyDiv></ModalEmptyDiv>
+                    </ModalHeaderContainer>
+                    <PositionViewModalButton onPress={() => { setPositionView("Full"), setIsPositionViewVisible(false) }}>
+                        <PositionViewModalButtonText>全倉</PositionViewModalButtonText>
+                        {
+                            positionView === 'Full' &&
+                            <ModalSelectedImage source={require("../../assets/images/trade/selected.png")} />
+                        }
+                    </PositionViewModalButton>
+                    <PositionViewModalDetailText>
+                        所有品種合約的倉位共用一個帳戶權益，合約帳戶中的擔保資產合併計算。
+                    </PositionViewModalDetailText>
+                    <PositionViewModalButton onPress={() => { setPositionView("Each"), setIsPositionViewVisible(false) }}>
+                        <PositionViewModalButtonText>逐倉</PositionViewModalButtonText>
+                        {
+                            positionView === 'Each' &&
+                            <ModalSelectedImage source={require("../../assets/images/trade/selected.png")} />
+                        }
+                    </PositionViewModalButton>
+                    <PositionViewModalDetailText>
+                        每個品種合約對應一個合約帳戶，不同品種合約帳戶擔保資產相互獨立。
+                    </PositionViewModalDetailText>
+                    <ModalConfirmButton>
+                        <ModalConfirmButtonText>確認</ModalConfirmButtonText>
+                    </ModalConfirmButton>
+                </View>
+            </Modal>
+
+            {/* Leverage View Modal 槓桿比例 */}
+            <Modal
+                isVisible={isLeverageViewVisible}
+                deviceHeight={windowHeight}
+                deviceWidth={windowWidth}
+                animationInTiming={500}
+                animationOutTiming={700}
+                backdropOpacity={0.7}
+                onBackdropPress={() => setIsLeverageViewVisible(false)}
+                onSwipeComplete={() => setIsLeverageViewVisible(false)}
+                swipeDirection={['down']}
+                style={{ justifyContent: 'flex-end', margin: 0 }}
+                hideModalContentWhileAnimating={true}
+            >
+                <View style={{ backgroundColor: '#242D37', borderTopLeftRadius: 8, borderTopRightRadius: 8, paddingLeft: 16, paddingRight: 16, paddingBottom: 30 }}>
+                    <ModalHeaderContainer>
+                        <TouchableOpacity onPress={() => { setIsLeverageViewVisible(false) }}>
+                            <ModalLeftCancelButton source={require("../../assets/images/trade/cancel.png")} />
+                        </TouchableOpacity>
+                        <ModalHedaerTitleText>槓桿比例</ModalHedaerTitleText>
+                        <ModalEmptyDiv></ModalEmptyDiv>
+                    </ModalHeaderContainer>
+                    <LeverageViewModalRowContainer>
+                        <TouchableOpacity onPress={() => { }}>
+                            {
+                                leverageView === '1' ?
+                                    <LeverageViewModalRemoveImage source={require("../../assets/images/trade/remove_bottom.png")} /> :
+                                    <LeverageViewModalRemoveImage source={require("../../assets/images/trade/remove.png")} />
+                            }
+                        </TouchableOpacity>
+                        <LeverageViewModalLeverageText>{leverageView}X</LeverageViewModalLeverageText>
+                        <TouchableOpacity onPress={() => { }}>
+                            <LeverageViewModalAddImage source={require("../../assets/images/trade/add.png")} />
+                        </TouchableOpacity>
+                    </LeverageViewModalRowContainer>
+                    <LeverageViewModalSliderContainer>
+                        {/* <Slider
+                            value={sliderNum}
+                            onValueChange={() => setSliderNum(sliderNum)}
+                            minimumValue={0}
+                            maximumValue={6}
+                            minimumTrackTintColor={'#F4F5F6'}
+                            maximumTrackTintColor={'#333C47'}
+                            containerStyle={{ alignContent: 'center', justifyContent: 'center' }}
+                            thumbImage={require("../../assets/images/trade/indicator.png")}
+                            thumbStyle={{ justifyContent: 'center' }}
+                            thumbTouchSize={{ width: 20, height: 20 }}
+                            trackClickable={true}
+                            thumbTintColor={'#F4F5F6'}
+                            trackMarks={[1, 2, 3, 4, 5, 6]}
+
+                            step={1}
+                        /> */}
+                        <SliderContainer
+                            trackMarks={[1, 2, 3, 4, 5, 6]}
+                        >
+
+                            <Slider
+                                value={sliderNum}
+                                onValueChange={() => setSliderNum(sliderNum)}
+                                animateTransitions
+                                renderThumbComponent={CustomThumb}
+                                minimumTrackTintColor={'#F4F5F6'}
+                                maximumTrackTintColor={'#333C47'}
+                                containerStyle={{ alignContent: 'center', justifyContent: 'center' }}
+                                maximumValue={6} minimumValue={0} step={1}
+                            />
+                        </SliderContainer>
+                    </LeverageViewModalSliderContainer>
+                </View>
+            </Modal>
+
+
+            {/* Buy Type Modal 下單類型*/}
+            <Modal
+                isVisible={isBuyTypeModalVisible}
+                deviceHeight={windowHeight}
+                deviceWidth={windowWidth}
+                animationInTiming={500}
+                animationOutTiming={700}
+                backdropOpacity={0.7}
+                onBackdropPress={() => setIsBuyTypeModalVisible(false)}
+                onSwipeComplete={() => setIsBuyTypeModalVisible(false)}
+                swipeDirection={['down']}
+                style={{ justifyContent: 'flex-end', margin: 0 }}
+                hideModalContentWhileAnimating={true}
+            >
+                <View style={{ backgroundColor: '#242D37', borderTopLeftRadius: 8, borderTopRightRadius: 8, paddingLeft: 16, paddingRight: 16, paddingBottom: 50 }}>
+                    <BuyTypeTitleContainer>
+                        <BuyTypeModalTitleText>下單類型</BuyTypeModalTitleText>
+                    </BuyTypeTitleContainer>
+                    <BuyTypeModalPickerButton onPress={() => { setBuyType('Limit'), setIsBuyTypeModalVisible(false) }}>
+                        <BuyTypeModalPickerButtonText>限價</BuyTypeModalPickerButtonText>
+                        {
+                            buyType === 'Limit' &&
+                            <ModalSelectedImage source={require("../../assets/images/trade/selected.png")} />
+                        }
+                    </BuyTypeModalPickerButton>
+                    <BuyTypeModalLineText></BuyTypeModalLineText>
+                    <BuyTypeModalPickerButton onPress={() => { setBuyType('Market'), setIsBuyTypeModalVisible(false) }}>
+                        <BuyTypeModalPickerButtonText>市價</BuyTypeModalPickerButtonText>
+                        {
+                            buyType === 'Market' &&
+                            <ModalSelectedImage source={require("../../assets/images/trade/selected.png")} />
+                        }
+                    </BuyTypeModalPickerButton>
+                    <BuyTypeModalLineText></BuyTypeModalLineText>
+                    <BuyTypeModalPickerButton onPress={() => { setBuyType('Plan_Limit'), setIsBuyTypeModalVisible(false) }}>
+                        <BuyTypeModalPickerButtonText>計畫限價</BuyTypeModalPickerButtonText>
+                        {
+                            buyType === 'Plan_Limit' &&
+                            <ModalSelectedImage source={require("../../assets/images/trade/selected.png")} />
+                        }
+                    </BuyTypeModalPickerButton>
+                    <BuyTypeModalLineText></BuyTypeModalLineText>
+                    <BuyTypeModalPickerButton onPress={() => { setBuyType('Plan_Market'), setIsBuyTypeModalVisible(false) }}>
+                        <BuyTypeModalPickerButtonText>限價</BuyTypeModalPickerButtonText>
+                        {
+                            buyType === 'Plan_Market' &&
+                            <ModalSelectedImage source={require("../../assets/images/trade/selected.png")} />
+                        }
+                    </BuyTypeModalPickerButton>
+                </View>
+            </Modal>
+
+
+
+
+
+
+
         </Container>
+
+
     )
 }
 
