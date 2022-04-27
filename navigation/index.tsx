@@ -17,7 +17,7 @@ import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../typ
 import LinkingConfiguration from './LinkingConfiguration';
 import HomeStack from './homeStack';
 import MarketStack from './marketStack';
-import ProfileStack from './profileStack';
+import WalletStack from './walletStack';
 import C2cStack from './c2cStack';
 import TradeStack from './tradeStack';
 import styled from "styled-components"
@@ -124,9 +124,9 @@ function BottomTabNavigator() {
         })}
       />
       <BottomTab.Screen
-        name="Profile"
-        component={ProfileStack}
-        options={({ navigation }: RootTabScreenProps<"Profile">) => ({
+        name="Wallet"
+        component={WalletStack}
+        options={({ navigation }: RootTabScreenProps<"Wallet">) => ({
           title: "",
           tabBarIcon: ({ focused }) => (
             focused ? <Icon source={require("../assets/images/global/wallet-blue.png")} /> : <Icon source={require("../assets/images/global/wallet-gray.png")} />

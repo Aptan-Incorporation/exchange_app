@@ -114,7 +114,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
               <PriceText>{btcPrice}</PriceText>
               <USDText>≈ {btcPrice} USD</USDText>
             </View>
-            {parseFloat(btcRate) > 0 ? <PercentText>{"+"+btcRate}%</PercentText> : <RedPercentText>{"-"+btcRate}%</RedPercentText>}
+            {parseFloat(btcRate) > 0 ? <PercentText>{"+"+btcRate}%</PercentText> : <RedPercentText>{btcRate}%</RedPercentText>}
           </View>
         </View>
         <View style={{ width: "100%", borderRadius: 8, backgroundColor: "#242D37", marginTop: 16 }}>
@@ -127,7 +127,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
               <PriceText>{ethPrice}</PriceText>
               <USDText>≈ {ethPrice} USD</USDText>
             </View>
-            {parseFloat(ethRate) > 0 ? <PercentText>{"+"+ethRate}%</PercentText> : <RedPercentText>{"-"+ethRate}%</RedPercentText>}
+            {parseFloat(ethRate) > 0 ? <PercentText>{"+"+ethRate}%</PercentText> : <RedPercentText>{ethRate}%</RedPercentText>}
           </View>
         </View>
         <View style={{ width: "100%", borderRadius: 8, backgroundColor: "#242D37", marginTop: 16 }}>
@@ -140,7 +140,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                <PriceText>{dogePrice}</PriceText>
               <USDText>≈ {dogePrice} USD</USDText>
             </View>
-            {parseFloat(dogeRate) > 0 ? <PercentText>{"+"+dogeRate}%</PercentText> : <RedPercentText>{"-"+dogeRate}%</RedPercentText>}
+            {parseFloat(dogeRate) > 0 ? <PercentText>{"+"+dogeRate}%</PercentText> : <RedPercentText>{dogeRate}%</RedPercentText>}
           </View>
         </View>
         <View style={{ display: "flex", flexDirection: "row", width: "100%", height: 33, borderBottomWidth: 1, borderBottomColor: "#242D37", marginTop: 24 }}>
@@ -199,7 +199,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                 <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{btcAmt}</Text>
               </View>
               <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#FB4C51", borderRadius: 4, alignItems: "center" }}>
-                <Text style={{ color: "white" }}>-{btcRate}%</Text>
+                <Text style={{ color: "white" }}>{btcRate}%</Text>
               </View>
             </View>
            </View>
@@ -227,7 +227,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                 <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{ethAmt}</Text>
               </View>
               <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#FB4C51", borderRadius: 4, alignItems: "center" }}>
-                <Text style={{ color: "white" }}>-{ethRate}%</Text>
+                <Text style={{ color: "white" }}>{ethRate}%</Text>
               </View>
             </View>
           </View>
@@ -255,7 +255,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                 <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{dogeAmt}</Text>
               </View>
               <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#FB4C51", borderRadius: 4, alignItems: "center" }}>
-                <Text style={{ color: "white" }}>+{dogeRate}%</Text>
+                <Text style={{ color: "white" }}>{dogeRate}%</Text>
               </View>
             </View>
           </View>

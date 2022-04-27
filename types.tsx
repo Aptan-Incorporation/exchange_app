@@ -22,6 +22,7 @@ export type RootStackParamList = {
   TradeScreen:undefined;
   C2cScreen:undefined;
   ProfileScreen:undefined;
+  WalletScreen:undefined;
   Login:undefined;
   Member:undefined;
   Register:undefined;
@@ -40,7 +41,7 @@ export type RootTabParamList = {
   Market:undefined;
   Trade:undefined;
   C2c:undefined;
-  Profile:undefined;
+  Wallet:undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<
