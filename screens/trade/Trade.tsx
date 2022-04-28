@@ -8,6 +8,8 @@ import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
 import { useState } from "react";
 import GraphPage from "../../components/trade/GraphPage"
+import SliderContainer from "../../components/trade/Slider";
+import { Form, FormItem } from 'react-native-form-component';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -631,11 +633,98 @@ display: flex;
 flex-direction: column;
 justify-content: center;
 align-items: center;
+padding-bottom: 500px;
 `;
 
 const TradePositionBackgroundImage = styled(Image)`
 width: 99px;
 height: 135px;
+`;
+
+const TradePositionCardContainer = styled(View)`
+display: flex;
+flex-direction: column;
+`;
+
+const TradePositionCardTitleContainer = styled(View)`
+display: flex;
+flex-direction: column;
+padding-top: 20px;
+`;
+
+const TradePositionCardTitleRowContainer = styled(View)`
+displayL flex;
+flex-direction: row;
+justify-content: space-between;
+`;
+
+const TradePositionCardTitleText = styled(Text)`
+font-weight: 700;
+font-size: 20px;
+line-height: 24px;
+color: ${props => props.theme.color.Secondary};
+`;
+
+const TradePositionCardTitleValueText = styled(Text)`
+font-weight: 500;
+font-size: 13px;
+line-height: 20px;
+color: ${props => props.theme.color.ExtraLightGray};
+`;
+
+const TradePositionCardDetailRowContainer = styled(View)`
+displayL flex;
+flex-direction: row;
+padding-top: 12px;
+`;
+
+const TradePositionCardDetailColumnContainer = styled(View)`
+displayL flex;
+flex-direction: column;
+width: 50%;
+`;
+
+const TradePositionCardSmallTitleText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 18px;
+color: ${props => props.theme.color.MidGray};
+`;
+
+const TradePositionCardBigValueText = styled(Text)`
+font-weight: 700;
+font-size: 16px;
+line-height: 20px;
+color: ${props => props.theme.color.ExtraLightGray};
+`;
+
+const TradePositionCardSmallValueText = styled(Text)`
+font-weight: 600;
+font-size: 13px;
+line-height: 16px;
+color: ${props => props.theme.color.ExtraLightGray};
+`;
+
+const TradePositionCardButtonContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+padding-top: 12px;
+`;
+
+const TradePositionCardButton = styled(TouchableOpacity)`
+height: 26px;
+width: 48%
+justify-content: center;
+align-items: center;
+background-color: ${props => props.theme.color.DarkGray};
+`;
+
+const TradePositionCardButtonText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 18px;
+color: ${props => props.theme.color.White};
 `;
 
 
@@ -648,6 +737,7 @@ display: flex;
 flex-direction: row;
 justify-content: space-between;
 padding-top: 10px;
+padding-bottom: 26px;
 `;
 
 const ModalHedaerTitleText = styled(Text)`
@@ -721,9 +811,7 @@ margin-top: 8px;
 const LeverageViewModalRowContainer = styled(View)`
 display: flex;
 flex-direction: row;
-justify-content: space-between;
 align-items: center;
-background-color: ${props => props.theme.color.DarkGray};
 margin-top: 26px;
 padding: 12px 10px 12px 10px;
 `;
@@ -752,6 +840,19 @@ margin-top: 24px
 const LeverageViewModalNotificationImage = styled(Image)`
 width: 24px;
 height: 24px;
+`;
+
+const LeverageViewModalNotificationText = styled(Text)`
+font-weight: 500;
+font-size: 13px;
+line-height: 20px;
+color: ${props => props.theme.color.SecondaryLight};
+`;
+
+const LeverageViewModalDetailRowContainer = styled(View)`
+display: flex;
+flex-direction: row;
+align-items: center;
 `;
 
 const LeverageViewModalDetailText = styled(Text)`
@@ -797,6 +898,26 @@ background-color: #242D37;
 height: 2px;
 `;
 
+// Stop Position Modal 止盈/止損
+
+const StopPositionModalRowContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+`;
+
+const StopPositionModalColumnContainer = styled(View)`
+display: flex;
+flex-direction: column;
+width: 48%;
+`;
+
+const StopPositionModalLine = styled(View)`
+height: 1px;
+margin-top: 24px;
+margin-bottom: 24px;
+background-color: #242D37;
+`;
 
 // Trade Page Array
 const BuyTable = [
@@ -826,70 +947,31 @@ const MyPosition = {
     USDT: '57649.86'
 };
 
+// My Position Array
 
-//Slider 
-const ThumbImage = styled(Image)`width: 20px; height: 20px`;
-
-const DEFAULT_VALUE = 0;
-
-const CustomThumb = (() => {
-    return (
-        <ThumbImage source={require("../../assets/images/trade/indicator.png")} />
-    );
-});
-
-const SliderContainer = (props: {
-    children: React.ReactElement;
-    sliderValue?: Array<number>;
-    trackMarks?: Array<number>;
-}) => {
-    const { sliderValue, trackMarks } = props;
-    const [value, setValue] = React.useState(
-        sliderValue ? sliderValue : DEFAULT_VALUE,
-    );
-    let renderTrackMarkComponent: React.ReactNode;
-
-    if (trackMarks?.length && (!Array.isArray(value) || value?.length === 1)) {
-        renderTrackMarkComponent = (index: number) => {
-            const currentMarkValue = trackMarks[index];
-            const currentSliderValue =
-                value || (Array.isArray(value) && value[0]) || 0;
-            const style =
-                currentMarkValue > Math.max(currentSliderValue)
-                    ? { width: 8, height: 12, backgroundColor: '#333C47' }
-                    : { width: 8, height: 12, backgroundColor: '#DEDDE3' }
-            return <View style={style} />;
-        };
+const PositionArray = [
+    {
+        title: 'BTCUSDT',
+        positionType: 'Full',
+        value: '0',
+        positionNum: '0.1',
+        inPrice: '17,000.00',
+        labelPrice: '17,000.00',
+        stopPrice: '17,000.00',
+        leverage: 20
+    }, {
+        title: 'BTCUSDT',
+        positionType: 'Full',
+        value: '0',
+        positionNum: '0.1',
+        inPrice: '17,000.00',
+        labelPrice: '17,000.00',
+        stopPrice: '17,000.00',
+        leverage: 20
     }
+]
 
-    const renderChildren = () => {
-        return React.Children.map(
-            props.children,
-            (child: React.ReactElement) => {
-                if (!!child && child.type === Slider) {
-                    return React.cloneElement(child, {
-                        onValueChange: setValue,
-                        renderTrackMarkComponent,
-                        trackMarks,
-                        value,
-                    });
-                }
 
-                return child;
-            },
-        );
-    };
-
-    return (
-        <View>
-            <View>
-                <Text>{Array.isArray(value) ? value.join(' - ') : value}</Text>
-            </View>
-            {renderChildren()}
-
-        </View>
-    );
-};
 
 
 
@@ -908,7 +990,7 @@ const TradeScreen = ({
 
     // Function Button
     const [positionView, setPositionView] = useState('Full');
-    const [leverageView, setLeverageView] = useState('1');
+    const [leverageViewNum, setLeverageViewNum] = useState(1);
     const [swapBuyPosition, setSwapBuyPosition] = useState('Open');
     const [isPositionViewVisible, setIsPositionViewVisible] = useState(false);
     const [isLeverageViewVisible, setIsLeverageViewVisible] = useState(false);
@@ -945,6 +1027,20 @@ const TradeScreen = ({
         }
     };
 
+    const buyTypeInputPlaceHolder = () => {
+        if (buyType === 'Limit') {
+            return "價格";
+        } else if (buyType === 'Market') {
+            return "市價";
+        } else if (buyType === 'Plan_Limit') {
+            return "觸發價";
+        } else if (buyType === 'Plan_Market') {
+            return "觸發價";
+        } else {
+            return "";
+        }
+    };
+
     const positionViewChange = () => {
         if (positionView === 'Full') {
             return "全倉";
@@ -955,8 +1051,26 @@ const TradeScreen = ({
         }
     };
 
+    // Position Detail Button
+    const [isStopPositionVisible, setIsStopPositionVisible] = useState(false);
+    const [positionStopEarnPrice, setPositionStopEarnPrice] = useState("");
+    const [positionStopLostPrice, setPositionStopLostPrice] = useState("");
+    const [positionStopEarn_SellPrice, setPositionStopEarn_SellPrice] = useState("");
+    const [positionStopLost_SellPrice, setPositionStopLost_SellPrice] = useState("");
+
+    const toggleStopPositionModal = () => {
+        setIsStopPositionVisible(!isStopPositionVisible)
+    };
 
 
+    // Slider Style
+    const ThumbImage = styled(Image)`width: 20px; height: 20px`;
+
+    const CustomThumb = (() => {
+        return (
+            <ThumbImage source={require("../../assets/images/trade/indicator.png")} />
+        );
+    });
 
 
 
@@ -1002,7 +1116,7 @@ const TradeScreen = ({
                                     <TradeHeaderButtonText>{positionViewChange()}</TradeHeaderButtonText>
                                 </TradeHeaderPositionButton>
                                 <TradeHeaderLeverageButton onPress={() => { toggleLeverageViewModal() }}>
-                                    <TradeHeaderButtonText>{leverageView}X</TradeHeaderButtonText>
+                                    <TradeHeaderButtonText>{leverageViewNum}X</TradeHeaderButtonText>
                                 </TradeHeaderLeverageButton>
                             </TradeHeaderRightContainer>
                         </TradeHeaderContainer>
@@ -1088,10 +1202,13 @@ const TradeScreen = ({
                                         </TradeFunctionPriceOption>
                                         <TradeFunctionPriceInputContainer>
                                             <TextInput
-                                                placeholder={"價格"}
+                                                placeholder={buyTypeInputPlaceHolder()}
                                                 value={buyPrice}
                                                 onChangeText={buyPrice => setBuyPrice(buyPrice)}
-                                                placeholderTextColor={'#8D97A2'}
+                                                placeholderTextColor={
+                                                    buyType === 'Market' ?
+                                                        '#FFFFFF' : '#8D97A2'
+                                                }
                                                 autoCorrect={false}
                                                 keyboardType={"decimal-pad"}
                                                 style={{ backgroundColor: '#242D37', width: '70%', height: 36, color: '#F4F5F6', borderTopLeftRadius: 4, borderBottomLeftRadius: 4, paddingLeft: 12 }}
@@ -1208,9 +1325,59 @@ const TradeScreen = ({
                             <TradePositionLine></TradePositionLine>
                             {
                                 swapPositionView === 0 ?
-                                    <TradePositionContainer>
-                                        <TradePositionBackgroundImage source={require("../../assets/images/trade/norecord.png")} />
-                                    </TradePositionContainer> :
+                                    PositionArray != null ?
+                                        <TradePositionContainer>
+                                            {
+                                                PositionArray.map((x, i) => {
+                                                    return (
+                                                        <TradePositionCardContainer>
+                                                            <TradePositionCardTitleContainer>
+                                                                <TradePositionCardTitleRowContainer>
+                                                                    <TradePositionCardTitleText>{x.title}</TradePositionCardTitleText>
+                                                                    <TradePositionCardSmallTitleText>未實現盈虧</TradePositionCardSmallTitleText>
+                                                                </TradePositionCardTitleRowContainer>
+                                                                <TradePositionCardTitleRowContainer>
+                                                                    <TradePositionCardTitleValueText>{x.positionType === 'Full' ? '全倉' : '逐倉'} {x.leverage}X</TradePositionCardTitleValueText>
+                                                                    <TradePositionCardBigValueText>{x.value} USDT</TradePositionCardBigValueText>
+                                                                </TradePositionCardTitleRowContainer>
+                                                            </TradePositionCardTitleContainer>
+                                                            <TradePositionCardDetailRowContainer>
+                                                                <TradePositionCardDetailColumnContainer>
+                                                                    <TradePositionCardSmallTitleText>持倉量</TradePositionCardSmallTitleText>
+                                                                    <TradePositionCardSmallValueText>{x.positionNum}</TradePositionCardSmallValueText>
+                                                                </TradePositionCardDetailColumnContainer>
+                                                                <TradePositionCardDetailColumnContainer>
+                                                                    <TradePositionCardSmallTitleText>入場價</TradePositionCardSmallTitleText>
+                                                                    <TradePositionCardSmallValueText>{x.inPrice}</TradePositionCardSmallValueText>
+                                                                </TradePositionCardDetailColumnContainer>
+                                                            </TradePositionCardDetailRowContainer>
+                                                            <TradePositionCardDetailRowContainer>
+                                                                <TradePositionCardDetailColumnContainer>
+                                                                    <TradePositionCardSmallTitleText>標記價</TradePositionCardSmallTitleText>
+                                                                    <TradePositionCardSmallValueText>{x.labelPrice}</TradePositionCardSmallValueText>
+                                                                </TradePositionCardDetailColumnContainer>
+                                                                <TradePositionCardDetailColumnContainer>
+                                                                    <TradePositionCardSmallTitleText>強平價</TradePositionCardSmallTitleText>
+                                                                    <TradePositionCardSmallValueText>{x.stopPrice}</TradePositionCardSmallValueText>
+                                                                </TradePositionCardDetailColumnContainer>
+                                                            </TradePositionCardDetailRowContainer>
+                                                            <TradePositionCardButtonContainer>
+                                                                <TradePositionCardButton onPress={() => { toggleStopPositionModal()}}>
+                                                                    <TradePositionCardButtonText>止盈/止損</TradePositionCardButtonText>
+                                                                </TradePositionCardButton>
+                                                                <TradePositionCardButton>
+                                                                    <TradePositionCardButtonText>平倉</TradePositionCardButtonText>
+                                                                </TradePositionCardButton>
+                                                            </TradePositionCardButtonContainer>
+                                                        </TradePositionCardContainer>
+                                                    )
+                                                })
+                                            }
+                                        </TradePositionContainer>
+                                        :
+                                        <TradePositionContainer>
+                                            <TradePositionBackgroundImage source={require("../../assets/images/trade/norecord.png")} />
+                                        </TradePositionContainer> :
                                     <TradePositionContainer>
                                         <TradePositionBackgroundImage source={require("../../assets/images/trade/norecord.png")} />
                                     </TradePositionContainer>
@@ -1290,15 +1457,15 @@ const TradeScreen = ({
                         <ModalHedaerTitleText>槓桿比例</ModalHedaerTitleText>
                         <ModalEmptyDiv></ModalEmptyDiv>
                     </ModalHeaderContainer>
-                    <LeverageViewModalRowContainer>
+                    <LeverageViewModalRowContainer style={{ backgroundColor: '#333C47', justifyContent: 'space-between' }}>
                         <TouchableOpacity onPress={() => { }}>
                             {
-                                leverageView === '1' ?
+                                leverageViewNum === 1 ?
                                     <LeverageViewModalRemoveImage source={require("../../assets/images/trade/remove_bottom.png")} /> :
                                     <LeverageViewModalRemoveImage source={require("../../assets/images/trade/remove.png")} />
                             }
                         </TouchableOpacity>
-                        <LeverageViewModalLeverageText>{leverageView}X</LeverageViewModalLeverageText>
+                        <LeverageViewModalLeverageText>{leverageViewNum}X</LeverageViewModalLeverageText>
                         <TouchableOpacity onPress={() => { }}>
                             <LeverageViewModalAddImage source={require("../../assets/images/trade/add.png")} />
                         </TouchableOpacity>
@@ -1323,19 +1490,37 @@ const TradeScreen = ({
                         /> */}
                         <SliderContainer
                             trackMarks={[1, 2, 3, 4, 5, 6]}
+                            onValueChangeSliderNum={setSliderNum}
                         >
-
                             <Slider
-                                value={sliderNum}
-                                onValueChange={() => setSliderNum(sliderNum)}
-                                animateTransitions
+
                                 renderThumbComponent={CustomThumb}
                                 minimumTrackTintColor={'#F4F5F6'}
                                 maximumTrackTintColor={'#333C47'}
-                                containerStyle={{ alignContent: 'center', justifyContent: 'center' }}
-                                maximumValue={6} minimumValue={0} step={1}
+                                containerStyle={{ alignContent: 'space-between', justifyContent: 'center' }}
+                                trackStyle={{ justifyContent: "space-between", alignContent: 'space-between' }}
+                                maximumValue={6}
+                                minimumValue={1}
+                                step={1}
                             />
                         </SliderContainer>
+                        {/* <ModalHedaerTitleText>{sliderNum}</ModalHedaerTitleText> */}
+                        <LeverageViewModalDetailRowContainer style={{ paddingTop: 26 }}>
+                            <LeverageViewModalNotificationImage source={require("../../assets/images/trade/notification.png")} />
+                            <LeverageViewModalNotificationText style={{ paddingLeft: 8 }}>槓桿比例愈高，發生強制平倉的風險愈高。</LeverageViewModalNotificationText>
+                        </LeverageViewModalDetailRowContainer>
+                        <LeverageViewModalDetailRowContainer style={{ paddingTop: 10 }}>
+                            <LeverageViewModalDetailText>調整槓桿後，您的 BTC 永續合約資金將變化為：</LeverageViewModalDetailText>
+                        </LeverageViewModalDetailRowContainer>
+                        <LeverageViewModalDetailRowContainer>
+                            <LeverageViewModalDetailText>{MyPosition.BTC} BTC 持倉擔保金額</LeverageViewModalDetailText>
+                        </LeverageViewModalDetailRowContainer>
+                        <LeverageViewModalDetailRowContainer>
+                            <LeverageViewModalDetailText>{MyPosition.BTC} BTC 可用擔保金額</LeverageViewModalDetailText>
+                        </LeverageViewModalDetailRowContainer>
+                        <ModalConfirmButton onPress={() => { setIsLeverageViewVisible(false) }}>
+                            <ModalConfirmButtonText>確認</ModalConfirmButtonText>
+                        </ModalConfirmButton>
                     </LeverageViewModalSliderContainer>
                 </View>
             </Modal>
@@ -1394,11 +1579,112 @@ const TradeScreen = ({
             </Modal>
 
 
+            {/* Buy Type Modal 下單類型*/}
+            <Modal
+                isVisible={isStopPositionVisible}
+                deviceHeight={100}
+                deviceWidth={windowWidth}
+                animationInTiming={500}
+                animationOutTiming={700}
+                backdropOpacity={0}
+                onBackdropPress={() => setIsStopPositionVisible(false)}
+                onSwipeComplete={() => setIsStopPositionVisible(false)}
+                swipeDirection={['down']}
+                style={{ justifyContent: 'flex-start', margin: 0, backgroundColor: '#18222D' }}
+                hideModalContentWhileAnimating={true}
+            >
+                <View style={{ backgroundColor: '#18222D', borderTopLeftRadius: 8, borderTopRightRadius: 8, paddingLeft: 16, paddingRight: 16, paddingBottom: 50, paddingTop: insets.top  }}>
+                <ModalHeaderContainer>
+                        <TouchableOpacity onPress={() => { setIsStopPositionVisible(false) }}>
+                            <ModalLeftCancelButton source={require("../../assets/images/trade/cancel.png")} />
+                        </TouchableOpacity>
+                        <ModalHedaerTitleText>止盈/止損</ModalHedaerTitleText>
+                        <ModalEmptyDiv></ModalEmptyDiv>
+                </ModalHeaderContainer>
+                    <Form onButtonPress={() => { }}>
+                        <StopPositionModalRowContainer>
+                            <StopPositionModalColumnContainer>
+                            <FormItem 
+                            
+                            label="止盈價"
+                            labelStyle={{
+                                fontSize: 13,
+                                lineHeight: 20,
+                                color: '#DDE0E3'
+                                }}
+                            textInputStyle={{
+                                fontSize: 15,
+                                lineHeight: 18,
+                                color: '#FFFFFF',
+                                width: 100
+                            }}
+                            value={positionStopEarnPrice}
+                            />
+                            </StopPositionModalColumnContainer>
+                            <StopPositionModalColumnContainer>
+                            <FormItem 
+                            
+                            label="賣出價"
+                            labelStyle={{
+                                fontSize: 13,
+                                lineHeight: 20,
+                                color: '#DDE0E3'
+                                }}
+                            textInputStyle={{
+                                fontSize: 15,
+                                lineHeight: 18,
+                                color: '#FFFFFF',
+                                
+                            }}
+                            value={positionStopEarn_SellPrice}
+                            />
+                            </StopPositionModalColumnContainer>
+                        </StopPositionModalRowContainer>
+                            <StopPositionModalLine></StopPositionModalLine>
+                        <StopPositionModalRowContainer>
+                            <StopPositionModalColumnContainer>
+                            <FormItem 
+                            
+                            label="止損價"
+                            labelStyle={{
+                                fontSize: 13,
+                                lineHeight: 20,
+                                color: '#DDE0E3'
+                                }}
+                            textInputStyle={{
+                                fontSize: 15,
+                                lineHeight: 18,
+                                color: '#FFFFFF',
+                                width: 100
+                            }}
+                            value={positionStopLostPrice}
+                            />
+                            </StopPositionModalColumnContainer>
+                            <StopPositionModalColumnContainer>
+                            <FormItem 
+                            
+                            label="賣出價"
+                            labelStyle={{
+                                fontSize: 13,
+                                lineHeight: 20,
+                                color: '#DDE0E3'
+                                }}
+                            textInputStyle={{
+                                fontSize: 15,
+                                lineHeight: 18,
+                                color: '#FFFFFF',
+                                
+                            }}
+                            value={positionStopLost_SellPrice}
+                            />
+                            </StopPositionModalColumnContainer>
+                        </StopPositionModalRowContainer>
+                        <StopPositionModalLine></StopPositionModalLine>
 
+                    </Form>
+                </View>
 
-
-
-
+            </Modal>
         </Container>
 
 
