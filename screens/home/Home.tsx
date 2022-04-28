@@ -95,7 +95,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
       <Header insets={insets.top}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("Register");
+            navigation.navigate("Login");
           }}
         >
           <IconImg source={require("../../assets/images/home/avatar.png")} />
