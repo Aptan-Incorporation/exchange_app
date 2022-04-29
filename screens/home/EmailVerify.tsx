@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, Image, TextInput } from "react-native"
+import { Text, View, TouchableOpacity, Image, TextInput,Alert } from "react-native"
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -80,14 +80,14 @@ const EmailVerify = ({ navigation }: RootStackScreenProps<"EmailVerify">) => {
                     api.postData("/auth/register",{account:email,password:password,password2:password,inviteCode:promoCode}).then(x=>{
                       setLoading(false)
                       if(x.status !== 400){
-                        alert(x.msg)
-                        navigation("Root")
+                        Alert.alert("註冊成功")
+                        navigation.navigate("Root")
                       }else{
-                        alert(x.data.msg)
+                        Alert.alert(x.data.msg)
                       }
                     })        
                   }else{
-                    alert(x.data.msg)
+                    Alert.alert(x.data.msg)
                     setLoading(false)
                   }
                 })

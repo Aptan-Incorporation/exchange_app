@@ -69,7 +69,7 @@ const Login = ({ navigation }: RootStackScreenProps<"Login">) => {
             <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>電子信箱</Text>
             <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="輸入電子信箱" onChangeText={setEmail}/>
             <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>密碼</Text>
-            <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="輸入密碼" secureTextEntry  onChangeText={setEmail}/>
+            <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="輸入密碼" secureTextEntry  onChangeText={setPassword}/>
           </View>
           <TouchableOpacity style={{display:"flex",flexDirection:"row",justifyContent:"flex-end"}}>
             <Text style={{color:"#A8C2DC",fontSize:14,fontWeight:"500",marginTop:16}}>忘記密碼</Text>
@@ -77,13 +77,13 @@ const Login = ({ navigation }: RootStackScreenProps<"Login">) => {
           <TouchableOpacity style={{display:"flex",flexDirection:"row",backgroundColor:"#3D6A97",borderRadius:4,justifyContent:"center",alignItems:"center",height:44,marginTop:42}} onPress={()=>{
             setLoading(true)
             api.postData("/auth/login",{account:email,password:password}).then(x=>{
-              console.log(x)
               setLoading(false)
               if(x.status === 401){
                 Alert.alert("帳號密碼錯誤")
               }else if(x.status !== 400){
                 AsyncStorage.setItem("token",x.data.token)
                 AsyncStorage.setItem("user",JSON.stringify(x.data.user))
+                navigation.goBack()
               }else{
                 Alert.alert(x.data.msg)
               }

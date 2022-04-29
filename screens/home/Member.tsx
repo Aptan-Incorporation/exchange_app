@@ -3,7 +3,8 @@ import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as React from "react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Container = styled(View)`
   display: flex;
@@ -39,7 +40,13 @@ const IconImg = styled(Image)`
 const Member = ({ navigation }: RootStackScreenProps<"Member">) => {
   const insets = useSafeAreaInsets();
   const [active, setActive] = React.useState("");
-
+  const [email, setEmail] = React.useState("");
+  const [userId, setUserId] = React.useState("");
+  useEffect(async ()=>{
+    let user = await AsyncStorage.getItem("user")
+    setEmail(JSON.parse(user!).account)
+    setUserId(JSON.parse(user!).userId)
+  })
   return (
     <Container>
       <Header insets={insets.top}>
@@ -60,8 +67,8 @@ const Member = ({ navigation }: RootStackScreenProps<"Member">) => {
             <Text style={{ color: "black", fontSize: 32, fontWeight: "600" }}>N</Text>
           </View>
           <View style={{marginLeft:12}}>
-            <Text style={{color:"#F4F5F6",fontSize:16,fontWeight:"700"}}>zxc******@gmail.com</Text>
-            <Text style={{color:"#8D97A2",fontSize:13,fontWeight:"600",marginTop:4}}>ID: 01831290</Text>
+        <Text style={{color:"#F4F5F6",fontSize:16,fontWeight:"700"}}>{email.slice(0,3)+ "****"+email.slice(7)}</Text>
+            <Text style={{color:"#8D97A2",fontSize:13,fontWeight:"600",marginTop:4}}>ID: {userId.slice(0,12)}</Text>
           </View>
         </View>
         <View style={{marginTop:24}}>
@@ -81,7 +88,11 @@ const Member = ({ navigation }: RootStackScreenProps<"Member">) => {
             <IconImg source={require("../../assets/images/home/bonus.png")} />
             <Text style={{color:"white",fontSize:15,marginLeft:16}}>代理返佣</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{display:"flex",flexDirection:"row",height:56,alignItems:"center",borderBottomWidth:1,borderBottomColor: "#242D37"}}>
+          <TouchableOpacity style={{display:"flex",flexDirection:"row",height:56,alignItems:"center",borderBottomWidth:1,borderBottomColor: "#242D37"}} onPress={()=>{
+              AsyncStorage.removeItem("token")
+              AsyncStorage.removeItem("user")
+              navigation.goBack()
+          }}>
             <IconImg source={require("../../assets/images/home/logout.png")} />
             <Text style={{color:"white",fontSize:15,marginLeft:16}}>登出</Text>
           </TouchableOpacity>

@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as React from "react";
 import { useState,useEffect,useContext } from "react";
 import { PriceContext } from "../../App" 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Container = styled(ScrollView)`
   display: flex;
@@ -94,8 +95,13 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
     <Container>
       <Header insets={insets.top}>
         <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Login");
+          onPress={async () => {
+            let token = await AsyncStorage.getItem("token")
+            if(token){
+              navigation.navigate("Member");
+            }else{
+              navigation.navigate("Login");
+            }
           }}
         >
           <IconImg source={require("../../assets/images/home/avatar.png")} />
