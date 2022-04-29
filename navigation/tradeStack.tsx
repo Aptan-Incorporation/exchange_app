@@ -26,9 +26,9 @@ const TradeStack = () => {
           </TouchableOpacity>
         ),
         title: '止盈/止損',
-        headerStyle: {backgroundColor: '#18222D'},
+        headerStyle: { backgroundColor: '#18222D' },
       })}>
-         <Stack.Screen name="StopPositionScreen" component={StopPositionScreen} />
+        <Stack.Screen name="StopPositionScreen" component={StopPositionScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );

@@ -36,12 +36,12 @@ const SliderContainer = (props: {
             const currentMarkValue = trackMarks[index];
             const currentSliderValue =
                 value || (Array.isArray(value) && value[0]) || 0;
-            const style = 
+            const style =
                 currentMarkValue > Math.max(currentSliderValue)
                     ? { width: 8, height: 12, backgroundColor: '#333C47' }
                     : { width: 8, height: 12, backgroundColor: '#DEDDE3' }
-            return (   
-            <View style={style}/>
+            return (
+                <View style={style} />
             );
         };
     }
@@ -71,11 +71,11 @@ const SliderContainer = (props: {
                 <Text>{Array.isArray(value) ? value.join(' - ') : value}</Text>
             </View>
             {renderChildren()}
-            <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                 <LeverageText>1X</LeverageText>
-                <LeverageText style={{paddingLeft: 5}}>3X</LeverageText>
-                <LeverageText style={{paddingLeft: 5}}>10X</LeverageText>
-                <LeverageText style={{paddingLeft: 3}}>30X</LeverageText>
+                <LeverageText style={{ paddingLeft: 5 }}>3X</LeverageText>
+                <LeverageText style={{ paddingLeft: 5 }}>10X</LeverageText>
+                <LeverageText style={{ paddingLeft: 3 }}>30X</LeverageText>
                 <LeverageText>75X</LeverageText>
                 <LeverageText>125X</LeverageText>
             </View>

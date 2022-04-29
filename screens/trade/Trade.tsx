@@ -9,8 +9,6 @@ import { RootStackScreenProps } from "../../types";
 import { useState } from "react";
 import GraphPage from "../../components/trade/GraphPage"
 import SliderContainer from "../../components/trade/Slider";
-import { Form, FormItem } from 'react-native-form-component';
-import StopPositionScreen from "./StopPosition";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -729,6 +727,112 @@ color: ${props => props.theme.color.White};
 `;
 
 
+// Trade Page Commit Style
+const TradeCommitContainer = styled(View)`
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+align-items: center;
+padding-bottom: 500px;
+`;
+
+const TradeCommitBackgroundImage = styled(Image)`
+width: 99px;
+height: 135px;
+`;
+
+const TradeCommitCardContainer = styled(View)`
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+width: 100%;
+`;
+
+const TradeCommitCardTitleContainer = styled(View)`
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+padding-top: 20px;
+`;
+
+const TradeCommitCardTitleText = styled(Text)`
+font-weight: 700;
+font-size: 20px;
+line-height: 24px;
+color: ${props => props.theme.color.Secondary};
+`;
+
+const TradeCommitCardTitleTimeText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 15px;
+color: ${props => props.theme.color.ExtraLightGray};
+`;
+
+const TradeCommitCardDetailRowContainer = styled(View)`
+displayL flex;
+flex-direction: row;
+justify-content: space-between;
+padding-top: 12px;
+`;
+
+const TradeCommitCardDetailColumnContainer = styled(View)`
+displayL flex;
+flex-direction: column;
+width: 30%;
+`;
+
+const TradeCommitCardSmallTitleText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 18px;
+color: ${props => props.theme.color.MidGray};
+`;
+
+const TradeCommitCardBuyDirectionLongText = styled(Text)`
+font-weight: 500;
+font-size: 13px;
+line-height: 20px;
+color: ${props => props.theme.color.Secondary};
+`;
+
+const TradeCommitCardBuyDirectionShortText = styled(Text)`
+font-weight: 500;
+font-size: 13px;
+line-height: 20px;
+color: ${props => props.theme.color.SecondaryLight};
+`;
+
+const TradeCommitCardSmallValueText = styled(Text)`
+font-weight: 500;
+font-size: 13px;
+line-height: 20px;
+color: ${props => props.theme.color.ExtraLightGray};
+`;
+
+const TradeCommitCardButtonContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+padding-top: 12px;
+`;
+
+const TradeCommitCardButton = styled(TouchableOpacity)`
+height: 26px;
+width: 48%
+justify-content: center;
+align-items: center;
+background-color: ${props => props.theme.color.DarkGray};
+`;
+
+const TradeCommitCardButtonText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 18px;
+color: ${props => props.theme.color.White};
+`;
+
+
 // Modal Style
 
 
@@ -909,6 +1013,31 @@ height: 2px;
 `;
 
 
+// Commit Stop Button Modal 當前委託止盈/止損價
+const CommitStopModalCardContainer = styled(View)``;
+
+const CommitStopModalCardTitleRowContainer = styled(View)``;
+
+const CommitStopModalCardTitleColumnContainer = styled(View)``;
+
+const CommitStopModalCardDetailContainer = styled(View)``;
+
+const CommitStopModalCardDetailColumnContainer = styled(View)``;
+
+const CommitStopModalCardTitleLongText = styled(Text)``;
+
+const CommitStopModalCardTitleShortText = styled(Text)``;
+
+const CommitStopModalCardTitleTimeText = styled(Text)``;
+
+const CommitStopModalCardTitleProgressText = styled(Text)``;
+
+const CommitStopModalCardDetailTitleText = styled(Text)``;
+
+const CommitStopModalCardDetailValueText = styled(Text)``;
+
+
+
 
 // Trade Page Array
 const BuyTable = [
@@ -950,7 +1079,8 @@ const PositionArray = [
         labelPrice: '17,000.00',
         stopPrice: '17,000.00',
         leverage: 20
-    }, {
+    },
+    {
         title: 'BTCUSDT',
         positionType: 'Full',
         value: '0',
@@ -960,7 +1090,30 @@ const PositionArray = [
         stopPrice: '17,000.00',
         leverage: 20
     }
-]
+];
+
+const CommitArray = [
+    {
+        title: 'BTCUSDT',
+        time: '2021-10-19 13:24:30',
+        butType: 'Limit',
+        buyDirection: 'Long',
+        CommitNumber: '0.1',
+        DealRate: 0,
+        DealNumber: 0,
+        CommitPrice: '17,000.0'
+    },
+    {
+        title: 'BTCUSDT',
+        time: '2021-10-19 15:45:30',
+        butType: 'Limit',
+        buyDirection: 'Short',
+        CommitNumber: '0.8',
+        DealRate: 0,
+        DealNumber: 0,
+        CommitPrice: '18,000.0'
+    },
+];
 
 
 
@@ -1042,7 +1195,7 @@ const TradeScreen = ({
         }
     };
 
-    
+
 
     // Slider Style
     const ThumbImage = styled(Image)`width: 20px; height: 20px`;
@@ -1054,9 +1207,16 @@ const TradeScreen = ({
     });
 
 
-
     // Position Detail 
     const [swapPositionView, setSwapPositionView] = useState(0);
+
+
+    // Commit Stop Button Modal 當前委託止盈/止損價
+    const [isCommitStopVisible, setIsCommitStopVisible] = useState(false);
+
+    const toggleCommitStopModal = () => {
+        setIsCommitStopVisible(!isCommitStopVisible)
+    };
 
     return (
         <Container>
@@ -1359,9 +1519,74 @@ const TradeScreen = ({
                                         <TradePositionContainer>
                                             <TradePositionBackgroundImage source={require("../../assets/images/trade/norecord.png")} />
                                         </TradePositionContainer> :
-                                    <TradePositionContainer>
-                                        <TradePositionBackgroundImage source={require("../../assets/images/trade/norecord.png")} />
-                                    </TradePositionContainer>
+                                    CommitArray !== null ?
+                                        <TradeCommitContainer>
+                                            {
+                                                CommitArray.map((x, i) => {
+                                                    return (
+                                                        <TradeCommitCardContainer>
+                                                            <TradeCommitCardTitleContainer>
+                                                                <TradeCommitCardTitleText>BTCUSDT</TradeCommitCardTitleText>
+                                                                <TradeCommitCardTitleTimeText>{x.time}</TradeCommitCardTitleTimeText>
+                                                            </TradeCommitCardTitleContainer>
+                                                            <TradeCommitCardDetailRowContainer>
+                                                                <TradeCommitCardDetailColumnContainer>
+                                                                    <TradeCommitCardSmallTitleText>交易類型</TradeCommitCardSmallTitleText>
+                                                                    {
+                                                                        x.butType === 'Limit' &&
+                                                                        <TradeCommitCardSmallValueText>限價</TradeCommitCardSmallValueText>
+                                                                    }
+                                                                    {
+                                                                        x.butType === 'Market' &&
+                                                                        <TradeCommitCardSmallValueText>市價</TradeCommitCardSmallValueText>
+                                                                    }
+                                                                </TradeCommitCardDetailColumnContainer>
+                                                                <TradeCommitCardDetailColumnContainer>
+                                                                    <TradeCommitCardSmallTitleText>下單方向</TradeCommitCardSmallTitleText>
+                                                                    {
+                                                                        x.buyDirection === 'Long' &&
+                                                                        <TradeCommitCardBuyDirectionLongText>買入</TradeCommitCardBuyDirectionLongText>
+                                                                    }
+                                                                    {
+                                                                        x.buyDirection === 'Short' &&
+                                                                        <TradeCommitCardBuyDirectionShortText>賣出</TradeCommitCardBuyDirectionShortText>
+                                                                    }
+                                                                </TradeCommitCardDetailColumnContainer>
+                                                                <TradeCommitCardDetailColumnContainer>
+                                                                    <TradeCommitCardSmallTitleText>委託單</TradeCommitCardSmallTitleText>
+                                                                    <TradeCommitCardSmallValueText>{x.CommitNumber}</TradeCommitCardSmallValueText>
+                                                                </TradeCommitCardDetailColumnContainer>
+                                                            </TradeCommitCardDetailRowContainer>
+                                                            <TradeCommitCardDetailRowContainer>
+                                                                <TradeCommitCardDetailColumnContainer>
+                                                                    <TradeCommitCardSmallTitleText>成交率</TradeCommitCardSmallTitleText>
+                                                                    <TradeCommitCardSmallValueText>{x.DealRate}%</TradeCommitCardSmallValueText>
+                                                                </TradeCommitCardDetailColumnContainer>
+                                                                <TradeCommitCardDetailColumnContainer>
+                                                                    <TradeCommitCardSmallTitleText>成交量</TradeCommitCardSmallTitleText>
+                                                                    <TradeCommitCardSmallValueText>{x.DealNumber}</TradeCommitCardSmallValueText>
+                                                                </TradeCommitCardDetailColumnContainer>
+                                                                <TradeCommitCardDetailColumnContainer>
+                                                                    <TradeCommitCardSmallTitleText>委託價</TradeCommitCardSmallTitleText>
+                                                                    <TradeCommitCardSmallValueText>{x.CommitPrice}</TradeCommitCardSmallValueText>
+                                                                </TradeCommitCardDetailColumnContainer>
+                                                            </TradeCommitCardDetailRowContainer>
+                                                            <TradeCommitCardButtonContainer>
+                                                                <TradeCommitCardButton onPress={() => { }}>
+                                                                    <TradeCommitCardButtonText>止盈/止損</TradeCommitCardButtonText>
+                                                                </TradeCommitCardButton>
+                                                                <TradeCommitCardButton onPress={() => { }}>
+                                                                    <TradeCommitCardButtonText>撤銷</TradeCommitCardButtonText>
+                                                                </TradeCommitCardButton>
+                                                            </TradeCommitCardButtonContainer>
+                                                        </TradeCommitCardContainer>
+                                                    )
+                                                })
+                                            }
+                                        </TradeCommitContainer> :
+                                        <TradeCommitContainer>
+                                            <TradeCommitBackgroundImage source={require("../../assets/images/trade/norecord.png")} />
+                                        </TradeCommitContainer>
                             }
                         </TradeContainer>
                     </MainSwapPageContainer> :
@@ -1417,6 +1642,7 @@ const TradeScreen = ({
                     </ModalConfirmButton>
                 </View>
             </Modal>
+
 
             {/* Leverage View Modal 槓桿比例 */}
             <Modal
@@ -1562,7 +1788,28 @@ const TradeScreen = ({
             </Modal>
 
 
-            
+            {/*Commit Stop Button Modal 當前委託止盈/止損價 */}
+            <Modal
+                isVisible={isBuyTypeModalVisible}
+                deviceHeight={windowHeight}
+                deviceWidth={windowWidth}
+                animationInTiming={500}
+                animationOutTiming={700}
+                backdropOpacity={0.7}
+                onBackdropPress={() => setIsBuyTypeModalVisible(false)}
+                onSwipeComplete={() => setIsBuyTypeModalVisible(false)}
+                swipeDirection={['down']}
+                style={{ justifyContent: 'flex-end', margin: 0 }}
+                hideModalContentWhileAnimating={true}
+            >
+                <View style={{ backgroundColor: '#242D37', borderTopLeftRadius: 8, borderTopRightRadius: 8, paddingLeft: 16, paddingRight: 16, paddingBottom: 50 }}>
+
+                </View>
+            </Modal>
+
+
+
+
         </Container>
 
 

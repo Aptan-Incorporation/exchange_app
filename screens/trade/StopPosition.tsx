@@ -1,15 +1,10 @@
 import * as React from "react";
-import { Text, TextInput, TouchableOpacity, View, Image, ScrollView, Dimensions } from "react-native"
-import { Slider } from '@miblanchard/react-native-slider';
+import { Text, TextInput, TouchableOpacity, View, Image, Dimensions } from "react-native"
 import Modal from "react-native-modal";
-import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
 import { useState } from "react";
-import GraphPage from "../../components/trade/GraphPage"
-import SliderContainer from "../../components/trade/Slider";
-import { Form, FormItem } from 'react-native-form-component';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -291,7 +286,7 @@ const StopPositionScreen = ({
                         positionStopEarn_SellPrice !== "" &&
                         positionStopLostPrice !== "" &&
                         positionStopLost_SellPrice !== "" ?
-                        <StopPositionSubmitButton onPress={() => {navigation.goBack()}}>
+                        <StopPositionSubmitButton onPress={() => { navigation.goBack() }}>
                             <StopPositionSubmitButtonText>送出</StopPositionSubmitButtonText>
                         </StopPositionSubmitButton> :
                         <StopPositionDisabledSubmitButton disabled={true}>
