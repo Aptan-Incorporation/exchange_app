@@ -10,12 +10,13 @@ import { useState } from "react";
 import GraphPage from "../../components/trade/GraphPage"
 import SliderContainer from "../../components/trade/Slider";
 import { Form, FormItem } from 'react-native-form-component';
+import StopPositionScreen from "./StopPosition";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 
 const Container = styled(View)`
-    display: flex ;
+    display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
@@ -752,6 +753,16 @@ width: 28px;
 height: 28px;
 `;
 
+const ModalYellowSelectedImage = styled(Image)`
+width: 28px;
+height: 28px;
+`;
+
+const ModalNextImage = styled(Image)`
+width: 28px;
+height: 28px;
+`;
+
 const ModalLeftCancelButton = styled(Image)`
 width: 28px;
 height: 28px;
@@ -894,30 +905,10 @@ color: ${props => props.theme.color.ExtraLightGray};
 
 const BuyTypeModalLineText = styled(Text)`
 background-color: #242D37;
-;
 height: 2px;
 `;
 
-// Stop Position Modal 止盈/止損
 
-const StopPositionModalRowContainer = styled(View)`
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-`;
-
-const StopPositionModalColumnContainer = styled(View)`
-display: flex;
-flex-direction: column;
-width: 48%;
-`;
-
-const StopPositionModalLine = styled(View)`
-height: 1px;
-margin-top: 24px;
-margin-bottom: 24px;
-background-color: #242D37;
-`;
 
 // Trade Page Array
 const BuyTable = [
@@ -1051,17 +1042,7 @@ const TradeScreen = ({
         }
     };
 
-    // Position Detail Button
-    const [isStopPositionVisible, setIsStopPositionVisible] = useState(false);
-    const [positionStopEarnPrice, setPositionStopEarnPrice] = useState("");
-    const [positionStopLostPrice, setPositionStopLostPrice] = useState("");
-    const [positionStopEarn_SellPrice, setPositionStopEarn_SellPrice] = useState("");
-    const [positionStopLost_SellPrice, setPositionStopLost_SellPrice] = useState("");
-
-    const toggleStopPositionModal = () => {
-        setIsStopPositionVisible(!isStopPositionVisible)
-    };
-
+    
 
     // Slider Style
     const ThumbImage = styled(Image)`width: 20px; height: 20px`;
@@ -1362,7 +1343,7 @@ const TradeScreen = ({
                                                                 </TradePositionCardDetailColumnContainer>
                                                             </TradePositionCardDetailRowContainer>
                                                             <TradePositionCardButtonContainer>
-                                                                <TradePositionCardButton onPress={() => { toggleStopPositionModal()}}>
+                                                                <TradePositionCardButton onPress={() => { navigation.push("StopPositionScreen") }}>
                                                                     <TradePositionCardButtonText>止盈/止損</TradePositionCardButtonText>
                                                                 </TradePositionCardButton>
                                                                 <TradePositionCardButton>
@@ -1386,6 +1367,8 @@ const TradeScreen = ({
                     </MainSwapPageContainer> :
                     <GraphPage />
             }
+
+            {/* Modal Page */}
 
             {/* Position View Modal 擔保資產模式*/}
             <Modal
@@ -1579,112 +1562,7 @@ const TradeScreen = ({
             </Modal>
 
 
-            {/* Buy Type Modal 下單類型*/}
-            <Modal
-                isVisible={isStopPositionVisible}
-                deviceHeight={100}
-                deviceWidth={windowWidth}
-                animationInTiming={500}
-                animationOutTiming={700}
-                backdropOpacity={0}
-                onBackdropPress={() => setIsStopPositionVisible(false)}
-                onSwipeComplete={() => setIsStopPositionVisible(false)}
-                swipeDirection={['down']}
-                style={{ justifyContent: 'flex-start', margin: 0, backgroundColor: '#18222D' }}
-                hideModalContentWhileAnimating={true}
-            >
-                <View style={{ backgroundColor: '#18222D', borderTopLeftRadius: 8, borderTopRightRadius: 8, paddingLeft: 16, paddingRight: 16, paddingBottom: 50, paddingTop: insets.top  }}>
-                <ModalHeaderContainer>
-                        <TouchableOpacity onPress={() => { setIsStopPositionVisible(false) }}>
-                            <ModalLeftCancelButton source={require("../../assets/images/trade/cancel.png")} />
-                        </TouchableOpacity>
-                        <ModalHedaerTitleText>止盈/止損</ModalHedaerTitleText>
-                        <ModalEmptyDiv></ModalEmptyDiv>
-                </ModalHeaderContainer>
-                    <Form onButtonPress={() => { }}>
-                        <StopPositionModalRowContainer>
-                            <StopPositionModalColumnContainer>
-                            <FormItem 
-                            
-                            label="止盈價"
-                            labelStyle={{
-                                fontSize: 13,
-                                lineHeight: 20,
-                                color: '#DDE0E3'
-                                }}
-                            textInputStyle={{
-                                fontSize: 15,
-                                lineHeight: 18,
-                                color: '#FFFFFF',
-                                width: 100
-                            }}
-                            value={positionStopEarnPrice}
-                            />
-                            </StopPositionModalColumnContainer>
-                            <StopPositionModalColumnContainer>
-                            <FormItem 
-                            
-                            label="賣出價"
-                            labelStyle={{
-                                fontSize: 13,
-                                lineHeight: 20,
-                                color: '#DDE0E3'
-                                }}
-                            textInputStyle={{
-                                fontSize: 15,
-                                lineHeight: 18,
-                                color: '#FFFFFF',
-                                
-                            }}
-                            value={positionStopEarn_SellPrice}
-                            />
-                            </StopPositionModalColumnContainer>
-                        </StopPositionModalRowContainer>
-                            <StopPositionModalLine></StopPositionModalLine>
-                        <StopPositionModalRowContainer>
-                            <StopPositionModalColumnContainer>
-                            <FormItem 
-                            
-                            label="止損價"
-                            labelStyle={{
-                                fontSize: 13,
-                                lineHeight: 20,
-                                color: '#DDE0E3'
-                                }}
-                            textInputStyle={{
-                                fontSize: 15,
-                                lineHeight: 18,
-                                color: '#FFFFFF',
-                                width: 100
-                            }}
-                            value={positionStopLostPrice}
-                            />
-                            </StopPositionModalColumnContainer>
-                            <StopPositionModalColumnContainer>
-                            <FormItem 
-                            
-                            label="賣出價"
-                            labelStyle={{
-                                fontSize: 13,
-                                lineHeight: 20,
-                                color: '#DDE0E3'
-                                }}
-                            textInputStyle={{
-                                fontSize: 15,
-                                lineHeight: 18,
-                                color: '#FFFFFF',
-                                
-                            }}
-                            value={positionStopLost_SellPrice}
-                            />
-                            </StopPositionModalColumnContainer>
-                        </StopPositionModalRowContainer>
-                        <StopPositionModalLine></StopPositionModalLine>
-
-                    </Form>
-                </View>
-
-            </Modal>
+            
         </Container>
 
 
