@@ -17,10 +17,13 @@ import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../typ
 import LinkingConfiguration from './LinkingConfiguration';
 import HomeStack from './homeStack';
 import MarketStack from './marketStack';
-import ProfileStack from './profileStack';
+import WalletStack from './walletStack';
 import C2cStack from './c2cStack';
 import TradeStack from './tradeStack';
 import styled from "styled-components"
+import Member from "../screens/home/Member";
+import Register from "../screens/home/Register";
+import EmailVerify from "../screens/home/EmailVerify";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -43,6 +46,9 @@ function RootNavigator() {
     <Stack.Navigator>
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
+      <Stack.Screen name="Member" component={Member} options={{ headerShown: false }} />
+      <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
+      <Stack.Screen name="EmailVerify" component={EmailVerify} options={{ headerShown: false }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
       </Stack.Group>
@@ -70,7 +76,7 @@ function BottomTabNavigator() {
       initialRouteName="Home"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
-        tabBarStyle:{backgroundColor:"#242D37"}
+        tabBarStyle: { backgroundColor: "#242D37" }
       }}
     >
       <BottomTab.Screen
@@ -118,9 +124,9 @@ function BottomTabNavigator() {
         })}
       />
       <BottomTab.Screen
-        name="Profile"
-        component={ProfileStack}
-        options={({ navigation }: RootTabScreenProps<"Profile">) => ({
+        name="Wallet"
+        component={WalletStack}
+        options={({ navigation }: RootTabScreenProps<"Wallet">) => ({
           title: "",
           tabBarIcon: ({ focused }) => (
             focused ? <Icon source={require("../assets/images/global/wallet-blue.png")} /> : <Icon source={require("../assets/images/global/wallet-gray.png")} />
