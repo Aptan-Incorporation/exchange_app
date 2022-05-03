@@ -14,7 +14,7 @@ display: flex ;
 flex-direction: column;
 `;
 
-// Stop Position Modal 止盈/止損
+// Stop Position Modal 當前持倉止盈/止損
 
 const StopPositionRowContainer = styled(View)`
 display: flex;

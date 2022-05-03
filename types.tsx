@@ -21,6 +21,7 @@ export type RootStackParamList = {
   MarketScreen:undefined;
   TradeScreen:undefined;
   StopPositionScreen:undefined;
+  HistoryScreen:undefined;
   C2cScreen:undefined;
   ProfileScreen:undefined;
   Login:undefined;
