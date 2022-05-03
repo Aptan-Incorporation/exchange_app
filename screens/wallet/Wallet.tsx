@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, TextInput, TouchableOpacity, View, Image, ScrollView, SafeAreaView, Button, Alert } from "react-native"
+import { Text, TextInput, TouchableOpacity, View, Image, ScrollView, SafeAreaView, Button, Alert} from "react-native"
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
 import { useState } from "react";
@@ -9,7 +9,7 @@ const Container = styled(SafeAreaView)`
     display: flex ;
     flex-direction: column;
     width: 100%;
-    background: #18222d;
+    background: black;
     flex:1;
 `;
 
@@ -32,7 +32,7 @@ const TitleTitle = styled(Text)`
 `;
 
 const Number = styled(Text)`
-   font-family: 'SF Pro Display';
+   /* font-family: 'SF Pro Display'; */
     font-style: normal;
     font-weight: 700;
     font-size: 28px;
@@ -137,7 +137,7 @@ const BG1 = styled(View)`
     border-radius: 8px;
     padding:20px;
     width:90%;
-    height:26%;
+    height:70%;
     margin-left:20px;
 
 `;
@@ -152,7 +152,7 @@ const BG001 = styled(View)`
    margin-left:-20px;
    display:flex;
    flex-direction:row;
-   justify-content:space-between
+   justify-content:space-between;
 
 
 `;
@@ -212,7 +212,7 @@ const Title3 = styled(Text)`
 `;
 
 const Number0 = styled(Number)`
-    font-family: 'SF Pro Display';
+    /* font-family: 'SF Pro Display'; */
     font-style: normal;
     font-weight: 700;
     font-size: 28px;
@@ -221,7 +221,7 @@ const Number0 = styled(Number)`
 `;
 
 const Number01 = styled(Number)`
-    font-family: 'SF Pro Text';
+    /* font-family: 'SF Pro Text'; */
     font-style: normal;
     font-weight: 600;
     font-size: 13px;
@@ -232,7 +232,7 @@ const Number01 = styled(Number)`
 `;
 
 const USDT = styled(Text)`
-    font-family: 'SF Pro Text';
+    /* font-family: 'SF Pro Text'; */
     font-style: normal;
     font-weight: 600;
     font-size: 13px;
@@ -248,7 +248,7 @@ const USDTcontent = styled(View)`
 `;
 
 const Number001 = styled(Number)`
-    font-family: 'SF Pro Display';
+    /* font-family: 'SF Pro Display'; */
     font-style: normal;
     font-weight: 700;
     font-size: 28px;
@@ -258,7 +258,7 @@ const Number001 = styled(Number)`
 `;
 
 const USDT1 = styled(Text)`
-    font-family: 'SF Pro Text';
+    /* font-family: 'SF Pro Text'; */
     font-style: normal;
     font-weight: 600;
     font-size: 13px;
@@ -269,18 +269,23 @@ const USDT1 = styled(Text)`
 `;
 
 const Number1 = styled(Text)`
-    font-family: 'SF Pro Text';
+    /* font-family: 'SF Pro Text'; */
     font-style: normal;
     font-weight: 600;
     font-size: 13px;
     line-height: 16px;
     /* letter-spacing: 0.004em; */
-    color: #8D97A2;
+    color: rgb(141, 151, 162);
 `;
 
 const Img1 = styled(Image)`
   width:16px;
   height:20px;
+`;
+
+const Background01 = styled(View)`
+ height:40%;
+ background: #18222D;
 `;
 
 const WalletScreen = ({
@@ -358,20 +363,24 @@ const WalletScreen = ({
                 </>
             }
             {index === 1 &&
-                <>
-                    <BG1>
-                        <BG001>
-                            <Title1>總估價</Title1>
-                            <Img1 source={require("../../assets/wellet/img1.png")} />
-                        </BG001>
-                        <TopArea>
-                            <USDTcontent>
-                                <Number001>107,967.92 </Number001>
-                                <USDT1>USDT</USDT1>
-                            </USDTcontent>
-                            <Number1>≈ 107,967.92 USD</Number1>
-                        </TopArea>
-                    </BG1>
+                <>  
+                    <Background01>
+                        <BG1>
+                            <BG001>
+                                <Title1>總估價</Title1>
+                                <TouchableOpacity>
+                                    <Img1 source={require("../../assets/wellet/img1.png")} />
+                                </TouchableOpacity>
+                            </BG001>
+                            <TopArea>
+                                <USDTcontent>
+                                    <Number001>107,967.92 </Number001>
+                                    <USDT1>USDT</USDT1>
+                                </USDTcontent>
+                                <Number1>≈ 107,967.92 USD</Number1>
+                            </TopArea>
+                        </BG1>
+                    </Background01>
                 </>
             }
 
