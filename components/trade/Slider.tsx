@@ -67,9 +67,9 @@ const SliderContainer = (props: {
 
     return (
         <View>
-            <View>
+            {/* <View>
                 <Text>{Array.isArray(value) ? value.join(' - ') : value}</Text>
-            </View>
+            </View> */}
             {renderChildren()}
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                 <LeverageText>1X</LeverageText>
