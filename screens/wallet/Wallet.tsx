@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, TextInput, TouchableOpacity, View, Image, ScrollView, SafeAreaView, Button, Alert} from "react-native"
+import { Text, TextInput, TouchableOpacity, View, Image, ScrollView, SafeAreaView, Button, Alert } from "react-native"
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
 import { useState } from "react";
@@ -344,12 +344,22 @@ const RechargeText = styled(Text)`
 
 `;
 
+const BelowArea1 = styled(View)`
+  margin-top:30px;
+  margin-left:25px;
+
+`;
 
 
+const Img2 = styled(Image)`
+  width: 28px;
+  height:28px;
 
+`;
 
-
-
+const Below = styled(View)`
+  margin-top:10px;
+`;
 
 
 
@@ -430,7 +440,7 @@ const WalletScreen = ({
                 </>
             }
             {index === 1 &&
-                <>  
+                <>
                     <Background01>
                         <BG1>
                             <BG001>
@@ -451,48 +461,61 @@ const WalletScreen = ({
                         <ButtonArea>
 
                             <Withdraw>
-                            <WithdrawText>提現</WithdrawText>
+                                <WithdrawText>提現</WithdrawText>
                             </Withdraw>
 
-                        
+
                             <Recharge>
-                            <RechargeText>充值</RechargeText>
+                                <RechargeText>充值</RechargeText>
                             </Recharge>
-                    
+
                         </ButtonArea>
                     </Background01>
+
+                    <BelowArea1>
+                        <Below>
+                            <TouchableOpacity>
+                                <Img2 source={require("../../assets/wellet/p1.png")} />
+                            </TouchableOpacity>
+                            <View>
+                                <Text></Text>
+                                <Text></Text>
+                            </View>
+                        </Below>
+                        <Below>
+                            <TouchableOpacity>
+                            <Img2 source={require("../../assets/wellet/p2.png")} />
+                            </TouchableOpacity>
+                            <View>
+                                <Text></Text>
+                                <Text></Text>
+                            </View>
+                        </Below>
+
+                        <Below>
+                            <TouchableOpacity>
+                            <Img2 source={require("../../assets/wellet/p3.png")} />
+                            </TouchableOpacity>
+                            <View>
+                                <Text></Text>
+                                <Text></Text>
+                            </View>
+                        </Below>
+
+                        <Below>
+                            <TouchableOpacity>
+                            <Img2 source={require("../../assets/wellet/p4.png")} />
+                            </TouchableOpacity>
+                            <View>
+                                <Text></Text>
+                                <Text></Text>
+                            </View>
+                        </Below>
+                    </BelowArea1>
                 </>
             }
 
-            {index === 2 &&
-                <>
-                    <BG2>
-                        <BG003>
-                            <Text>總價值</Text>
-                        </BG003>
-                        <TopArea>
-                            <Number>159,186.24 USDT</Number>
-                            <ValueText>總價值</ValueText>
-                            <Number>≈ 107,967.92 USD</Number>
-                        </TopArea>
-                    </BG2>
-                </>
-            }
 
-            {index === 3 &&
-                <>
-                    <BG3>
-                        <BG003>
-                            <Text>總價值</Text>
-                        </BG003>
-                        <TopArea>
-                            <Number>159,186.24 USDT</Number>
-                            <ValueText>總價值</ValueText>
-                            <Number>≈ 107,967.92 USD</Number>
-                        </TopArea>
-                    </BG3>
-                </>
-            }
 
         </Container>
     )
