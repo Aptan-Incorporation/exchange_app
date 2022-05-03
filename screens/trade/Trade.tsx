@@ -634,7 +634,7 @@ display: flex;
 flex-direction: column;
 justify-content: center;
 align-items: center;
-padding-bottom: 500px;
+padding-bottom: 280px;
 `;
 
 const TradePositionBackgroundImage = styled(Image)`
@@ -735,7 +735,7 @@ display: flex;
 flex-direction: column;
 justify-content: space-between;
 align-items: center;
-padding-bottom: 500px;
+padding-bottom: 280px;
 `;
 
 const TradeCommitBackgroundImage = styled(Image)`
@@ -925,33 +925,8 @@ margin-top: 8px;
 
 
 // Leverage View Modal 槓桿比例
-const LeverageViewModalRowContainer = styled(View)`
-display: flex;
-flex-direction: row;
-align-items: center;
-margin-top: 26px;
-padding: 12px 10px 12px 10px;
-`;
-
-const LeverageViewModalRemoveImage = styled(Image)`
-width: 24px;
-height: 24px;
-`;
-
-const LeverageViewModalAddImage = styled(Image)`
-width: 24px;
-height: 24px;
-`;
-
-const LeverageViewModalLeverageText = styled(Text)`
-font-weight: 600;
-font-size: 14px;
-line-height: 18px;
-color: ${props => props.theme.color.White};
-`;
 
 const LeverageViewModalSliderContainer = styled(View)`
-margin-top: 24px
 `;
 
 const LeverageViewModalNotificationImage = styled(Image)`
@@ -1761,19 +1736,7 @@ const TradeScreen = ({
                         <ModalHedaerTitleText>槓桿比例</ModalHedaerTitleText>
                         <ModalEmptyDiv></ModalEmptyDiv>
                     </ModalHeaderContainer>
-                    <LeverageViewModalRowContainer style={{ backgroundColor: '#333C47', justifyContent: 'space-between' }}>
-                        <TouchableOpacity onPress={() => { }}>
-                            {
-                                leverageViewNum === 1 ?
-                                    <LeverageViewModalRemoveImage source={require("../../assets/images/trade/remove_bottom.png")} /> :
-                                    <LeverageViewModalRemoveImage source={require("../../assets/images/trade/remove.png")} />
-                            }
-                        </TouchableOpacity>
-                        <LeverageViewModalLeverageText>{leverageViewNum}X</LeverageViewModalLeverageText>
-                        <TouchableOpacity onPress={() => { }}>
-                            <LeverageViewModalAddImage source={require("../../assets/images/trade/add.png")} />
-                        </TouchableOpacity>
-                    </LeverageViewModalRowContainer>
+                    
                     <LeverageViewModalSliderContainer>
                         {/* <Slider
                             value={sliderNum}

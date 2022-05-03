@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Text, TouchableOpacity, View, ScrollView, Dimensions, Alert } from "react-native"
+import { Text, TouchableOpacity, View, ScrollView, Dimensions, Image, } from "react-native"
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
 import { useState } from "react";
@@ -7,13 +8,39 @@ import { useState } from "react";
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 
-const Container = styled(View)`
+const Container = styled(View) <{ insets: number }>`
     display: flex;
     flex-direction: column;
     background-color: #18222D;
+    padding-top: ${props => props.insets}px;
     border: none;
-    padding: 0;
 `;
+
+// Main Header Container
+const MainHeaderContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding-top: 16px;
+padding-left: 16px;
+padding-right: 16px;
+`;
+
+const PreviousButton = styled(Image)`
+width: 28px;
+height: 28px;
+`;
+
+const MainHeaderTitleText = styled(Text)`
+font-weight: 600;
+font-size: 16px;
+line-height: 24px;
+color: ${props => props.theme.color.White};
+margin-right: 25px;
+`;
+
+const EmptyDiv = styled(View)``;
 
 // Header Container Style
 
@@ -405,16 +432,25 @@ const HistoryScreen = ({
     navigation
 }: RootStackScreenProps<"HistoryScreen">) => {
 
+    const insets = useSafeAreaInsets();
+
     const [swapView, setSwapView] = useState('HistoryCommit');
 
 
 
     return (
-        <Container>
+        <Container insets={insets.top}>
+            <MainHeaderContainer>
+                <TouchableOpacity onPress={() => { navigation.goBack() }}>
+                    <PreviousButton source={require("../../assets/images/global/previous.png")} />
+                </TouchableOpacity>
+                <MainHeaderTitleText>歷史訂單</MainHeaderTitleText>
+                <EmptyDiv></EmptyDiv>
+            </MainHeaderContainer>
             <HeaderContainer>
                 {
                     swapView === 'HistoryCommit' ?
-                        <TouchableOpacity onPress={() => { setSwapView('HistoryCommit') }} style={{ borderBottomWidth: 2, borderBottomColor: '#6699CC', marginRight: 24 }}>
+                        <TouchableOpacity onPress={() => { setSwapView('HistoryCommit') }} style={{ borderBottomWidth: 2, borderBottomColor: '#6699CC', marginRight: 24, paddingRight: 1, paddingLeft: 1 }}>
                             <SwapButtonClickedText>歷史委託</SwapButtonClickedText>
                         </TouchableOpacity> :
                         <TouchableOpacity onPress={() => { setSwapView('HistoryCommit') }} style={{ marginRight: 24 }}>
@@ -423,7 +459,7 @@ const HistoryScreen = ({
                 }
                 {
                     swapView === 'SubmitRecord' ?
-                        <TouchableOpacity onPress={() => { setSwapView('SubmitRecord') }} style={{ borderBottomWidth: 2, borderBottomColor: '#6699CC', marginRight: 24 }}>
+                        <TouchableOpacity onPress={() => { setSwapView('SubmitRecord') }} style={{ borderBottomWidth: 2, borderBottomColor: '#6699CC', marginRight: 24, paddingRight: 1, paddingLeft: 1 }}>
                             <SwapButtonClickedText>成交紀錄</SwapButtonClickedText>
                         </TouchableOpacity> :
                         <TouchableOpacity onPress={() => { setSwapView('SubmitRecord') }} style={{ marginRight: 24 }}>
@@ -432,7 +468,7 @@ const HistoryScreen = ({
                 }
                 {
                     swapView === 'AssetsRecord' ?
-                        <TouchableOpacity onPress={() => { setSwapView('AssetsRecord') }} style={{ borderBottomWidth: 2, borderBottomColor: '#6699CC', marginRight: 24 }}>
+                        <TouchableOpacity onPress={() => { setSwapView('AssetsRecord') }} style={{ borderBottomWidth: 2, borderBottomColor: '#6699CC', marginRight: 24, paddingRight: 1, paddingLeft: 1 }}>
                             <SwapButtonClickedText>資產紀錄</SwapButtonClickedText>
                         </TouchableOpacity> :
                         <TouchableOpacity onPress={() => { setSwapView('AssetsRecord') }} style={{ marginRight: 24 }}>
@@ -441,7 +477,7 @@ const HistoryScreen = ({
                 }
                 {
                     swapView === 'Position' ?
-                        <TouchableOpacity onPress={() => { setSwapView('Position') }} style={{ borderBottomWidth: 2, borderBottomColor: '#6699CC', marginRight: 24 }}>
+                        <TouchableOpacity onPress={() => { setSwapView('Position') }} style={{ borderBottomWidth: 2, borderBottomColor: '#6699CC', marginRight: 24, paddingRight: 1, paddingLeft: 1 }}>
                             <SwapButtonClickedText>所有持倉</SwapButtonClickedText>
                         </TouchableOpacity> :
                         <TouchableOpacity onPress={() => { setSwapView('Position') }} style={{ marginRight: 24 }}>

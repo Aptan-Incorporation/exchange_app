@@ -24,6 +24,7 @@ const TradeStack = () => {
     <Stack.Navigator>
       <Stack.Group screenOptions={{ headerShown: false }}>
         <Stack.Screen name="TradeScreen" component={TradeScreen} />
+        <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
       </Stack.Group>
       <Stack.Group screenOptions={({ navigation }) => ({
         headerLeft: () => (
@@ -35,17 +36,6 @@ const TradeStack = () => {
         headerStyle: { backgroundColor: '#18222D' },
       })}>
         <Stack.Screen name="StopPositionScreen" component={StopPositionScreen} />
-      </Stack.Group>
-      <Stack.Group screenOptions={({ navigation }) => ({
-        headerLeft: () => (
-          <TouchableOpacity onPress={() => { navigation.goBack() }}>
-            <PreviousButton source={require("../assets/images/global/previous.png")} />
-          </TouchableOpacity>
-        ),
-        title: '歷史訂單',
-        headerStyle: { backgroundColor: '#18222D' },
-      })}>
-        <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );

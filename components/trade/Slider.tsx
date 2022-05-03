@@ -6,7 +6,12 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+const Container = styled(View)`
+display: flex;
+flex-direction: column;
+`;
 
 //Slider 
 const LeverageText = styled(Text)`
@@ -14,6 +19,31 @@ font-weight: 400;
 font-size: 12px;
 line-height: 15px;
 color: ${props => props.theme.color.LightMidGray};
+`;
+
+const LeverageViewModalRowContainer = styled(View)`
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 12px 10px 12px 10px;
+margin-bottom: 24px;
+`;
+
+const LeverageViewModalRemoveImage = styled(Image)`
+width: 24px;
+height: 24px;
+`;
+
+const LeverageViewModalAddImage = styled(Image)`
+width: 24px;
+height: 24px;
+`;
+
+const LeverageViewModalLeverageText = styled(Text)`
+font-weight: 600;
+font-size: 14px;
+line-height: 18px;
+color: ${props => props.theme.color.White};
 `;
 
 const DEFAULT_VALUE = 1;
@@ -58,18 +88,70 @@ const SliderContainer = (props: {
                         value,
                     });
                 }
-
                 return child;
             },
         );
     };
 
+    const [buttonNum, setButtonNum] = useState(0);
+    const [sliderNum, setSliderNum] = useState(1);
+    const [sliderPlusValue, setSliderPlusValue] = useState(1);
+
+    useEffect(() => {
+        if (value == 1) {
+            setSliderNum(1)
+        } else if (value == 2) {
+            setSliderNum(3)
+        } else if (value == 3) {
+            setSliderNum(10)
+        } else if (value == 4) {
+            setSliderNum(30)
+        } else if (value == 5) {
+            setSliderNum(75)
+        } else {
+            setSliderNum(125)
+        };
+
+        // 上面新增一個buttonplusvalue使每次slidernum更新時，button value歸0
+
+
+        if ((buttonNum + sliderNum) > 125){
+            setSliderPlusValue(125)
+        } else if ((buttonNum + sliderNum < 1)) {
+            setSliderPlusValue(1)
+        } else {
+            setSliderPlusValue(buttonNum + sliderNum)
+        }
+    })
+
+
 
     return (
-        <View>
+        <Container>
             {/* <View>
                 <Text>{Array.isArray(value) ? value.join(' - ') : value}</Text>
             </View> */}
+            <LeverageViewModalRowContainer style={{ backgroundColor: '#333C47', justifyContent: 'space-between' }}>
+                <TouchableOpacity onPress={() => {
+                    buttonNum + sliderNum > 1 ?
+                        setButtonNum(buttonNum - 1) :  // 將此處的變數都更改為sliderplusvalue
+                        setButtonNum(0)
+                }}>
+                    {
+                        sliderNum + buttonNum === 1 ?
+                            <LeverageViewModalRemoveImage source={require("../../assets/images/trade/remove_bottom.png")} /> :
+                            <LeverageViewModalRemoveImage source={require("../../assets/images/trade/remove.png")} />
+                    }
+                </TouchableOpacity>
+                <LeverageViewModalLeverageText>{sliderPlusValue}X</LeverageViewModalLeverageText>
+                <TouchableOpacity onPress={() => {
+                    buttonNum + sliderNum < 125 ?
+                        setButtonNum(buttonNum + 1) :
+                        setSliderNum(125)
+                }}>
+                    <LeverageViewModalAddImage source={require("../../assets/images/trade/add.png")} />
+                </TouchableOpacity>
+            </LeverageViewModalRowContainer>
             {renderChildren()}
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                 <LeverageText>1X</LeverageText>
@@ -80,7 +162,7 @@ const SliderContainer = (props: {
                 <LeverageText>125X</LeverageText>
             </View>
 
-        </View>
+        </Container>
     );
 };
 

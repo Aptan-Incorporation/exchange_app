@@ -267,7 +267,7 @@ justify-content: space-between;
 padding-top: 24px;
 padding-right: 16px;
 padding-left: 16px;
-margin-bottom: 500px;
+margin-bottom: 150px;
 `;
 
 const GraphOpenPositionButton = styled(TouchableOpacity)`
