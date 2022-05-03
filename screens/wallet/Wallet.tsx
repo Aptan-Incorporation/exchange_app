@@ -252,6 +252,16 @@ const Number001 = styled(Number)`
 
 `;
 
+const USDT1 = styled(Text)`
+    font-family: 'SF Pro Text';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 16px;
+    /* letter-spacing: 0.004em; */
+    color: #F4F5F6;
+    margin-top:13px;
+`;
 
 const WalletScreen = ({
     navigation
@@ -336,7 +346,7 @@ const WalletScreen = ({
                         <TopArea>
                             <USDTcontent>
                                 <Number001>107,967.92 </Number001>
-                                <USDT>USDT</USDT>
+                                <USDT1>USDT</USDT1>
                             </USDTcontent>
                             <ValueText>總價值</ValueText>
                             <Number>≈ 107,967.92 USD</Number>
