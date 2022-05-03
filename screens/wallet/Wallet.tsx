@@ -18,9 +18,20 @@ const Row = styled(View)`
   padding:10px;
 `;
 
+const TitleTitle = styled(Text)`
+    font-family: 'PingFang TC';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.4px;
+    color: #18222D;
+`;
 
 const Number = styled(Text)`
-    font-family: 'SF Pro Text';
+    /* font-family: 'SF Pro Text'; */
     font-style: normal;
     font-weight: 600;
     font-size: 13px;
@@ -47,7 +58,7 @@ const TopArea = styled(View)`
 
 `;
 
-const BG01 = styled(View)`
+const BG0 = styled(View)`
     /* background: linear-gradient(90deg, #A8C2DC 0%, #6699CC 100%); */
     background: #6699CC; 
     border-radius: 8px;
@@ -57,7 +68,7 @@ const BG01 = styled(View)`
 
 `;
 
-const BG001 = styled(View)`
+const BG000 = styled(View)`
    background: #A8C2DC;
    padding:20px;
    margin-top:-20px;
@@ -89,19 +100,7 @@ const NumArea = styled(View)`
   margin-right:26px;
 `;
 
-const Title = styled(Text)`
-    font-family: 'PingFang TC';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 47px;
-    display: flex;
-    align-items: center;
-    letter-spacing: 0.4px;
-    color: #FFFFFF;
-    margin-left:23px;
 
-`;
 
 const Content = styled(View)`
  display:flex;
@@ -111,7 +110,7 @@ const Content = styled(View)`
 `;
 
 const Num1 = styled(Text)`
-    font-family: 'SF Pro Display';
+    /* font-family: 'SF Pro Display'; */
     font-style: normal;
     font-weight: 700;
     font-size: 20px;
@@ -122,7 +121,7 @@ const Num1 = styled(Text)`
 `;
 
 const Num2 = styled(Text)`
-    font-family: 'SF Pro Text';
+    /* font-family: 'SF Pro Text'; */
     font-style: normal;
     font-weight: 400;
     font-size: 12px;
@@ -133,9 +132,81 @@ const Num2 = styled(Text)`
 
 `;
 
+const BG1 = styled(View)`
+    /* gradient(97.81deg, #333C47 0%, #242D37 100%); */
+    background:#242D37;
+    border-radius: 8px;
+    padding:20px;
+    width:90%;
+    margin-left:20px;
+
+`;
+
+const BG001 = styled(View)`
+   background: #333C47;
+   border-top-left-radius: 8px;
+   border-top-right-radius: 8px;
+   padding:20px;
+   margin-top:-20px;
+   width:112%;
+   margin-left:-20px;
 
 
+`;
 
+const BG2 = styled(View)`
+    
+
+`;
+
+const BG002 = styled(View)`
+    
+
+`;
+
+
+const BG3 = styled(View)`
+    
+
+`;
+
+const BG003 = styled(View)`
+    
+
+`;
+
+const Title = styled(Text)`
+    font-family: 'PingFang TC';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    /* letter-spacing: 0.4px; */
+    color: #FFFFFF;
+    margin-top:15px;
+    margin-left:30px;
+`;
+
+const Title1 = styled(Text)`
+    font-family: 'PingFang TC';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.4px;
+    color: #FFFFFF;
+
+`;
+const Title2 = styled(Text)`
+
+`;
+const Title3 = styled(Text)`
+
+`;
 
 
 const WalletScreen = ({
@@ -171,16 +242,16 @@ const WalletScreen = ({
             </Row>
             {index === 0 &&
                 <>
-                    <BG01>
-                        <BG001>
-                            <Text>總價值</Text>
-                        </BG001>
+                    <BG0>
+                        <BG000>
+                            <TitleTitle>總價值</TitleTitle>
+                        </BG000>
                         <TopArea>
                             <Number>159,186.24 USDT</Number>
                             <ValueText>總價值</ValueText>
                             <Number>≈ 107,967.92 USD</Number>
                         </TopArea>
-                    </BG01>
+                    </BG0>
 
                     <Body>
                         <Content>
@@ -211,46 +282,46 @@ const WalletScreen = ({
             }
             {index === 1 &&
                 <>
-                    <BG01>
+                    <BG1>
                         <BG001>
-                            <Text>總價值</Text>
+                            <Title1>總估價</Title1>
                         </BG001>
                         <TopArea>
                             <Number>159,186.24 USDT</Number>
                             <ValueText>總價值</ValueText>
                             <Number>≈ 107,967.92 USD</Number>
                         </TopArea>
-                    </BG01>
+                    </BG1>
                 </>
             }
 
             {index === 2 &&
                 <>
-                    <BG01>
-                        <BG001>
+                    <BG2>
+                        <BG003>
                             <Text>總價值</Text>
-                        </BG001>
+                        </BG003>
                         <TopArea>
                             <Number>159,186.24 USDT</Number>
                             <ValueText>總價值</ValueText>
                             <Number>≈ 107,967.92 USD</Number>
                         </TopArea>
-                    </BG01>
+                    </BG2>
                 </>
             }
 
             {index === 3 &&
                 <>
-                    <BG01>
-                        <BG001>
+                    <BG3>
+                        <BG003>
                             <Text>總價值</Text>
-                        </BG001>
+                        </BG003>
                         <TopArea>
                             <Number>159,186.24 USDT</Number>
                             <ValueText>總價值</ValueText>
                             <Number>≈ 107,967.92 USD</Number>
                         </TopArea>
-                    </BG01>
+                    </BG3>
                 </>
             }
 
