@@ -288,6 +288,73 @@ const Background01 = styled(View)`
  background: #18222D;
 `;
 
+const ButtonArea = styled(View)`
+    display:flex;
+    justify-content: space-between;
+    flex-direction:row;
+  
+`;
+
+const Withdraw = styled(TouchableOpacity)`
+    border: 1px solid #6699CC;
+    /* box-sizing: border-box; */
+    border-radius: 4px;
+    width:178px;
+    height:38px;
+    align-items: center;
+    display:flex;
+    justify-content: center;
+    margin-left:20px;
+    margin-top:20px;
+
+
+`;
+
+const Recharge = styled(TouchableOpacity)`
+   background: #3D6A97;
+   border-radius: 4px;
+   width:178px;
+   height:38px;
+   margin-top:20px;
+   margin-right:20px;
+
+`;
+
+const WithdrawText = styled(Text)`
+    line-height:38px;
+    font-family: 'PingFang TC';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 22px;
+    text-align: center;
+    /* letter-spacing: 0.012em; */
+    color: #6699CC;
+`;
+
+const RechargeText = styled(Text)`
+    font-family: 'PingFang TC';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 38px;
+    text-align: center;
+    /* letter-spacing: 0.012em; */
+    color: #FFFFFF;
+
+`;
+
+
+
+
+
+
+
+
+
+
+
+
 const WalletScreen = ({
     navigation
 }: RootStackScreenProps<"WalletScreen">) => {
@@ -380,6 +447,19 @@ const WalletScreen = ({
                                 <Number1>≈ 107,967.92 USD</Number1>
                             </TopArea>
                         </BG1>
+
+                        <ButtonArea>
+
+                            <Withdraw>
+                            <WithdrawText>提現</WithdrawText>
+                            </Withdraw>
+
+                        
+                            <Recharge>
+                            <RechargeText>充值</RechargeText>
+                            </Recharge>
+                    
+                        </ButtonArea>
                     </Background01>
                 </>
             }
