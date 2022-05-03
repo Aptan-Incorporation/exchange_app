@@ -31,13 +31,13 @@ const TitleTitle = styled(Text)`
 `;
 
 const Number = styled(Text)`
-    /* font-family: 'SF Pro Text'; */
+   font-family: 'SF Pro Display';
     font-style: normal;
-    font-weight: 600;
-    font-size: 13px;
-    line-height: 16px;
-    /* letter-spacing: 0.004em; */
-    color: #333C47;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 34px;
+    color: #18222D;
+
 
 `;
 
@@ -197,7 +197,7 @@ const Title1 = styled(Text)`
     line-height: 24px;
     display: flex;
     align-items: center;
-    letter-spacing: 0.4px;
+    /* letter-spacing: 0.4px; */
     color: #FFFFFF;
 
 `;
@@ -208,6 +208,40 @@ const Title3 = styled(Text)`
 
 `;
 
+const Number0 = styled(Number)`
+    font-family: 'SF Pro Display';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 34px;
+    color: #18222D;
+`;
+
+const Number01 = styled(Number)`
+    font-family: 'SF Pro Text';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 16px;
+    /* letter-spacing: 0.004em; */
+    color: #333C47;
+`;
+
+const USDT = styled(Text)`
+    font-family: 'SF Pro Text';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 16px;
+    /* letter-spacing: 0.004em; */
+    color: #18222D;
+    margin-top:13px;
+`;
+
+const USDTcontent = styled(View)`
+  display:flex;
+  flex-direction: row;
+`;
 
 const WalletScreen = ({
     navigation
@@ -247,9 +281,12 @@ const WalletScreen = ({
                             <TitleTitle>總價值</TitleTitle>
                         </BG000>
                         <TopArea>
-                            <Number>159,186.24 USDT</Number>
+                            <USDTcontent>
+                                <Number0>159,186.24 </Number0>
+                                <USDT>USDT</USDT>
+                            </USDTcontent>
                             <ValueText>總價值</ValueText>
-                            <Number>≈ 107,967.92 USD</Number>
+                            <Number01>≈ 107,967.92 USD</Number01>
                         </TopArea>
                     </BG0>
 
