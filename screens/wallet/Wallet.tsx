@@ -355,12 +355,22 @@ const Img2 = styled(Image)`
   width: 28px;
   height:28px;
 
+
 `;
 
-const Below = styled(View)`
+const Below1 = styled(View)`
   margin-top:10px;
   display:flex;
   flex-direction: row;
+  justify-content: space-between;
+  margin-right:20px;
+`;
+const Below = styled(View)`
+  margin-top:40px;
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-right:20px;
  
 `;
 
@@ -397,6 +407,7 @@ const Num = styled(Text)`
     text-align: right;
     /* letter-spacing: 0.004em; */
     color: #F4F5F6;
+    /* margin-left:180px; */
 `;
 
 const ImgArea = styled(View)`
@@ -405,6 +416,15 @@ const ImgArea = styled(View)`
   flex-direction:row;
 
 `;
+
+
+
+const TextContener = styled(View)`
+   margin-left:20px; 
+
+`;
+
+
 
 const WalletScreen = ({
     navigation
@@ -514,23 +534,23 @@ const WalletScreen = ({
                     </Background01>
 
                     <BelowArea1>
-                        <Below>
+                        <Below1>
                             <ImgArea>
                                 <Img2 source={require("../../assets/wellet/p1.png")} />
-                                <View>
+                                <TextContener>
                                     <Text1>USDT</Text1>
                                     <Text01>TetherUS</Text01>
-                                </View>
+                                </TextContener>
                             </ImgArea>
                             <Num>56,310.25</Num>
-                        </Below>
+                        </Below1>
                         <Below>
                             <ImgArea>
                                 <Img2 source={require("../../assets/wellet/p2.png")} />
-                                <View>
+                                <TextContener>
                                     <Text1>BTC</Text1>
                                     <Text01>Bitcoin</Text01>
-                                </View>
+                                </TextContener>
                             </ImgArea>
                             <Num>33,720.87</Num>
                         </Below>
@@ -538,10 +558,10 @@ const WalletScreen = ({
                         <Below>
                             <ImgArea>
                                 <Img2 source={require("../../assets/wellet/p3.png")} />
-                                <View>
+                                <TextContener>
                                     <Text1>ETH</Text1>
                                     <Text01>Ethereum</Text01>
-                                </View>
+                                </TextContener>
                             </ImgArea>
                             <Num>25,000.00</Num>
                         </Below>
@@ -549,10 +569,10 @@ const WalletScreen = ({
                         <Below>
                             <ImgArea>
                                 <Img2 source={require("../../assets/wellet/p4.png")} />
-                                <View>
+                                <TextContener>
                                     <Text1>DOGE</Text1>
                                     <Text01>Dogecoin</Text01>
-                                </View>
+                                </TextContener>
                             </ImgArea>
                             <Num>14,000.00</Num>
                         </Below>
