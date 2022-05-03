@@ -4,6 +4,7 @@ import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
 import { useState } from "react";
 
+
 const Container = styled(SafeAreaView)`
     display: flex ;
     flex-direction: column;
@@ -136,6 +137,7 @@ const BG1 = styled(View)`
     border-radius: 8px;
     padding:20px;
     width:90%;
+    height:26%;
     margin-left:20px;
 
 `;
@@ -148,6 +150,9 @@ const BG001 = styled(View)`
    margin-top:-20px;
    width:112%;
    margin-left:-20px;
+   display:flex;
+   flex-direction:row;
+   justify-content:space-between
 
 
 `;
@@ -263,6 +268,21 @@ const USDT1 = styled(Text)`
     margin-top:13px;
 `;
 
+const Number1 = styled(Text)`
+    font-family: 'SF Pro Text';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 16px;
+    /* letter-spacing: 0.004em; */
+    color: #8D97A2;
+`;
+
+const Img1 = styled(Image)`
+  width:16px;
+  height:20px;
+`;
+
 const WalletScreen = ({
     navigation
 }: RootStackScreenProps<"WalletScreen">) => {
@@ -302,7 +322,7 @@ const WalletScreen = ({
                         </BG000>
                         <TopArea>
                             <USDTcontent>
-                             <Number>159,186.24 </Number>
+                                <Number>159,186.24 </Number>
                                 <USDT>USDT</USDT>
                             </USDTcontent>
                             <ValueText>總價值</ValueText>
@@ -342,14 +362,14 @@ const WalletScreen = ({
                     <BG1>
                         <BG001>
                             <Title1>總估價</Title1>
+                            <Img1 source={require("../../assets/wellet/img1.png")} />
                         </BG001>
                         <TopArea>
                             <USDTcontent>
                                 <Number001>107,967.92 </Number001>
                                 <USDT1>USDT</USDT1>
                             </USDTcontent>
-                            <ValueText>總價值</ValueText>
-                            <Number>≈ 107,967.92 USD</Number>
+                            <Number1>≈ 107,967.92 USD</Number1>
                         </TopArea>
                     </BG1>
                 </>
