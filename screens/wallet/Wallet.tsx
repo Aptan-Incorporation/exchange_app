@@ -37,8 +37,6 @@ const Number = styled(Text)`
     font-size: 28px;
     line-height: 34px;
     color: #18222D;
-
-
 `;
 
 const ValueText = styled(Text)`
@@ -225,6 +223,7 @@ const Number01 = styled(Number)`
     line-height: 16px;
     /* letter-spacing: 0.004em; */
     color: #333C47;
+
 `;
 
 const USDT = styled(Text)`
@@ -242,6 +241,17 @@ const USDTcontent = styled(View)`
   display:flex;
   flex-direction: row;
 `;
+
+const Number001 = styled(Number)`
+    font-family: 'SF Pro Display';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 34px;
+    color: #F4F5F6;
+
+`;
+
 
 const WalletScreen = ({
     navigation
@@ -282,7 +292,7 @@ const WalletScreen = ({
                         </BG000>
                         <TopArea>
                             <USDTcontent>
-                                <Number0>159,186.24 </Number0>
+                             <Number>159,186.24 </Number>
                                 <USDT>USDT</USDT>
                             </USDTcontent>
                             <ValueText>總價值</ValueText>
@@ -324,7 +334,10 @@ const WalletScreen = ({
                             <Title1>總估價</Title1>
                         </BG001>
                         <TopArea>
-                            <Number>159,186.24 USDT</Number>
+                            <USDTcontent>
+                                <Number001>107,967.92 </Number001>
+                                <USDT>USDT</USDT>
+                            </USDTcontent>
                             <ValueText>總價值</ValueText>
                             <Number>≈ 107,967.92 USD</Number>
                         </TopArea>
