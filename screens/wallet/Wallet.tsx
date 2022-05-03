@@ -70,12 +70,13 @@ const BG2 = styled(View)`
 
 const Body = styled(View)`
  margin-top:30px;
- margin-left:30px;
+ 
 `;
 
 const NumArea = styled(View)`
   display:flex;
   flex-direction:column;
+  margin-right:26px;
 `;
 
 const Title = styled(Text)`
@@ -83,11 +84,12 @@ const Title = styled(Text)`
     font-style: normal;
     font-weight: 600;
     font-size: 16px;
-    line-height: 24px;
+    line-height: 47px;
     display: flex;
     align-items: center;
     letter-spacing: 0.4px;
     color: #FFFFFF;
+    margin-left:23px;
 
 `;
 
@@ -103,7 +105,7 @@ const Num1 = styled(Text)`
     font-style: normal;
     font-weight: 700;
     font-size: 20px;
-    line-height: 24px;
+    line-height: 40px;
     text-align: right;
     /* letter-spacing: 0.002em; */
     color: #F4F5F6;
@@ -181,18 +183,18 @@ const WalletScreen = ({
 
                         <Content>
                             <Title>合約</Title>
-                            <View>
+                            <NumArea>
                                 <Num1>16,942.65 USDT</Num1>
                                 <Num2>≈ 107,652.28 USD</Num2>
-                            </View>
+                            </NumArea>
                         </Content>
 
                         <Content>
                             <Title>法幣</Title>
-                            <View>
+                            <NumArea>
                                 <Num1>107,652.28 USDT</Num1>
                                 <Num2>≈ 107,652.28 USD</Num2>
-                            </View>
+                            </NumArea>
                         </Content>
                     </Body>
                 </>
