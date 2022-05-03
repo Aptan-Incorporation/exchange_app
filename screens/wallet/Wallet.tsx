@@ -359,11 +359,52 @@ const Img2 = styled(Image)`
 
 const Below = styled(View)`
   margin-top:10px;
+  display:flex;
+  flex-direction: row;
+ 
 `;
 
+const Text1 = styled(Text)`
+    font-family: 'SF Pro Text';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 18px;
+    display: flex;
+    align-items: center;
+    /* letter-spacing: 0.004em; */
+    color: #FFFFFF;
+`;
 
+const Text01 = styled(Text)`
+    font-family: 'SF Pro Text';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    display: flex;
+    align-items: center;
+    /* letter-spacing: 0.004em; */
+    color: #8D97A2;
+`;
 
+const Num = styled(Text)`
+    font-family: 'SF Pro Text';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    text-align: right;
+    /* letter-spacing: 0.004em; */
+    color: #F4F5F6;
+`;
 
+const ImgArea = styled(View)`
+  display:flex;
+  justify-content: space-between;
+  flex-direction:row;
+
+`;
 
 const WalletScreen = ({
     navigation
@@ -474,42 +515,46 @@ const WalletScreen = ({
 
                     <BelowArea1>
                         <Below>
-                            <TouchableOpacity>
+                            <ImgArea>
                                 <Img2 source={require("../../assets/wellet/p1.png")} />
-                            </TouchableOpacity>
-                            <View>
-                                <Text></Text>
-                                <Text></Text>
-                            </View>
+                                <View>
+                                    <Text1>USDT</Text1>
+                                    <Text01>TetherUS</Text01>
+                                </View>
+                            </ImgArea>
+                            <Num>56,310.25</Num>
                         </Below>
                         <Below>
-                            <TouchableOpacity>
-                            <Img2 source={require("../../assets/wellet/p2.png")} />
-                            </TouchableOpacity>
-                            <View>
-                                <Text></Text>
-                                <Text></Text>
-                            </View>
-                        </Below>
-
-                        <Below>
-                            <TouchableOpacity>
-                            <Img2 source={require("../../assets/wellet/p3.png")} />
-                            </TouchableOpacity>
-                            <View>
-                                <Text></Text>
-                                <Text></Text>
-                            </View>
+                            <ImgArea>
+                                <Img2 source={require("../../assets/wellet/p2.png")} />
+                                <View>
+                                    <Text1>BTC</Text1>
+                                    <Text01>Bitcoin</Text01>
+                                </View>
+                            </ImgArea>
+                            <Num>33,720.87</Num>
                         </Below>
 
                         <Below>
-                            <TouchableOpacity>
-                            <Img2 source={require("../../assets/wellet/p4.png")} />
-                            </TouchableOpacity>
-                            <View>
-                                <Text></Text>
-                                <Text></Text>
-                            </View>
+                            <ImgArea>
+                                <Img2 source={require("../../assets/wellet/p3.png")} />
+                                <View>
+                                    <Text1>ETH</Text1>
+                                    <Text01>Ethereum</Text01>
+                                </View>
+                            </ImgArea>
+                            <Num>25,000.00</Num>
+                        </Below>
+
+                        <Below>
+                            <ImgArea>
+                                <Img2 source={require("../../assets/wellet/p4.png")} />
+                                <View>
+                                    <Text1>DOGE</Text1>
+                                    <Text01>Dogecoin</Text01>
+                                </View>
+                            </ImgArea>
+                            <Num>14,000.00</Num>
                         </Below>
                     </BelowArea1>
                 </>
