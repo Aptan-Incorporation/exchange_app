@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, TextInput, TouchableOpacity, View, Image, ScrollView, SafeAreaView, Button } from "react-native"
+import { Text, TextInput, TouchableOpacity, View, Image, ScrollView, SafeAreaView, Button, Alert } from "react-native"
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
 import { useState } from "react";
@@ -20,13 +20,13 @@ const Row = styled(View)`
 
 
 const Number = styled(Text)`
-    /* font-family: 'SF Pro Text';
+    font-family: 'SF Pro Text';
     font-style: normal;
     font-weight: 600;
     font-size: 13px;
     line-height: 16px;
-    letter-spacing: 0.004em;
-    color: #333C47; */
+    /* letter-spacing: 0.004em; */
+    color: #333C47;
 
 `;
 
@@ -48,43 +48,101 @@ const TopArea = styled(View)`
 `;
 
 const BG = styled(View)`
-    background: #6699CC;
+    /* background: linear-gradient(90deg, #A8C2DC 0%, #6699CC 100%); */
+    background: #6699CC; 
     border-radius: 8px;
     padding:20px;
-    width:80%;
-    margin-left:40px;
+    width:90%;
+    margin-left:20px;
 
 `;
 
 const BG2 = styled(View)`
    background: #A8C2DC;
    padding:20px;
-   width:100%;
    margin-top:-20px;
-   width:113.5%;
+   width:112%;
    margin-left:-20px;
-   /* border-radius: 8px 8px 0px 0px; */
-   border-radius: 8px;
+   border-top-left-radius: 8px;
+   border-top-right-radius: 8px;
 
 `;
+
+const Body = styled(View)`
+ margin-top:30px;
+ margin-left:30px;
+`;
+
+const NumArea = styled(View)`
+  display:flex;
+  flex-direction:column;
+`;
+
+const Title = styled(Text)`
+    font-family: 'PingFang TC';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.4px;
+    color: #FFFFFF;
+
+`;
+
+const Content = styled(View)`
+ display:flex;
+ flex-direction: row;
+ justify-content:space-between;
+ margin-top:20px;
+`;
+
+const Num1 = styled(Text)`
+    font-family: 'SF Pro Display';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: right;
+    /* letter-spacing: 0.002em; */
+    color: #F4F5F6;
+`;
+
+const Num2 = styled(Text)`
+    font-family: 'SF Pro Text';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    text-align: right;
+    /* letter-spacing: 0.004em; */
+    color: #8D97A2;
+
+`;
+
+
+
+
+
 
 const WalletScreen = ({
     navigation
 }: RootStackScreenProps<"WalletScreen">) => {
-
+    const [index, setIndex] = useState(0)
     return (
         <Container>
             <Row>
                 <Button
                     title="總覽"
                     color="white"
-                    onPress={() => Alert.alert('Button with adjusted color pressed')}
+                    onPress={() => setIndex(0)}
                 />
 
                 <Button
                     title="現貨"
                     color="white"
-                    onPress={() => Alert.alert('Button with adjusted color pressed')}
+                    onPress={() => setIndex(1)}
                 />
 
                 <Button
@@ -99,17 +157,90 @@ const WalletScreen = ({
                     onPress={() => Alert.alert('Button with adjusted color pressed')}
                 />
             </Row>
-            
-            <BG>
-                <BG2>
-                     <Text>總價值</Text>
-                </BG2>
-                <TopArea>
-                    <Number>159,186.24 USDT</Number>
-                    <ValueText>總價值</ValueText>
-                    <Number>=159,186.24 USD</Number>
-                </TopArea>
-            </BG>
+            {index === 0 &&
+                <>
+                    <BG>
+                        <BG2>
+                            <Text>總價值</Text>
+                        </BG2>
+                        <TopArea>
+                            <Number>159,186.24 USDT</Number>
+                            <ValueText>總價值</ValueText>
+                            <Number>≈ 107,967.92 USD</Number>
+                        </TopArea>
+                    </BG>
+
+                    <Body>
+                        <Content>
+                            <Title>現貨</Title>
+                            <NumArea>
+                                <Num1>107,967.92 USDT</Num1>
+                                <Num2>≈ 16,942.65 USD</Num2>
+                            </NumArea>
+                        </Content>
+
+                        <Content>
+                            <Title>合約</Title>
+                            <View>
+                                <Num1>16,942.65 USDT</Num1>
+                                <Num2>≈ 107,652.28 USD</Num2>
+                            </View>
+                        </Content>
+
+                        <Content>
+                            <Title>法幣</Title>
+                            <View>
+                                <Num1>107,652.28 USDT</Num1>
+                                <Num2>≈ 107,652.28 USD</Num2>
+                            </View>
+                        </Content>
+                    </Body>
+                </>
+            }
+            {index === 1 &&
+                <>
+                    <BG>
+                        <BG2>
+                            <Text>總價值</Text>
+                        </BG2>
+                        <TopArea>
+                            <Number>159,186.24 USDT</Number>
+                            <ValueText>總價值</ValueText>
+                            <Number>≈ 107,967.92 USD</Number>
+                        </TopArea>
+                    </BG>
+                </>
+            }
+
+            {index === 2 &&
+                <>
+                    <BG>
+                        <BG2>
+                            <Text>總價值</Text>
+                        </BG2>
+                        <TopArea>
+                            <Number>159,186.24 USDT</Number>
+                            <ValueText>總價值</ValueText>
+                            <Number>≈ 107,967.92 USD</Number>
+                        </TopArea>
+                    </BG>
+                </>
+            }
+
+            {index === 3 &&
+                <>
+                    <BG>
+                        <BG2>
+                            <Text>總價值</Text>
+                        </BG2>
+                        <TopArea>
+                            <Number>159,186.24 USDT</Number>
+                            <ValueText>總價值</ValueText>
+                            <Number>≈ 107,967.92 USD</Number>
+                        </TopArea>
+                    </BG>
+                </>
+            }
 
         </Container>
     )
