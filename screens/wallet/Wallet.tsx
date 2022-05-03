@@ -47,7 +47,7 @@ const TopArea = styled(View)`
 
 `;
 
-const BG = styled(View)`
+const BG01 = styled(View)`
     /* background: linear-gradient(90deg, #A8C2DC 0%, #6699CC 100%); */
     background: #6699CC; 
     border-radius: 8px;
@@ -57,7 +57,7 @@ const BG = styled(View)`
 
 `;
 
-const BG2 = styled(View)`
+const BG001 = styled(View)`
    background: #A8C2DC;
    padding:20px;
    margin-top:-20px;
@@ -65,6 +65,16 @@ const BG2 = styled(View)`
    margin-left:-20px;
    border-top-left-radius: 8px;
    border-top-right-radius: 8px;
+
+`;
+
+const BG02 = styled(View)`
+    /* background: linear-gradient(90deg, #A8C2DC 0%, #6699CC 100%); */
+    background: #6699CC; 
+    border-radius: 8px;
+    padding:20px;
+    width:90%;
+    margin-left:20px;
 
 `;
 
@@ -161,16 +171,16 @@ const WalletScreen = ({
             </Row>
             {index === 0 &&
                 <>
-                    <BG>
-                        <BG2>
+                    <BG01>
+                        <BG001>
                             <Text>總價值</Text>
-                        </BG2>
+                        </BG001>
                         <TopArea>
                             <Number>159,186.24 USDT</Number>
                             <ValueText>總價值</ValueText>
                             <Number>≈ 107,967.92 USD</Number>
                         </TopArea>
-                    </BG>
+                    </BG01>
 
                     <Body>
                         <Content>
@@ -201,46 +211,46 @@ const WalletScreen = ({
             }
             {index === 1 &&
                 <>
-                    <BG>
-                        <BG2>
+                    <BG01>
+                        <BG001>
                             <Text>總價值</Text>
-                        </BG2>
+                        </BG001>
                         <TopArea>
                             <Number>159,186.24 USDT</Number>
                             <ValueText>總價值</ValueText>
                             <Number>≈ 107,967.92 USD</Number>
                         </TopArea>
-                    </BG>
+                    </BG01>
                 </>
             }
 
             {index === 2 &&
                 <>
-                    <BG>
-                        <BG2>
+                    <BG01>
+                        <BG001>
                             <Text>總價值</Text>
-                        </BG2>
+                        </BG001>
                         <TopArea>
                             <Number>159,186.24 USDT</Number>
                             <ValueText>總價值</ValueText>
                             <Number>≈ 107,967.92 USD</Number>
                         </TopArea>
-                    </BG>
+                    </BG01>
                 </>
             }
 
             {index === 3 &&
                 <>
-                    <BG>
-                        <BG2>
+                    <BG01>
+                        <BG001>
                             <Text>總價值</Text>
-                        </BG2>
+                        </BG001>
                         <TopArea>
                             <Number>159,186.24 USDT</Number>
                             <ValueText>總價值</ValueText>
                             <Number>≈ 107,967.92 USD</Number>
                         </TopArea>
-                    </BG>
+                    </BG01>
                 </>
             }
 
