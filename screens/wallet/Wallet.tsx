@@ -148,13 +148,13 @@ const WalletScreen = ({
                 <Button
                     title="合約"
                     color="white"
-                    onPress={() => Alert.alert('Button with adjusted color pressed')}
+                    onPress={() => setIndex(2)}
                 />
 
                 <Button
                     title="法幣"
                     color="white"
-                    onPress={() => Alert.alert('Button with adjusted color pressed')}
+                    onPress={() => setIndex(3)}
                 />
             </Row>
             {index === 0 &&
