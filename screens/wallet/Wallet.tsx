@@ -43,7 +43,7 @@ const ValueText = styled(Text)`
 `;
 
 const TopArea = styled(View)`
-
+  margin-top:20px;
 
 `;
 
