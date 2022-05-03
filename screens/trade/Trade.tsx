@@ -19,6 +19,7 @@ const Container = styled(View) <{ insets: number }>`
     align-items: center;
     width: 100%;
     padding-top: ${props => props.insets}px;
+    background-color: #18222D;
 `;
 
 
@@ -28,7 +29,7 @@ display: flex;
 flex-direction: row;
 justify-content: center;
 align-items: center;
-padding-top: 16px;
+padding-top: 10px;
 padding-left: 16px;
 padding-right: 16px;
 padding-bottom: 11px;
