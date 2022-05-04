@@ -1173,6 +1173,7 @@ const TradeScreen = ({
     const [buyPrice, setBuyPrice] = useState('');
     const [swapCurrency, setSwapCurrency] = useState(0);
     const [buyNumber, setBuyNumber] = useState("");
+    const [buyNumberSliderNumber, setBuyNumberSliderNumber] = useState("");
     const [sliderNum, setSliderNum] = useState(0);
 
     const toggleBuyTypeModal = () => {
@@ -1253,10 +1254,17 @@ const TradeScreen = ({
     });
 
     const RenderAboveThumbComponent = (() => {
+
+        let PercentageNum = Math.round(sliderNum / parseFloat(MyPosition.BTC) * 100);
+
         return (
             <View>
-                <RenderAboveThumbImage source={require("../../assets/images/trade/sliderFloat.png")} />
-                {<RenderAboveThumbText>{sliderNum}%</RenderAboveThumbText>}
+                { PercentageNum != 0 &&
+                    <View>
+                        <RenderAboveThumbImage source={require("../../assets/images/trade/sliderFloat.png")} />
+                        <RenderAboveThumbText>{PercentageNum}%</RenderAboveThumbText>
+                    </View>
+                }
             </View>
         );
     });
@@ -1453,10 +1461,9 @@ const TradeScreen = ({
                                         <TradeFunctionNumberInputContainer>
                                             <TextInput
                                                 placeholder={"數量"}
-                                                value={buyNumber}
+                                                value={buyNumberSliderNumber}
                                                 onChangeText={buyNumber => setBuyNumber(buyNumber)}
                                                 placeholderTextColor={'#8D97A2'}
-                                                autoCorrect={false}
                                                 keyboardType={"decimal-pad"}
                                                 style={{ backgroundColor: '#242D37', width: '70%', height: 36, color: '#F4F5F6', borderTopLeftRadius: 4, borderBottomLeftRadius: 4, paddingLeft: 12 }}
                                             />
@@ -1474,6 +1481,9 @@ const TradeScreen = ({
                                             trackMarks={[0, 25, 50, 75, 100]}
                                             sliderValue={[sliderNum]}
                                             onValueChangeSliderNum={setSliderNum}
+                                            positionNum={MyPosition.BTC}
+                                            buyNumber={'20'}
+                                            onValueChangeBuyNumber={setBuyNumber}
                                         >
                                             <Slider
                                                 renderAboveThumbComponent={RenderAboveThumbComponent}
@@ -1483,7 +1493,7 @@ const TradeScreen = ({
                                                 containerStyle={{ alignContent: 'space-between', justifyContent: 'center' }}
                                                 trackStyle={{ justifyContent: "space-between", alignContent: 'space-between' }}
                                                 maximumValue={100}
-                                                minimumValue={1}
+                                                minimumValue={0}
                                                 step={1}
                                             />
                                         </SmallSliderContainer>

@@ -8,16 +8,19 @@ display: flex;
 flex-direction: column;
 `;
 
-const DEFAULT_VALUE = 1;
+const DEFAULT_VALUE = 0;
 
 
 const SliderContainer = (props: {
     children: React.ReactElement;
     sliderValue?: Array<number>;
     trackMarks?: Array<number>;
+    positionNum: string;
+    buyNumber: string;
     onValueChangeSliderNum: React.Dispatch<React.SetStateAction<number>>;
+    onValueChangeBuyNumber: React.Dispatch<React.SetStateAction<string>>;
 }) => {
-    const { sliderValue, trackMarks, onValueChangeSliderNum } = props;
+    const { sliderValue, trackMarks, positionNum, buyNumber, onValueChangeSliderNum, onValueChangeBuyNumber } = props;
     const [value, setValue] = React.useState(
         sliderValue ? sliderValue : DEFAULT_VALUE,
     );
@@ -57,9 +60,12 @@ const SliderContainer = (props: {
     };
 
     let num = parseInt(value.toString());
+    
 
     const returnValue = () => {
-        onValueChangeSliderNum(num);
+        let newPositionNum = parseFloat(((parseFloat(positionNum) / 100) * num).toFixed(3));
+        onValueChangeSliderNum(newPositionNum);
+        onValueChangeBuyNumber(newPositionNum.toString());
     };
 
 
