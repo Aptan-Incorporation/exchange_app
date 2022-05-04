@@ -1,12 +1,7 @@
 import * as React from "react";
-import { Text, TextInput, TouchableOpacity, View, Image, ScrollView, Dimensions } from "react-native"
+import { Text, TouchableOpacity, View, Image } from "react-native"
 import { Slider } from '@miblanchard/react-native-slider';
-import Modal from "react-native-modal";
-import { LinearGradient } from 'expo-linear-gradient';
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import styled from "styled-components"
-import { RootStackScreenProps } from "../../types";
-import { useState, useEffect } from "react";
 
 const Container = styled(View)`
 display: flex;
@@ -46,6 +41,47 @@ line-height: 18px;
 color: ${props => props.theme.color.White};
 `;
 
+const LeverageViewModalNotificationImage = styled(Image)`
+width: 24px;
+height: 24px;
+`;
+
+const LeverageViewModalNotificationText = styled(Text)`
+font-weight: 500;
+font-size: 13px;
+line-height: 20px;
+color: ${props => props.theme.color.SecondaryLight};
+`;
+
+const LeverageViewModalDetailRowContainer = styled(View)`
+display: flex;
+flex-direction: row;
+align-items: center;
+`;
+
+const LeverageViewModalDetailText = styled(Text)`
+font-weight: 500;
+font-size: 13px;
+line-height: 20px;
+color: ${props => props.theme.color.LightMidGray};
+`;
+
+const ModalConfirmButton = styled(TouchableOpacity)`
+height: 44px;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+background-color: ${props => props.theme.color.PrimaryDark};
+margin-top: 32px;
+`;
+
+const ModalConfirmButtonText = styled(Text)`
+font-weight: 500;
+font-size: 14px;
+line-height: 22px;
+color: ${props => props.theme.color.White};
+`;
+
 const DEFAULT_VALUE = 1;
 
 
@@ -53,9 +89,11 @@ const SliderContainer = (props: {
     children: React.ReactElement;
     sliderValue?: Array<number>;
     trackMarks?: Array<number>;
-    onValueChangeSliderNum?: React.Dispatch<React.SetStateAction<number>>;
+    positionNum?: String;
+    onValueChangeSliderNum: React.Dispatch<React.SetStateAction<number>>;
+    isModalVisable: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-    const { sliderValue, trackMarks, onValueChangeSliderNum } = props;
+    const { sliderValue, trackMarks, positionNum, onValueChangeSliderNum, isModalVisable } = props;
     const [value, setValue] = React.useState(
         sliderValue ? sliderValue : DEFAULT_VALUE,
     );
@@ -93,37 +131,12 @@ const SliderContainer = (props: {
         );
     };
 
-    const [buttonNum, setButtonNum] = useState(0);
-    const [sliderNum, setSliderNum] = useState(1);
-    const [sliderPlusValue, setSliderPlusValue] = useState(1);
+    let num = parseInt(value.toString());
 
-    useEffect(() => {
-        if (value == 1) {
-            setSliderNum(1)
-        } else if (value == 2) {
-            setSliderNum(3)
-        } else if (value == 3) {
-            setSliderNum(10)
-        } else if (value == 4) {
-            setSliderNum(30)
-        } else if (value == 5) {
-            setSliderNum(75)
-        } else {
-            setSliderNum(125)
-        };
-
-        // 上面新增一個buttonplusvalue使每次slidernum更新時，button value歸0
-
-
-        if ((buttonNum + sliderNum) > 125){
-            setSliderPlusValue(125)
-        } else if ((buttonNum + sliderNum < 1)) {
-            setSliderPlusValue(1)
-        } else {
-            setSliderPlusValue(buttonNum + sliderNum)
-        }
-    })
-
+    const sendDataLeverageModal = () => {
+        isModalVisable(false)
+        onValueChangeSliderNum(num)
+    }
 
 
     return (
@@ -133,21 +146,21 @@ const SliderContainer = (props: {
             </View> */}
             <LeverageViewModalRowContainer style={{ backgroundColor: '#333C47', justifyContent: 'space-between' }}>
                 <TouchableOpacity onPress={() => {
-                    buttonNum + sliderNum > 1 ?
-                        setButtonNum(buttonNum - 1) :  // 將此處的變數都更改為sliderplusvalue
-                        setButtonNum(0)
+                    value > 1 ?
+                        setValue(num - 1) :
+                        setValue(1)
                 }}>
                     {
-                        sliderNum + buttonNum === 1 ?
+                        value == 1 ?
                             <LeverageViewModalRemoveImage source={require("../../assets/images/trade/remove_bottom.png")} /> :
                             <LeverageViewModalRemoveImage source={require("../../assets/images/trade/remove.png")} />
                     }
                 </TouchableOpacity>
-                <LeverageViewModalLeverageText>{sliderPlusValue}X</LeverageViewModalLeverageText>
+                <LeverageViewModalLeverageText>{value}X</LeverageViewModalLeverageText>
                 <TouchableOpacity onPress={() => {
-                    buttonNum + sliderNum < 125 ?
-                        setButtonNum(buttonNum + 1) :
-                        setSliderNum(125)
+                    value < 125 ?
+                        setValue(num + 1) :
+                        setValue(125)
                 }}>
                     <LeverageViewModalAddImage source={require("../../assets/images/trade/add.png")} />
                 </TouchableOpacity>
@@ -155,13 +168,28 @@ const SliderContainer = (props: {
             {renderChildren()}
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                 <LeverageText>1X</LeverageText>
-                <LeverageText style={{ paddingLeft: 5 }}>3X</LeverageText>
-                <LeverageText style={{ paddingLeft: 5 }}>10X</LeverageText>
-                <LeverageText style={{ paddingLeft: 3 }}>30X</LeverageText>
-                <LeverageText>75X</LeverageText>
+                <LeverageText style={{ paddingLeft: 5 }}>25X</LeverageText>
+                <LeverageText style={{ paddingLeft: 5 }}>50X</LeverageText>
+                <LeverageText style={{ paddingLeft: 3 }}>75X</LeverageText>
+                <LeverageText>100X</LeverageText>
                 <LeverageText>125X</LeverageText>
             </View>
-
+            <LeverageViewModalDetailRowContainer style={{ paddingTop: 26 }}>
+                <LeverageViewModalNotificationImage source={require("../../assets/images/trade/notification.png")} />
+                <LeverageViewModalNotificationText style={{ paddingLeft: 8 }}>槓桿比例愈高，發生強制平倉的風險愈高。</LeverageViewModalNotificationText>
+            </LeverageViewModalDetailRowContainer>
+            <LeverageViewModalDetailRowContainer style={{ paddingTop: 10 }}>
+                <LeverageViewModalDetailText>調整槓桿後，您的 BTC 永續合約資金將變化為：</LeverageViewModalDetailText>
+            </LeverageViewModalDetailRowContainer>
+            <LeverageViewModalDetailRowContainer>
+                <LeverageViewModalDetailText>{positionNum} BTC 持倉擔保金額</LeverageViewModalDetailText>
+            </LeverageViewModalDetailRowContainer>
+            <LeverageViewModalDetailRowContainer>
+                <LeverageViewModalDetailText>{positionNum} BTC 可用擔保金額</LeverageViewModalDetailText>
+            </LeverageViewModalDetailRowContainer>
+            <ModalConfirmButton onPress={() => { sendDataLeverageModal() }}>
+                <ModalConfirmButtonText>確認</ModalConfirmButtonText>
+            </ModalConfirmButton>
         </Container>
     );
 };

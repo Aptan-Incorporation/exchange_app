@@ -9,6 +9,7 @@ import { RootStackScreenProps } from "../../types";
 import { useState } from "react";
 import GraphPage from "../../components/trade/GraphPage"
 import SliderContainer from "../../components/trade/Slider";
+import SmallSliderContainer from "../../components/trade/SmallSlider";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -929,30 +930,7 @@ margin-top: 8px;
 const LeverageViewModalSliderContainer = styled(View)`
 `;
 
-const LeverageViewModalNotificationImage = styled(Image)`
-width: 24px;
-height: 24px;
-`;
 
-const LeverageViewModalNotificationText = styled(Text)`
-font-weight: 500;
-font-size: 13px;
-line-height: 20px;
-color: ${props => props.theme.color.SecondaryLight};
-`;
-
-const LeverageViewModalDetailRowContainer = styled(View)`
-display: flex;
-flex-direction: row;
-align-items: center;
-`;
-
-const LeverageViewModalDetailText = styled(Text)`
-font-weight: 500;
-font-size: 13px;
-line-height: 20px;
-color: ${props => props.theme.color.LightMidGray};
-`;
 
 // Buy Type Modal 下單類型
 const BuyTypeTitleContainer = styled(View)`
@@ -1070,8 +1048,6 @@ height: 1px;
 background-color: ${props => props.theme.color.DarkGray};
 margin-top: 24px;
 `;
-
-
 
 
 // Trade Page Array
@@ -1209,7 +1185,12 @@ const TradeScreen = ({
 
     const toggleLeverageViewModal = () => {
         setIsLeverageViewVisible(!isLeverageViewVisible);
+    };
+
+    const LeverageChangeModal = (data: boolean) => {
+        setIsLeverageViewVisible(data);
     }
+
 
     const buyTypeChange = () => {
         if (buyType === 'Limit') {
@@ -1253,12 +1234,34 @@ const TradeScreen = ({
 
     // Slider Style
     const ThumbImage = styled(Image)`width: 20px; height: 20px`;
+    const RenderAboveThumbImage = styled(Image)` position: relative; width: 32px; height: 22px; alignItems: center; justifyContent: center; right: 6;`;
+    const RenderAboveThumbText = styled(Text)`
+    fontSize: 10px;
+    fontWeight: 400;
+    position: absolute;
+    textAlign: center;
+    right: 8px;
+    top: 2.5px;
+    `;
 
     const CustomThumb = (() => {
         return (
-            <ThumbImage source={require("../../assets/images/trade/indicator.png")} />
+            <View>
+                <ThumbImage source={require("../../assets/images/trade/indicator.png")} />
+            </View>
         );
     });
+
+    const RenderAboveThumbComponent = (() => {
+        return (
+            <View>
+                <RenderAboveThumbImage source={require("../../assets/images/trade/sliderFloat.png")} />
+                {<RenderAboveThumbText>{sliderNum}%</RenderAboveThumbText>}
+            </View>
+        );
+    });
+
+
 
 
     // Position Detail 
@@ -1466,23 +1469,24 @@ const TradeScreen = ({
                                                         <TradeFunctionNumberInputRightText>USDT</TradeFunctionNumberInputRightText>
                                                     </TradeFunctionNumberInputRightContainer>
                                             }
-
                                         </TradeFunctionNumberInputContainer>
-                                        <Slider
-                                            value={sliderNum}
-                                            onValueChange={() => setSliderNum(sliderNum)}
-                                            minimumValue={0}
-                                            maximumValue={100}
-                                            minimumTrackTintColor={'#F4F5F6'}
-                                            maximumTrackTintColor={'#333C47'}
-                                            containerStyle={{ alignContent: 'center', justifyContent: 'center' }}
-                                            thumbImage={require("../../assets/images/trade/indicator.png")}
-                                            thumbStyle={{ justifyContent: 'center' }}
-                                            thumbTouchSize={{ width: 20, height: 20 }}
-                                            trackClickable={true}
-                                            thumbTintColor={'#F4F5F6'}
-                                            trackMarks={[25, 50, 75]}
-                                        />
+                                        <SmallSliderContainer
+                                            trackMarks={[0, 25, 50, 75, 100]}
+                                            sliderValue={[sliderNum]}
+                                            onValueChangeSliderNum={setSliderNum}
+                                        >
+                                            <Slider
+                                                renderAboveThumbComponent={RenderAboveThumbComponent}
+                                                renderThumbComponent={CustomThumb}
+                                                minimumTrackTintColor={'#F4F5F6'}
+                                                maximumTrackTintColor={'#333C47'}
+                                                containerStyle={{ alignContent: 'space-between', justifyContent: 'center' }}
+                                                trackStyle={{ justifyContent: "space-between", alignContent: 'space-between' }}
+                                                maximumValue={100}
+                                                minimumValue={1}
+                                                step={1}
+                                            />
+                                        </SmallSliderContainer>
                                         <TradeFunctionPositionViewContainer>
                                             <TradeFunctionPositionViewTitleText>可用</TradeFunctionPositionViewTitleText>
                                             <TradeFunctionPositionViewValueText>{MyPosition.USDT} USDT</TradeFunctionPositionViewValueText>
@@ -1736,7 +1740,7 @@ const TradeScreen = ({
                         <ModalHedaerTitleText>槓桿比例</ModalHedaerTitleText>
                         <ModalEmptyDiv></ModalEmptyDiv>
                     </ModalHeaderContainer>
-                    
+
                     <LeverageViewModalSliderContainer>
                         {/* <Slider
                             value={sliderNum}
@@ -1752,12 +1756,14 @@ const TradeScreen = ({
                             trackClickable={true}
                             thumbTintColor={'#F4F5F6'}
                             trackMarks={[1, 2, 3, 4, 5, 6]}
-
                             step={1}
                         /> */}
                         <SliderContainer
-                            trackMarks={[1, 2, 3, 4, 5, 6]}
-                            onValueChangeSliderNum={setSliderNum}
+                            trackMarks={[1, 25, 50, 75, 100, 125]}
+                            sliderValue={[leverageViewNum]}
+                            onValueChangeSliderNum={setLeverageViewNum}
+                            isModalVisable={setIsLeverageViewVisible}
+                            positionNum={MyPosition.BTC}
                         >
                             <Slider
 
@@ -1766,28 +1772,13 @@ const TradeScreen = ({
                                 maximumTrackTintColor={'#333C47'}
                                 containerStyle={{ alignContent: 'space-between', justifyContent: 'center' }}
                                 trackStyle={{ justifyContent: "space-between", alignContent: 'space-between' }}
-                                maximumValue={6}
+                                maximumValue={125}
                                 minimumValue={1}
                                 step={1}
                             />
                         </SliderContainer>
                         {/* <ModalHedaerTitleText>{sliderNum}</ModalHedaerTitleText> */}
-                        <LeverageViewModalDetailRowContainer style={{ paddingTop: 26 }}>
-                            <LeverageViewModalNotificationImage source={require("../../assets/images/trade/notification.png")} />
-                            <LeverageViewModalNotificationText style={{ paddingLeft: 8 }}>槓桿比例愈高，發生強制平倉的風險愈高。</LeverageViewModalNotificationText>
-                        </LeverageViewModalDetailRowContainer>
-                        <LeverageViewModalDetailRowContainer style={{ paddingTop: 10 }}>
-                            <LeverageViewModalDetailText>調整槓桿後，您的 BTC 永續合約資金將變化為：</LeverageViewModalDetailText>
-                        </LeverageViewModalDetailRowContainer>
-                        <LeverageViewModalDetailRowContainer>
-                            <LeverageViewModalDetailText>{MyPosition.BTC} BTC 持倉擔保金額</LeverageViewModalDetailText>
-                        </LeverageViewModalDetailRowContainer>
-                        <LeverageViewModalDetailRowContainer>
-                            <LeverageViewModalDetailText>{MyPosition.BTC} BTC 可用擔保金額</LeverageViewModalDetailText>
-                        </LeverageViewModalDetailRowContainer>
-                        <ModalConfirmButton onPress={() => { setIsLeverageViewVisible(false) }}>
-                            <ModalConfirmButtonText>確認</ModalConfirmButtonText>
-                        </ModalConfirmButton>
+
                     </LeverageViewModalSliderContainer>
                 </View>
             </Modal>
