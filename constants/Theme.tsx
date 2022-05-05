@@ -8,6 +8,9 @@ export const Theme = {
     ExtraLightGray: "#F4F5F6",
     SecondaryLight:"#FB4C51",
     DarkRed:"#A60008",
-    Secondary:"#2FB264"
+    Secondary:"#2FB264",
+    White: "#FFFFFF",
+    Primary: "#6699CC",
+    PrimaryDark: "#3D6A97"
   },
 };
