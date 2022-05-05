@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GraphPage from "../../components/trade/GraphPage"
 import SliderContainer from "../../components/trade/Slider";
 import SmallSliderContainer from "../../components/trade/SmallSlider";
@@ -463,30 +463,6 @@ font-weight: 400;
 font-size: 12px;
 line-height: 18px;
 color: ${props => props.theme.color.White};
-`;
-
-const TradeFunctionNumberInputContainer = styled(View)`
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-align-items: center;
-`;
-
-const TradeFunctionNumberInputRightContainer = styled(View)`
-height: 36px;
-width: 30%;
-border-top-right-radius: 4px;
-border-bottom-right-radius: 4px;
-background-color: #242D37;
-justify-content: center;
-align-items: center;
-`;
-
-const TradeFunctionNumberInputRightText = styled(Text)`
-font-weight: 400;
-font-size: 12px;
-line-height: 15px;
-color: ${props => props.theme.color.ExtraLightGray};
 `;
 
 const TradeFunctionPositionViewContainer = styled(View)`
@@ -1172,8 +1148,6 @@ const TradeScreen = ({
     const [buyType, setBuyType] = useState('Limit');
     const [buyPrice, setBuyPrice] = useState('');
     const [swapCurrency, setSwapCurrency] = useState(0);
-    const [buyNumber, setBuyNumber] = useState("");
-    const [buyNumberSliderNumber, setBuyNumberSliderNumber] = useState("");
     const [sliderNum, setSliderNum] = useState(0);
 
     const toggleBuyTypeModal = () => {
@@ -1187,10 +1161,6 @@ const TradeScreen = ({
     const toggleLeverageViewModal = () => {
         setIsLeverageViewVisible(!isLeverageViewVisible);
     };
-
-    const LeverageChangeModal = (data: boolean) => {
-        setIsLeverageViewVisible(data);
-    }
 
 
     const buyTypeChange = () => {
@@ -1259,7 +1229,7 @@ const TradeScreen = ({
 
         return (
             <View>
-                { PercentageNum != 0 &&
+                {(PercentageNum != 0) && (!isNaN(PercentageNum)) &&
                     <View>
                         <RenderAboveThumbImage source={require("../../assets/images/trade/sliderFloat.png")} />
                         <RenderAboveThumbText>{PercentageNum}%</RenderAboveThumbText>
@@ -1268,9 +1238,6 @@ const TradeScreen = ({
             </View>
         );
     });
-
-
-
 
     // Position Detail 
     const [swapPositionView, setSwapPositionView] = useState(0);
@@ -1458,32 +1425,12 @@ const TradeScreen = ({
                                                     </TradeFunctionRightCurrencyButtonClicked>
                                                 </TradeFunctionCurrencyButtonContainer>
                                         }
-                                        <TradeFunctionNumberInputContainer>
-                                            <TextInput
-                                                placeholder={"數量"}
-                                                value={buyNumberSliderNumber}
-                                                onChangeText={buyNumber => setBuyNumber(buyNumber)}
-                                                placeholderTextColor={'#8D97A2'}
-                                                keyboardType={"decimal-pad"}
-                                                style={{ backgroundColor: '#242D37', width: '70%', height: 36, color: '#F4F5F6', borderTopLeftRadius: 4, borderBottomLeftRadius: 4, paddingLeft: 12 }}
-                                            />
-                                            {
-                                                swapCurrency === 0 ?
-                                                    <TradeFunctionNumberInputRightContainer>
-                                                        <TradeFunctionNumberInputRightText>BTC</TradeFunctionNumberInputRightText>
-                                                    </TradeFunctionNumberInputRightContainer> :
-                                                    <TradeFunctionNumberInputRightContainer>
-                                                        <TradeFunctionNumberInputRightText>USDT</TradeFunctionNumberInputRightText>
-                                                    </TradeFunctionNumberInputRightContainer>
-                                            }
-                                        </TradeFunctionNumberInputContainer>
                                         <SmallSliderContainer
                                             trackMarks={[0, 25, 50, 75, 100]}
-                                            sliderValue={[sliderNum]}
-                                            onValueChangeSliderNum={setSliderNum}
+                                            sliderValue={[0]}
                                             positionNum={MyPosition.BTC}
-                                            buyNumber={'20'}
-                                            onValueChangeBuyNumber={setBuyNumber}
+                                            onChangeSliderValue={setSliderNum}
+                                            swapCurrency={swapCurrency}
                                         >
                                             <Slider
                                                 renderAboveThumbComponent={RenderAboveThumbComponent}
