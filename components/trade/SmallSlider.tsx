@@ -14,6 +14,7 @@ display: flex;
 flex-direction: row;
 justify-content: space-between;
 align-items: center;
+padding-bottom: 18px;
 `;
 
 const TradeFunctionNumberInputRightContainer = styled(View)`
@@ -74,7 +75,7 @@ const SliderContainer = (props: {
                 if (!!child && child.type === Slider) {
                     return React.cloneElement(child, {
                         onValueChange: setValue,
-                        onSlidingComplete: () => { setNewInputNum(positionString2) },
+                        onSlidingComplete: () => { setNewInputNum(positionString) },
                         renderTrackMarkComponent,
                         trackMarks,
                         value,
@@ -82,13 +83,12 @@ const SliderContainer = (props: {
                 }
                 return child;
             },
-        )
-            ;
+        );
     };
 
     let num = parseInt(value.toString());
-    let positionNum2 = parseFloat(((parseFloat(positionNum) / 100) * num).toFixed(3));
-    let positionString2 = (parseFloat(((parseFloat(positionNum) / 100) * num).toFixed(3))).toString();
+    //let positionNum = parseFloat(((parseFloat(positionNum) / 100) * num).toFixed(3));
+    let positionString = (parseFloat(((parseFloat(positionNum) / 100) * num).toFixed(3))).toString();
     const [newInputNum, setNewInputNum] = React.useState("0");
 
 
@@ -96,21 +96,12 @@ const SliderContainer = (props: {
         onChangeSliderValue(parseFloat(newInputNum))
     });
 
-
-
-
-
     useEffect(() => {
         if (parseFloat(newInputNum) > parseFloat(positionNum)) {
             setValue(100)
             setNewInputNum(positionNum)
         }
     })
-
-
-
-
-
 
     return (
         <Container>

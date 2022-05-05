@@ -1148,7 +1148,6 @@ const TradeScreen = ({
     const [buyType, setBuyType] = useState('Limit');
     const [buyPrice, setBuyPrice] = useState('');
     const [swapCurrency, setSwapCurrency] = useState(0);
-    const [buyNumber, setBuyNumber] = React.useState(0);
     const [sliderNum, setSliderNum] = useState(0);
 
     const toggleBuyTypeModal = () => {
@@ -1162,10 +1161,6 @@ const TradeScreen = ({
     const toggleLeverageViewModal = () => {
         setIsLeverageViewVisible(!isLeverageViewVisible);
     };
-
-    const LeverageChangeModal = (data: boolean) => {
-        setIsLeverageViewVisible(data);
-    }
 
 
     const buyTypeChange = () => {
@@ -1243,13 +1238,6 @@ const TradeScreen = ({
             </View>
         );
     });
-
-
-
-
-
-
-
 
     // Position Detail 
     const [swapPositionView, setSwapPositionView] = useState(0);
