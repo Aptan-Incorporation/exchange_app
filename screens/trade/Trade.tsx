@@ -6,10 +6,13 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import GraphPage from "../../components/trade/GraphPage"
-import SliderContainer from "../../components/trade/Slider";
-import SmallSliderContainer from "../../components/trade/SmallSlider";
+// import SliderContainer from "../../components/trade/Slider";
+// import SmallSliderContainer from "../../components/trade/SmallSlider";
+import axios from "axios"
+import api from "../../common/api"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -1048,6 +1051,17 @@ height: 1px;
 background-color: ${props => props.theme.color.DarkGray};
 margin-top: 24px;
 `;
+// Slider Style
+const ThumbImage = styled(Image)`width: 20px; height: 20px;`;
+const RenderAboveThumbImage = styled(Image)` position: relative; width: 32px; height: 22px; alignItems: center; justifyContent: center; right: 6;`;
+const RenderAboveThumbText = styled(Text)`
+    font-size: 10px;
+    font-weight: 400;
+    position: absolute;
+    text-align: center;
+    right: 8px;
+    top: 2.5px;
+`;
 
 
 // Trade Page Array
@@ -1233,17 +1247,7 @@ const TradeScreen = ({
 
 
 
-    // Slider Style
-    const ThumbImage = styled(Image)`width: 20px; height: 20px`;
-    const RenderAboveThumbImage = styled(Image)` position: relative; width: 32px; height: 22px; alignItems: center; justifyContent: center; right: 6;`;
-    const RenderAboveThumbText = styled(Text)`
-    fontSize: 10px;
-    fontWeight: 400;
-    position: absolute;
-    textAlign: center;
-    right: 8px;
-    top: 2.5px;
-    `;
+    
 
     const CustomThumb = (() => {
         return (
@@ -1296,7 +1300,120 @@ const TradeScreen = ({
                 { text: "確定", onPress: () => console.log("OK Pressed") }
             ]
         );
+    const [entrustArray, setEntrustArray] = useState([]);
+    const [positionArray, setPositionArray] = useState([]);
+    const [bidsArray, setBidsArray] = useState([]);
+    const [asksArray, setAsksArray] = useState([]);
+    const [price, setPrice] = useState("");
+    const [position, setPosition] = useState(false);
+    const [future, setFuture] = useState(false);
+    const [balance, setBalance] = useState(0);
+    const [wareHousedPrice, setWareHousedPrice] = useState("");
 
+    const getEntrust = () => {
+        api.get("/investor/future?status=CREATE").then((x) => {
+            setEntrustArray(x.data);
+            for (let i = 0; i < x.data.length; i++) {
+            if (x.data[i].status !== "CANCEL") {
+                setFuture(true);
+                return;
+            }
+            }
+        })
+        setInterval(() => {
+        api.get("/investor/future?status=CREATE").then((x) => {
+            setEntrustArray(x.data);
+            // console.log(x.data);
+            for (let i = 0; i < x.data.length; i++) {
+            if (x.data[i].status !== "CANCEL") {
+                setFuture(true);
+                return;
+            }
+            }
+        })},3000)
+    };
+    const getPosition = () => {
+        api.get("/investor/position").then((x) => {
+            console.log(x)
+            setPositionArray(x.data.sort(function (a:any, b:any) {
+            return a.positionId > b.positionId ? 1 : -1;
+            }));
+            for (let i = 0; i < x.data.length; i++) {
+            if (x.data[i].status !== "CLOSE") {
+                setPosition(true);
+                return;
+            }
+            }
+        })
+        setInterval(() => {
+        api.get("/investor/position").then((x) => {
+            setPositionArray(x.data.sort(function (a:any, b:any) {
+            return a.positionId > b.positionId ? 1 : -1;
+            }));
+    
+            for (let i = 0; i < x.data.length; i++) {
+            if (x.data[i].status !== "CLOSE") {
+                setPosition(true);
+                return;
+            }
+            }
+        })},3000)
+        };
+    const getDepth = () => {
+        axios
+            .get("https://api1.binance.com/api/v3/depth?symbol=BTCUSDT&limit=8")
+            .then((x) => {
+                setAsksArray(x.data.asks.reverse());
+                setBidsArray(x.data.bids);
+            });
+            axios
+            .get("https://api1.binance.com/api/v3/ticker/price?symbol=BTCUSDT")
+            .then((x) => {
+                setPrice(x.data.price);
+            });
+        setInterval(() => {
+            axios
+            .get("https://api1.binance.com/api/v3/depth?symbol=BTCUSDT&limit=8")
+            .then((x) => {
+                setAsksArray(x.data.asks.reverse());
+                setBidsArray(x.data.bids);
+            });
+            axios
+            .get("https://api1.binance.com/api/v3/ticker/price?symbol=BTCUSDT")
+            .then((x) => {
+                setPrice(x.data.price);
+            });
+        }, 2000);
+    };
+    
+    const getPrice = () => {
+        axios
+            .get("https://api1.binance.com/api/v3/ticker/price?symbol=BTCUSDT")
+            .then((x) => {
+              setWareHousedPrice(x.data.price.slice(0, -6));
+            });
+    };
+    
+    const getBalance = () => {
+        api.get("/investor/margin-balance").then((x) => {
+            setBalance(x.data);
+        });
+    };
+
+    useEffect(async () => {
+        // let token = await AsyncStorage.getItem("token")
+        // if (token) {
+        //     getEntrust();
+        //     getPosition();
+        //     getBalance();
+        // }
+        // if(localStorage.getItem("leverRatio")){
+        //   setLeverRatio(parseInt(localStorage.getItem("leverRatio")!))
+        //   setTempLeverRatio(parseInt(localStorage.getItem("leverRatio")!))
+        // }
+        getDepth();
+        getPrice();
+    }, []);
 
 
     return (
@@ -1477,7 +1594,7 @@ const TradeScreen = ({
                                                     </TradeFunctionNumberInputRightContainer>
                                             }
                                         </TradeFunctionNumberInputContainer>
-                                        <SmallSliderContainer
+                                        {/* <SmallSliderContainer
                                             trackMarks={[0, 25, 50, 75, 100]}
                                             sliderValue={[sliderNum]}
                                             onValueChangeSliderNum={setSliderNum}
@@ -1496,7 +1613,7 @@ const TradeScreen = ({
                                                 minimumValue={0}
                                                 step={1}
                                             />
-                                        </SmallSliderContainer>
+                                        </SmallSliderContainer> */}
                                         <TradeFunctionPositionViewContainer>
                                             <TradeFunctionPositionViewTitleText>可用</TradeFunctionPositionViewTitleText>
                                             <TradeFunctionPositionViewValueText>{MyPosition.USDT} USDT</TradeFunctionPositionViewValueText>
@@ -1768,7 +1885,7 @@ const TradeScreen = ({
                             trackMarks={[1, 2, 3, 4, 5, 6]}
                             step={1}
                         /> */}
-                        <SliderContainer
+                        {/* <SliderContainer
                             trackMarks={[1, 25, 50, 75, 100, 125]}
                             sliderValue={[leverageViewNum]}
                             onValueChangeSliderNum={setLeverageViewNum}
@@ -1786,7 +1903,7 @@ const TradeScreen = ({
                                 minimumValue={1}
                                 step={1}
                             />
-                        </SliderContainer>
+                        </SliderContainer> */}
                         {/* <ModalHedaerTitleText>{sliderNum}</ModalHedaerTitleText> */}
 
                     </LeverageViewModalSliderContainer>
