@@ -86,8 +86,7 @@ const Login = ({ navigation }: RootStackScreenProps<"Login">) => {
                 navigation.goBack()
               }else{
                 Alert.alert(x.data.msg)
-              }
-              
+              }            
             })
           }}>
             <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>登入</Text>

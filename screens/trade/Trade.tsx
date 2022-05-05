@@ -1363,17 +1363,19 @@ const TradeScreen = ({
     
     const getBalance = () => {
         api.get("/investor/margin-balance").then((x) => {
+            console.log(x.data)
             setBalance(x.data);
         });
     };
 
     useEffect(async () => {
-        // let token = await AsyncStorage.getItem("token")
-        // if (token) {
-        //     getEntrust();
-        //     getPosition();
-        //     getBalance();
-        // }
+        let token = await AsyncStorage.getItem("token")
+        console.log(token)
+        if (token) {
+            getEntrust();
+            getPosition();
+            getBalance();
+        }
         // if(localStorage.getItem("leverRatio")){
         //   setLeverRatio(parseInt(localStorage.getItem("leverRatio")!))
         //   setTempLeverRatio(parseInt(localStorage.getItem("leverRatio")!))
@@ -1439,15 +1441,18 @@ const TradeScreen = ({
                                     </TradeTableTopTitleContainer>
                                     <TradeTableSellContainer>
                                         {
-                                            SellTable.map((x, i) => {
-                                                let percent = Number((1 - (x.number)).toPrecision());
+                                            asksArray.map((x:string, i) => {
+                                                let percent = Number((1 - parseFloat(x[1])).toPrecision());
+                                                if(parseInt((parseFloat(x[0].slice(0, 2) + "," + x[0].slice(2, -9))*parseFloat(x[1].slice(0, -5))+20).toString().slice(-2))){
+                                                    percent = parseInt((parseFloat(x[0].slice(0, 2) + "," + x[0].slice(2, -9))*parseFloat(x[1].slice(0, -5))+20).toString().slice(-2))/100
+                                                }
                                                 return (
 
                                                     <LinearGradient colors={['transparent', 'rgba(251, 76, 81, 0.2)']} start={{ x: percent, y: 0.0 }} end={{ x: percent, y: 0.0 }}>
                                                         <TradeTableRowContainer>
 
-                                                            <TradeTableSellPriceText>{x.price}</TradeTableSellPriceText>
-                                                            <TradeTableNumberText>{x.number}</TradeTableNumberText>
+                                                            <TradeTableSellPriceText>{x[0].slice(0, 2) + "," + x[0].slice(2, -6)}</TradeTableSellPriceText>
+                                                            <TradeTableNumberText>{x[1].slice(0, -5)}</TradeTableNumberText>
 
                                                         </TradeTableRowContainer>
                                                     </LinearGradient>
@@ -1467,13 +1472,16 @@ const TradeScreen = ({
                                     </TradeTableBottomTitleContainer>
                                     <TradeTableBuyContainer>
                                         {
-                                            BuyTable.map((x, i) => {
-                                                let percent = Number((1 - (x.number)).toPrecision());
+                                            bidsArray.map((x:string, i) => {
+                                                let percent = Number((1 - parseFloat(x[1])).toPrecision());
+                                                if(parseInt((parseFloat(x[0].slice(0, 2) + "," + x[0].slice(2, -9))*parseFloat(x[1].slice(0, -5))+20).toString().slice(-2))){
+                                                    percent = parseInt((parseFloat(x[0].slice(0, 2) + "," + x[0].slice(2, -9))*parseFloat(x[1].slice(0, -5))+20).toString().slice(-2))/100
+                                                }
                                                 return (
                                                     <LinearGradient colors={['transparent', 'rgba(47, 178, 100, 0.2)']} start={{ x: percent, y: 0.0 }} end={{ x: percent, y: 0.0 }}>
                                                         <TradeTableRowContainer>
-                                                            <TradeTableBuyPriceText>{x.price}</TradeTableBuyPriceText>
-                                                            <TradeTableNumberText>{x.number}</TradeTableNumberText>
+                                                            <TradeTableBuyPriceText>{x[0].slice(0, 2) + "," + x[0].slice(2, -6)}</TradeTableBuyPriceText>
+                                                            <TradeTableNumberText>{x[1].slice(0, -5)}</TradeTableNumberText>
                                                         </TradeTableRowContainer>
                                                     </LinearGradient>
                                                 )
@@ -1582,10 +1590,10 @@ const TradeScreen = ({
                                         </SmallSliderContainer>
                                         <TradeFunctionPositionViewContainer>
                                             <TradeFunctionPositionViewTitleText>可用</TradeFunctionPositionViewTitleText>
-                                            <TradeFunctionPositionViewValueText>{MyPosition.USDT} USDT</TradeFunctionPositionViewValueText>
+                                            <TradeFunctionPositionViewValueText>{balance} USDT</TradeFunctionPositionViewValueText>
                                         </TradeFunctionPositionViewContainer>
                                         <TradeFunctionPositionViewContainer>
-                                            <TradeFunctionPositionViewTitleText>可用</TradeFunctionPositionViewTitleText>
+                                            <TradeFunctionPositionViewTitleText>可開</TradeFunctionPositionViewTitleText>
                                             <TradeFunctionPositionViewValueText>{MyPosition.BTC} BTC</TradeFunctionPositionViewValueText>
                                         </TradeFunctionPositionViewContainer>
                                         <TradeFunctionPositionViewContainer>
@@ -1633,15 +1641,15 @@ const TradeScreen = ({
                             <TradePositionLine></TradePositionLine>
                             {
                                 swapPositionView === 0 ?
-                                    PositionArray != null ?
+                                     positionArray .length !== 0 ?
                                         <TradePositionContainer>
                                             {
-                                                PositionArray.map((x, i) => {
+                                                positionArray.map((x:any, i) => {
                                                     return (
                                                         <TradePositionCardContainer>
                                                             <TradePositionCardTitleContainer>
                                                                 <TradePositionCardTitleRowContainer>
-                                                                    <TradePositionCardTitleText>{x.title}</TradePositionCardTitleText>
+                                                                    <TradePositionCardTitleText>{x.profitAndLoss}</TradePositionCardTitleText>
                                                                     <TradePositionCardSmallTitleText>未實現盈虧</TradePositionCardSmallTitleText>
                                                                 </TradePositionCardTitleRowContainer>
                                                                 <TradePositionCardTitleRowContainer>
@@ -1652,21 +1660,21 @@ const TradeScreen = ({
                                                             <TradePositionCardDetailRowContainer>
                                                                 <TradePositionCardDetailColumnContainer>
                                                                     <TradePositionCardSmallTitleText>持倉量</TradePositionCardSmallTitleText>
-                                                                    <TradePositionCardSmallValueText>{x.positionNum}</TradePositionCardSmallValueText>
+                                                                    <TradePositionCardSmallValueText>{x.quantity}</TradePositionCardSmallValueText>
                                                                 </TradePositionCardDetailColumnContainer>
                                                                 <TradePositionCardDetailColumnContainer>
                                                                     <TradePositionCardSmallTitleText>入場價</TradePositionCardSmallTitleText>
-                                                                    <TradePositionCardSmallValueText>{x.inPrice}</TradePositionCardSmallValueText>
+                                                                    <TradePositionCardSmallValueText>{x.avgPrice}</TradePositionCardSmallValueText>
                                                                 </TradePositionCardDetailColumnContainer>
                                                             </TradePositionCardDetailRowContainer>
                                                             <TradePositionCardDetailRowContainer>
                                                                 <TradePositionCardDetailColumnContainer>
                                                                     <TradePositionCardSmallTitleText>標記價</TradePositionCardSmallTitleText>
-                                                                    <TradePositionCardSmallValueText>{x.labelPrice}</TradePositionCardSmallValueText>
+                                                                    <TradePositionCardSmallValueText>{x.avgPrice}</TradePositionCardSmallValueText>
                                                                 </TradePositionCardDetailColumnContainer>
                                                                 <TradePositionCardDetailColumnContainer>
                                                                     <TradePositionCardSmallTitleText>強平價</TradePositionCardSmallTitleText>
-                                                                    <TradePositionCardSmallValueText>{x.stopPrice}</TradePositionCardSmallValueText>
+                                                                    <TradePositionCardSmallValueText>{x.forceClose}</TradePositionCardSmallValueText>
                                                                 </TradePositionCardDetailColumnContainer>
                                                             </TradePositionCardDetailRowContainer>
                                                             <TradePositionCardButtonContainer>
@@ -1686,10 +1694,10 @@ const TradeScreen = ({
                                         <TradePositionContainer>
                                             <TradePositionBackgroundImage source={require("../../assets/images/trade/norecord.png")} />
                                         </TradePositionContainer> :
-                                    CommitArray !== null ?
+                                    entrustArray.length !== 0 ?
                                         <TradeCommitContainer>
                                             {
-                                                CommitArray.map((x, i) => {
+                                                entrustArray.map((x:any, i) => {
                                                     return (
                                                         <TradeCommitCardContainer>
                                                             <TradeCommitCardTitleContainer>
@@ -1700,42 +1708,42 @@ const TradeScreen = ({
                                                                 <TradeCommitCardDetailColumnContainer>
                                                                     <TradeCommitCardSmallTitleText>交易類型</TradeCommitCardSmallTitleText>
                                                                     {
-                                                                        x.butType === 'Limit' &&
+                                                                        x.type === 'Limit' &&
                                                                         <TradeCommitCardSmallValueText>限價</TradeCommitCardSmallValueText>
                                                                     }
                                                                     {
-                                                                        x.butType === 'Market' &&
+                                                                        x.type === 'Market' &&
                                                                         <TradeCommitCardSmallValueText>市價</TradeCommitCardSmallValueText>
                                                                     }
                                                                 </TradeCommitCardDetailColumnContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
                                                                     <TradeCommitCardSmallTitleText>下單方向</TradeCommitCardSmallTitleText>
                                                                     {
-                                                                        x.buyDirection === 'Long' &&
+                                                                        x.side === 'Long' &&
                                                                         <TradeCommitCardBuyDirectionLongText>買入</TradeCommitCardBuyDirectionLongText>
                                                                     }
                                                                     {
-                                                                        x.buyDirection === 'Short' &&
+                                                                        x.side === 'Short' &&
                                                                         <TradeCommitCardBuyDirectionShortText>賣出</TradeCommitCardBuyDirectionShortText>
                                                                     }
                                                                 </TradeCommitCardDetailColumnContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
                                                                     <TradeCommitCardSmallTitleText>委託單</TradeCommitCardSmallTitleText>
-                                                                    <TradeCommitCardSmallValueText>{x.CommitNumber}</TradeCommitCardSmallValueText>
+                                                                    <TradeCommitCardSmallValueText>{x.origQty}</TradeCommitCardSmallValueText>
                                                                 </TradeCommitCardDetailColumnContainer>
                                                             </TradeCommitCardDetailRowContainer>
                                                             <TradeCommitCardDetailRowContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
                                                                     <TradeCommitCardSmallTitleText>成交率</TradeCommitCardSmallTitleText>
-                                                                    <TradeCommitCardSmallValueText>{x.DealRate}%</TradeCommitCardSmallValueText>
+                                                                    <TradeCommitCardSmallValueText>0</TradeCommitCardSmallValueText>
                                                                 </TradeCommitCardDetailColumnContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
-                                                                    <TradeCommitCardSmallTitleText>成交量</TradeCommitCardSmallTitleText>
-                                                                    <TradeCommitCardSmallValueText>{x.DealNumber}</TradeCommitCardSmallValueText>
+                                                                    <TradeCommitCardSmallTitleText>觸發價</TradeCommitCardSmallTitleText>
+                                                                    <TradeCommitCardSmallValueText>{x.executedQty}</TradeCommitCardSmallValueText>
                                                                 </TradeCommitCardDetailColumnContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
                                                                     <TradeCommitCardSmallTitleText>委託價</TradeCommitCardSmallTitleText>
-                                                                    <TradeCommitCardSmallValueText>{x.CommitPrice}</TradeCommitCardSmallValueText>
+                                                                    <TradeCommitCardSmallValueText>{x.price}</TradeCommitCardSmallValueText>
                                                                 </TradeCommitCardDetailColumnContainer>
                                                             </TradeCommitCardDetailRowContainer>
                                                             <TradeCommitCardButtonContainer>
