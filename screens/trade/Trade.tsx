@@ -8,8 +8,8 @@ import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
 import { useState,useEffect } from "react";
 import GraphPage from "../../components/trade/GraphPage"
-// import SliderContainer from "../../components/trade/Slider";
-// import SmallSliderContainer from "../../components/trade/SmallSlider";
+import SliderContainer from "../../components/trade/Slider";
+import SmallSliderContainer from "../../components/trade/SmallSlider";
 import axios from "axios"
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -466,30 +466,6 @@ font-weight: 400;
 font-size: 12px;
 line-height: 18px;
 color: ${props => props.theme.color.White};
-`;
-
-const TradeFunctionNumberInputContainer = styled(View)`
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-align-items: center;
-`;
-
-const TradeFunctionNumberInputRightContainer = styled(View)`
-height: 36px;
-width: 30%;
-border-top-right-radius: 4px;
-border-bottom-right-radius: 4px;
-background-color: #242D37;
-justify-content: center;
-align-items: center;
-`;
-
-const TradeFunctionNumberInputRightText = styled(Text)`
-font-weight: 400;
-font-size: 12px;
-line-height: 15px;
-color: ${props => props.theme.color.ExtraLightGray};
 `;
 
 const TradeFunctionPositionViewContainer = styled(View)`
@@ -1186,8 +1162,6 @@ const TradeScreen = ({
     const [buyType, setBuyType] = useState('Limit');
     const [buyPrice, setBuyPrice] = useState('');
     const [swapCurrency, setSwapCurrency] = useState(0);
-    const [buyNumber, setBuyNumber] = useState("");
-    const [buyNumberSliderNumber, setBuyNumberSliderNumber] = useState("");
     const [sliderNum, setSliderNum] = useState(0);
 
     const toggleBuyTypeModal = () => {
@@ -1201,10 +1175,6 @@ const TradeScreen = ({
     const toggleLeverageViewModal = () => {
         setIsLeverageViewVisible(!isLeverageViewVisible);
     };
-
-    const LeverageChangeModal = (data: boolean) => {
-        setIsLeverageViewVisible(data);
-    }
 
 
     const buyTypeChange = () => {
@@ -1263,7 +1233,7 @@ const TradeScreen = ({
 
         return (
             <View>
-                { PercentageNum != 0 &&
+                {(PercentageNum != 0) && (!isNaN(PercentageNum)) &&
                     <View>
                         <RenderAboveThumbImage source={require("../../assets/images/trade/sliderFloat.png")} />
                         <RenderAboveThumbText>{PercentageNum}%</RenderAboveThumbText>
@@ -1272,9 +1242,6 @@ const TradeScreen = ({
             </View>
         );
     });
-
-
-
 
     // Position Detail 
     const [swapPositionView, setSwapPositionView] = useState(0);
@@ -1575,7 +1542,7 @@ const TradeScreen = ({
                                                     </TradeFunctionRightCurrencyButtonClicked>
                                                 </TradeFunctionCurrencyButtonContainer>
                                         }
-                                        <TradeFunctionNumberInputContainer>
+                                        {/* <TradeFunctionNumberInputContainer>
                                             <TextInput
                                                 placeholder={"數量"}
                                                 value={buyNumberSliderNumber}
@@ -1593,14 +1560,13 @@ const TradeScreen = ({
                                                         <TradeFunctionNumberInputRightText>USDT</TradeFunctionNumberInputRightText>
                                                     </TradeFunctionNumberInputRightContainer>
                                             }
-                                        </TradeFunctionNumberInputContainer>
-                                        {/* <SmallSliderContainer
+                                        </TradeFunctionNumberInputContainer> */}
+                                        <SmallSliderContainer
                                             trackMarks={[0, 25, 50, 75, 100]}
-                                            sliderValue={[sliderNum]}
-                                            onValueChangeSliderNum={setSliderNum}
+                                            sliderValue={[0]}
                                             positionNum={MyPosition.BTC}
-                                            buyNumber={'20'}
-                                            onValueChangeBuyNumber={setBuyNumber}
+                                            onChangeSliderValue={setSliderNum}
+                                            swapCurrency={swapCurrency}
                                         >
                                             <Slider
                                                 renderAboveThumbComponent={RenderAboveThumbComponent}
@@ -1613,7 +1579,7 @@ const TradeScreen = ({
                                                 minimumValue={0}
                                                 step={1}
                                             />
-                                        </SmallSliderContainer> */}
+                                        </SmallSliderContainer>
                                         <TradeFunctionPositionViewContainer>
                                             <TradeFunctionPositionViewTitleText>可用</TradeFunctionPositionViewTitleText>
                                             <TradeFunctionPositionViewValueText>{MyPosition.USDT} USDT</TradeFunctionPositionViewValueText>
@@ -1885,7 +1851,7 @@ const TradeScreen = ({
                             trackMarks={[1, 2, 3, 4, 5, 6]}
                             step={1}
                         /> */}
-                        {/* <SliderContainer
+                        <SliderContainer
                             trackMarks={[1, 25, 50, 75, 100, 125]}
                             sliderValue={[leverageViewNum]}
                             onValueChangeSliderNum={setLeverageViewNum}
@@ -1903,7 +1869,7 @@ const TradeScreen = ({
                                 minimumValue={1}
                                 step={1}
                             />
-                        </SliderContainer> */}
+                        </SliderContainer>
                         {/* <ModalHedaerTitleText>{sliderNum}</ModalHedaerTitleText> */}
 
                     </LeverageViewModalSliderContainer>
