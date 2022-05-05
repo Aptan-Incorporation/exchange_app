@@ -1491,12 +1491,12 @@ const TradeScreen = ({
                                     <TradeTableBottomTitleContainer>
                                         {
                                             isPositive === true ?
-                                                <TradeTableBottomTitlePriceRiseText>41,254.50</TradeTableBottomTitlePriceRiseText> :
-                                                <TradeTableBottomTitlePriceFallText>41,254.50</TradeTableBottomTitlePriceFallText>
+                                                <TradeTableBottomTitlePriceRiseText>{wareHousedPrice}</TradeTableBottomTitlePriceRiseText> :
+                                                <TradeTableBottomTitlePriceFallText>{wareHousedPrice}</TradeTableBottomTitlePriceFallText>
                                         }
                                     </TradeTableBottomTitleContainer>
                                     <TradeTableBottomTitleContainer>
-                                        <TradeTableBottomTitleOwnValueText>57,648.39</TradeTableBottomTitleOwnValueText>
+                                    <TradeTableBottomTitleOwnValueText>{wareHousedPrice}</TradeTableBottomTitleOwnValueText>
                                     </TradeTableBottomTitleContainer>
                                     <TradeTableBuyContainer>
                                         {
