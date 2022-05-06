@@ -217,6 +217,7 @@ font-weight: 700;
 font-size: 20px;
 line-height: 24px;
 color: ${props => props.theme.color.SecondaryLight};
+padding-right: 4px;
 `;
 
 const SellCurrencyText = styled(Text)`
@@ -290,9 +291,9 @@ height: 200px;
 
 // Buy Array
 
-// Buy Array USDT
-const BuyArrayUSDT = [
+const BuyArray = [
     {
+        id: 100001,
         type: 'USDT',
         account: 'loo*****@gmail.com',
         successRate: 88,
@@ -307,6 +308,7 @@ const BuyArrayUSDT = [
         }
     },
     {
+        id: 100002,
         type: 'USDT',
         account: 'bes*****@gmail.com',
         successRate: 100,
@@ -321,6 +323,7 @@ const BuyArrayUSDT = [
         }
     },
     {
+        id: 100003,
         type: 'USDT',
         account: 'mon*****@gmail.com',
         successRate: 71,
@@ -335,6 +338,7 @@ const BuyArrayUSDT = [
         }
     },
     {
+        id: 100004,
         type: 'USDT',
         account: 'hms*****@gmail.com',
         successRate: 98,
@@ -347,8 +351,76 @@ const BuyArrayUSDT = [
             touchnGo: false,
             ppay: true
         }
-    }
-]
+    },
+];
+
+
+// Sell Array
+
+const SellArray = [
+    {
+        id: 200001,
+        type: 'USDT',
+        account: 'Qoo*****@gmail.com',
+        successRate: 88,
+        number: '4,640.000000',
+        limitFrom: '200.00',
+        limitTo: '5100.00',
+        price: '1.10',
+        payType: {
+            account: true,
+            touchnGo: false,
+            ppay: true
+        }
+    },
+    {
+        id: 200002,
+        type: 'USDT',
+        account: 'Ues*****@gmail.com',
+        successRate: 100,
+        number: '4,192.746299',
+        limitFrom: '101.00',
+        limitTo: '800.00',
+        price: '1.09',
+        payType: {
+            account: true,
+            touchnGo: false,
+            ppay: false
+        }
+    },
+    {
+        id: 200003,
+        type: 'USDT',
+        account: 'Uon*****@gmail.com',
+        successRate: 71,
+        number: '2,973.691232',
+        limitFrom: '101.00',
+        limitTo: '800.00',
+        price: '1.01',
+        payType: {
+            account: true,
+            touchnGo: true,
+            ppay: true
+        }
+    },
+    {
+        id: 200004,
+        type: 'USDT',
+        account: 'Cms*****@gmail.com',
+        successRate: 98,
+        number: '5,100.962615',
+        limitFrom: '100.00',
+        limitTo: '5,202.00',
+        price: '1.02',
+        payType: {
+            account: false,
+            touchnGo: true,
+            ppay: false
+        }
+    },
+];
+
+
 
 
 const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
@@ -459,14 +531,18 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                 }
             </HeaderContainer>
             <DetailContainer>
+                {/* 購買頁面 >> USDT頁面  */}
                 {
+                    swapBuySell === 0 &&
                     swapBuyCurrencyType === 'USDT' &&
-                    BuyArrayUSDT.map((x, i) => {
+                    BuyArray.map((x, i) => {
                         return (
+                            /* 在 BuyArray 中尋找符合 USDT 的 OBject */
                             x.type === 'USDT' &&
                             <DetailCardContainer>
                                 <DeatilCardTopContainer>
                                     <PhotoButton onPress={() => { }}>
+                                        {/* 取 account 中第一個字位於頭像 */}
                                         <PhotoButtonText>{(x.account).charAt(0).toUpperCase()}</PhotoButtonText>
                                     </PhotoButton>
                                     <EmailText>{x.account}</EmailText>
@@ -489,6 +565,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                     </DetailCardMiddleRightRowContainer>
                                 </DetailCardMiddleContainer>
                                 <DetailCardBottomContainer>
+                                    {/* 顯示支援付款的Icon */}
                                     <DetailCardBottomRowContainer>
                                         {
                                             x.payType.account === true &&
@@ -504,22 +581,107 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                             <PpayIcon source={require("../../assets/images/c2c/p_pay.png")} />
                                         }
                                     </DetailCardBottomRowContainer>
-                                    <BuyButton onPress={() => { }}>
-                                        <BuyButtonText>購買</BuyButtonText>
-                                    </BuyButton>
-                                </DetailCardBottomContainer>
-                                {
-                                    i !== BuyArrayUSDT.length - 1 &&
-                                    <DetailCardLine></DetailCardLine>
-                                }
+                                    <BuyButton onPress={() => {
+                                        navigation.navigate('C2cBuyScreen', {
+                                            Id: x.id,
+                                            CurrencyType: x.type,
+                                            Account: x.account,
+                                            SuccessRate: x.successRate,
+                                            AvailableNum: x.number,
+                                            LimitFrom: x.limitFrom,
+                                            LimitTo: x.limitTo,
+                                            Price: x.price,
+                                            payTypeAccount: x.payType.account,
+                                            payTypeTouchnGo: x.payType.touchnGo,
+                                            payTypePpay: x.payType.ppay
+                                        } as any)
+                                    }}
+                                        /* disabled={isNavigate()} */
+                                    >
+                                    <BuyButtonText>購買</BuyButtonText>
+                                </BuyButton>
+                            </DetailCardBottomContainer>
+                                {/* 找出 BuyArray 中符合的 Object 並讓最後一個不顯示分段 Line */ }
+                        {
+                            x.type === 'USDT' &&
+                                i !== BuyArray.length - 1 &&
+                                <DetailCardLine></DetailCardLine>
+                        }
                             </DetailCardContainer>
-                        )
+            )
                     })
 
                 }
-                <EmptyDiv></EmptyDiv>
-            </DetailContainer>
-        </Container>
+            {/* ******************* */}
+            {/* 出售頁面 >> USDT頁面  */}
+            {
+                swapBuySell === 1 &&
+                swapBuyCurrencyType === 'USDT' &&
+                SellArray.map((x, i) => {
+                    return (
+                        /* 在 SellArray 中尋找符合 USDT 的 OBject */
+                        x.type === 'USDT' &&
+                        <DetailCardContainer>
+                            <DeatilCardTopContainer>
+                                <PhotoButton onPress={() => { }}>
+                                    {/* 取 account 中第一個字位於頭像 */}
+                                    <PhotoButtonText>{(x.account).charAt(0).toUpperCase()}</PhotoButtonText>
+                                </PhotoButton>
+                                <EmailText>{x.account}</EmailText>
+                                <SuccessRateText>({x.successRate}%)</SuccessRateText>
+                            </DeatilCardTopContainer>
+                            <DetailCardMiddleContainer>
+                                <DetailCardMiddleLeftColumnContainer>
+                                    <DetailCardMiddleLeftRowContainer>
+                                        <SmallTitleText>數量</SmallTitleText>
+                                        <SmallValueText>{x.number} USDT</SmallValueText>
+                                    </DetailCardMiddleLeftRowContainer>
+                                    <DetailCardMiddleLeftRowContainer>
+                                        <SmallTitleText>限額</SmallTitleText>
+                                        <SmallValueText>{x.limitFrom} - {x.limitTo} USD</SmallValueText>
+                                    </DetailCardMiddleLeftRowContainer>
+                                </DetailCardMiddleLeftColumnContainer>
+                                <DetailCardMiddleRightRowContainer>
+                                    <SellPriceText>{x.price}</SellPriceText>
+                                    <SellCurrencyText>USDT</SellCurrencyText>
+                                </DetailCardMiddleRightRowContainer>
+                            </DetailCardMiddleContainer>
+                            <DetailCardBottomContainer>
+                                {/* 顯示支援付款的Icon */}
+                                <DetailCardBottomRowContainer>
+                                    {
+                                        x.payType.account === true &&
+                                        <AccountIcon source={require("../../assets/images/c2c/account.png")} />
+                                    }
+                                    {
+                                        x.payType.touchnGo === true &&
+                                        <TouchnGoIcon source={require("../../assets/images/c2c/touchn_go.png")} />
+                                    }
+
+                                    {
+                                        x.payType.ppay === true &&
+                                        <PpayIcon source={require("../../assets/images/c2c/p_pay.png")} />
+                                    }
+                                </DetailCardBottomRowContainer>
+                                <SellButton onPress={() => { }}>
+                                    <SellButtonText>購買</SellButtonText>
+                                </SellButton>
+                            </DetailCardBottomContainer>
+                            {/* 找出 SellArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
+                            {
+                                x.type === 'USDT' &&
+                                i !== SellArray.length - 1 &&
+                                <DetailCardLine></DetailCardLine>
+                            }
+                        </DetailCardContainer>
+                    )
+                })
+
+            }
+            {/* 預留 Padding */}
+            <EmptyDiv></EmptyDiv>
+        </DetailContainer>
+        </Container >
     )
 }
 
