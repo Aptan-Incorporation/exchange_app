@@ -11,6 +11,7 @@ export const Theme = {
     Secondary:"#2FB264",
     White: "#FFFFFF",
     Primary: "#6699CC",
+    PrimaryLight: "#A8C2DC",
     PrimaryDark: "#3D6A97"
   },
 };
