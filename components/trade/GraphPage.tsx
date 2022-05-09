@@ -102,6 +102,7 @@ const GraphContainer = styled(ScrollView)`
 display: flex;
 flex-direction: column;
 width: 100%;
+
 `;
 
 const GraphContentContainer = styled(View)`
@@ -326,15 +327,15 @@ const GraphPage = () => {
     const [isPositive, setIsPositive] = useState(true);
 
     return (
-        <View>
+        <View style={{width:"100%"}}>
             <GraphHeaderContainer>
                 <GraphHeaderTopRowContainer>
                     <GraphHeaderBigTitleText>BTCUSDT</GraphHeaderBigTitleText>
-                    {
+                    {/* {
                         isPositive === true ?
                             <GraphHeaderFluctuationRiseText>+2.90%</GraphHeaderFluctuationRiseText> :
                             <GraphHeaderFluctuationFallText>-2.90%</GraphHeaderFluctuationFallText>
-                    }
+                    } */}
                 </GraphHeaderTopRowContainer>
                 <GraphHeaderBottomRowContainer>
                     {
@@ -351,15 +352,15 @@ const GraphPage = () => {
                             <GraphHeaderSmallTitleText>指數價格</GraphHeaderSmallTitleText>
                             <GraphHeaderSmallValueText>57,607.26</GraphHeaderSmallValueText>
                         </GraphHeaderBottomInlineRowContainer>
-                        <GraphHeaderBottomInlineRowContainer>
+                        {/* <GraphHeaderBottomInlineRowContainer>
                             <GraphHeaderSmallTitleText>資金費率</GraphHeaderSmallTitleText>
                             <GraphHeaderSmallValueText>0.0193%</GraphHeaderSmallValueText>
-                        </GraphHeaderBottomInlineRowContainer>
+                        </GraphHeaderBottomInlineRowContainer> */}
                     </GraphHeaderBottomRowColumnContainer>
                 </GraphHeaderBottomRowContainer>
             </GraphHeaderContainer>
 
-            <GraphContainer>
+            <GraphContainer contentContainerStyle={{paddingBottom:350}}>
                 <GraphContentContainer>
                     <GraphTempImage source={require("../../assets/images/trade/bg.png")} />
                 </GraphContentContainer>
@@ -461,14 +462,14 @@ const GraphPage = () => {
                         }
                     </GraphDetailSellContainer>
                 </GraphDetailContainer>
-                <GraphButtonContainer>
+                {/* <GraphButtonContainer>
                     <GraphOpenPositionButton>
                         <GraphButtonText>開倉</GraphButtonText>
                     </GraphOpenPositionButton>
                     <GraphClosePositionButton>
                         <GraphButtonText>平倉</GraphButtonText>
                     </GraphClosePositionButton>
-                </GraphButtonContainer>
+                </GraphButtonContainer> */}
             </GraphContainer>
         </View>
     );

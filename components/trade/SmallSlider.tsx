@@ -7,6 +7,7 @@ import { useEffect } from "react";
 const Container = styled(View)`
 display: flex;
 flex-direction: column;
+
 `;
 
 const TradeFunctionNumberInputContainer = styled(View)`
@@ -15,6 +16,8 @@ flex-direction: row;
 justify-content: space-between;
 align-items: center;
 padding-bottom: 18px;
+margin-top:2;
+
 `;
 
 const TradeFunctionNumberInputRightContainer = styled(View)`

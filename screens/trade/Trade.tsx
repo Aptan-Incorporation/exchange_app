@@ -13,6 +13,7 @@ import SmallSliderContainer from "../../components/trade/SmallSlider";
 import axios from "axios"
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Spinner from 'react-native-loading-spinner-overlay'
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -370,6 +371,7 @@ justify-content: space-between;
 align-items: center;
 padding-left: 12px;
 padding-right: 8px;
+margin-top:2;
 `; // Input Select
 
 const TradeFunctionPriceOptionText = styled(Text)`
@@ -389,6 +391,7 @@ display: flex;
 flex-direction: row;
 justify-content: space-between;
 align-items: center;
+margin-top:2;
 `;
 
 const TradeFunctionPriceInputRightContainer = styled(View)`
@@ -399,6 +402,7 @@ border-bottom-right-radius: 4px;
 background-color: #242D37;
 justify-content: center;
 align-items: center;
+
 `;
 
 const TradeFunctionPriceInputRightText = styled(Text)`
@@ -412,6 +416,8 @@ const TradeFunctionCurrencyButtonContainer = styled(View)`
 display: flex;
 flex-direction: row;
 justify-content: center;
+margin-top:2;
+
 `;
 
 const TradeFunctionLeftCurrencyButton = styled(TouchableOpacity)`
@@ -491,21 +497,24 @@ color: ${props => props.theme.color.White};
 
 
 const TradeFunctionBuyButton = styled(TouchableOpacity)`
-width: 45%;
+width: 100%;
 height: 38px;
 border-radius: 4px;
 background-color: ${props => props.theme.color.Secondary};
 align-items: center;
 justify-content: center;
+margin-top:5;
 `;
 
 const TradeFunctionSellButton = styled(TouchableOpacity)`
-width: 45%;
+width: 100%;
 height: 38px;
 border-radius: 4px;
 background-color: ${props => props.theme.color.SecondaryLight};
 align-items: center;
 justify-content: center;
+margin-top:5;
+
 `;
 
 const TradeFunctionBuySellButtonText = styled(Text)`
@@ -927,7 +936,7 @@ color: ${props => props.theme.color.White};
 `;
 
 const BuyTypeModalPickerButton = styled(TouchableOpacity)`
-height: 50px;
+height: 55px;
 flex-direction: row
 justify-content: space-between;
 align-items: center;
@@ -1161,8 +1170,19 @@ const TradeScreen = ({
     const [isBuyTypeModalVisible, setIsBuyTypeModalVisible] = useState(false);
     const [buyType, setBuyType] = useState('Limit');
     const [buyPrice, setBuyPrice] = useState('');
+    const [stopPrice, setStopPrice] = useState('');
     const [swapCurrency, setSwapCurrency] = useState(0);
     const [sliderNum, setSliderNum] = useState(0);
+    const [entrustArray, setEntrustArray] = useState([]);
+    const [positionArray, setPositionArray] = useState([]);
+    const [bidsArray, setBidsArray] = useState([]);
+    const [asksArray, setAsksArray] = useState([]);
+    const [price, setPrice] = useState("");
+    const [position, setPosition] = useState(false);
+    const [future, setFuture] = useState(false);
+    const [balance, setBalance] = useState(0);
+    const [wareHousedPrice, setWareHousedPrice] = useState("");
+    const [loading,setLoading] = useState(false);
 
     const toggleBuyTypeModal = () => {
         setIsBuyTypeModalVisible(!isBuyTypeModalVisible);
@@ -1192,15 +1212,11 @@ const TradeScreen = ({
     };
 
     const buyTypeInputPlaceHolder = () => {
-        if (buyType === 'Limit') {
+        if (buyType === 'Limit' || buyType === 'Plan_Limit' ) {
             return "價格";
-        } else if (buyType === 'Market') {
+        } else if (buyType === 'Market' || buyType === 'Plan_Market') {
             return "市價";
-        } else if (buyType === 'Plan_Limit') {
-            return "觸發價";
-        } else if (buyType === 'Plan_Market') {
-            return "觸發價";
-        } else {
+        }else {
             return "";
         }
     };
@@ -1229,7 +1245,7 @@ const TradeScreen = ({
 
     const RenderAboveThumbComponent = (() => {
 
-        let PercentageNum = Math.round(sliderNum / parseFloat(MyPosition.BTC) * 100);
+        let PercentageNum = balance === 0 ? Math.round(sliderNum / parseFloat(((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().substring(0,((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().indexOf(".")+3)) * 100) : 0;
 
         return (
             <View>
@@ -1267,15 +1283,7 @@ const TradeScreen = ({
                 { text: "確定", onPress: () => console.log("OK Pressed") }
             ]
         );
-    const [entrustArray, setEntrustArray] = useState([]);
-    const [positionArray, setPositionArray] = useState([]);
-    const [bidsArray, setBidsArray] = useState([]);
-    const [asksArray, setAsksArray] = useState([]);
-    const [price, setPrice] = useState("");
-    const [position, setPosition] = useState(false);
-    const [future, setFuture] = useState(false);
-    const [balance, setBalance] = useState(0);
-    const [wareHousedPrice, setWareHousedPrice] = useState("");
+
 
     const getEntrust = () => {
         api.get("/investor/future?status=CREATE").then((x) => {
@@ -1287,21 +1295,20 @@ const TradeScreen = ({
             }
             }
         })
-        setInterval(() => {
-        api.get("/investor/future?status=CREATE").then((x) => {
-            setEntrustArray(x.data);
-            // console.log(x.data);
-            for (let i = 0; i < x.data.length; i++) {
-            if (x.data[i].status !== "CANCEL") {
-                setFuture(true);
-                return;
-            }
-            }
-        })},3000)
+        // setInterval(() => {
+        // api.get("/investor/future?status=CREATE").then((x) => {
+        //     setEntrustArray(x.data);
+        //     // console.log(x.data);
+        //     for (let i = 0; i < x.data.length; i++) {
+        //     if (x.data[i].status !== "CANCEL") {
+        //         setFuture(true);
+        //         return;
+        //     }
+        //     }
+        // })},3000)
     };
     const getPosition = () => {
         api.get("/investor/position").then((x) => {
-            console.log(x)
             setPositionArray(x.data.sort(function (a:any, b:any) {
             return a.positionId > b.positionId ? 1 : -1;
             }));
@@ -1312,19 +1319,19 @@ const TradeScreen = ({
             }
             }
         })
-        setInterval(() => {
-        api.get("/investor/position").then((x) => {
-            setPositionArray(x.data.sort(function (a:any, b:any) {
-            return a.positionId > b.positionId ? 1 : -1;
-            }));
+        // setInterval(() => {
+        // api.get("/investor/position").then((x) => {
+        //     setPositionArray(x.data.sort(function (a:any, b:any) {
+        //     return a.positionId > b.positionId ? 1 : -1;
+        //     }));
     
-            for (let i = 0; i < x.data.length; i++) {
-            if (x.data[i].status !== "CLOSE") {
-                setPosition(true);
-                return;
-            }
-            }
-        })},3000)
+        //     for (let i = 0; i < x.data.length; i++) {
+        //     if (x.data[i].status !== "CLOSE") {
+        //         setPosition(true);
+        //         return;
+        //     }
+        //     }
+        // })},3000)
         };
     const getDepth = () => {
         axios
@@ -1338,19 +1345,19 @@ const TradeScreen = ({
             .then((x) => {
                 setPrice(x.data.price);
             });
-        setInterval(() => {
-            axios
-            .get("https://api1.binance.com/api/v3/depth?symbol=BTCUSDT&limit=8")
-            .then((x) => {
-                setAsksArray(x.data.asks.reverse());
-                setBidsArray(x.data.bids);
-            });
-            axios
-            .get("https://api1.binance.com/api/v3/ticker/price?symbol=BTCUSDT")
-            .then((x) => {
-                setPrice(x.data.price);
-            });
-        }, 2000);
+        // setInterval(() => {
+        //     axios
+        //     .get("https://api1.binance.com/api/v3/depth?symbol=BTCUSDT&limit=8")
+        //     .then((x) => {
+        //         setAsksArray(x.data.asks.reverse());
+        //         setBidsArray(x.data.bids);
+        //     });
+        //     axios
+        //     .get("https://api1.binance.com/api/v3/ticker/price?symbol=BTCUSDT")
+        //     .then((x) => {
+        //         setPrice(x.data.price);
+        //     });
+        // }, 2000);
     };
     
     const getPrice = () => {
@@ -1358,23 +1365,26 @@ const TradeScreen = ({
             .get("https://api1.binance.com/api/v3/ticker/price?symbol=BTCUSDT")
             .then((x) => {
               setWareHousedPrice(x.data.price.slice(0, -6));
+              setBuyPrice(x.data.price.slice(0, -6))
             });
     };
     
     const getBalance = () => {
         api.get("/investor/margin-balance").then((x) => {
-            console.log(x.data)
             setBalance(x.data);
         });
     };
 
     useEffect(async () => {
         let token = await AsyncStorage.getItem("token")
-        console.log(token)
+        let leverage = await AsyncStorage.getItem("leverage")
         if (token) {
             getEntrust();
             getPosition();
             getBalance();
+        }
+        if(leverage){
+            setLeverageViewNum(parseInt(leverage))
         }
         // if(localStorage.getItem("leverRatio")){
         //   setLeverRatio(parseInt(localStorage.getItem("leverRatio")!))
@@ -1387,6 +1397,9 @@ const TradeScreen = ({
 
     return (
         <Container insets={insets.top}>
+            {loading && 
+        <Spinner visible={true} textContent={''} />
+      }
             {
                 swapIndex === 0 ?
                     <SwapContainer>
@@ -1412,12 +1425,12 @@ const TradeScreen = ({
                         <TradeHeaderContainer>
                             <TradeHeaderLeftContainer>
                                 <TradeHeaderTitleText>BTCUSDT</TradeHeaderTitleText>
-                                {
+                                {/* {
                                     isPositive === true ?
                                         <TradeHeaderFluctuationRiseText>+2.90%</TradeHeaderFluctuationRiseText>
                                         :
                                         <TradeHeaderFluctuationFallText>-2.90%</TradeHeaderFluctuationFallText>
-                                }
+                                } */}
                             </TradeHeaderLeftContainer>
                             <TradeHeaderRightContainer>
                                 <TradeHeaderPositionButton onPress={() => { togglePositionViewModal() }}>
@@ -1495,18 +1508,18 @@ const TradeScreen = ({
                                             swapBuyPosition === 'Open' ?
                                                 <TradeFunctionPositionButtonContainer>
                                                     <TradeFunctionOpenPositionButtonClicked onPress={() => { setSwapBuyPosition('Open') }}>
-                                                        <TradeFunctionPositionButtonClickedText>開倉</TradeFunctionPositionButtonClickedText>
+                                                        <TradeFunctionPositionButtonClickedText>買入</TradeFunctionPositionButtonClickedText>
                                                     </TradeFunctionOpenPositionButtonClicked>
                                                     <TradeFunctionClosePositionButton onPress={() => { setSwapBuyPosition('Close') }}>
-                                                        <TradeFunctionPositionButtonText>平倉</TradeFunctionPositionButtonText>
+                                                        <TradeFunctionPositionButtonText>賣出</TradeFunctionPositionButtonText>
                                                     </TradeFunctionClosePositionButton>
                                                 </TradeFunctionPositionButtonContainer> :
                                                 <TradeFunctionPositionButtonContainer>
                                                     <TradeFunctionOpenPositionButton onPress={() => { setSwapBuyPosition('Open') }}>
-                                                        <TradeFunctionPositionButtonText>開倉</TradeFunctionPositionButtonText>
+                                                        <TradeFunctionPositionButtonText>買入</TradeFunctionPositionButtonText>
                                                     </TradeFunctionOpenPositionButton>
                                                     <TradeFunctionClosePositionButtonClicked onPress={() => { setSwapBuyPosition('Close') }}>
-                                                        <TradeFunctionPositionButtonClickedText>平倉</TradeFunctionPositionButtonClickedText>
+                                                        <TradeFunctionPositionButtonClickedText>賣出</TradeFunctionPositionButtonClickedText>
                                                     </TradeFunctionClosePositionButtonClicked>
                                                 </TradeFunctionPositionButtonContainer>
                                         }
@@ -1514,15 +1527,34 @@ const TradeScreen = ({
                                             <TradeFunctionPriceOptionText>{buyTypeChange()}</TradeFunctionPriceOptionText>
                                             <TradeFunctionPriceOptionIcon source={require("../../assets/images/trade/dropdown.png")} />
                                         </TradeFunctionPriceOption>
+                                        {(buyType === "Plan_Limit" || buyType === "Plan_Market") && 
+                                            <TradeFunctionPriceInputContainer>
+                                            <TextInput
+                                                placeholder={"觸發價"}
+                                                value={stopPrice}
+                                                onChangeText={stopPrice => setStopPrice(stopPrice)}
+                                                placeholderTextColor={
+                                                  '#8D97A2'
+                                                }
+                                                autoCorrect={false}
+                                                keyboardType={"decimal-pad"}
+                                                style={{ backgroundColor: '#242D37', width: '70%', height: 36, color: '#F4F5F6', borderTopLeftRadius: 4, borderBottomLeftRadius: 4, paddingLeft: 12 }}
+                                            />
+                                            <TradeFunctionPriceInputRightContainer>
+                                                <TradeFunctionPriceInputRightText>USDT</TradeFunctionPriceInputRightText>
+                                            </TradeFunctionPriceInputRightContainer>
+                                            </TradeFunctionPriceInputContainer>
+                                        }      
                                         <TradeFunctionPriceInputContainer>
                                             <TextInput
                                                 placeholder={buyTypeInputPlaceHolder()}
-                                                value={buyPrice}
+                                                value={(buyType === "Market" || buyType === "Plan_Market") ? "":buyPrice}
                                                 onChangeText={buyPrice => setBuyPrice(buyPrice)}
                                                 placeholderTextColor={
                                                     buyType === 'Market' ?
                                                         '#FFFFFF' : '#8D97A2'
                                                 }
+                                                editable={(buyType === "Market" || buyType === "Plan_Market") ? false : true}
                                                 autoCorrect={false}
                                                 keyboardType={"decimal-pad"}
                                                 style={{ backgroundColor: '#242D37', width: '70%', height: 36, color: '#F4F5F6', borderTopLeftRadius: 4, borderBottomLeftRadius: 4, paddingLeft: 12 }}
@@ -1572,7 +1604,9 @@ const TradeScreen = ({
                                         <SmallSliderContainer
                                             trackMarks={[0, 25, 50, 75, 100]}
                                             sliderValue={[0]}
-                                            positionNum={MyPosition.BTC}
+                                            positionNum={balance === 0
+                                                ? "0"
+                                                : (((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().substring(0,((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().indexOf(".")+3)).toString()}
                                             onChangeSliderValue={setSliderNum}
                                             swapCurrency={swapCurrency}
                                         >
@@ -1594,15 +1628,134 @@ const TradeScreen = ({
                                         </TradeFunctionPositionViewContainer>
                                         <TradeFunctionPositionViewContainer>
                                             <TradeFunctionPositionViewTitleText>可開</TradeFunctionPositionViewTitleText>
-                                            <TradeFunctionPositionViewValueText>{MyPosition.BTC} BTC</TradeFunctionPositionViewValueText>
+                                            <TradeFunctionPositionViewValueText>{balance === 0
+                        ? 0
+                        : ((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().substring(0,((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().indexOf(".")+3)}{" "} BTC</TradeFunctionPositionViewValueText>
                                         </TradeFunctionPositionViewContainer>
                                         <TradeFunctionPositionViewContainer>
-                                            <TradeFunctionBuyButton onPress={() => { }}>
+                                            {swapBuyPosition === "Open" ?
+                                            <TradeFunctionBuyButton onPress={async() => {
+                                                let token = await AsyncStorage.getItem("token")
+                                                if (token) {
+                                                    if (!buyPrice && (buyType === "Limit" || buyType === "Plan_Limit")) {
+                                                      Alert.alert("請輸入價格");
+                                                    } else if (!stopPrice && (buyType === "Plan_Market" || buyType === "Plan_Limit")) {
+                                                        Alert.alert("請輸入觸發價");
+                                                    }else if (!sliderNum) {
+                                                        Alert.alert("請輸入數量");
+                                                    } else {
+                                                      var obj = buyType === "Limit" ?
+                                                      {
+                                                          price: parseFloat(buyPrice),
+                                                          origQty: sliderNum,
+                                                          side: "BUY",
+                                                          symbol: "BTC-USDT",
+                                                          leverage: leverageViewNum,
+                                                          type:"LIMIT"
+                                                      } : buyType === "Market" ? {
+                                                          origQty: sliderNum,
+                                                          side: "BUY",
+                                                          symbol: "BTC-USDT",
+                                                          leverage: leverageViewNum,
+                                                          type:"MARKET"
+                                                        } : buyType === "Plan_Limit" ? {
+                                                          price: parseFloat(buyPrice),
+                                                          origQty: sliderNum,
+                                                          side: "BUY",
+                                                          symbol: "BTC-USDT",
+                                                          leverage: leverageViewNum,
+                                                          type:"STOP_LIMIT",
+                                                          stopPrice:stopPrice
+                                                        } : {
+                                                          origQty: sliderNum,
+                                                          side: "BUY",
+                                                          symbol: "BTC-USDT",
+                                                          leverage: leverageViewNum,
+                                                          type:"STOP_MARKET",
+                                                          stopPrice:stopPrice
+                                                        }
+                                                        setLoading(true)
+                                                      api
+                                                        .post("/order/futures/open-order", obj)
+                                                        .then((x) => {
+                                                          setLoading(false)
+                                                          setBuyPrice("")
+                                                          setStopPrice("")
+                                                          setSliderNum(0)
+                                                          getEntrust();
+                                                          getPosition();
+                                                          getBalance()
+                                                        });
+                                                    }
+                                                  } else {
+                                                    alert("請先登入");
+                                                  } 
+                                            }}>
                                                 <TradeFunctionBuySellButtonText>開倉買入</TradeFunctionBuySellButtonText>
-                                            </TradeFunctionBuyButton>
-                                            <TradeFunctionSellButton onPress={() => { }}>
+                                            </TradeFunctionBuyButton> 
+                                            :
+                                            <TradeFunctionSellButton onPress={async () => { 
+                                                let token = await AsyncStorage.getItem("token")
+                                                if (token) {
+                                                    if (!buyPrice && (buyType === "Limit" || buyType === "Plan_Limit")) {
+                                                        Alert.alert("請輸入價格");
+                                                    } else if (!stopPrice && (buyType === "Plan_Market" || buyType === "Plan_Limit")) {
+                                                        Alert.alert("請輸入觸發價");
+                                                    }else if (!sliderNum) {
+                                                        Alert.alert("請輸入數量");
+                                                    } else {
+                                                      var obj = buyType === "Limit" ?
+                                                      {
+                                                          price: parseFloat(buyPrice),
+                                                          origQty: sliderNum,
+                                                          side: "SELL",
+                                                          symbol: "BTC-USDT",
+                                                          leverage: leverageViewNum,
+                                                          type:"LIMIT"
+                                                      } : buyType === "Market" ? {
+                                                          origQty: sliderNum,
+                                                          side: "SELL",
+                                                          symbol: "BTC-USDT",
+                                                          leverage: leverageViewNum,
+                                                          type:"MARKET"
+                                                        } : buyType === "Plan_Limit" ? {
+                                                          price: parseFloat(buyPrice),
+                                                          origQty: sliderNum,
+                                                          side: "SELL",
+                                                          symbol: "BTC-USDT",
+                                                          leverage: leverageViewNum,
+                                                          type:"STOP_LIMIT",
+                                                          stopPrice:stopPrice
+                                                        } : {
+                                                          origQty: sliderNum,
+                                                          side: "SELL",
+                                                          symbol: "BTC-USDT",
+                                                          leverage: leverageViewNum,
+                                                          type:"STOP_MARKET",
+                                                          stopPrice:stopPrice
+                                                        }
+                                                        setLoading(true)
+                                                      api
+                                                        .post("/order/futures/open-order", obj)
+                                                        .then((x) => {
+                                                          setLoading(false)
+                                                          setBuyPrice("")
+                                                          setStopPrice("")
+                                                          setSliderNum(0)
+                                                          getEntrust();
+                                                          getPosition();
+                                                          getBalance()
+                                                        });
+                                                    }
+                                                  } else {
+                                                    alert("請先登入");
+                                                  }
+                                            }}>
                                                 <TradeFunctionBuySellButtonText>開倉賣出</TradeFunctionBuySellButtonText>
                                             </TradeFunctionSellButton>
+                                            }
+                                            
+                                            
                                         </TradeFunctionPositionViewContainer>
                                     </TradeFunctionColumnContainer>
                                 </TradeFunctionContainer>
@@ -1653,7 +1806,7 @@ const TradeScreen = ({
                                                                     <TradePositionCardSmallTitleText>未實現盈虧</TradePositionCardSmallTitleText>
                                                                 </TradePositionCardTitleRowContainer>
                                                                 <TradePositionCardTitleRowContainer>
-                                                                    <TradePositionCardTitleValueText>{x.positionType === 'Full' ? '全倉' : '逐倉'} {x.leverage}X</TradePositionCardTitleValueText>
+                                                                    <TradePositionCardTitleValueText>{x.type === 'FULL' ? '全倉' : '逐倉'} {x.leverage}X</TradePositionCardTitleValueText>
                                                                     <TradePositionCardBigValueText>{x.value} USDT</TradePositionCardBigValueText>
                                                                 </TradePositionCardTitleRowContainer>
                                                             </TradePositionCardTitleContainer>
@@ -1708,22 +1861,30 @@ const TradeScreen = ({
                                                                 <TradeCommitCardDetailColumnContainer>
                                                                     <TradeCommitCardSmallTitleText>交易類型</TradeCommitCardSmallTitleText>
                                                                     {
-                                                                        x.type === 'Limit' &&
+                                                                        x.type === 'LIMIT' &&
                                                                         <TradeCommitCardSmallValueText>限價</TradeCommitCardSmallValueText>
                                                                     }
                                                                     {
-                                                                        x.type === 'Market' &&
+                                                                        x.type === 'MARKET' &&
                                                                         <TradeCommitCardSmallValueText>市價</TradeCommitCardSmallValueText>
+                                                                    }
+                                                                    {
+                                                                        x.type === 'STOP_MARKET' &&
+                                                                        <TradeCommitCardSmallValueText>計畫市價</TradeCommitCardSmallValueText>
+                                                                    }
+                                                                    {
+                                                                        x.type === 'STOP_LIMIT' &&
+                                                                        <TradeCommitCardSmallValueText>計畫限價</TradeCommitCardSmallValueText>
                                                                     }
                                                                 </TradeCommitCardDetailColumnContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
                                                                     <TradeCommitCardSmallTitleText>下單方向</TradeCommitCardSmallTitleText>
                                                                     {
-                                                                        x.side === 'Long' &&
+                                                                        x.side === 'BUY' &&
                                                                         <TradeCommitCardBuyDirectionLongText>買入</TradeCommitCardBuyDirectionLongText>
                                                                     }
                                                                     {
-                                                                        x.side === 'Short' &&
+                                                                        x.side === 'SELL' &&
                                                                         <TradeCommitCardBuyDirectionShortText>賣出</TradeCommitCardBuyDirectionShortText>
                                                                     }
                                                                 </TradeCommitCardDetailColumnContainer>
@@ -1739,7 +1900,7 @@ const TradeScreen = ({
                                                                 </TradeCommitCardDetailColumnContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
                                                                     <TradeCommitCardSmallTitleText>觸發價</TradeCommitCardSmallTitleText>
-                                                                    <TradeCommitCardSmallValueText>{x.executedQty}</TradeCommitCardSmallValueText>
+                                                                    <TradeCommitCardSmallValueText>{x.stopPrice}</TradeCommitCardSmallValueText>
                                                                 </TradeCommitCardDetailColumnContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
                                                                     <TradeCommitCardSmallTitleText>委託價</TradeCommitCardSmallTitleText>
@@ -1864,7 +2025,8 @@ const TradeScreen = ({
                             sliderValue={[leverageViewNum]}
                             onValueChangeSliderNum={setLeverageViewNum}
                             isModalVisable={setIsLeverageViewVisible}
-                            positionNum={MyPosition.BTC}
+                            positionNum={balance === 0 ? "0" :(((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().substring(0,((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().indexOf(".")+3)).toString()}
+                            balance={balance}
                         >
                             <Slider
 
@@ -1928,7 +2090,7 @@ const TradeScreen = ({
                     </BuyTypeModalPickerButton>
                     <BuyTypeModalLineText></BuyTypeModalLineText>
                     <BuyTypeModalPickerButton onPress={() => { setBuyType('Plan_Market'), setIsBuyTypeModalVisible(false) }}>
-                        <BuyTypeModalPickerButtonText>限價</BuyTypeModalPickerButtonText>
+                        <BuyTypeModalPickerButtonText>計畫市價</BuyTypeModalPickerButtonText>
                         {
                             buyType === 'Plan_Market' &&
                             <ModalSelectedImage source={require("../../assets/images/trade/selected.png")} />

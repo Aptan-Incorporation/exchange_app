@@ -3,7 +3,9 @@ import { Text, TouchableOpacity, View, ScrollView, Dimensions, Image, } from "re
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
-import { useState } from "react";
+import { useState,useEffect } from "react";
+import api from "../../common/api"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -435,8 +437,40 @@ const HistoryScreen = ({
     const insets = useSafeAreaInsets();
 
     const [swapView, setSwapView] = useState('HistoryCommit');
+    const [entrustArray, setEntrustArray] = useState([]);
+    const [dealEntrustArray, setDealEntrustArray] = useState([]);
+    const [positionArray, setPositionArray] = useState([]);
 
+    const getPosition = () => {
+        api.get("/investor/position").then((x) => {
+            setPositionArray(x.data);
+        })
+    };
 
+    const getDealEntrust = () => {
+        api.get("/investor/future?status=DEAL").then((x) => {
+            setDealEntrustArray(x.data);
+        })
+    };
+
+    const getHistoryEntrust = () => {
+        api.get("/investor/future").then((x) => {
+            console.log(x.data)
+
+            setEntrustArray(x.data);
+        })
+
+    };
+
+    useEffect(async () => {
+        let token = await AsyncStorage.getItem("token")
+        if (token) {
+            getHistoryEntrust();
+            getDealEntrust()
+            getPosition();
+        }
+
+    }, []);
 
     return (
         <Container insets={insets.top}>
@@ -491,72 +525,73 @@ const HistoryScreen = ({
                 {
                     swapView === 'HistoryCommit' &&
 
-                    HistoryCommitArray.map((x, i) => {
+                    entrustArray.map((x:any, i) => {
                         return (
                             <CardContainer>
                                 <CardTitleContainer>
                                     <CardTitleRowContainer>
                                         {
-                                            x.buyType === 'sell' ?
-                                                <CardTitleSecondaryLightText>{x.title} ・ {x.leverage}X</CardTitleSecondaryLightText> :
-                                                <CardTitleSecondaryText>{x.title} ・ {x.leverage}X</CardTitleSecondaryText>
+                                            x.side === 'BUY' ?
+                                                <CardTitleSecondaryLightText>BTCUSDT ・ {x.leverage}X</CardTitleSecondaryLightText> :
+                                                <CardTitleSecondaryText>BTCUSDT・ {x.leverage}X</CardTitleSecondaryText>
                                         }
                                         {
-                                            x.progress === 0 ?
-                                                <HistoryCommitCardTitleProgressCancelText>已撤銷</HistoryCommitCardTitleProgressCancelText> :
-                                                <HistoryCommitCardTitleProgressCommitText>已委託</HistoryCommitCardTitleProgressCommitText>
+                                            x.status === "CREATE"?
+                                                <HistoryCommitCardTitleProgressCancelText>已建立</HistoryCommitCardTitleProgressCancelText> :x.status === "DEAL"?
+                                                <HistoryCommitCardTitleProgressCancelText>已成交</HistoryCommitCardTitleProgressCancelText>:
+                                                <HistoryCommitCardTitleProgressCancelText>已取消</HistoryCommitCardTitleProgressCancelText>
                                         }
                                     </CardTitleRowContainer>
-                                    <CardTitleTimeText>{x.time}</CardTitleTimeText>
+                                    <CardTitleTimeText>{new Date(x.createdDate).getFullYear()}-{new Date(x.createdDate).getMonth()+1 < 10 ? "0"+(new Date(x.createdDate).getMonth()+1) : new Date(x.createdDate).getMonth()+1}-{new Date(x.createdDate).getDate() < 10 ? "0"+(new Date(x.createdDate).getDate()) : new Date(x.createdDate).getDate()} {new Date(x.createdDate).getHours() < 10 ? "0"+(new Date(x.createdDate).getHours()) : new Date(x.createdDate).getHours()}:{new Date(x.createdDate).getMinutes() < 10 ? "0"+(new Date(x.createdDate).getMinutes()) : new Date(x.createdDate).getMinutes()}</CardTitleTimeText>
                                 </CardTitleContainer>
                                 <CardDetailContainer>
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>交易類型</CardDetailTitleText>
-                                            <CardDetailValueText>{x.type}</CardDetailValueText>
+                                            <CardDetailValueText>{x.type === "LIMIT" ? "限價" : x.type === "MARKET" ? "市價" : x.type === "STOP_LIMIT" ? "計畫限價":"計畫市價"}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>成交率</CardDetailTitleText>
-                                            <CardDetailValueText>{x.successRate}%</CardDetailValueText>
+                                            <CardDetailTitleText>委託量</CardDetailTitleText>
+                                        <CardDetailValueText>{x.origQty}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
-                                        <CardDetailInColumnContainer>
+                                        {/* <CardDetailInColumnContainer>
                                             <CardDetailTitleText>成交均價</CardDetailTitleText>
                                             <CardDetailValueText>{x.successAverage}</CardDetailValueText>
-                                        </CardDetailInColumnContainer>
+                                        </CardDetailInColumnContainer> */}
                                     </CardDetailColumnContainer>
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>下單方向</CardDetailTitleText>
                                             {
-                                                x.directionType === 'Long' ?
-                                                    <CardDetailValueDirectionLong>{x.direction}</CardDetailValueDirectionLong> :
-                                                    <CardDetailValueDirectionShort>{x.direction}</CardDetailValueDirectionShort>
+                                                x.side === 'BUY' ?
+                                                    <CardDetailValueDirectionLong>買入</CardDetailValueDirectionLong> :
+                                                    <CardDetailValueDirectionShort>賣出</CardDetailValueDirectionShort>
                                             }
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>成交量</CardDetailTitleText>
-                                            <CardDetailValueText>{x.successNum}</CardDetailValueText>
+                                            <CardDetailTitleText>委託價</CardDetailTitleText>
+                                            <CardDetailValueText>{x.price}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
-                                        <CardDetailInColumnContainer>
+                                        {/* <CardDetailInColumnContainer>
                                             <CardDetailTitleText>止盈/止損</CardDetailTitleText>
                                             <TouchableOpacity onPress={() => { }}>
                                                 <CardDetailValueText>查看</CardDetailValueText>
                                             </TouchableOpacity>
-                                        </CardDetailInColumnContainer>
+                                        </CardDetailInColumnContainer> */}
                                     </CardDetailColumnContainer>
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>委託量</CardDetailTitleText>
-                                            <CardDetailValueText>{x.commitNum}</CardDetailValueText>
+                                            <CardDetailTitleText>成交率</CardDetailTitleText>
+                                            <CardDetailValueText>0</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>委託價</CardDetailTitleText>
-                                            <CardDetailValueText>{x.commitPrice}</CardDetailValueText>
+                                            <CardDetailTitleText>觸發價</CardDetailTitleText>
+                                            <CardDetailValueText>{x.stopPrice}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                     </CardDetailColumnContainer>
                                 </CardDetailContainer>
                                 {
-                                    i !== HistoryCommitArray.length - 1 &&
+                                    i !== entrustArray.length - 1 &&
                                     <CardLine></CardLine>
                                 }
                             </CardContainer>
@@ -566,55 +601,55 @@ const HistoryScreen = ({
                 {
                     swapView === 'SubmitRecord' &&
 
-                    SubmitRecordArray.map((x, i) => {
+                    dealEntrustArray.map((x:any, i) => {
                         return (
                             <CardContainer>
                                 <CardTitleContainer>
                                     {
-                                        x.buyType === 'sell' ?
-                                            <CardTitleSecondaryLightText>{x.title}</CardTitleSecondaryLightText> :
-                                            <CardTitleSecondaryText>{x.title}</CardTitleSecondaryText>
+                                        x.side === 'SELL' ?
+                                    <CardTitleSecondaryLightText>BTCUSDT {x.leverage}X</CardTitleSecondaryLightText> :
+                                            <CardTitleSecondaryText>BTCUSDT {x.leverage}X</CardTitleSecondaryText>
                                     }
-                                    <CardTitleTimeText>{x.time}</CardTitleTimeText>
+                                    <CardTitleTimeText>{new Date(x.createdDate).getFullYear()}-{new Date(x.createdDate).getMonth()+1 < 10 ? "0"+(new Date(x.createdDate).getMonth()+1) : new Date(x.createdDate).getMonth()+1}-{new Date(x.createdDate).getDate() < 10 ? "0"+(new Date(x.createdDate).getDate()) : new Date(x.createdDate).getDate()} {new Date(x.createdDate).getHours() < 10 ? "0"+(new Date(x.createdDate).getHours()) : new Date(x.createdDate).getHours()}:{new Date(x.createdDate).getMinutes() < 10 ? "0"+(new Date(x.createdDate).getMinutes()) : new Date(x.createdDate).getMinutes()}</CardTitleTimeText>
                                 </CardTitleContainer>
                                 <CardDetailContainer>
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>交易類型</CardDetailTitleText>
-                                            <CardDetailValueText>{x.type}</CardDetailValueText>
+                                            <CardDetailValueText>{x.type === "LIMIT" ? "限價" : x.type === "MARKET" ? "市價" : x.type === "STOP_LIMIT" ? "計畫限價":"計畫市價"}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>成交量</CardDetailTitleText>
-                                            <CardDetailValueText>{x.successNum}</CardDetailValueText>
+                                            <CardDetailTitleText>委託量</CardDetailTitleText>
+                                            <CardDetailValueText>{x.origQty}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                     </CardDetailColumnContainer>
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>下單方向</CardDetailTitleText>
                                             {
-                                                x.directionType === 'Long' ?
-                                                    <CardDetailValueDirectionLong>{x.direction}</CardDetailValueDirectionLong> :
-                                                    <CardDetailValueDirectionShort>{x.direction}</CardDetailValueDirectionShort>
+                                                x.side === 'BUY' ?
+                                                    <CardDetailValueDirectionLong>買入</CardDetailValueDirectionLong> :
+                                                    <CardDetailValueDirectionShort>賣出</CardDetailValueDirectionShort>
                                             }
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>成交價</CardDetailTitleText>
-                                            <CardDetailValueText>{x.successPrice}</CardDetailValueText>
+                                            <CardDetailTitleText>委託價</CardDetailTitleText>
+                                            <CardDetailValueText>{x.price}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                     </CardDetailColumnContainer>
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>成交率</CardDetailTitleText>
-                                            <CardDetailValueText>{x.successRate}%</CardDetailValueText>
+                                            <CardDetailValueText>0</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>平倉盈虧</CardDetailTitleText>
-                                            <CardDetailValueText>{x.EarnLost}</CardDetailValueText>
+                                            <CardDetailTitleText>觸發價</CardDetailTitleText>
+                                            <CardDetailValueText>{x.stopPrice}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                     </CardDetailColumnContainer>
                                 </CardDetailContainer>
                                 {
-                                    i !== SubmitRecordArray.length - 1 &&
+                                    i !== dealEntrustArray.length - 1 &&
                                     <CardLine></CardLine>
                                 }
                             </CardContainer>
@@ -655,60 +690,60 @@ const HistoryScreen = ({
                 {
                     swapView === 'Position' &&
 
-                    PositionArray.map((x, i) => {
+                    positionArray.map((x:any, i) => {
                         return (
                             <CardContainer>
                                 <CardTitleContainer>
                                     {
-                                        x.buyType === 'buy' ?
-                                            <CardTitleSecondaryText>{x.title}・{x.leverage}X</CardTitleSecondaryText> :
-                                            <CardTitleSecondaryLightText>{x.title}・{x.leverage}X</CardTitleSecondaryLightText>
+                                        x.side === 'BUY' ?
+                                            <CardTitleSecondaryText>BTCUSDT・全倉{x.leverage}X</CardTitleSecondaryText> :
+                                            <CardTitleSecondaryLightText>BTCUSDT・全倉{x.leverage}X</CardTitleSecondaryLightText>
                                     }
-                                    <CardTitleTimeText>{x.time}</CardTitleTimeText>
+                                    {/* <CardTitleTimeText>{new Date(x.createdDate).getFullYear()}-{new Date(x.createdDate).getMonth()+1 < 10 ? "0"+(new Date(x.createdDate).getMonth()+1) : new Date(x.createdDate).getMonth()+1}-{new Date(x.createdDate).getDate() < 10 ? "0"+(new Date(x.createdDate).getDate()) : new Date(x.createdDate).getDate()} {new Date(x.createdDate).getHours() < 10 ? "0"+(new Date(x.createdDate).getHours()) : new Date(x.createdDate).getHours()}:{new Date(x.createdDate).getMinutes() < 10 ? "0"+(new Date(x.createdDate).getMinutes()) : new Date(x.createdDate).getMinutes()}</CardTitleTimeText> */}
                                 </CardTitleContainer>
                                 <CardDetailContainer>
                                     <CardDetailColumnContainer>
-                                        <CardDetailInColumnContainer>
+                                        {/* <CardDetailInColumnContainer>
                                             <CardDetailTitleText>開倉均價</CardDetailTitleText>
-                                            <CardDetailValueText>{x.openPositionAveragePrice}</CardDetailValueText>
-                                        </CardDetailInColumnContainer>
+                                            <CardDetailValueText>{x.avgPrice}</CardDetailValueText>
+                                        </CardDetailInColumnContainer> */}
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>未實現盈虧</CardDetailTitleText>
-                                            <CardDetailValueText>{x.earnLost}</CardDetailValueText>
+                                            <CardDetailValueText>{x.profitAndLoss}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>持倉量</CardDetailTitleText>
-                                            <CardDetailValueText>{x.positionNum}</CardDetailValueText>
+                                            <CardDetailTitleText>強平價格</CardDetailTitleText>
+                                            <CardDetailValueText>{x.forceClose}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
-                                        <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>價格</CardDetailTitleText>
-                                            <CardDetailValueText>{x.price}</CardDetailValueText>
-                                        </CardDetailInColumnContainer>
+                                        {/* <CardDetailInColumnContainer>
+                                            <CardDetailTitleText>入場價格</CardDetailTitleText>
+                                            <CardDetailValueText>{x.avgPrice}</CardDetailValueText>
+                                        </CardDetailInColumnContainer> */}
                                     </CardDetailColumnContainer>
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>持倉均價</CardDetailTitleText>
-                                            <CardDetailValueText>{x.holdPositionAveragePrice}</CardDetailValueText>
+                                            <CardDetailTitleText>標記價格</CardDetailTitleText>
+                                            <CardDetailValueText>{x.avgPrice}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>收益</CardDetailTitleText>
-                                            <CardDetailValueText>{x.earn}</CardDetailValueText>
+                                            <CardDetailTitleText>持倉量</CardDetailTitleText>
+                                            <CardDetailValueText>{x.quantity}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
-                                        <CardDetailInColumnContainer>
+                                        {/* <CardDetailInColumnContainer>
                                             <CardDetailTitleText>擔保資產率</CardDetailTitleText>
                                             <CardDetailValueText>{x.assetsRate}%</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>數量</CardDetailTitleText>
-                                            <CardDetailValueText>{x.number}</CardDetailValueText>
-                                        </CardDetailInColumnContainer>
+                                            <CardDetailValueText>{x.quantity}</CardDetailValueText>
+                                        </CardDetailInColumnContainer> */}
                                     </CardDetailColumnContainer>
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>擔保資產</CardDetailTitleText>
-                                            <CardDetailValueText>{x.assetsNum}</CardDetailValueText>
+                                            <CardDetailTitleText>入場價格</CardDetailTitleText>
+                                            <CardDetailValueText>{x.margin}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
-                                        <CardDetailInColumnContainer>
+                                        {/* <CardDetailInColumnContainer>
                                             <CardDetailTitleText>收益率</CardDetailTitleText>
                                             {
                                                 x.earnRatePositive === true ?
@@ -719,11 +754,11 @@ const HistoryScreen = ({
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>預估強平</CardDetailTitleText>
                                             <CardDetailValueText>{x.estimateCancelValue}</CardDetailValueText>
-                                        </CardDetailInColumnContainer>
+                                        </CardDetailInColumnContainer> */}
                                     </CardDetailColumnContainer>
                                 </CardDetailContainer>
                                 {
-                                    i !== PositionArray.length - 1 &&
+                                    i !== positionArray.length - 1 &&
                                     <CardLine></CardLine>
                                 }
                             </CardContainer>

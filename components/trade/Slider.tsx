@@ -2,6 +2,8 @@ import * as React from "react";
 import { Text, TouchableOpacity, View, Image } from "react-native"
 import { Slider } from '@miblanchard/react-native-slider';
 import styled from "styled-components"
+import api from "../../common/api"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Container = styled(View)`
 display: flex;
@@ -92,8 +94,9 @@ const SliderContainer = (props: {
     positionNum?: String;
     onValueChangeSliderNum: React.Dispatch<React.SetStateAction<number>>;
     isModalVisable: React.Dispatch<React.SetStateAction<boolean>>;
+    balance:number
 }) => {
-    const { sliderValue, trackMarks, positionNum, onValueChangeSliderNum, isModalVisable } = props;
+    const { sliderValue, trackMarks, positionNum, onValueChangeSliderNum, isModalVisable,balance } = props;
     const [value, setValue] = React.useState(
         sliderValue ? sliderValue : DEFAULT_VALUE,
     );
@@ -182,12 +185,19 @@ const SliderContainer = (props: {
                 <LeverageViewModalDetailText>調整槓桿後，您的 BTC 永續合約資金將變化為：</LeverageViewModalDetailText>
             </LeverageViewModalDetailRowContainer>
             <LeverageViewModalDetailRowContainer>
-                <LeverageViewModalDetailText>{positionNum} BTC 持倉擔保金額</LeverageViewModalDetailText>
+                <LeverageViewModalDetailText>{balance} USDT 持倉擔保金額</LeverageViewModalDetailText>
             </LeverageViewModalDetailRowContainer>
             <LeverageViewModalDetailRowContainer>
                 <LeverageViewModalDetailText>{positionNum} BTC 可用擔保金額</LeverageViewModalDetailText>
             </LeverageViewModalDetailRowContainer>
-            <ModalConfirmButton onPress={() => { sendDataLeverageModal() }}>
+            <ModalConfirmButton onPress={() => { 
+                api.postData("/order/position/adjust-leverage",{leverage:value,symbol:"BTC-USDT"}).then(x=>{
+                    if(x.status !== 400){
+                        AsyncStorage.setItem("leverage",value.toString())
+                        sendDataLeverageModal() 
+                    }
+                })
+            }}>
                 <ModalConfirmButtonText>確認</ModalConfirmButtonText>
             </ModalConfirmButton>
         </Container>
