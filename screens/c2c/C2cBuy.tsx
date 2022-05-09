@@ -1,14 +1,18 @@
 import * as React from "react"
-import { Text, TextInput, View, Image, TouchableOpacity, ScrollView } from "react-native"
+import { Text, TextInput, View, Image, TouchableOpacity, ScrollView, TouchableWithoutFeedback, Keyboard } from "react-native"
 import { RootStackScreenProps } from "../../types";
 import styled from "styled-components"
 import { useState } from "react";
+import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import C2cBuyFirst from "../../components/c2c/buy/C2cBuyFirst";
+import C2cBuySecond from "../../components/c2c/buy/C2cBuySecond";
 
 const Container = styled(View) <{ insets: number }>`
     display: flex ;
     flex-direction: column;
     padding-top: ${props => props.insets}px;
+    justify-content: space-between;
 `;
 
 const HeaderContainer = styled(View)`
@@ -40,147 +44,67 @@ width: 28px;
 height: 28px;
 `;
 
+const ProgressBarContainer = styled(View)`
+display: flex;
+flex-direction: row;
+`;
 
-// Top Container
+const ProgressBarElseLine = styled(View)`
+height: 4px;
+background-color: ${props => props.theme.color.DarkGray};
+`;
+
 const TopContainer = styled(View)`
+display: flex;
+flex-direction: column;
+background-color: #18222D;
+`;
+
+const TopInColumnContainer = styled(View)`
 display: flex;
 flex-direction: column;
 padding-top: 16px;
 padding-left: 16px;
 padding-right: 16px;
-padding-bottom: 24px;
+padding-bottom: 16px;
 `;
 
-const TopDetailContainer = styled(View)`
-display: flex;
-flex-direction: column;
+const TopContainerTitleText = styled(Text)`
+font-weight: 600;
+font-size: 24px;
+line-height: 36px;
+color: ${props => props.theme.color.White};
 `;
 
-const TopDetailPriceRowContainer = styled(View)`
-display: flex;
-flex-direction: row;
-align-items: baseline;
-`;
-
-const TopDetailRowContainer = styled(View)`
+const TopContainerTimerContainer = styled(View)`
 display: flex;
 flex-direction: row;
-align-items: center;
+margin-top: 4px;
 `;
 
-const TopDetailTitleText = styled(Text)`
+const TopContainerTimerText = styled(Text)`
+font-weight: 700;
+font-size: 16px;
+line-height: 20px;
+color: #FABD43;
+`;
+
+const TopContainerTimerMiddleText = styled(Text)`
+font-weight: 700;
+font-size: 16px;
+line-height: 20px;
+color: ${props => props.theme.color.LightMidGray};
+`;
+
+const TopContainerDetailText = styled(Text)`
 font-weight: 500;
 font-size: 13px;
 line-height: 20px;
-color: ${props => props.theme.color.MidGray};
-padding-right: 8px;
+color: ${props => props.theme.color.LightMidGray};
+margin-top: 4px;
 `;
 
-const TopDetailPriceText = styled(Text)`
-font-weight: 700;
-font-size: 24px;
-line-height: 30px;
-color: ${props => props.theme.color.Secondary};
-`;
 
-const TopDetailCurrencyText = styled(Text)`
-font-weight: 400;
-font-size: 15px;
-line-height: 18px;
-color: ${props => props.theme.color.Secondary};
-margin-left: 4px;
-`;
-
-const TopDetailValueText = styled(Text)`
-font-weight: 600;
-font-size: 13px;
-line-height: 16px;
-color: ${props => props.theme.color.ExtraLightGray};
-`;
-
-const TopInputContainer = styled(View)`
-display: flex;
-flex-direction: row;
-padding-top: 26px;
-`;
-
-const TopInputLeftContainer = styled(View)`
-display: flex;
-flex-direction: column;
-justify-content: space-between;
-width: 85%;
-`;
-
-const TopInputLeftRowContainer = styled(View)`
-display: flex;
-flex-direction: row;
-align-items: center;
-justify-content: space-between;
-`;
-
-const TopInputRightContainer = styled(View)`
-background-color: #242D37;
-justify-content: center;
-align-items: center;
-width: 15%;
-border-top-right-radius: 4px;
-border-bottom-right-radius: 4px;
-`;
-
-const TopInputCurrencyTextContainer = styled(View)`
-flex-direction: row;
-height: 46px;
-width: 15%;
-background-color: #242D37;
-justify-content: flex-end;
-align-items: center;
-`;
-
-const TopInputCurrencyText = styled(Text)`
-font-weight: 400;
-font-size: 15px;
-line-height: 18px;
-color: ${props => props.theme.color.ExtraLightGray};
-`;
-
-const TopInputAllButton = styled(TouchableOpacity)`
-height: 46px;
-width: 15%;
-font-weight: 500;
-font-size: 14px;
-line-height: 22px;
-background-color: #242D37;
-justify-content: center;
-align-items: flex-end;
-`;
-
-const TopInputAllButtonText = styled(Text)`
-font-weight: 500;
-font-size: 14px;
-line-height: 22px;
-color: ${props => props.theme.color.PrimaryLight};
-`;
-
-const TopInputSwapIcon = styled(Image)`
-width: 28px;
-height: 28px;
-`;
-
-const TopBuyButton = styled(TouchableOpacity)`
-height: 45px;
-border-radius: 4px;
-background-color: ${props => props.theme.color.PrimaryDark};
-justify-content: center;
-align-items: center;
-margin-top: 24px;
-`;
-
-const TopBuyButtonText = styled(Text)`
-font-weight: 500;
-font-size: 14px;
-line-height: 22px;
-color: ${props => props.theme.color.White};
-`;
 
 const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen">) => {
 
@@ -188,6 +112,7 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
 
     // Props From Previous Screen
     const { Id } = route.params;
+    const { MyUSD } = route.params;
     const { Account } = route.params; // Email
     const { CurrencyType } = route.params; // USDT, BTC..
     const { SuccessRate } = route.params;
@@ -205,80 +130,128 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
     // Input Number
     const [inputNumber, setInputNumber] = useState("");
 
+    // 購買流程
+    const [swapPage, setSwapPage] = useState(1);
+
+    //購買單號
+    const [buyId, setBuyId] = useState("");
+
+    //選擇付款方式
+    const [choosePayType, setChoosePaytype] = useState("");
+
     return (
-        <Container insets={insets.top}>
-            <HeaderContainer>
-                <TouchableOpacity onPress={() => { navigation.goBack() }}>
-                    <PreviousIcon source={require("../../assets/images/global/previous.png")} />
-                </TouchableOpacity>
-                <HeaderTitleText>購買 {CurrencyType}</HeaderTitleText>
-                <HeaderEmptyContainer></HeaderEmptyContainer>
-            </HeaderContainer>
-            <TopContainer>
-                <TopDetailContainer>
-                    <TopDetailPriceRowContainer>
-                        <TopDetailTitleText>單價</TopDetailTitleText>
-                        <TopDetailPriceText>{Price}</TopDetailPriceText>
-                        <TopDetailCurrencyText>{CurrencyType}</TopDetailCurrencyText>
-                    </TopDetailPriceRowContainer>
-                    <TopDetailRowContainer>
-                        <TopDetailTitleText>數量</TopDetailTitleText>
-                        <TopDetailValueText>{AvailableNum} {CurrencyType}</TopDetailValueText>
-                    </TopDetailRowContainer>
-                    <TopDetailRowContainer>
-                        <TopDetailTitleText>限額</TopDetailTitleText>
-                        <TopDetailValueText>{LimitFrom} - {LimitTo} USD</TopDetailValueText>
-                    </TopDetailRowContainer>
-                </TopDetailContainer>
-                <TopInputContainer>
-                    <TopInputLeftContainer>
-                        <TopInputLeftRowContainer>
-                            <TextInput
-                                placeholder={"請輸入數量"}
-                                value={inputPrice}
-                                onChangeText={inputPrice => setInputPrice(inputPrice)}
-                                placeholderTextColor={'#8D97A2'}
-                                autoCorrect={false}
-                                keyboardType={"decimal-pad"}
-                                style={{ backgroundColor: '#242D37', width: '70%', height: 46, color: '#F4F5F6', borderTopLeftRadius: 4, paddingLeft: 16, paddingTop: 15, paddingBottom: 15 }}
-                            />
-                            <TopInputCurrencyTextContainer>
-                                <TopInputCurrencyText>USD</TopInputCurrencyText>
-                            </TopInputCurrencyTextContainer>
-                            <TopInputAllButton onPress={() => { }}>
-                                <TopInputAllButtonText>全部</TopInputAllButtonText>
-                            </TopInputAllButton>
-                        </TopInputLeftRowContainer>
-                        <TopInputLeftRowContainer>
-                            <TextInput
-                                placeholder={"請輸入數量"}
-                                value={inputNumber}
-                                onChangeText={inputNumber => setInputNumber(inputNumber)}
-                                placeholderTextColor={'#8D97A2'}
-                                autoCorrect={false}
-                                keyboardType={"decimal-pad"}
-                                style={{ backgroundColor: '#242D37', width: '70%', height: 46, color: '#F4F5F6', borderBottomLeftRadius: 4, paddingLeft: 16, paddingTop: 15, paddingBottom: 15 }}
-                            />
-                            <TopInputCurrencyTextContainer>
-                                <TopInputCurrencyText>{CurrencyType}</TopInputCurrencyText>
-                            </TopInputCurrencyTextContainer>
-                            <TopInputAllButton onPress={() => { }}>
-                                <TopInputAllButtonText>全部</TopInputAllButtonText>
-                            </TopInputAllButton>
-                        </TopInputLeftRowContainer>
-                    </TopInputLeftContainer>
-                    <TopInputRightContainer>
-                        <TouchableOpacity onPress={() => { }}>
-                            <TopInputSwapIcon source={require("../../assets/images/c2c/swap.png")} />
-                        </TouchableOpacity>
-                    </TopInputRightContainer>
-                </TopInputContainer>
-                <TopBuyButton onPress={() => { }}>
-                    <TopBuyButtonText>購買</TopBuyButtonText>
-                </TopBuyButton>
-            </TopContainer>
-            
-        </Container>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <Container insets={insets.top}>
+                <HeaderContainer>
+                    <TouchableOpacity onPress={() => { navigation.goBack() }}>
+                        <PreviousIcon source={require("../../assets/images/global/previous.png")} />
+                    </TouchableOpacity>
+                    <HeaderTitleText>購買 {CurrencyType}</HeaderTitleText>
+                    <HeaderEmptyContainer></HeaderEmptyContainer>
+                </HeaderContainer>
+                {
+                    swapPage === 1 &&
+                    <C2cBuyFirst
+                        Id={Id}
+                        MyUSD={MyUSD}
+                        Account={Account}
+                        CurrencyType={CurrencyType}
+                        SuccessRate={SuccessRate}
+                        AvailableNum={AvailableNum}
+                        LimitFrom={LimitFrom}
+                        LimitTo={LimitTo}
+                        Price={Price}
+                        PayTypeAccount={payTypeAccount}
+                        PayTypeTouchnGo={payTypeTouchnGo}
+                        PayTypePpay={payTypePpay}
+                        onValueChangeInputPrice={setInputPrice}
+                        onValueChangeInputNumber={setInputNumber}
+                        onChangeSetSwapPage={setSwapPage}
+                    />
+                }
+                {
+                    swapPage === 2 &&
+                    <TopContainer>
+                        <ProgressBarContainer>
+                            <LinearGradient colors={['#A8C2DC', '#6699CC']} style={{
+                                height: 4,
+                                width: '33%'
+                            }}>
+                            </LinearGradient>
+                            <ProgressBarElseLine style={{ width: '67%' }}></ProgressBarElseLine>
+                        </ProgressBarContainer>
+                        <TopInColumnContainer>
+                        <TopContainerTitleText>請付款</TopContainerTitleText>
+                        <TopContainerTimerContainer>
+                            <TopContainerTimerText>14</TopContainerTimerText>
+                            <TopContainerTimerMiddleText> : </TopContainerTimerMiddleText>
+                            <TopContainerTimerText>58</TopContainerTimerText>
+                        </TopContainerTimerContainer>
+                        </TopInColumnContainer>
+                    </TopContainer>
+                }
+                {
+                    swapPage === 3 &&
+                    <TopContainer>
+                        <ProgressBarContainer>
+                            <LinearGradient colors={['#A8C2DC', '#6699CC']} style={{
+                                height: 4,
+                                width: '66%'
+                            }}>
+                            </LinearGradient>
+                            <ProgressBarElseLine style={{ width: '34%' }}></ProgressBarElseLine>
+                        </ProgressBarContainer>
+                        <TopInColumnContainer>
+                        <TopContainerTitleText>等待放行</TopContainerTitleText>
+                        <TopContainerTimerContainer>
+                            <TopContainerTimerText>4</TopContainerTimerText>
+                            <TopContainerTimerMiddleText> : </TopContainerTimerMiddleText>
+                            <TopContainerTimerText>58</TopContainerTimerText>
+                        </TopContainerTimerContainer>
+                        </TopInColumnContainer>
+                    </TopContainer>
+                }
+                {
+                    swapPage === 4 &&
+                    <TopContainer>
+                        <ProgressBarContainer>
+                            <LinearGradient colors={['#A8C2DC', '#6699CC']} style={{
+                                height: 4,
+                                width: '100%'
+                            }}>
+                            </LinearGradient>
+                            <ProgressBarElseLine style={{ width: '0%' }}></ProgressBarElseLine>
+                        </ProgressBarContainer>
+                        <TopInColumnContainer>
+                        <TopContainerTitleText>訂單已完成</TopContainerTitleText>
+                        <TopContainerDetailText>購買的加密貨幣已發放至您的現貨資產</TopContainerDetailText>
+                        </TopInColumnContainer>
+                    </TopContainer>
+                }
+                {
+                    swapPage === 2 &&
+                    <C2cBuySecond
+                        Id={Id}
+                        MyUSD={MyUSD}
+                        Account={Account}
+                        CurrencyType={CurrencyType}
+                        SuccessRate={SuccessRate}
+                        AvailableNum={AvailableNum}
+                        LimitFrom={LimitFrom}
+                        LimitTo={LimitTo}
+                        Price={Price}
+                        PayTypeAccount={payTypeAccount}
+                        PayTypeTouchnGo={payTypeTouchnGo}
+                        PayTypePpay={payTypePpay}
+                        BuyPrice={inputPrice}
+                        BuyNumber={inputNumber}
+                        onChangeSetSwapPage={setSwapPage}
+                        onChangeSetBuyId={setBuyId}
+                    />
+                }
+
+            </Container>
+        </TouchableWithoutFeedback>
     )
 
 }

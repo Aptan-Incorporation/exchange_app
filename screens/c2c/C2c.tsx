@@ -420,6 +420,8 @@ const SellArray = [
     },
 ];
 
+const MyUSD = '1000';
+
 
 
 
@@ -584,6 +586,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                     <BuyButton onPress={() => {
                                         navigation.navigate('C2cBuyScreen', {
                                             Id: x.id,
+                                            MyUSD: MyUSD,
                                             CurrencyType: x.type,
                                             Account: x.account,
                                             SuccessRate: x.successRate,

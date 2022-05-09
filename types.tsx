@@ -24,6 +24,7 @@ export type RootStackParamList = {
   HistoryScreen:undefined;
   C2cScreen:{
     Id: string,
+    MyUSD: string,
     CurrencyType: string,
     Account: string,
     SuccessRate: number,
