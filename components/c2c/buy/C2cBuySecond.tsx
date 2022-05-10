@@ -1,10 +1,15 @@
 import * as React from "react"
-import { Text, TextInput, View, Image, TouchableOpacity, InputAccessoryView } from "react-native"
+import { Text, TextInput, View, ScrollView, Image, TouchableOpacity, InputAccessoryView, Dimensions, Alert, Button } from "react-native"
+import Modal from "react-native-modal";
 import styled from "styled-components"
 import { useState } from "react";
+import { useNavigation } from '@react-navigation/native';
+
+const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get('window').width;
 
 
-const Container = styled(View)`
+const Container = styled(ScrollView)`
 display: flex;
 flex-direction: column;
 background-color: #18222D;
@@ -227,7 +232,94 @@ line-height: 22px;
 color: ${props => props.theme.color.PrimaryLight};
 `;
 
+const BottomButtonContainer = styled(View)`
+display: flex;
+flex-direction: row
+justify-content: space-between;
+margin-top: 37px;
+padding-bottom: 200px;
+`;
 
+const CancelButton = styled(TouchableOpacity)`
+width: 25%;
+height: 44px;
+justify-content: center;
+align-items: center;
+border: 1px solid ${props => props.theme.color.Primary};
+border-radius: 4px;
+`;
+
+const CancelButtonText = styled(Text)`
+font-weight: 500;
+font-size: 14px;
+line-height: 22px;
+color: ${props => props.theme.color.Primary};
+`;
+
+const SubmitButton = styled(TouchableOpacity)`
+height: 44px;
+width: 70%;
+justify-content: center;
+align-items: center;
+background-color: ${props => props.theme.color.PrimaryDark};
+border-radius: 4px;
+`;
+
+const SubmitButtonText = styled(Text)`
+font-weight: 500;
+font-size: 14px;
+line-height: 22px;
+color: ${props => props.theme.color.White};
+`;
+
+
+// Modal Style
+const ModalHeaderContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+padding-top: 10px;
+padding-bottom: 26px;
+`;
+
+const ModalHedaerTitleText = styled(Text)`
+font-weight: 600;
+font-size: 16px;
+line-height: 24px
+color: ${props => props.theme.color.White};
+`;
+
+const ModalLeftCancelButton = styled(Image)`
+width: 28px;
+height: 28px;
+`;
+
+const ModalEmptyDiv = styled(View)`
+width: 28px;
+height: 28px;
+`;
+
+const QRCodeContainer = styled(View)`
+width: 224px;
+height: 224px;
+justify-content: center;
+align-items: center;
+background-color: ${props => props.theme.color.White};
+`;
+
+const QRCodeImage = styled(Image)`
+width: 137px;
+height: 137px;
+`;
+
+const ModalDetailText = styled(Text)`
+font-weight: 500;
+font-size: 13px;
+line-height: 20px;
+color: ${props => props.theme.color.LightMidGray};
+margin-top: 24px;
+
+`;
 
 // Array
 
@@ -248,6 +340,10 @@ const PpayArray = {
     account: '938712386',
     qrcode: ''
 }
+
+const TouchnGoQRCode = '../../../assets/images/c2c/qrcode.png'
+
+const PpayQRCode = '../../../assets/images/c2c/qrcode.png'
 
 
 const C2cBuySecond = (props: {
@@ -298,11 +394,114 @@ const C2cBuySecond = (props: {
     //選擇付款方式
     const [choosePayType, setChoosePaytype] = useState("");
 
+    // QRCode Modal
+    const [isQRCodeModalVisible, setIsQRCodeModalVisible] = useState(false);
+
+    const toggleQRCodeModal = () => {
+        setIsQRCodeModalVisible(!isQRCodeModalVisible);
+    };
+
+    // 取消訂單
+
+    const navigation = useNavigation();
+
+    const cancelAlert = () =>
+        Alert.alert(
+            "確定取消訂單？",
+            "惡意取消訂單若達到 3 次或更多，您帳戶的部分功能將暫時禁用。",
+            [
+                {
+                    text: "取消",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                },
+                { text: "確定", onPress: () => { navigation.goBack() } }
+            ]
+        );
+
+
+
+    // 送出訂單，下一步
+
+    const [submitText, setSubmitText] = useState('已付款，下一步');
+
+    const handleSubmitAlert = () => {
+        setSubmitText('放行中...')
+        setTimeout(() => { handleSubmit() }, 5000)
+    };
+
+    const SubmitAlert = () => {
+        if (choosePayType != "") {
+            Alert.alert(
+                "已完成付款？",
+                "請確定您已向賣方完成付款，惡意點擊系統將直接凍結您的賬戶。",
+                [
+                    {
+                        text: "取消",
+                        onPress: () => console.log("Cancel Pressed"),
+                        style: "cancel"
+                    },
+                    { text: "確定", onPress: () => { handleSubmitAlert() } }
+                ]
+            );
+        }
+    };
+
+
+
+    const handleButtonDisabled = () => {
+        if (submitText === '已付款，下一步') {
+            return false;
+        } else {
+            return true;
+        }
+    };
+
+
+    const handleSubmitButtonStyle = () => {
+        if (submitText === '放行中...') {
+            return 'rgba(102, 153, 204, 0.3)';
+        } else {
+            return '#3D6A97';
+        }
+    };
+
+
+    const handleSubmitButtonTextStyle = () => {
+        if (submitText === '放行中...') {
+            return 'rgba(255, 255, 255, 0.3)';
+        } else {
+            return '#FFFFFF';
+        }
+    };
+
+    const handleCancelButtonStyle = () => {
+        if (submitText === '放行中...') {
+            return 'rgba(102, 153, 204, 0.3)';
+        } else {
+            return '#6699CC';
+        }
+    };
+
+    const handleCancelButtonTextStyle = () => {
+        if (submitText === '放行中...') {
+            return 'rgba(102, 153, 204, 0.3)';
+        } else {
+            return '#6699CC';
+        }
+    };
+
     const handleSubmit = () => {
-        setChoosePaytype("")
-        onChangeSetSwapPage(3)
-        onChangeSetBuyId(buyId)
-    }
+        if (choosePayType != "") {
+            setChoosePaytype(choosePayType);
+            onChangeSetBuyId(buyId);
+            onChangeSetSwapPage(3);
+        }
+    };
+
+
+
+
 
     return (
         <Container>
@@ -332,34 +531,34 @@ const C2cBuySecond = (props: {
                 <SecondCardDetailText>以下為賣方的收款資訊，請您務必使用本人名下的支付方式自行轉帳，戶名需對應至您驗證帳號身份的姓名，平台並不會自動為您轉帳。</SecondCardDetailText>
                 <SecondCardPayTypeRowContainer>
                     {
-                        PayTypeAccount == true &&
-                            choosePayType === 'Account' ?
+                        PayTypeAccount &&
+                        (choosePayType == 'Account' ?
                             <BankAccountButtonClicked onPress={() => { setChoosePaytype('Account') }}>
                                 <PayTypeButtonClickedText>銀行卡</PayTypeButtonClickedText>
                             </BankAccountButtonClicked> :
                             <BankAccountButton onPress={() => { setChoosePaytype('Account') }}>
                                 <PayTypeButtonText>銀行卡</PayTypeButtonText>
-                            </BankAccountButton>
+                            </BankAccountButton>)
                     }
                     {
-                        PayTypeTouchnGo == true && // 壞掉
-                            choosePayType === 'TouchnGo' ?
+                        PayTypeTouchnGo &&
+                        (choosePayType == 'TouchnGo' ?
                             <TouchnGoButtonClicked onPress={() => { setChoosePaytype('TouchnGo') }}>
                                 <PayTypeButtonClickedText>Touch'n Go</PayTypeButtonClickedText>
                             </TouchnGoButtonClicked> :
                             <TouchnGoButton onPress={() => { setChoosePaytype('TouchnGo') }}>
                                 <PayTypeButtonText>Touch'n Go</PayTypeButtonText>
-                            </TouchnGoButton>
+                            </TouchnGoButton>)
                     }
                     {
-                        PayTypePpay == true && // 壞掉
-                            choosePayType === 'Ppay' ?
+                        PayTypePpay &&
+                        (choosePayType == 'Ppay' ?
                             <PpayButtonClicked onPress={() => { setChoosePaytype('Ppay') }}>
                                 <PayTypeButtonClickedText>Ppay</PayTypeButtonClickedText>
                             </PpayButtonClicked> :
                             <PpayButton onPress={() => { setChoosePaytype('Ppay') }}>
                                 <PayTypeButtonText>Ppay</PayTypeButtonText>
-                            </PpayButton>
+                            </PpayButton>)
                     }
                 </SecondCardPayTypeRowContainer>
                 {
@@ -407,7 +606,7 @@ const C2cBuySecond = (props: {
                         </SecondCardPayDetailContainer>
                         <SecondCardPayDetailContainer>
                             <SecondCardPayDetailTitleText>二維碼</SecondCardPayDetailTitleText>
-                            <TouchableOpacity onPress={() => { }}>
+                            <TouchableOpacity onPress={() => { toggleQRCodeModal() }}>
                                 <QRCodeText>查看</QRCodeText>
                             </TouchableOpacity>
                         </SecondCardPayDetailContainer>
@@ -432,13 +631,66 @@ const C2cBuySecond = (props: {
                         </SecondCardPayDetailContainer>
                         <SecondCardPayDetailContainer>
                             <SecondCardPayDetailTitleText>二維碼</SecondCardPayDetailTitleText>
-                            <TouchableOpacity onPress={() => { }}>
+                            <TouchableOpacity onPress={() => { toggleQRCodeModal() }}>
                                 <QRCodeText>查看</QRCodeText>
                             </TouchableOpacity>
                         </SecondCardPayDetailContainer>
                     </PayBottomContainer>
                 }
             </SecondCardContainer>
+            <BottomButtonContainer>
+                <CancelButton onPress={() => { cancelAlert() }} disabled={handleButtonDisabled()} style={{ borderColor: handleCancelButtonStyle() }}>
+                    <CancelButtonText style={{ color: handleCancelButtonTextStyle() }}>取消訂單</CancelButtonText>
+                </CancelButton>
+                <SubmitButton onPress={() => { SubmitAlert() }} disabled={handleButtonDisabled()} style={{ backgroundColor: handleSubmitButtonStyle() }}>
+                    <SubmitButtonText style={{ color: handleSubmitButtonTextStyle() }}>{submitText}</SubmitButtonText>
+                </SubmitButton>
+            </BottomButtonContainer>
+
+            <Modal
+                isVisible={isQRCodeModalVisible}
+                deviceHeight={windowHeight}
+                deviceWidth={windowWidth}
+                animationInTiming={500}
+                animationOutTiming={700}
+                backdropOpacity={0.7}
+                onBackdropPress={() => setIsQRCodeModalVisible(false)}
+                onSwipeComplete={() => setIsQRCodeModalVisible(false)}
+                swipeDirection={['down']}
+                style={{ justifyContent: 'flex-end', margin: 0 }}
+                hideModalContentWhileAnimating={true}
+            >
+                <View style={{ backgroundColor: '#242D37', borderTopLeftRadius: 8, borderTopRightRadius: 8, paddingLeft: 16, paddingRight: 16, paddingBottom: 30 }}>
+                    <ModalHeaderContainer>
+                        <TouchableOpacity onPress={() => { setIsQRCodeModalVisible(false) }}>
+                            <ModalLeftCancelButton source={require("../../../assets/images/trade/cancel.png")} />
+                        </TouchableOpacity>
+                        <ModalHedaerTitleText>二維碼</ModalHedaerTitleText>
+                        <ModalEmptyDiv></ModalEmptyDiv>
+                    </ModalHeaderContainer>
+
+                    {
+                        choosePayType === 'TouchnGo' &&
+                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                            <QRCodeContainer>
+                                <QRCodeImage source={require(TouchnGoQRCode)} />
+                            </QRCodeContainer>
+                            <ModalDetailText>Touch’n Go 用戶掃描此行動條碼後，即可進行付款。</ModalDetailText>
+                        </View>
+                    }
+                    {
+                        choosePayType === 'Ppay' &&
+                        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                            <QRCodeContainer>
+                                <QRCodeImage source={require(PpayQRCode)} />
+                            </QRCodeContainer>
+                            <ModalDetailText>Ppay 用戶掃描此行動條碼後，即可進行付款。</ModalDetailText>
+                        </View>
+                    }
+
+                </View>
+            </Modal>
+
         </Container>
     )
 }
