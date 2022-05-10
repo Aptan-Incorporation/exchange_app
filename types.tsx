@@ -29,6 +29,10 @@ export type RootStackParamList = {
   Member:undefined;
   Register:undefined;
   EmailVerify:undefined;
+  Recharge:undefined;
+  Withdraw:undefined;
+  Funds:undefined;
+  History:undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
