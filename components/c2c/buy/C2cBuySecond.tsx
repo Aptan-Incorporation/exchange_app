@@ -363,6 +363,9 @@ const C2cBuySecond = (props: {
     BuyNumber: string;
     onChangeSetSwapPage: React.Dispatch<React.SetStateAction<number>>;
     onChangeSetBuyId: React.Dispatch<React.SetStateAction<string>>;
+    onChangeSetChoosePayType: React.Dispatch<React.SetStateAction<string>>;
+    onChangeISWaitFinish: React.Dispatch<React.SetStateAction<boolean>>;
+    onValueChangeSetBuyTime: React.Dispatch<React.SetStateAction<string>>;
 }) => {
 
     const {
@@ -381,7 +384,10 @@ const C2cBuySecond = (props: {
         BuyPrice,
         BuyNumber,
         onChangeSetSwapPage,
-        onChangeSetBuyId
+        onChangeSetBuyId,
+        onChangeSetChoosePayType,
+        onChangeISWaitFinish,
+        onValueChangeSetBuyTime
     } = props;
 
     const getRandom = (x: number) => {
@@ -400,6 +406,12 @@ const C2cBuySecond = (props: {
     const toggleQRCodeModal = () => {
         setIsQRCodeModalVisible(!isQRCodeModalVisible);
     };
+
+    // 設置訂單日期
+    const returnBuyTime = () => {
+        let v = new Date();
+        return `${v.getFullYear()}-${v.getMonth()+1}-${v.getDate()} ${v.getHours()}:${v.getMinutes()}:${v.getSeconds()}`;
+    }
 
     // 取消訂單
 
@@ -426,8 +438,14 @@ const C2cBuySecond = (props: {
     const [submitText, setSubmitText] = useState('已付款，下一步');
 
     const handleSubmitAlert = () => {
-        setSubmitText('放行中...')
-        setTimeout(() => { handleSubmit() }, 5000)
+        if (choosePayType != "") {
+            setSubmitText('放行中...')
+            onChangeISWaitFinish(true);
+            onChangeSetChoosePayType(choosePayType);
+            onChangeSetBuyId(buyId);
+            onValueChangeSetBuyTime(returnBuyTime());
+            setTimeout(() => { handleSubmit() }, 5000)
+        }
     };
 
     const SubmitAlert = () => {
@@ -493,8 +511,6 @@ const C2cBuySecond = (props: {
 
     const handleSubmit = () => {
         if (choosePayType != "") {
-            setChoosePaytype(choosePayType);
-            onChangeSetBuyId(buyId);
             onChangeSetSwapPage(3);
         }
     };
@@ -533,30 +549,30 @@ const C2cBuySecond = (props: {
                     {
                         PayTypeAccount &&
                         (choosePayType == 'Account' ?
-                            <BankAccountButtonClicked onPress={() => { setChoosePaytype('Account') }}>
+                            <BankAccountButtonClicked onPress={() => { setChoosePaytype('Account') }} disabled={handleButtonDisabled()}>
                                 <PayTypeButtonClickedText>銀行卡</PayTypeButtonClickedText>
                             </BankAccountButtonClicked> :
-                            <BankAccountButton onPress={() => { setChoosePaytype('Account') }}>
+                            <BankAccountButton onPress={() => { setChoosePaytype('Account') }} disabled={handleButtonDisabled()}>
                                 <PayTypeButtonText>銀行卡</PayTypeButtonText>
                             </BankAccountButton>)
                     }
                     {
                         PayTypeTouchnGo &&
                         (choosePayType == 'TouchnGo' ?
-                            <TouchnGoButtonClicked onPress={() => { setChoosePaytype('TouchnGo') }}>
+                            <TouchnGoButtonClicked onPress={() => { setChoosePaytype('TouchnGo') }} disabled={handleButtonDisabled()}>
                                 <PayTypeButtonClickedText>Touch'n Go</PayTypeButtonClickedText>
                             </TouchnGoButtonClicked> :
-                            <TouchnGoButton onPress={() => { setChoosePaytype('TouchnGo') }}>
+                            <TouchnGoButton onPress={() => { setChoosePaytype('TouchnGo') }} disabled={handleButtonDisabled()}>
                                 <PayTypeButtonText>Touch'n Go</PayTypeButtonText>
                             </TouchnGoButton>)
                     }
                     {
                         PayTypePpay &&
                         (choosePayType == 'Ppay' ?
-                            <PpayButtonClicked onPress={() => { setChoosePaytype('Ppay') }}>
+                            <PpayButtonClicked onPress={() => { setChoosePaytype('Ppay') }} disabled={handleButtonDisabled()}>
                                 <PayTypeButtonClickedText>Ppay</PayTypeButtonClickedText>
                             </PpayButtonClicked> :
-                            <PpayButton onPress={() => { setChoosePaytype('Ppay') }}>
+                            <PpayButton onPress={() => { setChoosePaytype('Ppay') }} disabled={handleButtonDisabled()}>
                                 <PayTypeButtonText>Ppay</PayTypeButtonText>
                             </PpayButton>)
                     }

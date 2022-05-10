@@ -2,11 +2,13 @@ import * as React from "react"
 import { Text, TextInput, View, Image, TouchableOpacity, ScrollView, TouchableWithoutFeedback, Keyboard } from "react-native"
 import { RootStackScreenProps } from "../../types";
 import styled from "styled-components"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import C2cBuyFirst from "../../components/c2c/buy/C2cBuyFirst";
 import C2cBuySecond from "../../components/c2c/buy/C2cBuySecond";
+import C2cBuyLast from "../../components/c2c/buy/C2cBuyLast";
+import CountdownTimer from "../../components/c2c/CountdownTimer";
 
 const Container = styled(View) <{ insets: number }>`
     display: flex ;
@@ -133,11 +135,40 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
     // 購買流程
     const [swapPage, setSwapPage] = useState(1);
 
-    //購買單號
+    // 購買單號
     const [buyId, setBuyId] = useState("");
 
-    //選擇付款方式
+    // 選擇付款方式
     const [choosePayType, setChoosePaytype] = useState("");
+
+    // 訂單時間
+    const [buyTime, setBuyTime] = useState("");
+
+    // 付款確認 等待放行
+    const [isWaitFinish, setIsWaitFinish] = useState(false);
+
+    // Countdown Timer
+    const [secondLeft, setSecondLeft] = useState(60);
+    const [minuteLeft, setMinuteLeft] = useState(14);
+
+    const Countdown = () => {
+        for (let i = 14; i <= 0; i--) {
+            useEffect(() => {
+                const intervalId = setInterval(() => {
+                    setSecondLeft((t) => t - 1);
+                }, 1000);
+                setMinuteLeft(minuteLeft - 1);
+                return () => clearInterval(intervalId);
+            }, []);
+
+
+        }
+    };
+
+    const THREE_DAYS_IN_MS = 3 * 24 * 60 * 60 * 1000;
+    const NOW_IN_MS = new Date().getTime();
+
+    const dateTimeAfterThreeDays = NOW_IN_MS + THREE_DAYS_IN_MS;
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -171,48 +202,47 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
                 }
                 {
                     swapPage === 2 &&
-                    <TopContainer>
-                        <ProgressBarContainer>
-                            <LinearGradient colors={['#A8C2DC', '#6699CC']} style={{
-                                height: 4,
-                                width: '33%'
-                            }}>
-                            </LinearGradient>
-                            <ProgressBarElseLine style={{ width: '67%' }}></ProgressBarElseLine>
-                        </ProgressBarContainer>
-                        <TopInColumnContainer>
-                        <TopContainerTitleText>請付款</TopContainerTitleText>
-                        <TopContainerTimerContainer>
-                            <TopContainerTimerText>14</TopContainerTimerText>
-                            <TopContainerTimerMiddleText> : </TopContainerTimerMiddleText>
-                            <TopContainerTimerText>58</TopContainerTimerText>
-                        </TopContainerTimerContainer>
-                        </TopInColumnContainer>
-                    </TopContainer>
+                    (isWaitFinish === false ?
+                        <TopContainer>
+                            <ProgressBarContainer>
+                                <LinearGradient colors={['#A8C2DC', '#6699CC']} style={{
+                                    height: 4,
+                                    width: '33%'
+                                }}>
+                                </LinearGradient>
+                                <ProgressBarElseLine style={{ width: '67%' }}></ProgressBarElseLine>
+                            </ProgressBarContainer>
+                            <TopInColumnContainer>
+                                <TopContainerTitleText>請付款</TopContainerTitleText>
+                                <TopContainerTimerContainer>
+                                    <TopContainerTimerText>{minuteLeft}</TopContainerTimerText>
+                                    <TopContainerTimerMiddleText> : </TopContainerTimerMiddleText>
+                                    <TopContainerTimerText>{dateTimeAfterThreeDays}</TopContainerTimerText>
+                                </TopContainerTimerContainer>
+                                <CountdownTimer targetDate={dateTimeAfterThreeDays} />
+                            </TopInColumnContainer>
+                        </TopContainer> :
+                        <TopContainer>
+                            <ProgressBarContainer>
+                                <LinearGradient colors={['#A8C2DC', '#6699CC']} style={{
+                                    height: 4,
+                                    width: '66%'
+                                }}>
+                                </LinearGradient>
+                                <ProgressBarElseLine style={{ width: '34%' }}></ProgressBarElseLine>
+                            </ProgressBarContainer>
+                            <TopInColumnContainer>
+                                <TopContainerTitleText>等待放行</TopContainerTitleText>
+                                <TopContainerTimerContainer>
+                                    <TopContainerTimerText>{minuteLeft}</TopContainerTimerText>
+                                    <TopContainerTimerMiddleText> : </TopContainerTimerMiddleText>
+                                    <TopContainerTimerText>{secondLeft}</TopContainerTimerText>
+                                </TopContainerTimerContainer>
+                            </TopInColumnContainer>
+                        </TopContainer>)
                 }
                 {
                     swapPage === 3 &&
-                    <TopContainer>
-                        <ProgressBarContainer>
-                            <LinearGradient colors={['#A8C2DC', '#6699CC']} style={{
-                                height: 4,
-                                width: '66%'
-                            }}>
-                            </LinearGradient>
-                            <ProgressBarElseLine style={{ width: '34%' }}></ProgressBarElseLine>
-                        </ProgressBarContainer>
-                        <TopInColumnContainer>
-                        <TopContainerTitleText>等待放行</TopContainerTitleText>
-                        <TopContainerTimerContainer>
-                            <TopContainerTimerText>4</TopContainerTimerText>
-                            <TopContainerTimerMiddleText> : </TopContainerTimerMiddleText>
-                            <TopContainerTimerText>58</TopContainerTimerText>
-                        </TopContainerTimerContainer>
-                        </TopInColumnContainer>
-                    </TopContainer>
-                }
-                {
-                    swapPage === 4 &&
                     <TopContainer>
                         <ProgressBarContainer>
                             <LinearGradient colors={['#A8C2DC', '#6699CC']} style={{
@@ -223,8 +253,8 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
                             <ProgressBarElseLine style={{ width: '0%' }}></ProgressBarElseLine>
                         </ProgressBarContainer>
                         <TopInColumnContainer>
-                        <TopContainerTitleText>訂單已完成</TopContainerTitleText>
-                        <TopContainerDetailText>購買的加密貨幣已發放至您的現貨資產</TopContainerDetailText>
+                            <TopContainerTitleText>訂單已完成</TopContainerTitleText>
+                            <TopContainerDetailText>購買的加密貨幣已發放至您的現貨資產</TopContainerDetailText>
                         </TopInColumnContainer>
                     </TopContainer>
                 }
@@ -247,9 +277,25 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
                         BuyNumber={inputNumber}
                         onChangeSetSwapPage={setSwapPage}
                         onChangeSetBuyId={setBuyId}
+                        onChangeSetChoosePayType={setChoosePaytype}
+                        onChangeISWaitFinish={setIsWaitFinish}
+                        onValueChangeSetBuyTime={setBuyTime}
                     />
                 }
-
+                {
+                    swapPage === 3 &&
+                    <C2cBuyLast
+                        Id={Id}
+                        MyUSD={MyUSD}
+                        CurrencyType={CurrencyType}
+                        Price={Price}
+                        BuyPrice={inputPrice}
+                        BuyNumber={inputNumber}
+                        BuyID={buyId}
+                        ChosenPayType={choosePayType}
+                        BuyTime={buyTime}
+                    />
+                }
             </Container>
         </TouchableWithoutFeedback>
     )
