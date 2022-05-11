@@ -113,11 +113,11 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
     const insets = useSafeAreaInsets();
 
     // Props From Previous Screen
-    const { Id } = route.params;
-    const { MyUSD } = route.params;
+    const { Id } = route.params; // 購買商品ID
+    const { MyUSD } = route.params; //帳戶剩餘資產
     const { Account } = route.params; // Email
     const { CurrencyType } = route.params; // USDT, BTC..
-    const { SuccessRate } = route.params;
+    const { SuccessRate } = route.params; // 成功率
     const { AvailableNum } = route.params; // 數量
     const { LimitFrom } = route.params; // 限額
     const { LimitTo } = route.params; // 限額
@@ -147,28 +147,9 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
     // 付款確認 等待放行
     const [isWaitFinish, setIsWaitFinish] = useState(false);
 
-    // Countdown Timer
-    const [secondLeft, setSecondLeft] = useState(60);
-    const [minuteLeft, setMinuteLeft] = useState(14);
+    // Countdown Timer (Import CountdownTimer)
+    const FIFTEENMINUTES = 15 * 60 * 1000;
 
-    const Countdown = () => {
-        for (let i = 14; i <= 0; i--) {
-            useEffect(() => {
-                const intervalId = setInterval(() => {
-                    setSecondLeft((t) => t - 1);
-                }, 1000);
-                setMinuteLeft(minuteLeft - 1);
-                return () => clearInterval(intervalId);
-            }, []);
-
-
-        }
-    };
-
-    const THREE_DAYS_IN_MS = 3 * 24 * 60 * 60 * 1000;
-    const NOW_IN_MS = new Date().getTime();
-
-    const dateTimeAfterThreeDays = NOW_IN_MS + THREE_DAYS_IN_MS;
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -215,11 +196,8 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
                             <TopInColumnContainer>
                                 <TopContainerTitleText>請付款</TopContainerTitleText>
                                 <TopContainerTimerContainer>
-                                    <TopContainerTimerText>{minuteLeft}</TopContainerTimerText>
-                                    <TopContainerTimerMiddleText> : </TopContainerTimerMiddleText>
-                                    <TopContainerTimerText>{dateTimeAfterThreeDays}</TopContainerTimerText>
+                                    <CountdownTimer targetDate={FIFTEENMINUTES} />
                                 </TopContainerTimerContainer>
-                                <CountdownTimer targetDate={dateTimeAfterThreeDays} />
                             </TopInColumnContainer>
                         </TopContainer> :
                         <TopContainer>
@@ -234,9 +212,7 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
                             <TopInColumnContainer>
                                 <TopContainerTitleText>等待放行</TopContainerTitleText>
                                 <TopContainerTimerContainer>
-                                    <TopContainerTimerText>{minuteLeft}</TopContainerTimerText>
-                                    <TopContainerTimerMiddleText> : </TopContainerTimerMiddleText>
-                                    <TopContainerTimerText>{secondLeft}</TopContainerTimerText>
+                                    <CountdownTimer targetDate={FIFTEENMINUTES} />
                                 </TopContainerTimerContainer>
                             </TopInColumnContainer>
                         </TopContainer>)

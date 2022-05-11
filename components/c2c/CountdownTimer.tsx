@@ -1,92 +1,82 @@
 import * as React from "react"
-import { Text, TextInput, View, Image, TouchableOpacity, ScrollView, TouchableWithoutFeedback, Keyboard } from "react-native"
-import { RootStackScreenProps } from "../../types";
+import { Text, View } from "react-native"
 import styled from "styled-components"
 import { useState, useEffect } from "react";
 
-const useCountdown = (targetDate: any) => {
-    const countDownDate = new Date(targetDate).getTime();
+
+const TopContainerTimerText = styled(Text)`
+font-weight: 700;
+font-size: 16px;
+line-height: 20px;
+color: #FABD43;
+`;
+
+const TopContainerTimerMiddleText = styled(Text)`
+font-weight: 700;
+font-size: 16px;
+line-height: 20px;
+color: ${props => props.theme.color.LightMidGray};
+`;
+
+const useCountdown = (targetDate: number) => {
 
     const [countDown, setCountDown] = useState(
-        countDownDate - new Date().getTime()
+        targetDate
     );
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setCountDown(countDownDate - new Date().getTime());
+            setCountDown((targetDate) => targetDate - 1000);
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [countDownDate]);
+    }, [targetDate]);
 
     return getReturnValues(countDown);
 };
 
-const getReturnValues = (countDown: any) => {
+const getReturnValues = (countDown: number) => {
     // calculate time left
-    const days = Math.floor(countDown / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(
-        (countDown % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    );
     const minutes = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((countDown % (1000 * 60)) / 1000);
 
-    return [days, hours, minutes, seconds];
+    return [minutes, seconds];
 };
 
 
 
 
 
-const DateTimeDisplay = ({ value, type, isDanger }) => {
+const DateTimeDisplay = ({ value }) => {
     return (
         <View>
-            <Text>{value}</Text>
-            <Text>{type}</Text>
+            <TopContainerTimerText>{value}</TopContainerTimerText>
         </View>
     );
 };
 
 
-const ExpiredNotice = () => {
+const ShowCounter = ({ minutes, seconds }) => {
     return (
-       <View>
-            <Text>Expired!!!</Text>
-            <Text>Please select a future date and time.</Text>
-        </View>
-    );
-};
+        <View style={{ display: 'flex', flexDirection: 'row' }}>
 
-const ShowCounter = ({ days, hours, minutes, seconds }) => {
-    return (
-        <View style={{display: 'flex', flexDirection: 'row'}}>
-                <DateTimeDisplay value={days} type={'Days'} isDanger={days <= 3} />
-                <Text>:</Text>
-                <DateTimeDisplay value={hours} type={'Hours'} isDanger={false} />
-                <Text>:</Text>
-                <DateTimeDisplay value={minutes} type={'Mins'} isDanger={false} />
-                <Text>:</Text>
-                <DateTimeDisplay value={seconds} type={'Seconds'} isDanger={false} />
-            
+            <DateTimeDisplay value={minutes} />
+            <TopContainerTimerMiddleText> : </TopContainerTimerMiddleText>
+            <DateTimeDisplay value={seconds} />
+
         </View>
     );
 };
 
 const CountdownTimer = ({ targetDate }) => {
-    const [days, hours, minutes, seconds] = useCountdown(targetDate);
+    const [minutes, seconds] = useCountdown(targetDate);
 
-    if (days + hours + minutes + seconds <= 0) {
-        return <ExpiredNotice />;
-    } else {
-        return (
-            <ShowCounter
-                days={days}
-                hours={hours}
-                minutes={minutes}
-                seconds={seconds}
-            />
-        );
-    }
+    return (
+        <ShowCounter
+            minutes={minutes}
+            seconds={seconds}
+        />
+    );
 };
 
 export default CountdownTimer;
