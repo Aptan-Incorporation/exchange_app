@@ -31,20 +31,19 @@ const IconImg = styled(Image)`
   height:28px;
 `
 
-const EmailVerify = ({ navigation }: RootStackScreenProps<"EmailVerify">) => {
+const PhoneVerify = ({ navigation }: RootStackScreenProps<"PhoneVerify">) => {
   const insets = useSafeAreaInsets();
-  const [count,setCount] = useState(180)
+  const [count,setCount] = useState(300)
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [promoCode, setPromocode] = React.useState("");
   const [loading,setLoading] = React.useState(false);
+  const [phone, setPhone] = React.useState("");
 
   useEffect(async ()=>{
-    let register = await AsyncStorage.getItem("register")
-    let user = JSON.parse(register!)
-    setEmail(user.email)
-    setPassword(user.password)
-    setPromocode(user.promoCode)
+    let phone = await AsyncStorage.getItem("phone")
+    setPhone(phone)
+
     setTimeout(()=>{
       if(count > 0){
         setCount(c => c - 1)
@@ -60,35 +59,29 @@ const EmailVerify = ({ navigation }: RootStackScreenProps<"EmailVerify">) => {
             navigation.goBack();
           }}
         >
-          <IconImg source={require("../../assets/images/global/cancel.png")} />
+          <IconImg source={require("../../assets/images/global/previous.png")} />
         </TouchableOpacity>
         {/* <HeaderText>登入</HeaderText>
       <View></View> */}
       </Header>
       <View style={{ padding: 16 }}>
         <View>
-          <Text style={{ color: "white", fontSize: 32, fontWeight: "600" }}>信箱驗證</Text>
+          <Text style={{ color: "white", fontSize: 32, fontWeight: "600" }}>手機驗證</Text>
           <Text style={{ color: "#DDE0E3", fontSize: 15, fontWeight: "400", marginTop: 24, marginBottom: 4 }}>6位數驗證碼已寄送至</Text>
-          <Text style={{ color: "#FABD43", fontSize: 20, fontWeight: "700", marginTop: 8, marginBottom: 4 }}>{email}</Text>
+    <Text style={{ color: "#FABD43", fontSize: 20, fontWeight: "700", marginTop: 8, marginBottom: 4 }}>{phone}</Text>
           <Text style={{ color: "#DDE0E3", fontSize: 12, fontWeight: "500", marginTop: 8, marginBottom: 4 }}>剩餘時間{Math.floor(count/60)}:{(count - Math.floor(count/60)*60) < 10 ? "0"+(count - Math.floor(count/60)*60) :(count - Math.floor(count/60)*60)} </Text>
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between",marginTop:40}}>
             <TextInput style={{ width: "100%", height: 48, backgroundColor: "#242D37", borderRadius: 4,color:"white",fontSize:15,paddingLeft:10 }} maxLength={6} onChangeText={text =>{
              if(text.length === 6){
                 setLoading(true)
-                api.postData("/auth/email/check-code",{email:email,code:text}).then(x=>{
+                api.postData("/user/phone/check-code",{phone:phone,code:text}).then(x=>{
+                  setLoading(false)
                   if(x.status !== 400){
-                    api.postData("/auth/register",{account:email,password:password,password2:password,inviteCode:promoCode}).then(x=>{
-                      setLoading(false)
-                      if(x.status !== 400){
-                        Alert.alert("註冊成功")
-                        navigation.navigate("Root")
-                      }else{
-                        Alert.alert(x.data.msg)
-                      }
-                    })        
+                    Alert.alert("驗證成功")
+                    navigation.navigate("Setting")       
                   }else{
                     Alert.alert(x.data.msg)
-                    setLoading(false)
+                    
                   }
                 })
               }
@@ -99,9 +92,8 @@ const EmailVerify = ({ navigation }: RootStackScreenProps<"EmailVerify">) => {
         {count === 0 && 
           <TouchableOpacity style={{ display: "flex", flexDirection: "row", borderRadius: 4, justifyContent: "center", alignItems: "center", height: 44, marginTop: 42,borderColor:"#3D6A97",borderWidth:1 }} onPress={()=>{
             setLoading(true)
-            api.postData("/auth/email/verify-code",{ email:email }).then(x=>{
-              setLoading(false)
-              
+            api.postData("/user/phone/verify-code",{ phone:phone }).then(x=>{
+              setLoading(false)     
             })
             // navigation.navigate("Root")
           }}
@@ -115,4 +107,4 @@ const EmailVerify = ({ navigation }: RootStackScreenProps<"EmailVerify">) => {
   );
 };
 
-export default EmailVerify;
+export default PhoneVerify;

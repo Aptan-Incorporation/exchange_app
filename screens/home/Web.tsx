@@ -15,6 +15,7 @@ import { useState, useEffect } from "react";
 import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Clipboard from 'expo-clipboard';
+import { WebView } from 'react-native-webview';
 
 const Container = styled(View)`
   display: flex;
@@ -40,7 +41,8 @@ const Header = styled(View)<{ insets: number }>`
 const HeaderText = styled(Text)`
   font-size: 16px;
   color: white;
-  margin-right: 30px;
+  font-weight:600;
+  margin-right:30;
 `;
 
 const IconImg = styled(Image)`
@@ -48,27 +50,25 @@ const IconImg = styled(Image)`
   height: 28px;
 `;
 
-const RechargeScreen = ({ navigation }: RootStackScreenProps<"Recharge">) => {
-  const [address, setAddress] = useState([]);
+const Web = ({ navigation }: RootStackScreenProps<"Web">) => {
+  const [positionArray, setPositionArray] = useState([]);
+  const [web, setWeb] = useState("");
   const insets = useSafeAreaInsets();
 
-  const getAddress = () => {
-    api.get("/investor/wallet").then(x => {
-      console.log(x.data)
-      setAddress(x.data)
+  const getPosition = () => {
+    api.get("/investor/position").then(x => {
+      setPositionArray(x.data);
     });
   };
 
   const copyToClipboard = async () => {
-    await Clipboard.setString(address);
+    await Clipboard.setString('hello world');
     Alert.alert("複製成功")
 };
 
   useEffect(async () => {
-    let token = await AsyncStorage.getItem("token");
-    if (token) {
-       getAddress();
-    }
+    let web = await AsyncStorage.getItem("web");
+    setWeb(web)
   }, []);
 
   return (
@@ -83,24 +83,14 @@ const RechargeScreen = ({ navigation }: RootStackScreenProps<"Recharge">) => {
             source={require("../../assets/images/global/previous.png")}
           />
         </TouchableOpacity>
-        <HeaderText>充值USDT</HeaderText>
+        <HeaderText>Google 驗證</HeaderText>
         <View></View>
       </Header>
-      <View style={{justifyContent:"center",alignItems:"center",display:"flex",flexDirection:"column",marginTop:20}}>
-          <View style={{width:189,height:189,backgroundColor:"white",borderRadius:8,display:"flex",justifyContent:"center",alignItems:"center"}}>
-          <Image source={require("../../assets/images/wallet/qrcode.png")} style={{width:141,height:141}}/>
-
-          </View>
-          <Text style={{color:"#8D97A2",fontSize:13,fontWeight:"500",marginTop:20}}>此地址只可接收USDT</Text>
-          <View style={{display:"flex",flexDirection:"row",alignItems:"center"}}>
-                <Text style={{color:"#F4F5F6",fontSize:15,fontWeight:"700",marginTop:20}} >{address}</Text>
-                <TouchableOpacity onPress={copyToClipboard}>
-                     <Image source={require("../../assets/images/wallet/copy.png")} style={{width:20,height:20,marginLeft:5,marginTop:20}}/>
-                </TouchableOpacity>
-          </View>
-      </View>
+      <WebView 
+      source={{ uri: web }}
+    />
     </Container>
   );
 };
 
-export default RechargeScreen;
+export default Web;

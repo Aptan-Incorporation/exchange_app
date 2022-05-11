@@ -24,6 +24,16 @@ import styled from "styled-components"
 import Member from "../screens/home/Member";
 import Register from "../screens/home/Register";
 import EmailVerify from "../screens/home/EmailVerify";
+import Setting from "../screens/home/Setting";
+import PhoneVerify from "../screens/home/PhoneVerify";
+import PhoneInput from "../screens/home/PhoneInput";
+import GoogleVerifyStep1 from "../screens/home/GoogleVerifyStep1";
+import GoogleVerifyStep2 from "../screens/home/GoogleVerifyStep2";
+import GoogleVerifyStep3 from "../screens/home/GoogleVerifyStep3";
+import FundPassword from "../screens/home/FundPassword";
+import IdentityVerifyStep1 from "../screens/home/IdentityVerifyStep1";
+import IdentityVerifyStep2 from "../screens/home/IdentityVerifyStep2";
+import Web from "../screens/home/Web";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -47,8 +57,18 @@ function RootNavigator() {
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Screen name="Member" component={Member} options={{ headerShown: false }} />
+      <Stack.Screen name="Setting" component={Setting} options={{ headerShown: false }} />
+      <Stack.Screen name="PhoneVerify" component={PhoneVerify} options={{ headerShown: false }} />
+      <Stack.Screen name="PhoneInput" component={PhoneInput} options={{ headerShown: false }} />
+      <Stack.Screen name="GoogleVerifyStep1" component={GoogleVerifyStep1} options={{ headerShown: false }} />
+      <Stack.Screen name="GoogleVerifyStep2" component={GoogleVerifyStep2} options={{ headerShown: false }} />
+      <Stack.Screen name="GoogleVerifyStep3" component={GoogleVerifyStep3} options={{ headerShown: false }} />
+      <Stack.Screen name="FundPassword" component={FundPassword} options={{ headerShown: false }} />
       <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
       <Stack.Screen name="EmailVerify" component={EmailVerify} options={{ headerShown: false }} />
+      <Stack.Screen name="IdentityVerifyStep1" component={IdentityVerifyStep1} options={{ headerShown: false }} />
+      <Stack.Screen name="IdentityVerifyStep2" component={IdentityVerifyStep2} options={{ headerShown: false }} />
+      <Stack.Screen name="Web" component={Web} options={{ headerShown: false }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
       </Stack.Group>

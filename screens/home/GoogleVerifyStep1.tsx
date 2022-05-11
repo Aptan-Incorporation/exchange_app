@@ -40,7 +40,7 @@ const Header = styled(View)<{ insets: number }>`
 const HeaderText = styled(Text)`
   font-size: 16px;
   color: white;
-  margin-right: 30px;
+  font-weight:600;
 `;
 
 const IconImg = styled(Image)`
@@ -48,26 +48,25 @@ const IconImg = styled(Image)`
   height: 28px;
 `;
 
-const RechargeScreen = ({ navigation }: RootStackScreenProps<"Recharge">) => {
-  const [address, setAddress] = useState([]);
+const GoogleVerifyStep1 = ({ navigation }: RootStackScreenProps<"GoogleVerifyStep1">) => {
+  const [positionArray, setPositionArray] = useState([]);
   const insets = useSafeAreaInsets();
 
-  const getAddress = () => {
-    api.get("/investor/wallet").then(x => {
-      console.log(x.data)
-      setAddress(x.data)
+  const getPosition = () => {
+    api.get("/investor/position").then(x => {
+      setPositionArray(x.data);
     });
   };
 
   const copyToClipboard = async () => {
-    await Clipboard.setString(address);
+    await Clipboard.setString('hello world');
     Alert.alert("複製成功")
 };
 
   useEffect(async () => {
     let token = await AsyncStorage.getItem("token");
     if (token) {
-       getAddress();
+      getPosition();
     }
   }, []);
 
@@ -83,24 +82,30 @@ const RechargeScreen = ({ navigation }: RootStackScreenProps<"Recharge">) => {
             source={require("../../assets/images/global/previous.png")}
           />
         </TouchableOpacity>
-        <HeaderText>充值USDT</HeaderText>
-        <View></View>
+        <HeaderText>Google 驗證</HeaderText>
+        <TouchableOpacity onPress={()=>{navigation.navigate("GoogleVerifyStep2")}}>
+          <Text style={{color:"#A8C2DC",fontSize:16,fontWeight:"600"}}>下一步</Text>
+        </TouchableOpacity>
       </Header>
       <View style={{justifyContent:"center",alignItems:"center",display:"flex",flexDirection:"column",marginTop:20}}>
-          <View style={{width:189,height:189,backgroundColor:"white",borderRadius:8,display:"flex",justifyContent:"center",alignItems:"center"}}>
-          <Image source={require("../../assets/images/wallet/qrcode.png")} style={{width:141,height:141}}/>
-
-          </View>
-          <Text style={{color:"#8D97A2",fontSize:13,fontWeight:"500",marginTop:20}}>此地址只可接收USDT</Text>
-          <View style={{display:"flex",flexDirection:"row",alignItems:"center"}}>
-                <Text style={{color:"#F4F5F6",fontSize:15,fontWeight:"700",marginTop:20}} >{address}</Text>
-                <TouchableOpacity onPress={copyToClipboard}>
-                     <Image source={require("../../assets/images/wallet/copy.png")} style={{width:20,height:20,marginLeft:5,marginTop:20}}/>
-                </TouchableOpacity>
+          <Text style={{color:"#8D97A2",fontSize:13,fontWeight:"500",marginTop:20}}>請下載 Google 驗證 APP。</Text>
+          <View style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+            <TouchableOpacity onPress={()=>{
+              AsyncStorage.setItem("web","https://apps.apple.com/tw/app/google-authenticator/id388497605")
+              navigation.navigate("Web")
+            }}>
+               <Image source={require("../../assets/images/home/appstore.png")} style={{width:223,height:80,marginTop:40}}/>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={()=>{
+              AsyncStorage.setItem("web","https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=zh_TW&gl=US")
+              navigation.navigate("Web")
+            }}>
+              <Image source={require("../../assets/images/home/googleplay.png")} style={{width:223,height:80,marginTop:20}}/>
+            </TouchableOpacity>
           </View>
       </View>
     </Container>
   );
 };
 
-export default RechargeScreen;
+export default GoogleVerifyStep1;

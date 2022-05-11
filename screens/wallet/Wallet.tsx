@@ -2,9 +2,10 @@ import * as React from "react";
 import { Text, TextInput, TouchableOpacity, View, Image, ScrollView, SafeAreaView, Button, Alert } from "react-native"
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
+import api from "../../common/api"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Container = styled(View) <{ insets: number }>`
     display: flex ;
@@ -362,7 +363,49 @@ const WalletScreen = ({
 }: RootStackScreenProps<"WalletScreen">) => {
     const [index, setIndex] = useState(0)
     const insets = useSafeAreaInsets();
+    const [futuresBalance,setFuturesBalance] = useState(0)
+    const [spotBalance,setSpotBalance] = useState(0)
+    const [totalBalance,setTotalBalance] = useState(0)
+    const [position,setPosition] = useState(0)
+    const getBalance = () => {
+        api.get("/investor/property").then(x=>{
+            setFuturesBalance(x.data.futures.balance)
+            setTotalBalance(x.data.spot.equityValue)
+            for(let i = 0 ;i<x.data.spot.coins.length ; i++){
+                if(x.data.spot.coins[i].symbol === "USDT"){
+                    setSpotBalance(x.data.spot.coins[i].balance)
+                } 
+            }
+        })
+        setTimeout(()=>{
+            api.get("/investor/property").then(x=>{
+                setFuturesBalance(x.data.futures.balance)
+                setTotalBalance(x.data.spot.equityValue)
+                for(let i = 0 ;i<x.data.spot.coins.length ; i++){
+                    if(x.data.spot.coins[i].symbol === "USDT"){
+                        setSpotBalance(x.data.spot.coins[i].balance)
+                    } 
+                }
+            })
+        },1000)
+        
+    };
 
+    const getPosition = () => {
+        api.get("/investor/position").then((x) => {
+            if(x.data.length != 0){
+                setPosition(x.data[0].profitAndLoss)
+            }
+        })
+    };
+
+    useEffect(async ()=>{
+        let token = await AsyncStorage.getItem("token")
+        if(token){
+            getBalance()
+            getPosition()
+        }
+    },[totalBalance,spotBalance,futuresBalance])
     return (
         <Container insets={insets.top}>
             <Row>
@@ -387,7 +430,7 @@ const WalletScreen = ({
                         </BG000>
                         <TopArea>
                             <USDTcontent>
-                                <Number>159,186.24 </Number>
+                                <Number>{totalBalance} </Number>
                                 <USDT>USDT</USDT>
                             </USDTcontent>
                         </TopArea>
@@ -397,7 +440,7 @@ const WalletScreen = ({
                         <Content>
                             <Title>現貨</Title>
                             <NumArea>
-                                <Num1>107,967.92 </Num1>
+                                <Num1>{totalBalance} </Num1>
                                 <Text style={{color:"#F4F5F6",fontSize:12,fontWeight:"400"}}>USDT</Text>
                             </NumArea>
                         </Content>
@@ -405,7 +448,7 @@ const WalletScreen = ({
                         <Content>
                             <Title>合約</Title>
                             <NumArea>
-                                <Num1>16,942.65 </Num1>
+                                <Num1>{futuresBalance} </Num1>
                                 <Text style={{color:"#F4F5F6",fontSize:12,fontWeight:"400"}}>USDT</Text>
 
                             </NumArea>
@@ -414,7 +457,7 @@ const WalletScreen = ({
                         <Content>
                             <Title>法幣</Title>
                             <NumArea>
-                                <Num1>107,652.28 </Num1>
+                                <Num1>0 </Num1>
                                 <Text style={{color:"#F4F5F6",fontSize:12,fontWeight:"400"}}>USDT</Text>
                             </NumArea>
                         </Content>
@@ -427,13 +470,13 @@ const WalletScreen = ({
                         <BG1>
                             <BG001>
                                 <Title1>總估價</Title1>
-                                <TouchableOpacity>
+                                <TouchableOpacity onPress={()=>{navigation.navigate("History")}}>
                                     <Img1 source={require("../../assets/images/wallet/history.png")} />
                                 </TouchableOpacity>
                             </BG001>
                             <TopArea>
                                 <USDTcontent>
-                                    <Number001>107,967.92 </Number001>
+                                    <Number001>{totalBalance} </Number001>
                                     <USDT1>USDT</USDT1>
                                 </USDTcontent>
                             </TopArea>
@@ -472,7 +515,7 @@ const WalletScreen = ({
                                     <Text01>TetherUS</Text01>
                                 </TextContener>
                             </ImgArea>
-                            <Num>56,310.25</Num>
+                            <Num>{spotBalance}</Num>
                         </Below1>
                         {/* <Below>
                             <ImgArea>
@@ -518,13 +561,13 @@ const WalletScreen = ({
                         <BG1>
                             <BG001>
                                 <Title1>總資產</Title1>
-                                <TouchableOpacity>
+                                <TouchableOpacity  onPress={()=>{navigation.navigate("History")}}>
                                     <Img1 source={require("../../assets/images/wallet/history.png")} />
                                 </TouchableOpacity>
                             </BG001>
                             <TopArea>
                                 <USDTcontent>
-                                    <Number001>107,967.92 </Number001>
+                                    <Number001>{futuresBalance} </Number001>
                                     <USDT1>USDT</USDT1>
                                 </USDTcontent>
                             </TopArea>
@@ -538,7 +581,7 @@ const WalletScreen = ({
                                     <Text1>保證金餘額</Text1>
                                 </View>
                             </ImgArea>
-                            <Num>56,310.25</Num>
+                            <Num>{futuresBalance}</Num>
                         </Below1>
                         <Below1  style={{marginTop:30}}>
                             <ImgArea>
@@ -546,7 +589,7 @@ const WalletScreen = ({
                                     <Text1>錢包餘額</Text1>
                                 </View>
                             </ImgArea>
-                            <Num>56,310.25</Num>
+                            <Num>{futuresBalance}</Num>
                         </Below1>
                         <Below1  style={{marginTop:30}}>
                             <ImgArea>
@@ -554,11 +597,13 @@ const WalletScreen = ({
                                     <Text1>未實現盈虧</Text1>
                                 </View>
                             </ImgArea>
-                            <Num>56,310.25</Num>
+                            <Num>{position}</Num>
                         </Below1>
                         
                     </BelowArea1>
-                    <TouchableOpacity style={{ backgroundColor: "#3D6A97",borderRadius:4,justifyContent:"center",display:"flex",flexDirection:"row",padding:12,marginTop:30}}>
+                    <TouchableOpacity style={{ backgroundColor: "#3D6A97",borderRadius:4,justifyContent:"center",display:"flex",flexDirection:"row",padding:12,marginTop:30}}  onPress={()=>{
+                                navigation.navigate("Funds")
+                            }}>
                         <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>資金劃轉</Text>
                     </TouchableOpacity>
                 </>
@@ -575,7 +620,7 @@ const WalletScreen = ({
                             </BG001>
                             <TopArea>
                                 <USDTcontent>
-                                    <Number001>107,967.92 </Number001>
+                                    <Number001>0 </Number001>
                                     <USDT1>USDT</USDT1>
                                 </USDTcontent>
                             </TopArea>
@@ -604,7 +649,7 @@ const WalletScreen = ({
                                     <Text01>TetherUS</Text01>
                                 </TextContener>
                             </ImgArea>
-                            <Num>56,310.25</Num>
+                            <Num>0</Num>
                         </Below1>
                         {/* <Below>
                             <ImgArea>

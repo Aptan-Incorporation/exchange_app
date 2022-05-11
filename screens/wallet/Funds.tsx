@@ -6,7 +6,8 @@ import {
   ScrollView,
   Dimensions,
   Image,
-  TextInput
+  TextInput,
+  Alert
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import styled from "styled-components";
@@ -14,6 +15,7 @@ import { RootStackScreenProps } from "../../types";
 import { useState, useEffect } from "react";
 import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Spinner from 'react-native-loading-spinner-overlay'
 
 const Container = styled(View)`
   display: flex;
@@ -46,24 +48,32 @@ const IconImg = styled(Image)`
 `;
 
 const FundsScreen = ({ navigation }: RootStackScreenProps<"Funds">) => {
-  const [positionArray, setPositionArray] = useState([]);
-  const insets = useSafeAreaInsets();
+    const [status, setStatus] = useState(0);
+    const insets = useSafeAreaInsets();
+    const [futuresBalance,setFuturesBalance] = useState(0)
+    const [totalBalance,setTotalBalance] = useState(0)
+    const [num,setNum] = useState("")
+    const [loading,setLoading] = useState(false)
 
-  const getPosition = () => {
-    api.get("/investor/position").then(x => {
-      setPositionArray(x.data);
-    });
-  };
+    const getBalance = () => {
+        api.get("/investor/property").then(x=>{
+            setFuturesBalance(x.data.futures.balance)
+            setTotalBalance(x.data.spot.equityValue)
+        })
+    };
 
   useEffect(async () => {
     let token = await AsyncStorage.getItem("token");
     if (token) {
-      getPosition();
+      getBalance()
     }
   }, []);
 
   return (
     <Container>
+        {loading && 
+        <Spinner visible={true} textContent={''} />
+      }
       <Header insets={insets.top}>
         <TouchableOpacity
           onPress={() => {
@@ -82,23 +92,61 @@ const FundsScreen = ({ navigation }: RootStackScreenProps<"Funds">) => {
               <View style={{width:"80%"}}>
                 <View style={{display:"flex",flexDirection:"row",width:"100%",padding:12,alignItems:"center",borderBottomWidth:1,borderBottomColor:"#333C47"}}>
                     <Text style={{color:"#8D97A2",fontSize:13,fontWeight:"500"}}>從</Text>
-                    <Text style={{color:"white",fontSize:15,fontWeight:"400",marginLeft:20}}>現貨資產</Text>
+                    <Text style={{color:"white",fontSize:15,fontWeight:"400",marginLeft:20}}>{status === 0 ? "現貨資產" :"合約資產"}</Text>
                 </View>
                 <View style={{display:"flex",flexDirection:"row",width:"100%",padding:12,alignItems:"center"}}>
                     <Text style={{color:"#8D97A2",fontSize:13,fontWeight:"500"}}>至</Text>
-                    <Text style={{color:"white",fontSize:15,fontWeight:"400",marginLeft:20}}>合約資產</Text>
+                    <Text style={{color:"white",fontSize:15,fontWeight:"400",marginLeft:20}}>{status === 0 ? "合約資產" :"現貨資產"}</Text>
                 </View>
               </View>
-              <TouchableOpacity  style={{marginRight:10}}>
+              <TouchableOpacity  style={{marginRight:10}} onPress={()=>{
+                  if(status === 0){
+                      setStatus(1)
+                      setNum("")
+                  }else{
+                    setStatus(0)
+                    setNum("")
+                  }
+              }}>
                   <Image source={require("../../assets/images/wallet/swap.png")} style={{width:28,height:28}}/>
               </TouchableOpacity>
           </View>
          <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>數量</Text>
-         <TextInput style={{backgroundColor:"#242D37",borderRadius:4,padding:12,color:"white",marginTop:5}} placeholder="輸入劃轉數量" keyboardType={"decimal-pad"} returnKeyType={"done"}/>
-         <TouchableOpacity>
-            <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:10}}>可用 57,649.86 USDT</Text>
+         <TextInput style={{backgroundColor:"#242D37",borderRadius:4,padding:12,color:"white",marginTop:5}} placeholder="輸入劃轉數量" keyboardType={"decimal-pad"} returnKeyType={"done"} onChangeText={text => setNum(text)} value={num}/>
+         <TouchableOpacity onPress={()=>{
+             if(status === 0){
+                setNum(totalBalance.toString())
+            }else{
+                setNum(futuresBalance.toString())
+            }
+         }}>
+            <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:10}}>可用 {status === 0 ? totalBalance : futuresBalance} USDT</Text>
          </TouchableOpacity>
-         <TouchableOpacity style={{display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:"#3D6A97",padding:12,borderRadius:4,marginTop:30}}>
+         <TouchableOpacity style={{display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:"#3D6A97",padding:12,borderRadius:4,marginTop:30}} onPress={async ()=>{
+            let token = await AsyncStorage.getItem("token");
+            if(!token){
+                Alert.alert("請先登入")
+            }else if(!num){
+                Alert.alert("請輸入數量")
+            }else{
+                let obj ={
+                    from: status === 0 ? "SPOT" :"FUTURE",
+                    to: status === 0 ? "FUTURE" :"SPOT",
+                    amount:num 
+                } 
+                setLoading(true)
+                api.postData("/wallet/transfer",obj).then(x=>{
+                    setLoading(false)
+                     if(x.status != 400){
+                        Alert.alert("劃轉成功")
+                        navigation.goBack()
+                     }else{
+                        Alert.alert(x.data.msg)
+                     }
+                 })
+            }
+            
+         }}>
              <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>劃轉</Text>
          </TouchableOpacity>
       </View>

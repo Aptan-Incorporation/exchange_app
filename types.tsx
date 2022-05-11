@@ -33,6 +33,16 @@ export type RootStackParamList = {
   Withdraw:undefined;
   Funds:undefined;
   History:undefined;
+  Setting:undefined;
+  PhoneVerify:undefined;
+  PhoneInput:undefined;
+  GoogleVerifyStep1:undefined;
+  GoogleVerifyStep2:undefined;
+  GoogleVerifyStep3:undefined;
+  IdentityVerifyStep1:undefined;
+  IdentityVerifyStep2:undefined;
+  FundPassword:undefined;
+  Web:undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
