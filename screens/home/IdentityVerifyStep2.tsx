@@ -46,7 +46,11 @@ const IdentityVerifyStep2 = ({ navigation }: RootStackScreenProps<"IdentityVerif
   const [email, setEmail] = React.useState("");
   const [promoCode, setPromocode] = React.useState("");
   const [loading,setLoading] = React.useState(false);
-  const [password, setPassword] = React.useState("");
+  const [user, setUser] = React.useState({
+    name:"",
+    address:"",
+    birthTime:0
+  });
   const [password2, setPassword2] = React.useState("");
   const [image, setImage] = useState("");
   const [image2, setImage2] = useState("");
@@ -113,8 +117,41 @@ const IdentityVerifyStep2 = ({ navigation }: RootStackScreenProps<"IdentityVerif
         </TouchableOpacity>
         <Text style={{color:"#BCC2C8",fontSize:13,fontWeight:"500",marginTop:20}}>請上傳身分證反面之照片，照片應清晰且完整。</Text>
 
-        <TouchableOpacity style={{display:"flex",flexDirection:"row",backgroundColor:"#3D6A97",borderRadius:4,justifyContent:"center",alignItems:"center",height:44,marginTop:42,width:"100%"}} onPress={()=>{
-           navigation.navigate("Setting")
+        <TouchableOpacity style={{display:"flex",flexDirection:"row",backgroundColor:"#3D6A97",borderRadius:4,justifyContent:"center",alignItems:"center",height:44,marginTop:42,width:"100%"}} onPress={async()=>{
+           if(!image){
+            alert("請上傳身分證正面")
+          }else if(!image2){
+            alert("請上傳身分證反面")
+          }
+          else{
+            setLoading(true)
+
+            const formData:any = new FormData();
+            let identity = await AsyncStorage.getItem("identity")
+            let user = JSON.parse(identity!)
+            
+            const data = {
+                idCardFront: image,
+                idCardBack: image2,
+                name:user.name,
+                address:user.address,
+                birthday:user.birth
+            }
+            console.log(data)
+            for (const [key, value] of Object.entries(data)) {
+                formData.append(key, value)
+            }
+
+            api.postFormData("/user/kyc",formData).then(x=>{
+              setLoading(false)
+              console.log(x)
+              if(x.status !== 400){
+                navigation.navigate("Setting")
+              }else{
+                alert(x.data.msg)
+              }
+            })
+          }
         }}>
         <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>儲存</Text>
       </TouchableOpacity>
