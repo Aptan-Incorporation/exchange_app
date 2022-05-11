@@ -39,6 +39,7 @@ export type RootStackParamList = {
   };
   C2cBuyScreen: undefined;
   C2cSellScreen: undefined;
+  C2cHistoryScreen: undefined;
   ProfileScreen:undefined;
   WalletScreen:undefined;
   Login:undefined;

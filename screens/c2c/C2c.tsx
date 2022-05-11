@@ -462,7 +462,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                 </TouchableOpacity>
                             </HeaderTitleInlineRowContainer>
                     }
-                    <TouchableOpacity onPress={() => { }}>
+                    <TouchableOpacity onPress={() => { navigation.navigate("C2cHistoryScreen") }}>
                         <HeaderTitleOrderIcon source={require("../../assets/images/c2c/order.png")} />
                     </TouchableOpacity>
                 </HeaderTitleContainer>
@@ -602,74 +602,74 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                             payTypePpay: x.payType.ppay
                                         } as any)
                                     }}
-                                        /* disabled={isNavigate()} */
+                                    /* disabled={isNavigate()} */
                                     >
-                                    <BuyButtonText>購買</BuyButtonText>
-                                </BuyButton>
-                            </DetailCardBottomContainer>
-                                {/* 找出 BuyArray 中符合的 Object 並讓最後一個不顯示分段 Line */ }
-                        {
-                            x.type === 'USDT' &&
-                                i !== BuyArray.length - 1 &&
-                                <DetailCardLine></DetailCardLine>
-                        }
+                                        <BuyButtonText>購買</BuyButtonText>
+                                    </BuyButton>
+                                </DetailCardBottomContainer>
+                                {/* 找出 BuyArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
+                                {
+                                    x.type === 'USDT' &&
+                                    i !== BuyArray.length - 1 &&
+                                    <DetailCardLine></DetailCardLine>
+                                }
                             </DetailCardContainer>
-            )
+                        )
                     })
 
                 }
-            {/* ******************* */}
-            {/* 出售頁面 >> USDT頁面  */}
-            {
-                swapBuySell === 1 &&
-                swapBuyCurrencyType === 'USDT' &&
-                SellArray.map((x, i) => {
-                    return (
-                        /* 在 SellArray 中尋找符合 USDT 的 OBject */
-                        x.type === 'USDT' &&
-                        <DetailCardContainer>
-                            <DeatilCardTopContainer>
-                                <PhotoButton onPress={() => { }}>
-                                    {/* 取 account 中第一個字位於頭像 */}
-                                    <PhotoButtonText>{(x.account).charAt(0).toUpperCase()}</PhotoButtonText>
-                                </PhotoButton>
-                                <EmailText>{x.account}</EmailText>
-                                <SuccessRateText>({x.successRate}%)</SuccessRateText>
-                            </DeatilCardTopContainer>
-                            <DetailCardMiddleContainer>
-                                <DetailCardMiddleLeftColumnContainer>
-                                    <DetailCardMiddleLeftRowContainer>
-                                        <SmallTitleText>數量</SmallTitleText>
-                                        <SmallValueText>{x.number} USDT</SmallValueText>
-                                    </DetailCardMiddleLeftRowContainer>
-                                    <DetailCardMiddleLeftRowContainer>
-                                        <SmallTitleText>限額</SmallTitleText>
-                                        <SmallValueText>{x.limitFrom} - {x.limitTo} USD</SmallValueText>
-                                    </DetailCardMiddleLeftRowContainer>
-                                </DetailCardMiddleLeftColumnContainer>
-                                <DetailCardMiddleRightRowContainer>
-                                    <SellPriceText>{x.price}</SellPriceText>
-                                    <SellCurrencyText>USDT</SellCurrencyText>
-                                </DetailCardMiddleRightRowContainer>
-                            </DetailCardMiddleContainer>
-                            <DetailCardBottomContainer>
-                                {/* 顯示支援付款的Icon */}
-                                <DetailCardBottomRowContainer>
-                                    {
-                                        x.payType.account === true &&
-                                        <AccountIcon source={require("../../assets/images/c2c/account.png")} />
-                                    }
-                                    {
-                                        x.payType.touchnGo === true &&
-                                        <TouchnGoIcon source={require("../../assets/images/c2c/touchn_go.png")} />
-                                    }
+                {/* ******************* */}
+                {/* 出售頁面 >> USDT頁面  */}
+                {
+                    swapBuySell === 1 &&
+                    swapBuyCurrencyType === 'USDT' &&
+                    SellArray.map((x, i) => {
+                        return (
+                            /* 在 SellArray 中尋找符合 USDT 的 OBject */
+                            x.type === 'USDT' &&
+                            <DetailCardContainer>
+                                <DeatilCardTopContainer>
+                                    <PhotoButton onPress={() => { }}>
+                                        {/* 取 account 中第一個字位於頭像 */}
+                                        <PhotoButtonText>{(x.account).charAt(0).toUpperCase()}</PhotoButtonText>
+                                    </PhotoButton>
+                                    <EmailText>{x.account}</EmailText>
+                                    <SuccessRateText>({x.successRate}%)</SuccessRateText>
+                                </DeatilCardTopContainer>
+                                <DetailCardMiddleContainer>
+                                    <DetailCardMiddleLeftColumnContainer>
+                                        <DetailCardMiddleLeftRowContainer>
+                                            <SmallTitleText>數量</SmallTitleText>
+                                            <SmallValueText>{x.number} USDT</SmallValueText>
+                                        </DetailCardMiddleLeftRowContainer>
+                                        <DetailCardMiddleLeftRowContainer>
+                                            <SmallTitleText>限額</SmallTitleText>
+                                            <SmallValueText>{x.limitFrom} - {x.limitTo} USD</SmallValueText>
+                                        </DetailCardMiddleLeftRowContainer>
+                                    </DetailCardMiddleLeftColumnContainer>
+                                    <DetailCardMiddleRightRowContainer>
+                                        <SellPriceText>{x.price}</SellPriceText>
+                                        <SellCurrencyText>USDT</SellCurrencyText>
+                                    </DetailCardMiddleRightRowContainer>
+                                </DetailCardMiddleContainer>
+                                <DetailCardBottomContainer>
+                                    {/* 顯示支援付款的Icon */}
+                                    <DetailCardBottomRowContainer>
+                                        {
+                                            x.payType.account === true &&
+                                            <AccountIcon source={require("../../assets/images/c2c/account.png")} />
+                                        }
+                                        {
+                                            x.payType.touchnGo === true &&
+                                            <TouchnGoIcon source={require("../../assets/images/c2c/touchn_go.png")} />
+                                        }
 
-                                    {
-                                        x.payType.ppay === true &&
-                                        <PpayIcon source={require("../../assets/images/c2c/p_pay.png")} />
-                                    }
-                                </DetailCardBottomRowContainer>
-                                <SellButton onPress={() => {
+                                        {
+                                            x.payType.ppay === true &&
+                                            <PpayIcon source={require("../../assets/images/c2c/p_pay.png")} />
+                                        }
+                                    </DetailCardBottomRowContainer>
+                                    <SellButton onPress={() => {
                                         navigation.navigate('C2cSellScreen', {
                                             Id: x.id,
                                             MyUSD: MyUSD,
@@ -687,23 +687,23 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                         } as any)
                                     }}
                                         /* disabled={isNavigate()} */>
-                                    <SellButtonText>購買</SellButtonText>
-                                </SellButton>
-                            </DetailCardBottomContainer>
-                            {/* 找出 SellArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
-                            {
-                                x.type === 'USDT' &&
-                                i !== SellArray.length - 1 &&
-                                <DetailCardLine></DetailCardLine>
-                            }
-                        </DetailCardContainer>
-                    )
-                })
+                                        <SellButtonText>購買</SellButtonText>
+                                    </SellButton>
+                                </DetailCardBottomContainer>
+                                {/* 找出 SellArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
+                                {
+                                    x.type === 'USDT' &&
+                                    i !== SellArray.length - 1 &&
+                                    <DetailCardLine></DetailCardLine>
+                                }
+                            </DetailCardContainer>
+                        )
+                    })
 
-            }
-            {/* 預留 Padding */}
-            <EmptyDiv></EmptyDiv>
-        </DetailContainer>
+                }
+                {/* 預留 Padding */}
+                <EmptyDiv></EmptyDiv>
+            </DetailContainer>
         </Container >
     )
 }
