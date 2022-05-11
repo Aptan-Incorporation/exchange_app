@@ -1,7 +1,14 @@
 import * as React from "react"
-import { Text, TextInput, View, Image, TouchableOpacity } from "react-native"
-import styled from "styled-components"
+import { Text, TextInput, View, Image, TouchableOpacity, Alert, AlertType, AlertButton, Dimensions, Pressable } from "react-native"
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
+import { useTogglePasswordVisibility } from '../../../hooks/useTogglePasswordVisibility';
+import Modal from "react-native-modal";
+import styled, { StyledComponent } from "styled-components"
 import { useState } from "react";
+
+const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get('window').width;
 
 // Top Container
 const TopContainer = styled(View)`
@@ -41,14 +48,14 @@ const TopDetailPriceText = styled(Text)`
 font-weight: 700;
 font-size: 24px;
 line-height: 30px;
-color: ${props => props.theme.color.Secondary};
+color: ${props => props.theme.color.SecondaryLight};
 `;
 
 const TopDetailCurrencyText = styled(Text)`
 font-weight: 400;
 font-size: 15px;
 line-height: 18px;
-color: ${props => props.theme.color.Secondary};
+color: ${props => props.theme.color.SecondaryLight};
 margin-left: 4px;
 `;
 
@@ -248,9 +255,85 @@ background-color: #242D37;
 margin-top: 16px;
 `;
 
+// Modal Style
+const ModalContainer = styled(View)`
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding-top: 16px;
+padding-left: 16px;
+padding-right: 16px;
+`;
+
+const ModalHeaderText = styled(Text)`
+font-weight: 500;
+font-size: 16px;
+line-height: 20px;
+color: ${props => props.theme.color.White};
+`;
+
+const ModalHeaderDetailText = styled(Text)`
+font-weight: 400;
+font-size: 14px;
+line-height: 18px;
+color: ${props => props.theme.color.LightGray};
+margin-top: 8px;
+`;
+
+const ModalRowLine = styled(View)`
+height: 1px;
+width: 100%;
+background-color: #3B393E;
+margin-top: 16px;
+`;
+
+const ModalButtonContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+padding-right: 16px;
+padding-left: 16px;
+`;
+
+const ModalCancelButton = styled(TouchableOpacity)`
+height: 43px;
+width: 45%;
+border-bottom-left-radius: 18px;
+justify-content: center;
+align-items: center;
+`;
+
+const ModalCancelButtonText = styled(Text)`
+font-weight: 400;
+font-size: 16px;
+line-height: 20px;
+color: #98999A;
+`;
+
+const ModalButtonLine = styled(View)`
+height: 43px;
+width: 1px;
+background-color: #3B393E;
+`;
+
+const ModalSubmitButton = styled(TouchableOpacity)`
+height: 43px;
+width: 45%;
+border-bottom-right-radius: 18px;
+justify-content: center;
+align-items: center;
+`;
+
+const ModalSubmitButtonText = styled(Text)`
+font-weight: 500;
+font-size: 16px;
+line-height: 20px;
+color: #0A84FF;
+`;
 
 
-const C2cBuyFirst = (props: {
+const C2cSellFirst = (props: {
     Id?: string;
     MyUSD: string;
     Account: string;
@@ -263,6 +346,7 @@ const C2cBuyFirst = (props: {
     PayTypeAccount: boolean;
     PayTypeTouchnGo: boolean;
     PayTypePpay: boolean;
+    UserPassword: string;
     onValueChangeInputPrice: React.Dispatch<React.SetStateAction<string>>;
     onValueChangeInputNumber: React.Dispatch<React.SetStateAction<string>>;
     onChangeSetSwapPage: React.Dispatch<React.SetStateAction<number>>;
@@ -281,6 +365,7 @@ const C2cBuyFirst = (props: {
         PayTypeAccount,
         PayTypeTouchnGo,
         PayTypePpay,
+        UserPassword,
         onChangeSetSwapPage,
         onValueChangeInputPrice,
         onValueChangeInputNumber
@@ -319,13 +404,38 @@ const C2cBuyFirst = (props: {
         }
     };
 
-    const handleSubmitForm = () => {
+
+    // 資金密碼Modal
+    const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const toggleModalVisible = () => {
         if (((parseFloat(inputPrice) / parseFloat(Price)).toFixed(2)) == parseFloat(inputNumber).toFixed(2) && (parseFloat(inputPrice) <= parseFloat(MyUSD))) {
+            setIsModalVisible(!isModalVisible);
+        }
+    };
+
+    const [password, setPassword] = useState("");
+    const { passwordVisibility, rightIcon, handlePasswordVisibility } =
+        useTogglePasswordVisibility();
+
+    const checkPassword = (psw: string) => {
+        if (psw === password) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    // Submit Form
+    const handleSubmitForm = () => {
+        if (checkPassword(UserPassword)) {
             onValueChangeInputPrice(inputPrice)
             onValueChangeInputNumber(inputNumber)
+            setIsModalVisible(false)
             onChangeSetSwapPage(2)
         }
     };
+
 
     return (
         <View style={{backgroundColor: '#131B24'}}>
@@ -392,7 +502,7 @@ const C2cBuyFirst = (props: {
                         </TouchableOpacity>
                     </TopInputRightContainer>
                 </TopInputContainer>
-                <TopBuyButton onPress={() => { handleSubmitForm() }}>
+                <TopBuyButton onPress={() => { toggleModalVisible() }}>
                     <TopBuyButtonText>購買</TopBuyButtonText>
                 </TopBuyButton>
             </TopContainer>
@@ -404,7 +514,7 @@ const C2cBuyFirst = (props: {
                     <EmailText>{Account}</EmailText>
                     <SuccessRateText>({SuccessRate})%</SuccessRateText>
                 </BottomDetailTopContainer>
-                <BottomDetailSmallTitleText>付款方式</BottomDetailSmallTitleText>
+                <BottomDetailSmallTitleText>收款方式</BottomDetailSmallTitleText>
                 <BottomDetailPayTypeContainer>
                     {
                         PayTypeAccount == true &&
@@ -426,14 +536,85 @@ const C2cBuyFirst = (props: {
                     }
                 </BottomDetailPayTypeContainer>
                 <BottomDetailLine></BottomDetailLine>
-                <BottomDetailSmallTitleText>付款時限</BottomDetailSmallTitleText>
-                <BottomDetailSmallValueText>15分鐘</BottomDetailSmallValueText>
+                <BottomDetailSmallTitleText>放行時限</BottomDetailSmallTitleText>
+                <BottomDetailSmallValueText>5分鐘</BottomDetailSmallValueText>
                 <BottomDetailLine></BottomDetailLine>
                 <BottomDetailSmallTitleText>備註</BottomDetailSmallTitleText>
-                <BottomDetailSmallValueText>請於時限內付款，不要卡單，轉帳時請不要備註任何相關字眼，備註一率不放幣。</BottomDetailSmallValueText>
+                <BottomDetailSmallValueText>請於時限內放行，不要卡單。</BottomDetailSmallValueText>
             </BottomDetailContainer>
+
+            {/* // Modal */}
+            <Modal
+                isVisible={isModalVisible}
+                deviceHeight={windowHeight}
+                deviceWidth={windowWidth}
+                animationInTiming={500}
+                animationOutTiming={700}
+                backdropOpacity={0.9}
+                onBackdropPress={() => setIsModalVisible(false)}
+                onSwipeComplete={() => setIsModalVisible(false)}
+                swipeDirection={['down']}
+                style={{ justifyContent: 'center', margin: 0 }}
+                hideModalContentWhileAnimating={true}
+            >
+                <View style={{
+                    backgroundColor: 'rgba(40, 39, 42, 1)',
+                    borderTopLeftRadius: 18,
+                    borderTopRightRadius: 18,
+                    borderBottomLeftRadius: 18,
+                    borderBottomRightRadius: 18,
+                    marginLeft: 53,
+                    marginRight: 53,
+                }}>
+                    <ModalContainer>
+                        <ModalHeaderText>輸入資金密碼</ModalHeaderText>
+                        <ModalHeaderDetailText>進行出售，請輸入您設定的資金密碼</ModalHeaderDetailText>
+
+                        <View style={{
+                            height: 32,
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            marginTop: 14,
+                            marginLeft: 16,
+                            marginRight: 16,
+                            paddingLeft: 12,
+                            paddingRight: 12,
+                            borderWidth: 1,
+                            borderColor: '#3B393E',
+                            borderRadius: 4,
+                            alignItems: 'center',
+                        }}>
+                            <TextInput
+                                style={{ width: '90%', color: '#FFFFFF' }}
+                                placeholder="輸入資金密碼"
+                                placeholderTextColor={'#98999A'}
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                textContentType="newPassword"
+                                secureTextEntry={passwordVisibility}
+                                value={password}
+                                enablesReturnKeyAutomatically
+                                onChangeText={text => setPassword(text)}
+                            />
+                            <Pressable onPress={handlePasswordVisibility}>
+                                <Feather name={rightIcon} size={16} color="#DBDCDD" />
+                            </Pressable>
+                        </View>
+                    </ModalContainer>
+                    <ModalRowLine></ModalRowLine>
+                    <ModalButtonContainer>
+                        <ModalCancelButton onPress={() => { setIsModalVisible(false) }}>
+                            <ModalCancelButtonText>取消</ModalCancelButtonText>
+                        </ModalCancelButton>
+                        <ModalButtonLine />
+                        <ModalSubmitButton onPress={() => { handleSubmitForm() }}>
+                            <ModalSubmitButtonText>確定</ModalSubmitButtonText>
+                        </ModalSubmitButton>
+                    </ModalButtonContainer>
+                </View>
+            </Modal>
         </View>
     )
 }
 
-export default C2cBuyFirst
+export default C2cSellFirst

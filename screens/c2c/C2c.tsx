@@ -101,6 +101,7 @@ flex-direction: column;
 padding-top: 20px;
 padding-left: 16px;
 padding-right: 12px;
+background-color: #131B24;
 `;
 
 const DetailCardContainer = styled(View)`
@@ -422,6 +423,8 @@ const SellArray = [
 
 const MyUSD = '1000';
 
+const UserPassword = '12345';
+
 
 
 
@@ -666,7 +669,24 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                         <PpayIcon source={require("../../assets/images/c2c/p_pay.png")} />
                                     }
                                 </DetailCardBottomRowContainer>
-                                <SellButton onPress={() => { }}>
+                                <SellButton onPress={() => {
+                                        navigation.navigate('C2cSellScreen', {
+                                            Id: x.id,
+                                            MyUSD: MyUSD,
+                                            CurrencyType: x.type,
+                                            Account: x.account,
+                                            SuccessRate: x.successRate,
+                                            AvailableNum: x.number,
+                                            LimitFrom: x.limitFrom,
+                                            LimitTo: x.limitTo,
+                                            Price: x.price,
+                                            payTypeAccount: x.payType.account,
+                                            payTypeTouchnGo: x.payType.touchnGo,
+                                            payTypePpay: x.payType.ppay,
+                                            userPassword: UserPassword
+                                        } as any)
+                                    }}
+                                        /* disabled={isNavigate()} */>
                                     <SellButtonText>購買</SellButtonText>
                                 </SellButton>
                             </DetailCardBottomContainer>

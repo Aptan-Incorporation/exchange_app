@@ -25,14 +25,23 @@ const useCountdown = (targetDate: number) => {
     );
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setCountDown((targetDate) => targetDate - 1000);
-        }, 1000);
+        
+            const interval = setInterval(() => {
+                setCountDown((targetDate) => targetDate - 1000);
+            }, 1000);
 
-        return () => clearInterval(interval);
-    }, [targetDate]);
+            if (countDown <= 0) {
+                clearInterval(interval);
+              }
+
+            return () => clearInterval(interval);
+            
+    }, [targetDate, countDown]);
+
+    
 
     return getReturnValues(countDown);
+
 };
 
 const getReturnValues = (countDown: number) => {

@@ -34,7 +34,8 @@ export type RootStackParamList = {
     Price: string,
     payTypeAccount: boolean,
     payTypeTouchnGo: boolean,
-    payTypePpay: boolean
+    payTypePpay: boolean,
+    userPassword: string
   };
   C2cBuyScreen: undefined;
   C2cSellScreen: undefined;
