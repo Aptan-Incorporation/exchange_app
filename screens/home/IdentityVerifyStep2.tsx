@@ -90,7 +90,7 @@ const IdentityVerifyStep2 = ({ navigation }: RootStackScreenProps<"IdentityVerif
   useEffect(async ()=>{
     let identity = await AsyncStorage.getItem("identity")
     let user = JSON.parse(identity!)
-    console.log(user)
+    // console.log(user)
 
   },[])
   return (
@@ -113,7 +113,7 @@ const IdentityVerifyStep2 = ({ navigation }: RootStackScreenProps<"IdentityVerif
         </TouchableOpacity>
         <Text style={{color:"#BCC2C8",fontSize:13,fontWeight:"500",marginTop:20}}>請上傳身分證正面之照片，照片應清晰且完整。</Text>
         <TouchableOpacity style={{display:"flex",flexDirection:"row",justifyContent:"center",marginTop:20}} onPress={pickImage2}>
-          <Image source={image ? { uri: image2 }:require("../../assets/images/home/back.png")} style={{width:311,height:186}}/>
+          <Image source={image2 ? { uri: image2 }:require("../../assets/images/home/back.png")} style={{width:311,height:186}}/>
         </TouchableOpacity>
         <Text style={{color:"#BCC2C8",fontSize:13,fontWeight:"500",marginTop:20}}>請上傳身分證反面之照片，照片應清晰且完整。</Text>
 
@@ -131,24 +131,33 @@ const IdentityVerifyStep2 = ({ navigation }: RootStackScreenProps<"IdentityVerif
             let user = JSON.parse(identity!)
             
             const data = {
-                idCardFront: image,
-                idCardBack: image2,
+                idCardFront: {uri:image,name:"123",type: "image/jpeg"},
+                idCardBack: {uri:image2,name:"123",type: "image/jpeg"},
                 name:user.name,
                 address:user.address,
                 birthday:user.birth
             }
-            console.log(data)
-            for (const [key, value] of Object.entries(data)) {
-                formData.append(key, value)
-            }
-
+            // console.log(data)
+            // for (const [key, value] of Object.entries(data)) {
+            //     formData.append(key, value)
+            // }
+            formData.append("idCardFront", {uri:image,name:"123"})
+            formData.append("idCardBack", {uri:image2,name:"456"})
+            formData.append("name", user.name)
+            formData.append("address", user.address)
+            formData.append("birthday", user.birth)
+            console.log(formData)
             api.postFormData("/user/kyc",formData).then(x=>{
               setLoading(false)
               console.log(x)
               if(x.status !== 400){
-                navigation.navigate("Setting")
+                if(x.status === 413){
+                  Alert.alert("檔案太大")
+                }else{
+                  navigation.navigate("Setting")
+                }
               }else{
-                alert(x.data.msg)
+                Alert.alert(x.data.msg)
               }
             })
           }

@@ -28,7 +28,6 @@ const Row = styled(View)`
 `;
 
 const TitleTitle = styled(Text)`
-    font-family: 'PingFang TC';
     font-style: normal;
     font-weight: 600;
     font-size: 16px;
@@ -47,7 +46,6 @@ const Number = styled(Text)`
 `;
 
 const ValueText = styled(Text)`
-    font-family: 'PingFang TC';
     font-style: normal;
     font-weight: 600;
     font-size: 16px;
@@ -131,7 +129,6 @@ const BG001 = styled(View)`
 `;
 
 const Title = styled(Text)`
-    font-family: 'PingFang TC';
     font-style: normal;
     font-weight: 600;
     font-size: 16px;
@@ -142,7 +139,6 @@ const Title = styled(Text)`
 `;
 
 const Title1 = styled(Text)`
-    font-family: 'PingFang TC';
     font-style: normal;
     font-weight: 600;
     font-size: 16px;
@@ -260,7 +256,6 @@ const Recharge = styled(TouchableOpacity)`
 `;
 
 const WithdrawText = styled(Text)`
-        font-family: 'PingFang TC';
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
@@ -273,7 +268,6 @@ const WithdrawText = styled(Text)`
 const RechargeText = styled(Text)`
     
     line-height:38px;
-    font-family: 'PingFang TC';
     font-style: normal;
     font-weight: 500;
     font-size: 14px;

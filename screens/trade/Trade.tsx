@@ -643,7 +643,7 @@ padding-top: 20px;
 `;
 
 const TradePositionCardTitleRowContainer = styled(View)`
-displayL flex;
+display: flex;
 flex-direction: row;
 justify-content: space-between;
 `;
@@ -663,13 +663,13 @@ color: ${props => props.theme.color.ExtraLightGray};
 `;
 
 const TradePositionCardDetailRowContainer = styled(View)`
-displayL flex;
+display: flex;
 flex-direction: row;
 padding-top: 12px;
 `;
 
 const TradePositionCardDetailColumnContainer = styled(View)`
-displayL flex;
+display: flex;
 flex-direction: column;
 width: 50%;
 `;
@@ -704,7 +704,7 @@ padding-top: 12px;
 
 const TradePositionCardButton = styled(TouchableOpacity)`
 height: 26px;
-width: 48%
+width: 48%;
 justify-content: center;
 align-items: center;
 background-color: ${props => props.theme.color.DarkGray};
@@ -761,14 +761,14 @@ color: ${props => props.theme.color.ExtraLightGray};
 `;
 
 const TradeCommitCardDetailRowContainer = styled(View)`
-displayL flex;
+display: flex;
 flex-direction: row;
 justify-content: space-between;
 padding-top: 12px;
 `;
 
 const TradeCommitCardDetailColumnContainer = styled(View)`
-displayL flex;
+display: flex;
 flex-direction: column;
 width: 30%;
 `;
@@ -810,7 +810,7 @@ padding-top: 12px;
 
 const TradeCommitCardButton = styled(TouchableOpacity)`
 height: 26px;
-width: 48%
+width: 48%;
 justify-content: center;
 align-items: center;
 background-color: ${props => props.theme.color.DarkGray};
@@ -839,7 +839,7 @@ padding-bottom: 26px;
 const ModalHedaerTitleText = styled(Text)`
 font-weight: 600;
 font-size: 16px;
-line-height: 24px
+line-height: 24px;
 color: ${props => props.theme.color.White};
 `;
 
@@ -937,7 +937,7 @@ color: ${props => props.theme.color.White};
 
 const BuyTypeModalPickerButton = styled(TouchableOpacity)`
 height: 55px;
-flex-direction: row
+flex-direction: row;
 justify-content: space-between;
 align-items: center;
 padding-top: 16px;
@@ -1345,7 +1345,7 @@ const TradeScreen = ({
             .then((x) => {
                 setPrice(x.data.price);
             });
-        // setInterval(() => {
+        //     setInterval(() => {
         //     axios
         //     .get("https://api1.binance.com/api/v3/depth?symbol=BTCUSDT&limit=8")
         //     .then((x) => {
