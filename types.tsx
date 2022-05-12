@@ -22,7 +22,24 @@ export type RootStackParamList = {
   TradeScreen:undefined;
   StopPositionScreen:undefined;
   HistoryScreen:undefined;
-  C2cScreen:undefined;
+  C2cScreen:{
+    Id: string,
+    MyUSD: string,
+    CurrencyType: string,
+    Account: string,
+    SuccessRate: number,
+    AvailableNum: string,
+    LimitFrom: string,
+    LimitTo: string,
+    Price: string,
+    payTypeAccount: boolean,
+    payTypeTouchnGo: boolean,
+    payTypePpay: boolean,
+    userPassword: string
+  };
+  C2cBuyScreen: undefined;
+  C2cSellScreen: undefined;
+  C2cHistoryScreen: undefined;
   ProfileScreen:undefined;
   WalletScreen:undefined;
   Login:undefined;
