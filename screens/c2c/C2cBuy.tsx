@@ -1,8 +1,8 @@
 import * as React from "react"
-import { Text, TextInput, View, Image, TouchableOpacity, ScrollView, TouchableWithoutFeedback, Keyboard } from "react-native"
+import { Text, View, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native"
 import { RootStackScreenProps } from "../../types";
 import styled from "styled-components"
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import C2cBuyFirst from "../../components/c2c/buy/C2cBuyFirst";
@@ -82,20 +82,6 @@ const TopContainerTimerContainer = styled(View)`
 display: flex;
 flex-direction: row;
 margin-top: 4px;
-`;
-
-const TopContainerTimerText = styled(Text)`
-font-weight: 700;
-font-size: 16px;
-line-height: 20px;
-color: #FABD43;
-`;
-
-const TopContainerTimerMiddleText = styled(Text)`
-font-weight: 700;
-font-size: 16px;
-line-height: 20px;
-color: ${props => props.theme.color.LightMidGray};
 `;
 
 const TopContainerDetailText = styled(Text)`
