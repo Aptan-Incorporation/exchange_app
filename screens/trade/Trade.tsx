@@ -1351,6 +1351,7 @@ const TradeScreen = ({
     const getBalance = () => {
         
         api.get("/investor/margin-balance").then((x) => {
+            console.log(x)
             if(x.status != 400 && x.status != 401){
                 setBalance(x.data);
             }
@@ -1452,7 +1453,7 @@ const TradeScreen = ({
                                                 }
                                                 return (
 
-                                                    <LinearGradient colors={['transparent', 'rgba(251, 76, 81, 0.2)']} start={{ x: percent, y: 0.0 }} end={{ x: percent, y: 0.0 }}>
+                                                    <LinearGradient colors={['transparent', 'rgba(251, 76, 81, 0.2)']} start={{ x: 0, y: 0.0 }} end={{ x: percent, y: 0.0 }}>
                                                         <TradeTableRowContainer>
 
                                                             <TradeTableSellPriceText>{x[0].slice(0, 2) + "," + x[0].slice(2, -6)}</TradeTableSellPriceText>
@@ -1482,7 +1483,7 @@ const TradeScreen = ({
                                                     percent = parseInt((parseFloat(x[0].slice(0, 2) + "," + x[0].slice(2, -9))*parseFloat(x[1].slice(0, -5))+20).toString().slice(-2))/100
                                                 }
                                                 return (
-                                                    <LinearGradient colors={['transparent', 'rgba(47, 178, 100, 0.2)']} start={{ x: percent, y: 0.0 }} end={{ x: percent, y: 0.0 }}>
+                                                    <LinearGradient colors={['transparent', 'rgba(47, 178, 100, 0.2)']} start={{ x: 0, y: 0.0 }} end={{ x: percent, y: 0.0 }}>
                                                         <TradeTableRowContainer>
                                                             <TradeTableBuyPriceText>{x[0].slice(0, 2) + "," + x[0].slice(2, -6)}</TradeTableBuyPriceText>
                                                             <TradeTableNumberText>{x[1].slice(0, -5)}</TradeTableNumberText>

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Text, TouchableOpacity, View, Image } from "react-native"
+import { Text, TouchableOpacity, View, Image, Alert } from "react-native"
 import { Slider } from '@miblanchard/react-native-slider';
 import styled from "styled-components"
 import api from "../../common/api"
@@ -191,10 +191,12 @@ const SliderContainer = (props: {
                 <LeverageViewModalDetailText>{positionNum} BTC 可用擔保金額</LeverageViewModalDetailText>
             </LeverageViewModalDetailRowContainer>
             <ModalConfirmButton onPress={() => { 
-                api.postData("/order/position/adjust-leverage",{leverage:value,symbol:"BTC-USDT"}).then(x=>{
+                api.postData("/order/position/adjust-leverage",{leverage:value[0],symbol:"BTC-USDT"}).then(x=>{
                     if(x.status !== 400){
-                        AsyncStorage.setItem("leverage",value.toString())
+                        AsyncStorage.setItem("leverage",value[0].toString())
                         sendDataLeverageModal() 
+                    }else{
+                        Alert.alert(x.data.msg)
                     }
                 })
             }}>
