@@ -443,21 +443,25 @@ const HistoryScreen = ({
 
     const getPosition = () => {
         api.get("/investor/position").then((x) => {
-            setPositionArray(x.data);
+            if(x.status != 400 && x.status != 401){
+                setPositionArray(x.data);
+            }
         })
     };
 
     const getDealEntrust = () => {
         api.get("/investor/future?status=DEAL").then((x) => {
-            setDealEntrustArray(x.data);
+            if(x.status != 400 && x.status != 401){
+                setDealEntrustArray(x.data);
+            }
         })
     };
 
     const getHistoryEntrust = () => {
         api.get("/investor/future").then((x) => {
-            console.log(x.data)
-
+            if(x.status != 400 && x.status != 401){
             setEntrustArray(x.data);
+            }
         })
 
     };
@@ -521,7 +525,7 @@ const HistoryScreen = ({
 
             </HeaderContainer>
             <SwapContainerLine></SwapContainerLine>
-            <BottomContainer>
+            <BottomContainer contentContainerStyle={{paddingBottom:420}}>
                 {
                     swapView === 'HistoryCommit' &&
 

@@ -48,9 +48,10 @@ const SliderContainer = (props: {
     positionNum: string;
     onChangeSliderValue: React.Dispatch<React.SetStateAction<number>>;
     swapCurrency: number;
+    balance: number;
 
 }) => {
-    const { sliderValue, trackMarks, positionNum, swapCurrency, onChangeSliderValue } = props;
+    const { sliderValue, trackMarks, positionNum, swapCurrency, onChangeSliderValue,balance } = props;
     const [value, setValue] = React.useState(
         sliderValue ? sliderValue : DEFAULT_VALUE,
     );
@@ -91,15 +92,8 @@ const SliderContainer = (props: {
     };
 
     let num = parseInt(value.toString());
-    
 
-    // const returnValue = () => {
-    //     let newPositionNum = parseFloat(((parseFloat(positionNum) / 100) * num).toFixed(3));
-    //     onValueChangeSliderNum(newPositionNum);
-    //     onValueChangeBuyNumber(newPositionNum.toString());
-    // };
-
-    let positionString = (parseFloat(((parseFloat(positionNum) / 100) * num).toFixed(3))).toString();
+    let positionString =  (parseFloat(((parseFloat(positionNum) / 100) * num).toFixed(3))).toString();
     const [newInputNum, setNewInputNum] = React.useState("0");
 
 

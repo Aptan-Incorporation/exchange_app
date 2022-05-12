@@ -18,10 +18,9 @@ const Api = {
     })
       .catch((error) => {
         if(error.response.status === 401){
-          localStorage.removeItem("token")
-          localStorage.removeItem("user")
+          AsyncStorage.removeItem("token")
+          AsyncStorage.removeItem("user")
           alert("登入過期，請重新登入")
-          window.location.reload()
         }else{
           alert(error.response.data.msg)
         }

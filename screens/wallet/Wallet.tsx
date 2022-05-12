@@ -363,16 +363,7 @@ const WalletScreen = ({
     const [position,setPosition] = useState(0)
     const getBalance = () => {
         api.get("/investor/property").then(x=>{
-            setFuturesBalance(x.data.futures.balance)
-            setTotalBalance(x.data.spot.equityValue)
-            for(let i = 0 ;i<x.data.spot.coins.length ; i++){
-                if(x.data.spot.coins[i].symbol === "USDT"){
-                    setSpotBalance(x.data.spot.coins[i].balance)
-                } 
-            }
-        })
-        setTimeout(()=>{
-            api.get("/investor/property").then(x=>{
+            if(x.status != 400 && x.status != 401){
                 setFuturesBalance(x.data.futures.balance)
                 setTotalBalance(x.data.spot.equityValue)
                 for(let i = 0 ;i<x.data.spot.coins.length ; i++){
@@ -380,18 +371,20 @@ const WalletScreen = ({
                         setSpotBalance(x.data.spot.coins[i].balance)
                     } 
                 }
-            })
-        },1000)
+            }
+        })
         
     };
 
     const getPosition = () => {
         api.get("/investor/position").then((x) => {
-            if(x.data.length != 0){
-                setPosition(x.data[0].profitAndLoss)
+            if(x.status != 400 && x.status != 401){
+                if(x.data.length != 0){
+                    setPosition(x.data[0].profitAndLoss)
+                }
             }
         })
-    };
+    }
 
     useEffect(async ()=>{
         let token = await AsyncStorage.getItem("token")
@@ -399,7 +392,16 @@ const WalletScreen = ({
             getBalance()
             getPosition()
         }
-    },[totalBalance,spotBalance,futuresBalance])
+
+        const interval = setInterval(() => {
+            if(token){
+                getBalance()
+                getPosition()
+            }
+        }, 2000);
+        
+        return () => clearInterval(interval); 
+    },[])
     return (
         <Container insets={insets.top}>
             <Row>

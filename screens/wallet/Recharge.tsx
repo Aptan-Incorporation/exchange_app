@@ -15,6 +15,8 @@ import { useState, useEffect } from "react";
 import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Clipboard from 'expo-clipboard';
+// import QRCode  from 'qrcode.react';
+import SvgQRCode from 'react-native-qrcode-svg';
 
 const Container = styled(View)`
   display: flex;
@@ -88,7 +90,7 @@ const RechargeScreen = ({ navigation }: RootStackScreenProps<"Recharge">) => {
       </Header>
       <View style={{justifyContent:"center",alignItems:"center",display:"flex",flexDirection:"column",marginTop:20}}>
           <View style={{width:189,height:189,backgroundColor:"white",borderRadius:8,display:"flex",justifyContent:"center",alignItems:"center"}}>
-          <Image source={require("../../assets/images/wallet/qrcode.png")} style={{width:141,height:141}}/>
+            <SvgQRCode value={address} size={141}/>
 
           </View>
           <Text style={{color:"#8D97A2",fontSize:13,fontWeight:"500",marginTop:20}}>此地址只可接收USDT</Text>

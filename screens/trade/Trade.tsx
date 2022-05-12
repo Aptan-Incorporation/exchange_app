@@ -1270,7 +1270,7 @@ const TradeScreen = ({
         setIsCommitStopVisible(!isCommitStopVisible)
     };
 
-    const cancelCommitAlert = () =>
+    const cancelCommitAlert = (id:any) =>
         Alert.alert(
             "撤銷委託單？",
             "確定撤銷後將無法再次回復該筆委託單內容。",
@@ -1280,59 +1280,51 @@ const TradeScreen = ({
                     onPress: () => console.log("Cancel Pressed"),
                     style: "cancel"
                 },
-                { text: "確定", onPress: () => console.log("OK Pressed") }
+                { text: "確定", onPress: () => {
+                    setLoading(true)
+                    api.postData("/order/futures/cancel-order",{orderId:id}).then(x=>{
+                        setLoading(false)
+                        if(x.status !== 400){
+                            getPosition()
+                            getBalance() 
+                            getEntrust()
+                        }else{
+                            Alert.alert(x.data.msg)
+                        }
+                    })
+                } }
             ]
         );
 
 
     const getEntrust = () => {
         api.get("/investor/future?status=CREATE").then((x) => {
-            setEntrustArray(x.data);
-            for (let i = 0; i < x.data.length; i++) {
-            if (x.data[i].status !== "CANCEL") {
-                setFuture(true);
-                return;
+            if(x.status != 400 && x.status != 401){
+                setEntrustArray(x.data);
+                for (let i = 0; i < x.data.length; i++) {
+                    if (x.data[i].status !== "CANCEL") {
+                        setFuture(true);
+                        return;
+                    }
+                }
             }
-            }
+            
         })
-        // setInterval(() => {
-        // api.get("/investor/future?status=CREATE").then((x) => {
-        //     setEntrustArray(x.data);
-        //     // console.log(x.data);
-        //     for (let i = 0; i < x.data.length; i++) {
-        //     if (x.data[i].status !== "CANCEL") {
-        //         setFuture(true);
-        //         return;
-        //     }
-        //     }
-        // })},3000)
     };
     const getPosition = () => {
         api.get("/investor/position").then((x) => {
-            setPositionArray(x.data.sort(function (a:any, b:any) {
-            return a.positionId > b.positionId ? 1 : -1;
-            }));
+            if(x.status != 400 && x.status != 401){
+            setPositionArray(x.data);
             for (let i = 0; i < x.data.length; i++) {
             if (x.data[i].status !== "CLOSE") {
                 setPosition(true);
                 return;
             }
             }
+        }
         })
-        // setInterval(() => {
-        // api.get("/investor/position").then((x) => {
-        //     setPositionArray(x.data.sort(function (a:any, b:any) {
-        //     return a.positionId > b.positionId ? 1 : -1;
-        //     }));
+    };
     
-        //     for (let i = 0; i < x.data.length; i++) {
-        //     if (x.data[i].status !== "CLOSE") {
-        //         setPosition(true);
-        //         return;
-        //     }
-        //     }
-        // })},3000)
-        };
     const getDepth = () => {
         axios
             .get("https://api1.binance.com/api/v3/depth?symbol=BTCUSDT&limit=8")
@@ -1345,19 +1337,6 @@ const TradeScreen = ({
             .then((x) => {
                 setPrice(x.data.price);
             });
-        //     setInterval(() => {
-        //     axios
-        //     .get("https://api1.binance.com/api/v3/depth?symbol=BTCUSDT&limit=8")
-        //     .then((x) => {
-        //         setAsksArray(x.data.asks.reverse());
-        //         setBidsArray(x.data.bids);
-        //     });
-        //     axios
-        //     .get("https://api1.binance.com/api/v3/ticker/price?symbol=BTCUSDT")
-        //     .then((x) => {
-        //         setPrice(x.data.price);
-        //     });
-        // }, 2000);
     };
     
     const getPrice = () => {
@@ -1370,28 +1349,40 @@ const TradeScreen = ({
     };
     
     const getBalance = () => {
+        
         api.get("/investor/margin-balance").then((x) => {
-            setBalance(x.data);
+            if(x.status != 400 && x.status != 401){
+                setBalance(x.data);
+            }
         });
     };
 
     useEffect(async () => {
         let token = await AsyncStorage.getItem("token")
         let leverage = await AsyncStorage.getItem("leverage")
+        
+        if(leverage){
+            setLeverageViewNum(parseInt(leverage))
+        }
+        getDepth();
         if (token) {
             getEntrust();
             getPosition();
             getBalance();
         }
-        if(leverage){
-            setLeverageViewNum(parseInt(leverage))
-        }
-        // if(localStorage.getItem("leverRatio")){
-        //   setLeverRatio(parseInt(localStorage.getItem("leverRatio")!))
-        //   setTempLeverRatio(parseInt(localStorage.getItem("leverRatio")!))
-        // }
-        getDepth();
         getPrice();
+        const interval = setInterval(() => {
+            getDepth();
+            if (token) {
+                getEntrust();
+                getPosition();
+                // getBalance();
+            }
+            
+        }, 2000);
+        
+        return () => clearInterval(interval); 
+        
     }, []);
 
 
@@ -1606,9 +1597,10 @@ const TradeScreen = ({
                                             sliderValue={[0]}
                                             positionNum={balance === 0
                                                 ? "0"
-                                                : (((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().substring(0,((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().indexOf(".")+3)).toString()}
+                                                : swapCurrency===1 ? balance.toString(): (((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().substring(0,((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().indexOf(".")+3)).toString()}
                                             onChangeSliderValue={setSliderNum}
                                             swapCurrency={swapCurrency}
+                                            balance={balance}
                                         >
                                             <Slider
                                                 renderAboveThumbComponent={RenderAboveThumbComponent}
@@ -1624,7 +1616,7 @@ const TradeScreen = ({
                                         </SmallSliderContainer>
                                         <TradeFunctionPositionViewContainer>
                                             <TradeFunctionPositionViewTitleText>可用</TradeFunctionPositionViewTitleText>
-                                            <TradeFunctionPositionViewValueText>{balance} USDT</TradeFunctionPositionViewValueText>
+                                            <TradeFunctionPositionViewValueText>{balance.toFixed(3)} USDT</TradeFunctionPositionViewValueText>
                                         </TradeFunctionPositionViewContainer>
                                         <TradeFunctionPositionViewContainer>
                                             <TradeFunctionPositionViewTitleText>可開</TradeFunctionPositionViewTitleText>
@@ -1644,30 +1636,31 @@ const TradeScreen = ({
                                                     }else if (!sliderNum) {
                                                         Alert.alert("請輸入數量");
                                                     } else {
+                                                        console.log((sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2))
                                                       var obj = buyType === "Limit" ?
                                                       {
                                                           price: parseFloat(buyPrice),
-                                                          origQty: sliderNum,
+                                                          origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "BUY",
                                                           symbol: "BTC-USDT",
                                                           leverage: leverageViewNum,
                                                           type:"LIMIT"
                                                       } : buyType === "Market" ? {
-                                                          origQty: sliderNum,
+                                                          origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "BUY",
                                                           symbol: "BTC-USDT",
                                                           leverage: leverageViewNum,
                                                           type:"MARKET"
                                                         } : buyType === "Plan_Limit" ? {
                                                           price: parseFloat(buyPrice),
-                                                          origQty: sliderNum,
+                                                          origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "BUY",
                                                           symbol: "BTC-USDT",
                                                           leverage: leverageViewNum,
                                                           type:"STOP_LIMIT",
                                                           stopPrice:stopPrice
                                                         } : {
-                                                          origQty: sliderNum,
+                                                          origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "BUY",
                                                           symbol: "BTC-USDT",
                                                           leverage: leverageViewNum,
@@ -1679,7 +1672,7 @@ const TradeScreen = ({
                                                         .post("/order/futures/open-order", obj)
                                                         .then((x) => {
                                                           setLoading(false)
-                                                          setBuyPrice("")
+                                                        //   setBuyPrice("")
                                                           setStopPrice("")
                                                           setSliderNum(0)
                                                           getEntrust();
@@ -1707,27 +1700,27 @@ const TradeScreen = ({
                                                       var obj = buyType === "Limit" ?
                                                       {
                                                           price: parseFloat(buyPrice),
-                                                          origQty: sliderNum,
+                                                          origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "SELL",
                                                           symbol: "BTC-USDT",
                                                           leverage: leverageViewNum,
                                                           type:"LIMIT"
                                                       } : buyType === "Market" ? {
-                                                          origQty: sliderNum,
+                                                          origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "SELL",
                                                           symbol: "BTC-USDT",
                                                           leverage: leverageViewNum,
                                                           type:"MARKET"
                                                         } : buyType === "Plan_Limit" ? {
                                                           price: parseFloat(buyPrice),
-                                                          origQty: sliderNum,
+                                                          origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "SELL",
                                                           symbol: "BTC-USDT",
                                                           leverage: leverageViewNum,
                                                           type:"STOP_LIMIT",
                                                           stopPrice:stopPrice
                                                         } : {
-                                                          origQty: sliderNum,
+                                                          origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "SELL",
                                                           symbol: "BTC-USDT",
                                                           leverage: leverageViewNum,
@@ -1834,7 +1827,18 @@ const TradeScreen = ({
                                                                 <TradePositionCardButton onPress={() => { navigation.push("StopPositionScreen") }}>
                                                                     <TradePositionCardButtonText>止盈/止損</TradePositionCardButtonText>
                                                                 </TradePositionCardButton>
-                                                                <TradePositionCardButton>
+                                                                <TradePositionCardButton onPress={()=>{
+                                                                    setLoading(true)
+                                                                    api.postData("/order/position/close-position",{positionId:x.positionId}).then(x=>{
+                                                                        setLoading(false)
+                                                                        if(x.status !== 400){
+                                                                           getPosition()
+                                                                           getBalance() 
+                                                                        }else{
+                                                                            Alert.alert(x.data.msg)
+                                                                        }
+                                                                    })
+                                                                }}>
                                                                     <TradePositionCardButtonText>平倉</TradePositionCardButtonText>
                                                                 </TradePositionCardButton>
                                                             </TradePositionCardButtonContainer>
@@ -1911,7 +1915,7 @@ const TradeScreen = ({
                                                                 <TradeCommitCardButton onPress={() => { toggleCommitStopModal() }}>
                                                                     <TradeCommitCardButtonText>止盈/止損</TradeCommitCardButtonText>
                                                                 </TradeCommitCardButton>
-                                                                <TradeCommitCardButton onPress={() => { cancelCommitAlert() }}>
+                                                                <TradeCommitCardButton onPress={() => { cancelCommitAlert(x.orderId) }}>
                                                                     <TradeCommitCardButtonText>撤銷</TradeCommitCardButtonText>
                                                                 </TradeCommitCardButton>
                                                             </TradeCommitCardButtonContainer>
