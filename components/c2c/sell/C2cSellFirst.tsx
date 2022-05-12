@@ -1,10 +1,9 @@
 import * as React from "react"
-import { Text, TextInput, View, Image, TouchableOpacity, Alert, AlertType, AlertButton, Dimensions, Pressable } from "react-native"
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Text, TextInput, View, Image, TouchableOpacity, Dimensions, Pressable } from "react-native"
 import { Feather } from '@expo/vector-icons';
 import { useTogglePasswordVisibility } from '../../../hooks/useTogglePasswordVisibility';
 import Modal from "react-native-modal";
-import styled, { StyledComponent } from "styled-components"
+import styled from "styled-components"
 import { useState } from "react";
 
 const windowHeight = Dimensions.get('window').height;
@@ -438,7 +437,7 @@ const C2cSellFirst = (props: {
 
 
     return (
-        <View style={{backgroundColor: '#131B24'}}>
+        <View style={{ backgroundColor: '#131B24' }}>
             <TopContainer>
                 <TopDetailContainer>
                     <TopDetailPriceRowContainer>

@@ -1,9 +1,8 @@
 import * as React from "react"
-import { Text, TextInput, View, ScrollView, Image, TouchableOpacity, InputAccessoryView, Dimensions, Alert, Button } from "react-native"
+import { Text, View, ScrollView, Image, TouchableOpacity, Dimensions, Alert } from "react-native"
 import Modal from "react-native-modal";
 import styled from "styled-components"
 import { useEffect, useState } from "react";
-import { useNavigation } from '@react-navigation/native';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -417,20 +416,20 @@ const C2cSellSecond = (props: {
 
 
     const SubmitAlert = () => {
-        
-            Alert.alert(
-                "確定放行？",
-                "請核對收到的款項無誤，點擊確定後系統將放行您的資金給買方。",
-                [
-                    {
-                        text: "取消",
-                        onPress: () => console.log("Cancel Pressed"),
-                        style: "cancel"
-                    },
-                    { text: "確定", onPress: () => { onChangeSetSwapPage(3) } }
-                ]
-            );
-        
+
+        Alert.alert(
+            "確定放行？",
+            "請核對收到的款項無誤，點擊確定後系統將放行您的資金給買方。",
+            [
+                {
+                    text: "取消",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                },
+                { text: "確定", onPress: () => { onChangeSetSwapPage(3) } }
+            ]
+        );
+
     };
 
 

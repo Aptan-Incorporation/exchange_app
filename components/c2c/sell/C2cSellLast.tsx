@@ -1,13 +1,7 @@
+import { useNavigation } from "@react-navigation/native";
 import * as React from "react"
-import { Text, TextInput, View, ScrollView, Image, TouchableOpacity, InputAccessoryView, Dimensions, Alert, Button } from "react-native"
-import Modal from "react-native-modal";
+import { Text, View, ScrollView, TouchableOpacity } from "react-native"
 import styled from "styled-components"
-import { useState } from "react";
-import { useNavigation } from '@react-navigation/native';
-
-const windowHeight = Dimensions.get('window').height;
-const windowWidth = Dimensions.get('window').width;
-
 
 const Container = styled(ScrollView)`
 display: flex;

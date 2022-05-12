@@ -1,8 +1,8 @@
 import * as React from "react"
-import { Text, TextInput, View, Image, TouchableOpacity, ScrollView, TouchableWithoutFeedback, Keyboard } from "react-native"
+import { Text, View, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native"
 import { RootStackScreenProps } from "../../types";
 import styled from "styled-components"
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import C2cSellFirst from "../../components/c2c/sell/C2cSellFirst";

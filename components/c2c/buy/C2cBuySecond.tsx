@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Text, TextInput, View, ScrollView, Image, TouchableOpacity, InputAccessoryView, Dimensions, Alert, Button } from "react-native"
+import { Text, View, ScrollView, Image, TouchableOpacity, Dimensions, Alert } from "react-native"
 import Modal from "react-native-modal";
 import styled from "styled-components"
 import { useState } from "react";
@@ -410,7 +410,7 @@ const C2cBuySecond = (props: {
     // 設置訂單日期
     const returnBuyTime = () => {
         let v = new Date();
-        return `${v.getFullYear()}-${v.getMonth()+1}-${v.getDate()} ${v.getHours()}:${v.getMinutes()}:${v.getSeconds()}`;
+        return `${v.getFullYear()}-${v.getMonth() + 1}-${v.getDate()} ${v.getHours()}:${v.getMinutes()}:${v.getSeconds()}`;
     }
 
     // 取消訂單
