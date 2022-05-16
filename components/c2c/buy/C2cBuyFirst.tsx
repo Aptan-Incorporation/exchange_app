@@ -2,6 +2,9 @@ import * as React from "react"
 import { Text, TextInput, View, Image, TouchableOpacity } from "react-native"
 import styled from "styled-components"
 import { useState } from "react";
+import axios from "axios"
+import api from "../../../common/api"
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 // Top Container
 const TopContainer = styled(View)`
@@ -252,8 +255,9 @@ margin-top: 16px;
 
 const C2cBuyFirst = (props: {
     Id?: string;
-    MyUSD: string;
+    MyCurrency: string;
     Account: string;
+    Owner: string;
     CurrencyType: string;
     SuccessRate: number;
     AvailableNum: string;
@@ -266,12 +270,17 @@ const C2cBuyFirst = (props: {
     onValueChangeInputPrice: React.Dispatch<React.SetStateAction<string>>;
     onValueChangeInputNumber: React.Dispatch<React.SetStateAction<string>>;
     onChangeSetSwapPage: React.Dispatch<React.SetStateAction<number>>;
+    onValueChangeSetBuyId: React.Dispatch<React.SetStateAction<string>>;
+    onValueChangeSetBuyTime: React.Dispatch<React.SetStateAction<number>>;
+    onValueChangeIsWaitFinish: React.Dispatch<React.SetStateAction<number>>;
+    onValueChangePayTimeLimit: React.Dispatch<React.SetStateAction<number>>;
 }) => {
 
     const {
         Id,
-        MyUSD,
+        MyCurrency,
         Account,
+        Owner,
         CurrencyType,
         SuccessRate,
         AvailableNum,
@@ -283,7 +292,11 @@ const C2cBuyFirst = (props: {
         PayTypePpay,
         onChangeSetSwapPage,
         onValueChangeInputPrice,
-        onValueChangeInputNumber
+        onValueChangeInputNumber,
+        onValueChangeSetBuyId,
+        onValueChangeSetBuyTime,
+        onValueChangeIsWaitFinish,
+        onValueChangePayTimeLimit
     } = props;
 
     // Input Price
@@ -293,8 +306,8 @@ const C2cBuyFirst = (props: {
     const [inputNumber, setInputNumber] = useState("");
 
     const handleOnChangeAllPrice = () => {
-        if (parseFloat(MyUSD) < parseFloat(LimitTo)) {
-            setInputPrice(parseFloat(MyUSD).toFixed(0))
+        if (parseFloat(MyCurrency) < parseFloat(LimitTo)) {
+            setInputPrice(parseFloat(MyCurrency).toFixed(0))
         } else {
             setInputPrice(parseFloat(LimitTo).toFixed(0))
         }
@@ -302,8 +315,8 @@ const C2cBuyFirst = (props: {
 
     const handleOnChangeAllNumber = () => {
         let str = ""
-        if (parseFloat(MyUSD) <= parseFloat(LimitTo)) {
-            str = (parseFloat(MyUSD) / parseFloat(Price)).toFixed(2);
+        if (parseFloat(MyCurrency) <= parseFloat(LimitTo)) {
+            str = (parseFloat(MyCurrency) / parseFloat(Price)).toFixed(2);
             setInputNumber(str);
         } else {
             str = (parseFloat(LimitTo) / parseFloat(Price)).toFixed(2);
@@ -312,15 +325,34 @@ const C2cBuyFirst = (props: {
     };
 
     const handleOnChangeExchange = () => {
-        if (inputPrice != "" && parseFloat(inputPrice) <= parseFloat(MyUSD)) {
+        if (inputPrice != "" && parseFloat(inputPrice) <= parseFloat(MyCurrency)) {
             setInputNumber((parseFloat(inputPrice) / parseFloat(Price)).toFixed(2));
-        } else if (inputNumber != "" && parseFloat(inputNumber) * parseFloat(Price) <= parseFloat(MyUSD)) {
+        } else if (inputNumber != "" && parseFloat(inputNumber) * parseFloat(Price) <= parseFloat(MyCurrency)) {
             setInputPrice((parseFloat(inputNumber) * parseFloat(Price)).toFixed(0));
         }
     };
 
+    const firstPostReturn = () => {
+        api.post(`otc/api/advertisement/${Id}/otcOrder/`,{
+            price: Price,
+            quantity: inputNumber,
+            payments: [null]
+        })
+        .then((response: any) => {
+            console.log(response)
+            if (response.status != 400 && response.status != 401) {
+                onValueChangeSetBuyId(response.id)
+                onValueChangeSetBuyTime(response.createdDate)
+                onValueChangeIsWaitFinish(response.status)
+                onValueChangePayTimeLimit(response.paymentTimeLimit)
+            }
+        })
+        .catch( (error) => console.log(error));
+    }
+
     const handleSubmitForm = () => {
-        if (((parseFloat(inputPrice) / parseFloat(Price)).toFixed(2)) == parseFloat(inputNumber).toFixed(2) && (parseFloat(inputPrice) <= parseFloat(MyUSD))) {
+        if (((parseFloat(inputPrice) / parseFloat(Price)).toFixed(2)) == parseFloat(inputNumber).toFixed(2) && (parseFloat(inputPrice) <= parseFloat(MyCurrency))) {
+            firstPostReturn()
             onValueChangeInputPrice(inputPrice)
             onValueChangeInputNumber(inputNumber)
             onChangeSetSwapPage(2)
@@ -399,9 +431,9 @@ const C2cBuyFirst = (props: {
             <BottomDetailContainer>
                 <BottomDetailTopContainer>
                     <PhotoButton onPress={() => { }}>
-                        <PhotoButtonText>{Account.charAt(0).toUpperCase()}</PhotoButtonText>
+                        <PhotoButtonText>{Owner.charAt(0).toUpperCase()}</PhotoButtonText>
                     </PhotoButton>
-                    <EmailText>{Account}</EmailText>
+                    <EmailText>{Owner}</EmailText>
                     <SuccessRateText>({SuccessRate})%</SuccessRateText>
                 </BottomDetailTopContainer>
                 <BottomDetailSmallTitleText>付款方式</BottomDetailSmallTitleText>

@@ -150,19 +150,17 @@ color: ${props => props.theme.color.Primary};
 
 const C2cBuyLast = (props: {
     Id?: string;
-    MyUSD: string;
     CurrencyType: string;
     Price: string;
     BuyPrice: string;
     BuyNumber: string;
     BuyID: string;
     ChosenPayType: string;
-    BuyTime: string;
+    BuyTime: number;
 }) => {
 
     const {
         Id,
-        MyUSD,
         CurrencyType,
         Price,
         BuyPrice,

@@ -348,8 +348,9 @@ const PpayQRCode = '../../../assets/images/c2c/qrcode.png'
 
 const C2cBuySecond = (props: {
     Id?: string;
-    MyUSD: string;
+    MyCurrency: string;
     Account: string;
+    Owner: string;
     CurrencyType: string;
     SuccessRate: number;
     AvailableNum: string;
@@ -361,17 +362,18 @@ const C2cBuySecond = (props: {
     PayTypePpay: boolean;
     BuyPrice: string;
     BuyNumber: string;
+    BuyTime: number;
+    BuyId: string,
+    IsWaitFinish: number;
     onChangeSetSwapPage: React.Dispatch<React.SetStateAction<number>>;
-    onChangeSetBuyId: React.Dispatch<React.SetStateAction<string>>;
     onChangeSetChoosePayType: React.Dispatch<React.SetStateAction<string>>;
-    onChangeISWaitFinish: React.Dispatch<React.SetStateAction<boolean>>;
-    onValueChangeSetBuyTime: React.Dispatch<React.SetStateAction<string>>;
 }) => {
 
     const {
         Id,
-        MyUSD,
+        MyCurrency,
         Account,
+        Owner,
         CurrencyType,
         SuccessRate,
         AvailableNum,
@@ -383,19 +385,12 @@ const C2cBuySecond = (props: {
         PayTypePpay,
         BuyPrice,
         BuyNumber,
+        BuyTime,
+        BuyId,
+        IsWaitFinish,
         onChangeSetSwapPage,
-        onChangeSetBuyId,
         onChangeSetChoosePayType,
-        onChangeISWaitFinish,
-        onValueChangeSetBuyTime
     } = props;
-
-    const getRandom = (x: number) => {
-        return (Math.floor(Math.random() * x) + 1).toString();
-    };
-
-    //購買單號
-    const [buyId, setBuyId] = useState(getRandom(100000000000000));
 
     //選擇付款方式
     const [choosePayType, setChoosePaytype] = useState("");
@@ -406,12 +401,6 @@ const C2cBuySecond = (props: {
     const toggleQRCodeModal = () => {
         setIsQRCodeModalVisible(!isQRCodeModalVisible);
     };
-
-    // 設置訂單日期
-    const returnBuyTime = () => {
-        let v = new Date();
-        return `${v.getFullYear()}-${v.getMonth() + 1}-${v.getDate()} ${v.getHours()}:${v.getMinutes()}:${v.getSeconds()}`;
-    }
 
     // 取消訂單
 
@@ -440,10 +429,7 @@ const C2cBuySecond = (props: {
     const handleSubmitAlert = () => {
         if (choosePayType != "") {
             setSubmitText('放行中...')
-            onChangeISWaitFinish(true);
             onChangeSetChoosePayType(choosePayType);
-            onChangeSetBuyId(buyId);
-            onValueChangeSetBuyTime(returnBuyTime());
             setTimeout(() => { handleSubmit() }, 5000)
         }
     };
@@ -539,7 +525,7 @@ const C2cBuySecond = (props: {
                 </FirstCardRowContainer>
                 <FirstCardRowContainer>
                     <FirstCardTitleText>單號</FirstCardTitleText>
-                    <FirstCardValueText>{buyId}</FirstCardValueText>
+                    <FirstCardValueText>{BuyId}</FirstCardValueText>
                 </FirstCardRowContainer>
             </FirstCardContainer>
             <SecondCardContainer>

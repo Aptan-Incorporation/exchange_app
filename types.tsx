@@ -24,8 +24,9 @@ export type RootStackParamList = {
   HistoryScreen:undefined;
   C2cScreen:{
     Id: string,
-    MyUSD: string,
-    CurrencyType: string,
+    CryptoAsset: string,
+    fiatCurrency: string,
+    Owner: string,
     Account: string,
     SuccessRate: number,
     AvailableNum: string,
@@ -34,8 +35,7 @@ export type RootStackParamList = {
     Price: string,
     payTypeAccount: boolean,
     payTypeTouchnGo: boolean,
-    payTypePpay: boolean,
-    userPassword: string
+    payTypePpay: boolean
   };
   C2cBuyScreen: undefined;
   C2cSellScreen: undefined;

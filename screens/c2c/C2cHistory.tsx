@@ -172,7 +172,6 @@ const CardMiddleRowContainer = styled(View)`
 display: flex;
 flex-direction: row;
 align-items: center;
-margin-top: 2px;
 `;
 
 const CardMiddleRightRowContainer = styled(View)`
@@ -187,6 +186,8 @@ font-size: 12px;
 line-height: 18px;
 color: ${props => props.theme.color.MidGray};
 `;
+
+
 
 const CardMiddleLeftValueText = styled(Text)`
 font-weight: 400;
