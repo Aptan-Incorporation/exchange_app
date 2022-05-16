@@ -1,4 +1,4 @@
-import { Text, View,SafeAreaView } from "react-native";
+import { Text, View,SafeAreaView,TouchableOpacity } from "react-native";
 import styled from "styled-components";
 import { RootStackScreenProps } from "../../types";
 import { PriceContext } from "../../App" 
@@ -45,7 +45,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
             </View>
           </View>
         </View>
-        <View
+        <TouchableOpacity
           style={{
             display: "flex",
             flexDirection: "row",
@@ -53,6 +53,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
             marginTop: 12,
             alignItems: "center"
           }}
+          onPress={()=>{navigation.navigate("Trade")}}
         >
           <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>
             BTCUSDT
@@ -91,7 +92,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
               <Text style={{ color: "white" }}>+{btcRate}%</Text>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
         <View
           style={{
             display: "flex",

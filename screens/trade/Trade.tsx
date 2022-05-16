@@ -228,6 +228,9 @@ const TradeTableRowContainer = styled(View)`
 display: flex;
 flex-direction: row;
 justify-content: space-between;
+margin-bottom:5px;
+align-items:center;
+padding-top:2px;
 `;
 
 const TradeTableBuyPriceText = styled(Text)`
@@ -685,7 +688,7 @@ const TradePositionCardBigValueText = styled(Text)`
 font-weight: 700;
 font-size: 16px;
 line-height: 20px;
-color: ${props => props.theme.color.ExtraLightGray};
+color: ${props => props.theme.color.Secondary};
 `;
 
 const TradePositionCardSmallValueText = styled(Text)`
@@ -1327,7 +1330,7 @@ const TradeScreen = ({
     
     const getDepth = () => {
         axios
-            .get("https://api1.binance.com/api/v3/depth?symbol=BTCUSDT&limit=8")
+            .get("https://api1.binance.com/api/v3/depth?symbol=BTCUSDT&limit=6")
             .then((x) => {
                 setAsksArray(x.data.asks.reverse());
                 setBidsArray(x.data.bids);
@@ -1796,12 +1799,14 @@ const TradeScreen = ({
                                                         <TradePositionCardContainer>
                                                             <TradePositionCardTitleContainer>
                                                                 <TradePositionCardTitleRowContainer>
-                                                                    <TradePositionCardTitleText>{x.profitAndLoss}</TradePositionCardTitleText>
+                                                                    {x.side === "BUY" ?                                                                    <TradePositionCardTitleText>多 BTC/USDT</TradePositionCardTitleText>
+ :                                                                    <TradePositionCardTitleText style={{color:"#FB4C51"}}>空 BTC/USDT</TradePositionCardTitleText>
+}
                                                                     <TradePositionCardSmallTitleText>未實現盈虧</TradePositionCardSmallTitleText>
                                                                 </TradePositionCardTitleRowContainer>
                                                                 <TradePositionCardTitleRowContainer>
                                                                     <TradePositionCardTitleValueText>{x.type === 'FULL' ? '全倉' : '逐倉'} {x.leverage}X</TradePositionCardTitleValueText>
-                                                                    <TradePositionCardBigValueText>{x.value} USDT</TradePositionCardBigValueText>
+                                                                    {x.profitAndLoss > 0 ? <TradePositionCardBigValueText>{x.profitAndLoss}</TradePositionCardBigValueText>:<TradePositionCardBigValueText style={{color:"#FB4C51"}}>{x.profitAndLoss}</TradePositionCardBigValueText>} 
                                                                 </TradePositionCardTitleRowContainer>
                                                             </TradePositionCardTitleContainer>
                                                             <TradePositionCardDetailRowContainer>

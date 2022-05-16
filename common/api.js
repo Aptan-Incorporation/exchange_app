@@ -70,7 +70,7 @@ const Api = {
         if(error.response.status === 401){
           AsyncStorage.removeItem("token")
           AsyncStorage.removeItem("user")
-          alert("登入過期，請重新登入")
+          // alert("登入過期，請重新登入")
           // window.location.reload()
         }else{
           // alert(error.response.data.msg)
