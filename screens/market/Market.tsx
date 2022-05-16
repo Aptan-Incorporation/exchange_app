@@ -1,9 +1,9 @@
-import { Text, View,SafeAreaView,TouchableOpacity } from "react-native";
+import { Text, View,SafeAreaView,TouchableOpacity,TextInput } from "react-native";
 import styled from "styled-components";
 import { RootStackScreenProps } from "../../types";
 import { PriceContext } from "../../App" 
 import * as React from "react";
-import {useContext } from "react";
+import {useContext,useState,useEffect } from "react";
 
 const Container = styled(SafeAreaView)`
   display: flex;
@@ -19,10 +19,83 @@ const ColumnText = styled(Text)`
 
 const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
     const {btcPrice,btcRate,btcAmt,ethPrice,ethRate,ethAmt,dogePrice,dogeRate,dogeAmt} = useContext(PriceContext)
+    const [search, setSearch] = useState("");
+    const [arr,setArray] = useState([{
+      name:"",
+      price:"",
+      amount:"",
+      rate:""
+    }])
 
+    const filterByName = (filteredData:any) => {
+      // Avoid filter for null value
+      if (!search) {
+        return filteredData;
+      }
+      
+      const filteredCars = filteredData.filter(
+        (x:any) => x.name.indexOf(search.toUpperCase()) !== -1
+      );
+      return filteredCars;
+    };
+
+    useEffect(()=>{
+      setArray([
+        {
+          name:"BTCUSDT",
+          price:btcPrice,
+          amount:btcAmt,
+          rate:btcRate
+        },
+        {
+          name:"ETHUSDT",
+          price:ethPrice,
+          amount:ethAmt,
+          rate:ethRate
+        },
+        {
+          name:"DOGEUSDT",
+          price:dogePrice,
+          amount:dogeAmt,
+          rate:dogeRate
+        }
+      ])
+      var filteredData = filterByName([
+        {
+          name:"BTCUSDT",
+          price:btcPrice,
+          amount:btcAmt,
+          rate:btcRate
+        },
+        {
+          name:"ETHUSDT",
+          price:ethPrice,
+          amount:ethAmt,
+          rate:ethRate
+        },
+        {
+          name:"DOGEUSDT",
+          price:dogePrice,
+          amount:dogeAmt,
+          rate:dogeRate
+        }
+      ]);
+      setArray(filteredData);
+    },[btcPrice,ethPrice,dogePrice,search])
   return (
     <Container>
+      
       <View style={{paddingHorizontal:16}}>
+      <TextInput
+          placeholder={"搜尋"}
+          value={search}
+          onChangeText={search => setSearch(search)}
+          placeholderTextColor={
+            '#8D97A2'
+          }
+          autoCorrect={false}
+          style={{ backgroundColor: '#242D37', width: '100%', height: 36, color: '#F4F5F6', borderTopLeftRadius: 4, borderBottomLeftRadius: 4, paddingLeft: 12,marginBottom:20 }}
+      />
         <View
           style={{
             display: "flex",
@@ -45,7 +118,138 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
             </View>
           </View>
         </View>
-        <TouchableOpacity
+        {
+          arr.map((x:any)=>{
+            return(
+              <>
+              {
+                x.name === "BTCUSDT" ?
+                <TouchableOpacity
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginTop: 24,
+                  alignItems: "center"
+                }}
+                onPress={()=>{navigation.navigate("Trade")}}
+              >
+                <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>
+                  {x.name}
+                </Text>
+                <View style={{ display: "flex", flexDirection: "row" }}>
+                  <View
+                    style={{
+                      marginRight: 40,
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-end"
+                    }}
+                  >
+                    <Text
+                      style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}
+                    >
+                      {x.price}
+                    </Text>
+                    <Text
+                      style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}
+                    >
+                      {x.amount}
+                    </Text>
+                  </View>
+                  {parseFloat(x.rate) > 0 ? <View
+                    style={{
+                      width: 88,
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      backgroundColor: "#2FB364",
+                      borderRadius: 4,
+                      alignItems: "center"
+                    }}
+                  >
+                    <Text style={{ color: "white" }}>+{x.rate}%</Text>
+                  </View>:<View
+                    style={{
+                      width: 88,
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      backgroundColor: "#FB4C51",
+                      borderRadius: 4,
+                      alignItems: "center"
+                    }}
+                  >
+                    <Text style={{ color: "white" }}>{x.rate}%</Text>
+                  </View>}
+                </View>
+              </TouchableOpacity> :
+              <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 24,
+                alignItems: "center"
+              }}
+            >
+              <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>
+                {x.name}
+              </Text>
+              <View style={{ display: "flex", flexDirection: "row" }}>
+                <View
+                  style={{
+                    marginRight: 40,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-end"
+                  }}
+                >
+                  <Text
+                    style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}
+                  >
+                    {x.price}
+                  </Text>
+                  <Text
+                    style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}
+                  >
+                    {x.amount}
+                  </Text>
+                </View>
+                {parseFloat(x.rate) > 0 ? <View
+                  style={{
+                    width: 88,
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    backgroundColor: "#2FB364",
+                    borderRadius: 4,
+                    alignItems: "center"
+                  }}
+                >
+                  <Text style={{ color: "white" }}>+{x.rate}%</Text>
+                </View>:<View
+                  style={{
+                    width: 88,
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    backgroundColor: "#FB4C51",
+                    borderRadius: 4,
+                    alignItems: "center"
+                  }}
+                >
+                  <Text style={{ color: "white" }}>{x.rate}%</Text>
+                </View>}
+              </View>
+            </View>
+              }
+              
+              </>
+            )
+          })
+        }
+        {/* <TouchableOpacity
           style={{
             display: "flex",
             flexDirection: "row",
@@ -78,7 +282,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                 {btcAmt}
               </Text>
             </View>
-            <View
+            {parseFloat(btcRate) > 0 ? <View
               style={{
                 width: 88,
                 display: "flex",
@@ -90,7 +294,20 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
               }}
             >
               <Text style={{ color: "white" }}>+{btcRate}%</Text>
-            </View>
+            </View>:<View
+              style={{
+                width: 88,
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                backgroundColor: "#FB4C51",
+                borderRadius: 4,
+                alignItems: "center"
+              }}
+            >
+              <Text style={{ color: "white" }}>{btcRate}%</Text>
+            </View>}
+            
           </View>
         </TouchableOpacity>
         <View
@@ -125,7 +342,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                 {ethAmt}
               </Text>
             </View>
-            <View
+            {parseFloat(ethRate) > 0 ? <View
               style={{
                 width: 88,
                 display: "flex",
@@ -137,11 +354,23 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
               }}
             >
               <Text style={{ color: "white" }}>+{ethRate}%</Text>
-            </View>
+            </View>:<View
+              style={{
+                width: 88,
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                backgroundColor: "#FB4C51",
+                borderRadius: 4,
+                alignItems: "center"
+              }}
+            >
+              <Text style={{ color: "white" }}>{ethRate}%</Text>
+            </View>}
           </View>
         </View>
-        <View
-          style={{
+        <View */}
+          {/* style={{
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
@@ -172,7 +401,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                 {dogeAmt}
               </Text>
             </View>
-            <View
+            {parseFloat(dogeRate) > 0 ? <View
               style={{
                 width: 88,
                 display: "flex",
@@ -184,9 +413,21 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
               }}
             >
               <Text style={{ color: "white" }}>+{dogeRate}%</Text>
-            </View>
+            </View>:<View
+              style={{
+                width: 88,
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "center",
+                backgroundColor: "#FB4C51",
+                borderRadius: 4,
+                alignItems: "center"
+              }}
+            >
+              <Text style={{ color: "white" }}>{dogeRate}%</Text>
+            </View>}
           </View>
-        </View>
+        </View> */}
       </View>
     </Container>
   );

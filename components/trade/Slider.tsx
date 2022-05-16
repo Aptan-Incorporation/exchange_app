@@ -191,17 +191,10 @@ const SliderContainer = (props: {
                 <LeverageViewModalDetailText>{positionNum} BTC 可用擔保金額</LeverageViewModalDetailText>
             </LeverageViewModalDetailRowContainer>
             <ModalConfirmButton onPress={() => { 
-                console.log(value.length)
-                if(value.length){
-                    console.log(value[0])
-                }else{
-                    console.log(parseInt(value))
-                }
                 var obj = {
                     leverage:value.length ? value[0]:parseInt(value),
                     symbol:"BTC-USDT"
                 }
-                console.log(obj)
                 api.postData("/order/position/adjust-leverage",obj).then(x=>{
                     if(x.status !== 400){
                         AsyncStorage.setItem("leverage",value.length ? value[0].toString():parseInt(value).toString())

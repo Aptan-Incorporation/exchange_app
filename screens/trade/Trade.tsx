@@ -14,6 +14,7 @@ import axios from "axios"
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
+import { useIsFocused } from '@react-navigation/native';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -1354,40 +1355,48 @@ const TradeScreen = ({
     const getBalance = () => {
         
         api.get("/investor/margin-balance").then((x) => {
-            console.log(x)
             if(x.status != 400 && x.status != 401){
                 setBalance(x.data);
             }
         });
     };
-
+    const isFocused = useIsFocused();
     useEffect(async () => {
-        let token = await AsyncStorage.getItem("token")
-        let leverage = await AsyncStorage.getItem("leverage")
-        
-        if(leverage){
-            setLeverageViewNum(parseInt(leverage))
-        }
-        getDepth();
-        if (token) {
-            getEntrust();
-            getPosition();
-            getBalance();
-        }
-        getPrice();
-        const interval = setInterval(() => {
-            getDepth();
+        if(isFocused){
+            
+            let token = await AsyncStorage.getItem("token")
+            if(!token){
+                setEntrustArray([])
+                setPositionArray([])
+                setBalance(0)
+            }
             if (token) {
                 getEntrust();
                 getPosition();
-                // getBalance();
+                getBalance();
             }
+            let leverage = await AsyncStorage.getItem("leverage")
+            if(leverage){
+                setLeverageViewNum(parseInt(leverage))
+            }
+            getDepth();
             
-        }, 2000);
+            getPrice();
+            const interval = setInterval(() => {
+                getDepth();
+                if (token) {
+                    getEntrust();
+                    getPosition();
+                    getBalance();
+                }
+                
+            }, 2000);
+            
+            return () => clearInterval(interval); 
+        }
         
-        return () => clearInterval(interval); 
         
-    }, []);
+    }, [isFocused]);
 
 
     return (

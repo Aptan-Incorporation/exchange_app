@@ -395,8 +395,8 @@ const GraphPage = () => {
 
             <GraphContainer contentContainerStyle={{paddingBottom:350}}>
                 <GraphContentContainer>
-                <WebView style={{width:"100%",height:430}}
-                 source={{ uri: 'https://exchange-chart-staging.aptan.cloud/' }}
+                <WebView style={{width:"100%",height:470}}
+                 source={{ uri: 'https://exchange-chart-staging.aptan.cloud' }}
                 />
                 </GraphContentContainer>
                 <GraphDetailTitleText>掛單簿</GraphDetailTitleText>
