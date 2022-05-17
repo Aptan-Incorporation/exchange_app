@@ -1,10 +1,14 @@
 import * as React from "react"
-import { Text, View, Image, TouchableOpacity, ScrollView } from "react-native"
+import { Text, View, Image, TouchableOpacity, ScrollView, Alert } from "react-native"
 import { RootStackScreenProps } from "../../types";
 import styled from "styled-components"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CountdownTimer from "../../components/c2c/CountdownTimer";
+import axios from "axios"
+import api from "../../common/api"
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Spinner from 'react-native-loading-spinner-overlay'
 
 const Container = styled(View) <{ insets: number }>`
     display: flex ;
@@ -399,8 +403,73 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
     // Countdown Timer (Import CountdownTimer)
     const FIFTEENMINUTES = 15 * 60 * 1000;
 
+    const [loading, setLoading] = useState(false);
+
+    // 獲取進行中訂單
+    const [waitingList, setWaitingList] = useState([]);
+
+    const getWaitingList = () => {
+        setLoading(true)
+        api.get(`/otc/api/otcOrder/?all=false&status=0,1`)
+            .then((x) => {
+                setLoading(false)
+                if (x.status != 400 && x.status != 401) {
+                    setWaitingList(x);
+                } else {
+                    Alert.alert(x.data.msg);
+                }
+            })
+            .catch(() => {
+                console.log(Error)
+            })
+    };
+
+
+    // 獲取已完成訂單
+    const [completeList, setCompleteList] = useState([]);
+
+    const getCompleteList = () => {
+        setLoading(true)
+        api.get(`/otc/api/otcOrder/?all=false&status=2`)
+            .then((x) => {
+                setLoading(false)
+                if (x.status != 400 && x.status != 401) {
+                    setCompleteList(x);
+                } else {
+                    Alert.alert(x.data.msg);
+                }
+            })
+            .catch(() => {
+                console.log(Error)
+            })
+    };
+    
+
+    const [account, setAccount] = useState("");
+    const [userId, setUserId] = useState("");
+
+
+    useEffect(async () => {
+        let token = await AsyncStorage.getItem("token")
+        let user = await AsyncStorage.getItem("user")
+        setAccount(JSON.parse(user!).account)
+        setUserId(JSON.parse(user!).userId)
+
+        if (token) {
+            getWaitingList()
+            getCompleteList()
+        } else {
+            Alert.alert("請先登入")
+        }
+
+    }, [])
+
     return (
         <Container insets={insets.top}>
+            {
+                loading &&
+                <Spinner visible={true} textContent={'載入中'} color={'#FFFFFF'} textStyle={{ color: '#FFFFFF' }} />
+            }
             <HeaderContainer>
                 <TouchableOpacity onPress={() => { navigation.goBack() }}>
                     <PreviousIcon source={require("../../assets/images/global/previous.png")} />
@@ -412,18 +481,18 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
             {
                 swapPage === 0 ?
                     <SwapContainer>
-                        <SwapLeftButtonClicked onPress={() => { setSwapPage(0) }}>
+                        <SwapLeftButtonClicked onPress={() => { setSwapPage(0), getWaitingList() }}>
                             <SwapButtonClickedText>進行中</SwapButtonClickedText>
                         </SwapLeftButtonClicked>
-                        <SwapRightButton onPress={() => { setSwapPage(1) }}>
+                        <SwapRightButton onPress={() => { setSwapPage(1), getCompleteList() }}>
                             <SwapButtonText>已完成</SwapButtonText>
                         </SwapRightButton>
                     </SwapContainer> :
                     <SwapContainer>
-                        <SwapLeftButton onPress={() => { setSwapPage(0) }}>
+                        <SwapLeftButton onPress={() => { setSwapPage(0), getWaitingList() }}>
                             <SwapButtonText>進行中</SwapButtonText>
                         </SwapLeftButton>
-                        <SwapRightButtonClicked onPress={() => { setSwapPage(1) }}>
+                        <SwapRightButtonClicked onPress={() => { setSwapPage(1), getCompleteList() }}>
                             <SwapButtonClickedText>已完成</SwapButtonClickedText>
                         </SwapRightButtonClicked>
                     </SwapContainer>
@@ -431,13 +500,13 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
             <DetailContainer>
                 {
                     swapPage === 0 &&
-                    (HistoryArray.length > 0 ?
-                        HistoryArray.map((x, i) => {
+                    (waitingList.length > 0 ?
+                        waitingList.map((x: any, i) => {
                             return (
-                                x.currentStatus !== 'COMPLETE' &&
+
                                 <CardContainer>
                                     {
-                                        x.buyType === 'buy' ?
+                                        x.buyUser === account ?
                                             <CardTitleContainer>
                                                 <CardBuyTitleText>買</CardBuyTitleText>
                                                 <CardBuyTitleCurrencyText>{x.type}/USD</CardBuyTitleCurrencyText>
@@ -450,39 +519,46 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                     }
                                     <CardMiddleContainer>
                                         <CardMiddleColumnContainer>
-                                            <CardMiddleRowContainer>
-                                                <CardMiddleLeftTitleText>交易方</CardMiddleLeftTitleText>
-                                                <CardMiddleLeftValueText>{x.account}</CardMiddleLeftValueText>
-                                            </CardMiddleRowContainer>
+                                            {
+                                                x.buyUser === account ?
+                                                    <CardMiddleRowContainer>
+                                                        <CardMiddleLeftTitleText>交易方</CardMiddleLeftTitleText>
+                                                        <CardMiddleLeftValueText>{x.sellUser}</CardMiddleLeftValueText>
+                                                    </CardMiddleRowContainer> :
+                                                    <CardMiddleRowContainer>
+                                                        <CardMiddleLeftTitleText>交易方</CardMiddleLeftTitleText>
+                                                        <CardMiddleLeftValueText>{x.buyUser}</CardMiddleLeftValueText>
+                                                    </CardMiddleRowContainer>
+                                            }
                                             <CardMiddleRowContainer>
                                                 <CardMiddleLeftTitleText>數量</CardMiddleLeftTitleText>
-                                                <CardMiddleLeftValueText>{x.buyNumber} {x.type}</CardMiddleLeftValueText>
+                                                <CardMiddleLeftValueText>{x.quantity} {x.cryptoAsset}</CardMiddleLeftValueText>
                                             </CardMiddleRowContainer>
                                             <CardMiddleRowContainer>
                                                 <CardMiddleLeftTitleText>單價</CardMiddleLeftTitleText>
-                                                <CardMiddleLeftValueText>{x.price} USD</CardMiddleLeftValueText>
+                                                <CardMiddleLeftValueText>{x.price} {x.fiatCurrency}</CardMiddleLeftValueText>
                                             </CardMiddleRowContainer>
                                         </CardMiddleColumnContainer>
                                         {
-                                            x.buyType === 'buy' ?
+                                            x.buyUser === account ?
                                                 <CardMiddleRightRowContainer>
-                                                    <CardMiddleRightBuyPriceText>{x.buyAmount}</CardMiddleRightBuyPriceText>
-                                                    <CardMiddleRightBuyCurrencyText>USD</CardMiddleRightBuyCurrencyText>
+                                                    <CardMiddleRightBuyPriceText>{x.amount}</CardMiddleRightBuyPriceText>
+                                                    <CardMiddleRightBuyCurrencyText>{x.fiatCurrency}</CardMiddleRightBuyCurrencyText>
                                                 </CardMiddleRightRowContainer> :
                                                 <CardMiddleRightRowContainer>
-                                                    <CardMiddleRightSellPriceText>{x.buyAmount}</CardMiddleRightSellPriceText>
-                                                    <CardMiddleRightSellCurrencyText>USD</CardMiddleRightSellCurrencyText>
+                                                    <CardMiddleRightSellPriceText>{x.amount}</CardMiddleRightSellPriceText>
+                                                    <CardMiddleRightSellCurrencyText>{x.fiatCurrency}</CardMiddleRightSellCurrencyText>
                                                 </CardMiddleRightRowContainer>
                                         }
                                     </CardMiddleContainer>
                                     {
-                                        x.buyType === 'buy' &&
-                                        (x.currentStatus === 'NOT_YET_PAID' &&
+                                        x.buyUser === account &&
+                                        (x.status === 0 &&
                                             <CardBottomContainer>
                                                 <CardBottomInRowContainer>
                                                     <CardBottomStatusText>請付款</CardBottomStatusText>
                                                     <TopContainerTimerContainer>
-                                                        <CountdownTimer targetDate={FIFTEENMINUTES} />
+                                                        <CountdownTimer targetDate={x.paymentTimeLimit} />
                                                     </TopContainerTimerContainer>
                                                 </CardBottomInRowContainer>
                                                 <CardBottomButton onPress={() => { }}>
@@ -491,8 +567,8 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                             </CardBottomContainer>)
                                     }
                                     {
-                                        x.buyType === 'buy' &&
-                                        (x.currentStatus === 'WAITING_PASS' &&
+                                        x.buyUser === account &&
+                                        (x.status === 1 &&
                                             <CardBottomContainer>
                                                 <CardBottomStatusText>等待放行...</CardBottomStatusText>
                                                 <CardBottomButton onPress={() => { }}>
@@ -501,8 +577,8 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                             </CardBottomContainer>)
                                     }
                                     {
-                                        x.buyType === 'sell' &&
-                                        (x.currentStatus === 'WAITING_PAYMENT' &&
+                                        x.sellUser === account &&
+                                        (x.status === 0 &&
                                             <CardBottomContainer>
                                                 <CardBottomInRowContainer>
                                                     <CardBottomStatusText>等待付款...</CardBottomStatusText>
@@ -513,8 +589,8 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                             </CardBottomContainer>)
                                     }
                                     {
-                                        x.buyType === 'sell' &&
-                                        (x.currentStatus === 'WAITING_PASS' &&
+                                        x.sellUser === account &&
+                                        (x.status === 1 &&
                                             <CardBottomContainer>
                                                 <CardBottomInRowContainer>
                                                     <CardBottomStatusText>請放行</CardBottomStatusText>
@@ -528,7 +604,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                             </CardBottomContainer>)
                                     }
                                     {
-                                        i !== HistoryArray.length - 1 &&
+                                        i !== waitingList.length - 1 &&
                                         <CardLine></CardLine>
                                     }
                                 </CardContainer>
@@ -547,52 +623,59 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                 {/* Swap Page */}
                 {
                     swapPage === 1 &&
-                    (HistoryCompleteArray.length > 0 ?
-                        HistoryCompleteArray.map((x, i) => {
+                    (completeList.length > 0 ?
+                        completeList.map((x: any, i) => {
                             return (
-                                x.currentStatus === 'COMPLETE' &&
+                                x.status === 2 &&
                                 <CardContainer>
                                     {
-                                        x.buyType === 'buy' ?
+                                        x.buyUser === account ?
                                             <CardTitleContainer>
                                                 <CardBuyTitleText>買</CardBuyTitleText>
-                                                <CardBuyTitleCurrencyText>{x.type}/USD</CardBuyTitleCurrencyText>
+                                                <CardBuyTitleCurrencyText>{x.cryptoAsset}/{x.fiatCurrency}</CardBuyTitleCurrencyText>
                                             </CardTitleContainer>
                                             :
                                             <CardTitleContainer>
                                                 <CardSellTitleText>賣</CardSellTitleText>
-                                                <CardSellTitleCurrencyText>{x.type}/USD</CardSellTitleCurrencyText>
+                                                <CardSellTitleCurrencyText>{x.cryptoAsset}/{x.fiatCurrency}</CardSellTitleCurrencyText>
                                             </CardTitleContainer>
                                     }
                                     <CardMiddleContainer>
                                         <CardMiddleColumnContainer>
-                                            <CardMiddleRowContainer>
-                                                <CardMiddleLeftTitleText>交易方</CardMiddleLeftTitleText>
-                                                <CardMiddleLeftValueText>{x.account}</CardMiddleLeftValueText>
-                                            </CardMiddleRowContainer>
+                                            {
+                                                x.buyUser === account ?
+                                                    <CardMiddleRowContainer>
+                                                        <CardMiddleLeftTitleText>交易方</CardMiddleLeftTitleText>
+                                                        <CardMiddleLeftValueText>{x.sellUser}</CardMiddleLeftValueText>
+                                                    </CardMiddleRowContainer> :
+                                                    <CardMiddleRowContainer>
+                                                        <CardMiddleLeftTitleText>交易方</CardMiddleLeftTitleText>
+                                                        <CardMiddleLeftValueText>{x.buyUser}</CardMiddleLeftValueText>
+                                                    </CardMiddleRowContainer>
+                                            }
                                             <CardMiddleRowContainer>
                                                 <CardMiddleLeftTitleText>數量</CardMiddleLeftTitleText>
-                                                <CardMiddleLeftValueText>{x.buyNumber} {x.type}</CardMiddleLeftValueText>
+                                                <CardMiddleLeftValueText>{x.quantity} {x.cryptoAsset}</CardMiddleLeftValueText>
                                             </CardMiddleRowContainer>
                                             <CardMiddleRowContainer>
                                                 <CardMiddleLeftTitleText>單價</CardMiddleLeftTitleText>
-                                                <CardMiddleLeftValueText>{x.price} USD</CardMiddleLeftValueText>
+                                                <CardMiddleLeftValueText>{x.price} {x.fiatCurrency}</CardMiddleLeftValueText>
                                             </CardMiddleRowContainer>
                                         </CardMiddleColumnContainer>
                                         {
-                                            x.buyType === 'buy' ?
+                                            x.buyUser === account ?
                                                 <CardMiddleRightRowContainer>
-                                                    <CardMiddleRightBuyPriceText>{x.buyAmount}</CardMiddleRightBuyPriceText>
-                                                    <CardMiddleRightBuyCurrencyText>USD</CardMiddleRightBuyCurrencyText>
+                                                    <CardMiddleRightBuyPriceText>{x.amount}</CardMiddleRightBuyPriceText>
+                                                    <CardMiddleRightBuyCurrencyText>{x.fiatCurrency}</CardMiddleRightBuyCurrencyText>
                                                 </CardMiddleRightRowContainer> :
                                                 <CardMiddleRightRowContainer>
-                                                    <CardMiddleRightSellPriceText>{x.buyAmount}</CardMiddleRightSellPriceText>
-                                                    <CardMiddleRightSellCurrencyText>USD</CardMiddleRightSellCurrencyText>
+                                                    <CardMiddleRightSellPriceText>{x.amount}</CardMiddleRightSellPriceText>
+                                                    <CardMiddleRightSellCurrencyText>{x.fiatCurrency}</CardMiddleRightSellCurrencyText>
                                                 </CardMiddleRightRowContainer>
                                         }
                                     </CardMiddleContainer>
                                     {
-                                        x.buyType === 'buy' ?
+                                        x.buyUser === account ?
                                             <CardBottomContainer>
                                                 <CardBottomStatusText>訂單完成</CardBottomStatusText>
                                                 <CardBottomButton onPress={() => { }}>
@@ -608,7 +691,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                             </CardBottomContainer>
                                     }
                                     {
-                                        i !== HistoryCompleteArray.length - 1 &&
+                                        i !== completeList.length - 1 &&
                                         <CardLine></CardLine>
                                     }
                                 </CardContainer>

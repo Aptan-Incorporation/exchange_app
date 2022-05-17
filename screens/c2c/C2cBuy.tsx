@@ -152,7 +152,6 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
         api.get(`/otc/api/user/${account}`).then((x) => {
 
             if (x.status != 400 && x.status != 401) {
-                setAccount(x.account);
                 setBuyFeeRate(x.buyFeeRate);
                 setSellFeeRate(x.sellFeeRate);
                 /* setUserWalletBalance(x.wallet.coins.find((x: any) => x.symbol === CryptoAsset).balance); */
