@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Text, View, Image, TouchableOpacity, ScrollView } from "react-native"
+import { Text, View, Image, TouchableOpacity, ScrollView, Alert } from "react-native"
 import { RootStackScreenProps } from "../../types";
 import styled from "styled-components"
 import { useEffect, useState } from "react";
@@ -106,6 +106,7 @@ flex-direction: column;
 padding-top: 20px;
 padding-left: 16px;
 padding-right: 12px;
+padding-bottom: 500px;
 background-color: #131B24;
 `;
 
@@ -450,57 +451,91 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
     const [sellList, setSellList] = useState([]);
     const [loading, setLoading] = useState(false);
 
-
-    const getBuyList = () => {
-        api.get(`/otc/api/advertisement/?all=true&my=true&type=buy&cryptoAsset=USDT`).then((x) => {
-            
-            if (x.status != 400 && x.status != 401) {
-                setBuyList(x);
-            }
-        })
+    const getBuyList = (cryptoAsset: string) => {
+        setLoading(true)
+        api.get(`/otc/api/advertisement/?all=false&my=false&type=buy&cryptoAsset=${cryptoAsset}`)
+            .then((x) => {
+                setLoading(false)
+                if (x.status != 400 && x.status != 401) {
+                    setBuyList(x);
+                } else {
+                    Alert.alert(x.data.msg);
+                }
+            })
+            .catch(() => {
+                console.log(Error)
+            })
     };
 
-    const getSellList = () => {
-        api.get(`/otc/api/advertisement/?all=true&my=true&type=sell&cryptoAsset=USDT`).then((x) => {
-            if (x.status != 400 && x.status != 401) {
-                setSellList(x);
-            }
-        })
+    const getSellList = (cryptoAsset: string) => {
+        setLoading(true)
+        api.get(`/otc/api/advertisement/?all=true&my=true&type=sell&cryptoAsset=${cryptoAsset}`)
+            .then((x) => {
+                setLoading(false)
+                if (x.status != 400 && x.status != 401) {
+                    setSellList(x);
+                } else {
+                    Alert.alert(x.data.msg);
+                }
+            })
+            .catch(() => {
+                console.log(Error)
+            })
     };
+
+    async function swapPageRefreshBuy(cryptoAsset: string) {
+        let token = await AsyncStorage.getItem("token")
+        if (token) {
+            getBuyList(cryptoAsset);
+        } else {
+            Alert.alert("請先登入");
+        }
+    };
+
+    async function swapPageRefreshSell(cryptoAsset: string) {
+        let token = await AsyncStorage.getItem("token")
+        if (token) {
+            getSellList(cryptoAsset);
+        } else {
+            Alert.alert("請先登入");
+        }
+    };
+
 
     useEffect(async () => {
         let token = await AsyncStorage.getItem("token")
-        
+
         if (token) {
-            getBuyList();
-            getSellList();
-            
+            getBuyList(swapBuyCurrencyType);
+        } else {
+            Alert.alert("請先登入");
         }
-        
+
     }, []);
 
     return (
         <Container insets={insets.top}>
-            {loading &&
-                <Spinner visible={true} textContent={''} />
+            {
+                loading &&
+                <Spinner visible={true} textContent={'載入中'} color={'#FFFFFF'} textStyle={{ color: '#FFFFFF' }} />
             }
             <HeaderContainer>
                 <HeaderTitleContainer>
                     {
                         swapBuySell === 0 ?
                             <HeaderTitleInlineRowContainer>
-                                <TouchableOpacity onPress={() => { setSwapBuySell(0) }}>
+                                <TouchableOpacity onPress={() => { setSwapBuySell(0), setSwapBuyCurrencyType('USDT'), swapPageRefreshBuy('USDT') }}>
                                     <HeaderTitleTextClicked>購買</HeaderTitleTextClicked>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { setSwapBuySell(1) }}>
+                                <TouchableOpacity onPress={() => { setSwapBuySell(1), setSwapBuyCurrencyType('USDT'), swapPageRefreshSell('USDT') }}>
                                     <HeaderTitleText>出售</HeaderTitleText>
                                 </TouchableOpacity>
                             </HeaderTitleInlineRowContainer> :
                             <HeaderTitleInlineRowContainer>
-                                <TouchableOpacity onPress={() => { setSwapBuySell(0) }}>
+                                <TouchableOpacity onPress={() => { setSwapBuySell(0), setSwapBuyCurrencyType('USDT'), swapPageRefreshBuy('USDT') }}>
                                     <HeaderTitleText>購買</HeaderTitleText>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { setSwapBuySell(1) }}>
+                                <TouchableOpacity onPress={() => { setSwapBuySell(1), setSwapBuyCurrencyType('USDT'), swapPageRefreshSell('USDT') }}>
                                     <HeaderTitleTextClicked>出售</HeaderTitleTextClicked>
                                 </TouchableOpacity>
                             </HeaderTitleInlineRowContainer>
@@ -509,73 +544,151 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                         <HeaderTitleOrderIcon source={require("../../assets/images/c2c/order.png")} />
                     </TouchableOpacity>
                 </HeaderTitleContainer>
+                {/* Buy Page CryptoAsset Swap */}
                 {
-                    swapBuyCurrencyType === 'USDT' &&
-                    <HeaderCurrencyPageContainer>
-                        <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('USDT') }}>
-                            <HeaderCurrencyButtonTextClicked>USDT</HeaderCurrencyButtonTextClicked>
-                        </HeaderCurrencyButtonClicked>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC') }}>
-                            <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH') }}>
-                            <HeaderCurrencyButtonText>ETH</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE') }}>
-                            <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                    </HeaderCurrencyPageContainer>
+                    swapBuySell === 0 &&
+                    (swapBuyCurrencyType === 'USDT' &&
+                        <HeaderCurrencyPageContainer>
+                            <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshBuy('USDT') }}>
+                                <HeaderCurrencyButtonTextClicked>USDT</HeaderCurrencyButtonTextClicked>
+                            </HeaderCurrencyButtonClicked>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshBuy('BTC') }}>
+                                <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshBuy('ETH') }}>
+                                <HeaderCurrencyButtonText>ETH</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshBuy('DOGE') }}>
+                                <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                        </HeaderCurrencyPageContainer>)
                 }
                 {
-                    swapBuyCurrencyType === 'BTC' &&
-                    <HeaderCurrencyPageContainer>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT') }}>
-                            <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                        <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('BTC') }}>
-                            <HeaderCurrencyButtonTextClicked>BTC</HeaderCurrencyButtonTextClicked>
-                        </HeaderCurrencyButtonClicked>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH') }}>
-                            <HeaderCurrencyButtonText>ETH</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE') }}>
-                            <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                    </HeaderCurrencyPageContainer>
+                    swapBuySell === 0 &&
+                    (swapBuyCurrencyType === 'BTC' &&
+                        <HeaderCurrencyPageContainer>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshBuy('USDT') }}>
+                                <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshBuy('BTC') }}>
+                                <HeaderCurrencyButtonTextClicked>BTC</HeaderCurrencyButtonTextClicked>
+                            </HeaderCurrencyButtonClicked>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshBuy('ETH') }}>
+                                <HeaderCurrencyButtonText>ETH</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshBuy('DOGE') }}>
+                                <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                        </HeaderCurrencyPageContainer>)
                 }
                 {
-                    swapBuyCurrencyType === 'ETH' &&
-                    <HeaderCurrencyPageContainer>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT') }}>
-                            <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC') }}>
-                            <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                        <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('ETH') }}>
-                            <HeaderCurrencyButtonTextClicked>ETH</HeaderCurrencyButtonTextClicked>
-                        </HeaderCurrencyButtonClicked>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE') }}>
-                            <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                    </HeaderCurrencyPageContainer>
+                    swapBuySell === 0 &&
+                    (swapBuyCurrencyType === 'ETH' &&
+                        <HeaderCurrencyPageContainer>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshBuy('USDT') }}>
+                                <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshBuy('BTC') }}>
+                                <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshBuy('ETH') }}>
+                                <HeaderCurrencyButtonTextClicked>ETH</HeaderCurrencyButtonTextClicked>
+                            </HeaderCurrencyButtonClicked>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshBuy('DOGE') }}>
+                                <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                        </HeaderCurrencyPageContainer>)
                 }
                 {
-                    swapBuyCurrencyType === 'DOGE' &&
-                    <HeaderCurrencyPageContainer>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT') }}>
-                            <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC') }}>
-                            <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH') }}>
-                            <HeaderCurrencyButtonText>ETH</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                        <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('DOGE') }}>
-                            <HeaderCurrencyButtonTextClicked>DOGE</HeaderCurrencyButtonTextClicked>
-                        </HeaderCurrencyButtonClicked>
-                    </HeaderCurrencyPageContainer>
+                    swapBuySell === 0 &&
+                    (swapBuyCurrencyType === 'DOGE' &&
+                        <HeaderCurrencyPageContainer>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshBuy('USDT') }}>
+                                <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshBuy('BTC') }}>
+                                <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshBuy('ETH') }}>
+                                <HeaderCurrencyButtonText>ETH</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshBuy('DOGE') }}>
+                                <HeaderCurrencyButtonTextClicked>DOGE</HeaderCurrencyButtonTextClicked>
+                            </HeaderCurrencyButtonClicked>
+                        </HeaderCurrencyPageContainer>)
+                }
+                {/* Sell Page CryptoAsset Swap */}
+                {
+                    swapBuySell === 1 &&
+                    (swapBuyCurrencyType === 'USDT' &&
+                        <HeaderCurrencyPageContainer>
+                            <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshSell('USDT') }}>
+                                <HeaderCurrencyButtonTextClicked>USDT</HeaderCurrencyButtonTextClicked>
+                            </HeaderCurrencyButtonClicked>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshSell('BTC') }}>
+                                <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshSell('ETH') }}>
+                                <HeaderCurrencyButtonText>ETH</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshSell('DOGE') }}>
+                                <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                        </HeaderCurrencyPageContainer>)
+                }
+                {
+                    swapBuySell === 1 &&
+                    (swapBuyCurrencyType === 'BTC' &&
+                        <HeaderCurrencyPageContainer>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshSell('USDT') }}>
+                                <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshSell('BTC') }}>
+                                <HeaderCurrencyButtonTextClicked>BTC</HeaderCurrencyButtonTextClicked>
+                            </HeaderCurrencyButtonClicked>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshSell('ETH') }}>
+                                <HeaderCurrencyButtonText>ETH</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshSell('DOGE') }}>
+                                <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                        </HeaderCurrencyPageContainer>)
+                }
+                {
+                    swapBuySell === 1 &&
+                    (swapBuyCurrencyType === 'ETH' &&
+                        <HeaderCurrencyPageContainer>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshSell('USDT') }}>
+                                <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshSell('BTC') }}>
+                                <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshSell('ETH') }}>
+                                <HeaderCurrencyButtonTextClicked>ETH</HeaderCurrencyButtonTextClicked>
+                            </HeaderCurrencyButtonClicked>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshSell('DOGE') }}>
+                                <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                        </HeaderCurrencyPageContainer>)
+                }
+                {
+                    swapBuySell === 1 &&
+                    (swapBuyCurrencyType === 'DOGE' &&
+                        <HeaderCurrencyPageContainer>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshSell('USDT') }}>
+                                <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshSell('BTC') }}>
+                                <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshSell('ETH') }}>
+                                <HeaderCurrencyButtonText>ETH</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshSell('DOGE') }}>
+                                <HeaderCurrencyButtonTextClicked>DOGE</HeaderCurrencyButtonTextClicked>
+                            </HeaderCurrencyButtonClicked>
+                        </HeaderCurrencyPageContainer>)
                 }
             </HeaderContainer>
             <DetailContainer>

@@ -1,10 +1,11 @@
 import * as React from "react"
-import { Text, TextInput, View, Image, TouchableOpacity } from "react-native"
+import { Text, TextInput, View, Image, TouchableOpacity, Alert } from "react-native"
 import styled from "styled-components"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios"
 import api from "../../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import Spinner from 'react-native-loading-spinner-overlay'
 
 // Top Container
 const TopContainer = styled(View)`
@@ -259,6 +260,7 @@ const C2cBuyFirst = (props: {
     Account: string;
     Owner: string;
     CurrencyType: string;
+    FiatCurrency: string;
     SuccessRate: number;
     AvailableNum: string;
     LimitFrom: string;
@@ -282,6 +284,7 @@ const C2cBuyFirst = (props: {
         Account,
         Owner,
         CurrencyType,
+        FiatCurrency,
         SuccessRate,
         AvailableNum,
         LimitFrom,
@@ -305,11 +308,14 @@ const C2cBuyFirst = (props: {
     // Input Number
     const [inputNumber, setInputNumber] = useState("");
 
+    const [loading, setLoading] = useState(false);
+    
+    // 以限額為依據判斷 （數量>限額）
     const handleOnChangeAllPrice = () => {
         if (parseFloat(MyCurrency) < parseFloat(LimitTo)) {
-            setInputPrice(parseFloat(MyCurrency).toFixed(0))
+            setInputPrice(parseFloat(MyCurrency).toFixed(2))
         } else {
-            setInputPrice(parseFloat(LimitTo).toFixed(0))
+            setInputPrice(parseFloat(LimitTo).toFixed(2))
         }
     };
 
@@ -317,7 +323,11 @@ const C2cBuyFirst = (props: {
         let str = ""
         if (parseFloat(MyCurrency) <= parseFloat(LimitTo)) {
             str = (parseFloat(MyCurrency) / parseFloat(Price)).toFixed(2);
-            setInputNumber(str);
+            if (str <= AvailableNum) {
+                setInputNumber(str);
+            } else {
+                setInputNumber(AvailableNum);
+            }
         } else {
             str = (parseFloat(LimitTo) / parseFloat(Price)).toFixed(2);
             setInputNumber(str);
@@ -328,39 +338,61 @@ const C2cBuyFirst = (props: {
         if (inputPrice != "" && parseFloat(inputPrice) <= parseFloat(MyCurrency)) {
             setInputNumber((parseFloat(inputPrice) / parseFloat(Price)).toFixed(2));
         } else if (inputNumber != "" && parseFloat(inputNumber) * parseFloat(Price) <= parseFloat(MyCurrency)) {
-            setInputPrice((parseFloat(inputNumber) * parseFloat(Price)).toFixed(0));
+            setInputPrice((parseFloat(inputNumber) * parseFloat(Price)).toFixed(2));
+        } else {
+            handleOnChangeAllNumber()
+            handleOnChangeAllPrice()
         }
     };
 
     const firstPostReturn = () => {
-        api.post(`otc/api/advertisement/${Id}/otcOrder/`,{
+        setLoading(true)
+        api.postData(`/otc/api/advertisement/${Id}/otcOrder/`, {
             price: Price,
             quantity: inputNumber,
             payments: [null]
         })
-        .then((response: any) => {
-            console.log(response)
-            if (response.status != 400 && response.status != 401) {
-                onValueChangeSetBuyId(response.id)
-                onValueChangeSetBuyTime(response.createdDate)
-                onValueChangeIsWaitFinish(response.status)
-                onValueChangePayTimeLimit(response.paymentTimeLimit)
-            }
-        })
-        .catch( (error) => console.log(error));
+            .then((x) => {
+                setLoading(false)
+                console.log(x)
+                if (x.status != 400 && x.status != 401) {
+                    onValueChangeSetBuyId(x.id)
+                    onValueChangeSetBuyTime(x.createdDate)
+                    onValueChangeIsWaitFinish(x.status)
+                    onValueChangePayTimeLimit(x.paymentTimeLimit)
+                    onValueChangeInputPrice(inputPrice)
+                    onValueChangeInputNumber(inputNumber)
+                    onChangeSetSwapPage(2)
+                } else {
+                    Alert.alert(x.data.msg)
+                }
+            })
+            .catch((Error) => {
+                console.log(Error)
+            })
     }
 
     const handleSubmitForm = () => {
         if (((parseFloat(inputPrice) / parseFloat(Price)).toFixed(2)) == parseFloat(inputNumber).toFixed(2) && (parseFloat(inputPrice) <= parseFloat(MyCurrency))) {
             firstPostReturn()
-            onValueChangeInputPrice(inputPrice)
-            onValueChangeInputNumber(inputNumber)
-            onChangeSetSwapPage(2)
         }
     };
 
+    /* useEffect(async () => {
+        let token = await AsyncStorage.getItem("token")
+
+        if (!token) {
+            Alert.alert("登入異常，請重新登入");
+        };
+
+    }, []); */
+
     return (
-        <View style={{backgroundColor: '#131B24'}}>
+        <View style={{ backgroundColor: '#131B24' }}>
+            {
+                loading &&
+                <Spinner visible={true} textContent={'載入中'} color={'#FFFFFF'} textStyle={{ color: '#FFFFFF' }} />
+            }
             <TopContainer>
                 <TopDetailContainer>
                     <TopDetailPriceRowContainer>
@@ -374,14 +406,14 @@ const C2cBuyFirst = (props: {
                     </TopDetailRowContainer>
                     <TopDetailRowContainer>
                         <TopDetailTitleText>限額</TopDetailTitleText>
-                        <TopDetailValueText>{LimitFrom} - {LimitTo} USD</TopDetailValueText>
+                        <TopDetailValueText>{LimitFrom} - {LimitTo} {FiatCurrency}</TopDetailValueText>
                     </TopDetailRowContainer>
                 </TopDetailContainer>
                 <TopInputContainer>
                     <TopInputLeftContainer>
                         <TopInputLeftRowContainer>
                             <TextInput
-                                placeholder={"請輸入數量"}
+                                placeholder={"請輸入金額"}
                                 value={inputPrice}
                                 onChangeText={inputPrice => setInputPrice(inputPrice)}
                                 placeholderTextColor={'#8D97A2'}
@@ -390,7 +422,7 @@ const C2cBuyFirst = (props: {
                                 style={{ backgroundColor: '#242D37', width: '70%', height: 46, color: '#F4F5F6', borderTopLeftRadius: 4, paddingLeft: 16, paddingTop: 15, paddingBottom: 15 }}
                             />
                             <TopInputCurrencyTextContainer>
-                                <TopInputCurrencyText>USD</TopInputCurrencyText>
+                                <TopInputCurrencyText>{FiatCurrency}</TopInputCurrencyText>
                             </TopInputCurrencyTextContainer>
                             <TopInputAllButtonContainer>
                                 <TouchableOpacity onPress={() => { handleOnChangeAllPrice() }}>

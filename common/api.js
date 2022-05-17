@@ -31,7 +31,7 @@ const Api = {
     let token = await AsyncStorage.getItem("token")
     let config = {
       headers: {
-        Authorization: token
+        Authorization: "Bearer " + token
       }
     };
     return axios.post(url + api, data, config).then((res) => {
