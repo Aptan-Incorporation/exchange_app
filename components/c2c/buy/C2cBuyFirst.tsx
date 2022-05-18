@@ -370,7 +370,7 @@ const C2cBuyFirst = (props: {
             .catch((Error) => {
                 console.log(Error)
             })
-    }
+    };
 
     const handleSubmitForm = () => {
         if (((parseFloat(inputPrice) / parseFloat(Price)).toFixed(2)) == parseFloat(inputNumber).toFixed(2) && (parseFloat(inputPrice) <= parseFloat(MyCurrency))) {

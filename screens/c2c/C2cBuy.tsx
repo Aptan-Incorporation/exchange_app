@@ -111,12 +111,14 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
     const { LimitFrom } = route.params; // 限額
     const { LimitTo } = route.params; // 限額
     const { Price } = route.params; // 單價
-    /* const { payTypeAccount } = route.params; // 帳戶付款 Boolean
-    const { payTypeTouchnGo } = route.params; // TouchnGo付款 Boolean
-    const { payTypePpay } = route.params; // Ppay付款 Boolean */
-    const payTypeAccount = true;
-    const payTypeTouchnGo = true;
-    const payTypePpay = true;
+    const { Payments } = route.params; // 付款方式Array
+    const { PaymentTimeLimit } = route.params; // 付款時限
+
+    // 先用假資料等之後再將Payments Array內容轉成以下
+    const payTypeAccount = true; // 帳戶付款 Boolean
+    const payTypeTouchnGo = true; // TouchnGo付款 Boolean
+    const payTypePpay = true; // Ppay付款 Boolean
+
 
     // Input Price
     const [inputPrice, setInputPrice] = useState("");
@@ -143,7 +145,7 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
     const [buyTime, setBuyTime] = useState(Number);
     // 付款確認 等待放行
     const [isWaitFinish, setIsWaitFinish] = useState(0);
-    // Countdown Timer (Import CountdownTimer) ms
+
     const [payTimeLimit, setPayTimeLimit] = useState(Number);
 
 
@@ -251,20 +253,20 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
                 {
                     swapPage === 3 &&
                     (isWaitFinish === 2 &&
-                    <TopContainer>
-                        <ProgressBarContainer>
-                            <LinearGradient colors={['#A8C2DC', '#6699CC']} style={{
-                                height: 4,
-                                width: '100%'
-                            }}>
-                            </LinearGradient>
-                            <ProgressBarElseLine style={{ width: '0%' }}></ProgressBarElseLine>
-                        </ProgressBarContainer>
-                        <TopInColumnContainer>
-                            <TopContainerTitleText>訂單已完成</TopContainerTitleText>
-                            <TopContainerDetailText>購買的加密貨幣已發放至您的現貨資產</TopContainerDetailText>
-                        </TopInColumnContainer>
-                    </TopContainer>)
+                        <TopContainer>
+                            <ProgressBarContainer>
+                                <LinearGradient colors={['#A8C2DC', '#6699CC']} style={{
+                                    height: 4,
+                                    width: '100%'
+                                }}>
+                                </LinearGradient>
+                                <ProgressBarElseLine style={{ width: '0%' }}></ProgressBarElseLine>
+                            </ProgressBarContainer>
+                            <TopInColumnContainer>
+                                <TopContainerTitleText>訂單已完成</TopContainerTitleText>
+                                <TopContainerDetailText>購買的加密貨幣已發放至您的現貨資產</TopContainerDetailText>
+                            </TopInColumnContainer>
+                        </TopContainer>)
                 }
                 {
                     swapPage === 2 &&

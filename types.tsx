@@ -27,18 +27,16 @@ export type RootStackParamList = {
     CryptoAsset: string,
     fiatCurrency: string,
     Owner: string,
-    Account: string,
     SuccessRate: number,
     AvailableNum: string,
     LimitFrom: string,
     LimitTo: string,
     Price: string,
-    payTypeAccount: boolean,
-    payTypeTouchnGo: boolean,
-    payTypePpay: boolean
+    Payments: [],
   };
   C2cBuyScreen: undefined;
   C2cSellScreen: undefined;
+  C2cCreateScreen: undefined;
   C2cHistoryScreen: undefined;
   ProfileScreen:undefined;
   WalletScreen:undefined;

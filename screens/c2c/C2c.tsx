@@ -42,6 +42,14 @@ align-items: center;
 width: 100px;
 `;
 
+const HeaderTitleInlineRowRightContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: flex-end;
+align-items: center;
+width: 100px;
+`;
+
 const HeaderTitleTextClicked = styled(Text)`
 font-weight: 600;
 font-size: 20px;
@@ -59,6 +67,12 @@ color: ${props => props.theme.color.Gray};
 const HeaderTitleOrderIcon = styled(Image)`
 width: 28px;
 height: 28px;
+`;
+
+const HeaderTitleAddIcon = styled(Image)`
+width: 32px;
+height: 32px;
+margin-right: 15px;
 `;
 
 const HeaderCurrencyPageContainer = styled(View)`
@@ -540,9 +554,14 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                 </TouchableOpacity>
                             </HeaderTitleInlineRowContainer>
                     }
+                     <HeaderTitleInlineRowRightContainer> 
+                    <TouchableOpacity onPress={() => { navigation.navigate("C2cCreateScreen") }}>
+                        <HeaderTitleAddIcon source={require("../../assets/images/c2c/add.png")} />
+                    </TouchableOpacity>
                     <TouchableOpacity onPress={() => { navigation.navigate("C2cHistoryScreen") }}>
                         <HeaderTitleOrderIcon source={require("../../assets/images/c2c/order.png")} />
                     </TouchableOpacity>
+                    </HeaderTitleInlineRowRightContainer> 
                 </HeaderTitleContainer>
                 {/* Buy Page CryptoAsset Swap */}
                 {
@@ -768,15 +787,13 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                             CryptoAsset: x.cryptoAsset,
                                             FiatCurrency: x.fiatCurrency,
                                             Owner: x.owner,
-                                            Account: "???",
                                             SuccessRate: "???",
                                             AvailableNum: x.totalTradingAmount,
                                             LimitFrom: x.orderLimitMin,
                                             LimitTo: x.orderLimitMax,
                                             Price: x.price,
-                                            /* payTypeAccount: payTypeAccount(),
-                                            payTypeTouchnGo: payTypeTouchnGo(),
-                                            payTypePpay: payTypePpay() */
+                                            Payments: x.payments,
+                                            
                                         } as any)
                                     }}
                                     /* disabled={isNavigate()} */
@@ -873,15 +890,13 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                             CryptoAsset: x.cryptoAsset,
                                             FiatCurrency: x.fiatCurrency,
                                             Owner: x.owner,
-                                            Account: "???",
                                             SuccessRate: "???",
                                             AvailableNum: x.totalTradingAmount,
                                             LimitFrom: x.orderLimitMin,
                                             LimitTo: x.orderLimitMax,
                                             Price: x.price,
-                                            /* payTypeAccount: payTypeAccount(),
-                                            payTypeTouchnGo: payTypeTouchnGo(),
-                                            payTypePpay: payTypePpay() */
+                                            Payments: x.payments,
+                                            
                                         } as any)
                                     }}
                                         /* disabled={isNavigate()} */>

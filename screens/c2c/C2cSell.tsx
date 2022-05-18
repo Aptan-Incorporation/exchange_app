@@ -2,13 +2,16 @@ import * as React from "react"
 import { Text, View, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native"
 import { RootStackScreenProps } from "../../types";
 import styled from "styled-components"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import C2cSellFirst from "../../components/c2c/sell/C2cSellFirst";
 import C2cSellSecond from "../../components/c2c/sell/C2cSellSecond";
 import C2cSellLast from "../../components/c2c/sell/C2cSellLast";
 import CountdownTimer from "../../components/c2c/CountdownTimer";
+import axios from "axios"
+import api from "../../common/api"
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Container = styled(View) <{ insets: number }>`
     display: flex ;
@@ -115,17 +118,20 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
     // Props From Previous Screen
     const { Id } = route.params; // 購買商品ID
     const { MyUSD } = route.params; //帳戶剩餘資產
-    const { Account } = route.params; // Email
-    const { CurrencyType } = route.params; // USDT, BTC..
+    const { Owner } = route.params; // 售出者
+    const { CryptoAsset } = route.params; // USDT, BTC..
+    const { FiatCurrency } = route.params; //法幣
     const { SuccessRate } = route.params; // 成功率
     const { AvailableNum } = route.params; // 數量
     const { LimitFrom } = route.params; // 限額
     const { LimitTo } = route.params; // 限額
     const { Price } = route.params; // 單價
-    const { payTypeAccount } = route.params; // 帳戶付款 Boolean
-    const { payTypeTouchnGo } = route.params; // TouchnGo付款 Boolean
-    const { payTypePpay } = route.params; // Ppay付款 Boolean
-    const { userPassword } = route.params; // 使用者密碼
+    const { Payments } = route.params; // 付款方式Array
+
+    // 先用假資料等之後再將Payments Array內容轉成以下
+    const payTypeAccount = true; // 帳戶付款 Boolean
+    const payTypeTouchnGo = true; // TouchnGo付款 Boolean
+    const payTypePpay = true; // Ppay付款 Boolean
 
     // Input Price
     const [inputPrice, setInputPrice] = useState("");
@@ -137,19 +143,54 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
     const [swapPage, setSwapPage] = useState(1);
 
     // 購買單號
-    const [buyId, setBuyId] = useState("422442424242222424");
+    const [buyId, setBuyId] = useState("");
 
     // 選擇付款方式
     const [choosePayType, setChoosePaytype] = useState("Account");
 
     // 訂單時間
-    const [buyTime, setBuyTime] = useState("2022-5-13 14:29:30");
-
-    // 付款確認 等待放行
-    const [isWaitFinish, setIsWaitFinish] = useState(false);
+    const [buyTime, setBuyTime] = useState(Number);
 
     // Countdown Timer (Import CountdownTimer)
     const FIVEMINUTES = 15 * 60 * 1000;
+
+    // USER INFO
+    const [account, setAccount] = useState("");
+    const [userId, setUserId] = useState("");
+    const [buyFeeRate, setBuyFeeRate] = useState();
+    const [sellFeeRate, setSellFeeRate] = useState();
+    const [userWalletBalance, setUserWalletBalance] = useState(Object);
+
+    // 付款確認 等待放行
+    const [isWaitFinish, setIsWaitFinish] = useState(0);
+    // Countdown Timer (Import CountdownTimer) ms
+    const [payTimeLimit, setPayTimeLimit] = useState(Number);
+
+
+
+    const getUserInfo = () => {
+        api.get(`/otc/api/user/${account}`).then((x) => {
+
+            if (x.status != 400 && x.status != 401) {
+                setBuyFeeRate(x.buyFeeRate);
+                setSellFeeRate(x.sellFeeRate);
+                /* setUserWalletBalance(x.wallet.coins.find((x: any) => x.symbol === CryptoAsset).balance); */
+                setUserWalletBalance('500');
+            }
+        })
+    };
+
+    useEffect(async () => {
+        let token = await AsyncStorage.getItem("token")
+        let user = await AsyncStorage.getItem("user")
+        setAccount(JSON.parse(user!).account)
+        setUserId(JSON.parse(user!).userId)
+
+        if (token) {
+            getUserInfo()
+        }
+    }, [])
+
 
 
     return (
@@ -159,16 +200,18 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
                     <TouchableOpacity onPress={() => { navigation.goBack() }}>
                         <PreviousIcon source={require("../../assets/images/global/previous.png")} />
                     </TouchableOpacity>
-                    <HeaderTitleText>出售 {CurrencyType}</HeaderTitleText>
+                    <HeaderTitleText>出售 {CryptoAsset}</HeaderTitleText>
                     <HeaderEmptyContainer></HeaderEmptyContainer>
                 </HeaderContainer>
                 {
                     swapPage === 1 &&
                     <C2cSellFirst
                         Id={Id}
-                        MyUSD={MyUSD}
-                        Account={Account}
-                        CurrencyType={CurrencyType}
+                        MyCurrency={userWalletBalance}
+                        Owner={Owner}
+                        Account={account}
+                        CurrencyType={CryptoAsset}
+                        FiatCurrency={FiatCurrency}
                         SuccessRate={SuccessRate}
                         AvailableNum={AvailableNum}
                         LimitFrom={LimitFrom}
@@ -177,15 +220,19 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
                         PayTypeAccount={payTypeAccount}
                         PayTypeTouchnGo={payTypeTouchnGo}
                         PayTypePpay={payTypePpay}
+                        Payments={Payments}
                         onValueChangeInputPrice={setInputPrice}
                         onValueChangeInputNumber={setInputNumber}
                         onChangeSetSwapPage={setSwapPage}
-                        UserPassword={userPassword}
+                        onValueChangeSetBuyId={setBuyId}
+                        onValueChangeSetBuyTime={setBuyTime}
+                        onValueChangeIsWaitFinish={setIsWaitFinish}
+                        onValueChangePayTimeLimit={setPayTimeLimit}
                     />
                 }
                 {
                     swapPage === 2 &&
-                    (isWaitFinish === false ?
+                    (isWaitFinish === 0 &&
                         <TopContainer>
                             <ProgressBarContainer>
                                 <LinearGradient colors={['#A8C2DC', '#6699CC']} style={{
@@ -198,10 +245,14 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
                             <TopInColumnContainer>
                                 <TopContainerTitleText>等待付款</TopContainerTitleText>
                                 <TopContainerTimerContainer>
-                                    <CountdownTimer targetDate={FIVEMINUTES} />
+                                    <CountdownTimer targetDate={payTimeLimit} />
                                 </TopContainerTimerContainer>
                             </TopInColumnContainer>
-                        </TopContainer> :
+                        </TopContainer>)
+                }
+                {
+                    swapPage === 2 &&
+                    (isWaitFinish === 1 &&
                         <TopContainer>
                             <ProgressBarContainer>
                                 <LinearGradient colors={['#A8C2DC', '#6699CC']} style={{
@@ -214,27 +265,28 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
                             <TopInColumnContainer>
                                 <TopContainerTitleText>買方已付款，請放行</TopContainerTitleText>
                                 <TopContainerTimerContainer>
-                                    <CountdownTimer targetDate={FIVEMINUTES} />
+                                    <CountdownTimer targetDate={payTimeLimit} />
                                 </TopContainerTimerContainer>
                             </TopInColumnContainer>
                         </TopContainer>)
                 }
                 {
                     swapPage === 3 &&
-                    <TopContainer>
-                        <ProgressBarContainer>
-                            <LinearGradient colors={['#A8C2DC', '#6699CC']} style={{
-                                height: 4,
-                                width: '100%'
-                            }}>
-                            </LinearGradient>
-                            <ProgressBarElseLine style={{ width: '0%' }}></ProgressBarElseLine>
-                        </ProgressBarContainer>
-                        <TopInColumnContainer>
-                            <TopContainerTitleText>訂單已完成</TopContainerTitleText>
-                            <TopContainerDetailText>出售的加密貨幣已從您的現貨資產扣除</TopContainerDetailText>
-                        </TopInColumnContainer>
-                    </TopContainer>
+                    (isWaitFinish === 2 &&
+                        <TopContainer>
+                            <ProgressBarContainer>
+                                <LinearGradient colors={['#A8C2DC', '#6699CC']} style={{
+                                    height: 4,
+                                    width: '100%'
+                                }}>
+                                </LinearGradient>
+                                <ProgressBarElseLine style={{ width: '0%' }}></ProgressBarElseLine>
+                            </ProgressBarContainer>
+                            <TopInColumnContainer>
+                                <TopContainerTitleText>訂單已完成</TopContainerTitleText>
+                                <TopContainerDetailText>出售的加密貨幣已從您的現貨資產扣除</TopContainerDetailText>
+                            </TopInColumnContainer>
+                        </TopContainer>)
                 }
                 {
                     swapPage === 2 &&

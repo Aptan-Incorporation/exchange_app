@@ -1,10 +1,14 @@
 import * as React from "react"
-import { Text, TextInput, View, Image, TouchableOpacity, Dimensions, Pressable } from "react-native"
+import { Text, TextInput, View, Image, TouchableOpacity, Dimensions, Pressable, Alert } from "react-native"
 import { Feather } from '@expo/vector-icons';
 import { useTogglePasswordVisibility } from '../../../hooks/useTogglePasswordVisibility';
 import Modal from "react-native-modal";
 import styled from "styled-components"
 import { useState } from "react";
+import axios from "axios"
+import api from "../../../common/api"
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Spinner from 'react-native-loading-spinner-overlay'
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -334,9 +338,11 @@ color: #0A84FF;
 
 const C2cSellFirst = (props: {
     Id?: string;
-    MyUSD: string;
+    MyCurrency: string;
+    Owner: string;
     Account: string;
     CurrencyType: string;
+    FiatCurrency: string;
     SuccessRate: number;
     AvailableNum: string;
     LimitFrom: string;
@@ -345,17 +351,22 @@ const C2cSellFirst = (props: {
     PayTypeAccount: boolean;
     PayTypeTouchnGo: boolean;
     PayTypePpay: boolean;
-    UserPassword: string;
+    Payments: [];
     onValueChangeInputPrice: React.Dispatch<React.SetStateAction<string>>;
     onValueChangeInputNumber: React.Dispatch<React.SetStateAction<string>>;
     onChangeSetSwapPage: React.Dispatch<React.SetStateAction<number>>;
+    onValueChangeSetBuyId: React.Dispatch<React.SetStateAction<string>>;
+    onValueChangeSetBuyTime: React.Dispatch<React.SetStateAction<number>>;
+    onValueChangeIsWaitFinish: React.Dispatch<React.SetStateAction<number>>;
+    onValueChangePayTimeLimit: React.Dispatch<React.SetStateAction<number>>;
 }) => {
 
     const {
         Id,
-        MyUSD,
+        MyCurrency,
         Account,
         CurrencyType,
+        FiatCurrency,
         SuccessRate,
         AvailableNum,
         LimitFrom,
@@ -364,10 +375,14 @@ const C2cSellFirst = (props: {
         PayTypeAccount,
         PayTypeTouchnGo,
         PayTypePpay,
-        UserPassword,
+        Payments,
         onChangeSetSwapPage,
         onValueChangeInputPrice,
-        onValueChangeInputNumber
+        onValueChangeInputNumber,
+        onValueChangeSetBuyId,
+        onValueChangeSetBuyTime,
+        onValueChangeIsWaitFinish,
+        onValueChangePayTimeLimit
     } = props;
 
     // Input Price
@@ -376,19 +391,25 @@ const C2cSellFirst = (props: {
     // Input Number
     const [inputNumber, setInputNumber] = useState("");
 
+    const [loading, setLoading] = useState(false);
+
     const handleOnChangeAllPrice = () => {
-        if (parseFloat(MyUSD) < parseFloat(LimitTo)) {
-            setInputPrice(parseFloat(MyUSD).toFixed(0))
+        if (parseFloat(MyCurrency) < parseFloat(LimitTo)) {
+            setInputPrice(parseFloat(MyCurrency).toFixed(2))
         } else {
-            setInputPrice(parseFloat(LimitTo).toFixed(0))
+            setInputPrice(parseFloat(LimitTo).toFixed(2))
         }
     };
 
     const handleOnChangeAllNumber = () => {
         let str = ""
-        if (parseFloat(MyUSD) <= parseFloat(LimitTo)) {
-            str = (parseFloat(MyUSD) / parseFloat(Price)).toFixed(2);
-            setInputNumber(str);
+        if (parseFloat(MyCurrency) <= parseFloat(LimitTo)) {
+            str = (parseFloat(MyCurrency) / parseFloat(Price)).toFixed(2);
+            if (str <= AvailableNum) {
+                setInputNumber(str);
+            } else {
+                setInputNumber(AvailableNum);
+            }
         } else {
             str = (parseFloat(LimitTo) / parseFloat(Price)).toFixed(2);
             setInputNumber(str);
@@ -396,10 +417,13 @@ const C2cSellFirst = (props: {
     };
 
     const handleOnChangeExchange = () => {
-        if (inputPrice != "" && parseFloat(inputPrice) <= parseFloat(MyUSD)) {
+        if (inputPrice != "" && parseFloat(inputPrice) <= parseFloat(MyCurrency)) {
             setInputNumber((parseFloat(inputPrice) / parseFloat(Price)).toFixed(2));
-        } else if (inputNumber != "" && parseFloat(inputNumber) * parseFloat(Price) <= parseFloat(MyUSD)) {
-            setInputPrice((parseFloat(inputNumber) * parseFloat(Price)).toFixed(0));
+        } else if (inputNumber != "" && parseFloat(inputNumber) * parseFloat(Price) <= parseFloat(MyCurrency)) {
+            setInputPrice((parseFloat(inputNumber) * parseFloat(Price)).toFixed(2));
+        } else {
+            handleOnChangeAllNumber()
+            handleOnChangeAllPrice()
         }
     };
 
@@ -408,36 +432,91 @@ const C2cSellFirst = (props: {
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     const toggleModalVisible = () => {
-        if (((parseFloat(inputPrice) / parseFloat(Price)).toFixed(2)) == parseFloat(inputNumber).toFixed(2) && (parseFloat(inputPrice) <= parseFloat(MyUSD))) {
+        if (((parseFloat(inputPrice) / parseFloat(Price)).toFixed(2)) == parseFloat(inputNumber).toFixed(2) && (parseFloat(inputPrice) <= parseFloat(MyCurrency))) {
             setIsModalVisible(!isModalVisible);
         }
     };
-
+    const [checkPassword, setCheckPassword] = useState(false);
     const [password, setPassword] = useState("");
     const { passwordVisibility, rightIcon, handlePasswordVisibility } =
         useTogglePasswordVisibility();
 
-    const checkPassword = (psw: string) => {
-        if (psw === password) {
-            return true;
-        } else {
-            return false;
-        }
+    // 檢查資金密碼
+    const postPasswordCheck = () => {
+        api.postData(`/auth/login`, {
+            account: Account,
+            password: password
+        })
+            .then((x) => {
+                if (x.status != 400 && x.status != 401) {
+                    if (x.status === 'OK') {
+                        setCheckPassword(true)
+                    } else {
+                        Alert.alert("密碼錯誤請重新輸入")
+                    }
+                }
+                else {
+                    Alert.alert("系統異常，請重新操作")
+                }
+            })
     };
+
+    // 送出訂單
+    const firstPostReturn = () => {
+        setLoading(true)
+        api.postData(`/otc/api/advertisement/${Id}/otcOrder/`, {
+            price: Price,
+            quantity: inputNumber,
+            payments: Payments // 出售必填
+        })
+            .then((x) => {
+                setLoading(false)
+                console.log(x)
+                if (x.status != 400 && x.status != 401) {
+                    onValueChangeSetBuyId(x.id)
+                    onValueChangeSetBuyTime(x.createdDate)
+                    onValueChangeIsWaitFinish(x.status)
+                    onValueChangePayTimeLimit(x.paymentTimeLimit)
+                    onValueChangeInputPrice(inputPrice)
+                    onValueChangeInputNumber(inputNumber)
+                    onChangeSetSwapPage(2)
+                } else {
+                    Alert.alert(x.data.msg)
+                }
+            })
+            .catch((Error) => {
+                console.log(Error)
+            })
+    };
+
+    // Buy Button
+    const handleBuyButton = () => {
+        if (((parseFloat(inputPrice) / parseFloat(Price)).toFixed(2)) == parseFloat(inputNumber).toFixed(2) && (parseFloat(inputPrice) <= parseFloat(MyCurrency))) {
+            toggleModalVisible()
+        }
+    }
+
 
     // Submit Form
     const handleSubmitForm = () => {
-        if (checkPassword(UserPassword)) {
-            onValueChangeInputPrice(inputPrice)
-            onValueChangeInputNumber(inputNumber)
+
+        postPasswordCheck();
+
+        if (checkPassword === true) {
+
             setIsModalVisible(false)
-            onChangeSetSwapPage(2)
+            firstPostReturn()
+
         }
     };
 
 
     return (
         <View style={{ backgroundColor: '#131B24' }}>
+            {
+                loading &&
+                <Spinner visible={true} textContent={'載入中'} color={'#FFFFFF'} textStyle={{ color: '#FFFFFF' }} />
+            }
             <TopContainer>
                 <TopDetailContainer>
                     <TopDetailPriceRowContainer>
@@ -451,14 +530,14 @@ const C2cSellFirst = (props: {
                     </TopDetailRowContainer>
                     <TopDetailRowContainer>
                         <TopDetailTitleText>限額</TopDetailTitleText>
-                        <TopDetailValueText>{LimitFrom} - {LimitTo} USD</TopDetailValueText>
+                        <TopDetailValueText>{LimitFrom} - {LimitTo} {FiatCurrency}</TopDetailValueText>
                     </TopDetailRowContainer>
                 </TopDetailContainer>
                 <TopInputContainer>
                     <TopInputLeftContainer>
                         <TopInputLeftRowContainer>
                             <TextInput
-                                placeholder={"請輸入數量"}
+                                placeholder={"請輸入金額"}
                                 value={inputPrice}
                                 onChangeText={inputPrice => setInputPrice(inputPrice)}
                                 placeholderTextColor={'#8D97A2'}
@@ -467,7 +546,7 @@ const C2cSellFirst = (props: {
                                 style={{ backgroundColor: '#242D37', width: '70%', height: 46, color: '#F4F5F6', borderTopLeftRadius: 4, paddingLeft: 16, paddingTop: 15, paddingBottom: 15 }}
                             />
                             <TopInputCurrencyTextContainer>
-                                <TopInputCurrencyText>USD</TopInputCurrencyText>
+                                <TopInputCurrencyText>{FiatCurrency}</TopInputCurrencyText>
                             </TopInputCurrencyTextContainer>
                             <TopInputAllButtonContainer>
                                 <TouchableOpacity onPress={() => { handleOnChangeAllPrice() }}>
@@ -501,7 +580,7 @@ const C2cSellFirst = (props: {
                         </TouchableOpacity>
                     </TopInputRightContainer>
                 </TopInputContainer>
-                <TopBuyButton onPress={() => { toggleModalVisible() }}>
+                <TopBuyButton onPress={() => { handleBuyButton() }}>
                     <TopBuyButtonText>購買</TopBuyButtonText>
                 </TopBuyButton>
             </TopContainer>
@@ -536,7 +615,7 @@ const C2cSellFirst = (props: {
                 </BottomDetailPayTypeContainer>
                 <BottomDetailLine></BottomDetailLine>
                 <BottomDetailSmallTitleText>放行時限</BottomDetailSmallTitleText>
-                <BottomDetailSmallValueText>5分鐘</BottomDetailSmallValueText>
+                <BottomDetailSmallValueText>15分鐘</BottomDetailSmallValueText>
                 <BottomDetailLine></BottomDetailLine>
                 <BottomDetailSmallTitleText>備註</BottomDetailSmallTitleText>
                 <BottomDetailSmallValueText>請於時限內放行，不要卡單。</BottomDetailSmallValueText>

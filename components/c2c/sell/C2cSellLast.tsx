@@ -150,20 +150,20 @@ color: ${props => props.theme.color.Primary};
 
 const C2cSellLast = (props: {
     Id?: string;
-    MyUSD: string;
     CurrencyType: string;
+    FiatCurrency: string;
     Price: string;
     BuyPrice: string;
     BuyNumber: string;
     BuyID: string;
     ChosenPayType: string;
-    BuyTime: string;
+    BuyTime: number;
 }) => {
 
     const {
         Id,
-        MyUSD,
         CurrencyType,
+        FiatCurrency,
         Price,
         BuyPrice,
         BuyNumber,
@@ -193,7 +193,7 @@ const C2cSellLast = (props: {
                     <FirstCardSmallTitleText>總價</FirstCardSmallTitleText>
                     <FirstCardFirstInRowContainer>
                         <FirstCardPriceText>{BuyPrice}</FirstCardPriceText>
-                        <FirstCardPriceCurrencyText>USD</FirstCardPriceCurrencyText>
+                        <FirstCardPriceCurrencyText>{FiatCurrency}</FirstCardPriceCurrencyText>
                     </FirstCardFirstInRowContainer>
                 </FirstCardFirstRowContainer>
                 <FirstCardRowContainer>
@@ -202,7 +202,7 @@ const C2cSellLast = (props: {
                 </FirstCardRowContainer>
                 <FirstCardRowContainer>
                     <FirstCardSmallTitleText>單價</FirstCardSmallTitleText>
-                    <FirstCardSmallValueText>{Price} USD</FirstCardSmallValueText>
+                    <FirstCardSmallValueText>{Price} {FiatCurrency}</FirstCardSmallValueText>
                 </FirstCardRowContainer>
                 <FirstCardRowContainer>
                     <FirstCardSmallTitleText>單號</FirstCardSmallTitleText>
