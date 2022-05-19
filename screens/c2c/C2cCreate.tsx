@@ -9,7 +9,6 @@ import axios from "axios"
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
-import { ProgressBar, Provider as PaperProvider } from 'react-native-paper';
 import { SearchBar } from "@rneui/themed";
 
 const windowHeight = Dimensions.get('window').height;
@@ -477,6 +476,15 @@ align-items: center;
 padding-top: 4px;
 `;
 
+const PriceBottomRowContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: flex-end;
+padding-top: 8px;
+padding-bottom: 8px;
+`;
+
 const PriceTitleText = styled(Text)`
 font-weight: 600;
 font-size: 16px;
@@ -720,7 +728,6 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
 
 
     return (
-        <PaperProvider>
             <Container insets={insets.top}>
                 {
                     loading &&
@@ -860,11 +867,21 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                         priceType === 0 ?
                                             <PriceRowContainer>
                                                 <TextInput
-                                                    style={{ height: 48, backgroundColor: '#242D37', paddingBottom: 12, paddingTop: 12, paddingLeft: 16, paddingRight: 16, width: '80%' }}
+                                                    style={{ 
+                                                        height: 48,
+                                                        backgroundColor: '#242D37',
+                                                        paddingBottom: 12,
+                                                        paddingTop: 12,
+                                                        paddingLeft: 16,
+                                                        paddingRight: 16,
+                                                        width: '80%',
+                                                        color: '#FFFFFF'
+                                                    }}
                                                     value={inputPrice}
                                                     onChangeText={(text) => { setInputPrice(text) }}
                                                     placeholder={"輸入固定價格"}
                                                     placeholderTextColor={'#8D97A2'}
+                                                    keyboardType={"decimal-pad"}
                                                 />
                                                 <PriceInputCurencytTextView>
                                                     <PriceInputCurrencyText>{fiatCurrencyType}</PriceInputCurrencyText>
@@ -881,6 +898,14 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                             </PriceNumberContainer>
                                     }
                                 </PriceTypeInputContainer>
+                                <PriceBottomRowContainer style={{paddingTop:  16}}>
+                                    <PriceSmallTitleText>市場參考價</PriceSmallTitleText>
+                                    <PriceMarketValueText>$$$ {fiatCurrencyType} / {cryptoAssetType}</PriceMarketValueText>
+                                </PriceBottomRowContainer>
+                                <PriceBottomRowContainer>
+                                    <PriceSmallTitleText>交易價格</PriceSmallTitleText>
+                                    <PriceTradeText>$$$ {fiatCurrencyType} / {cryptoAssetType}</PriceTradeText>
+                                </PriceBottomRowContainer>
                             </PriceContainer>
 
                         </SwapPageContainer>
@@ -1046,7 +1071,6 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                     </View>
                 </Modal>
             </Container>
-        </PaperProvider>
     )
 }
 
