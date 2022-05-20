@@ -575,11 +575,292 @@ padding-left: 15px;
 
 // Progress Part 1 Style
 
+const PaymentContainer = styled(View)`
+display; flex;
+flex-direction: column;
+padding: 16px;
+`;
+
+const PaymentTitleRowContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+`;
+
+const PaymentTitleText = styled(Text)`
+font-weight: 600;
+font-size: 16px;
+line-height: 24px;
+color: ${props => props.theme.color.White};
+`;
+
+const PaymentAddImage = styled(Image)`
+width: 28px;
+height: 28px;
+`;
+
+const PaymentRowContainer = styled(ScrollView)`
+display: flex;
+flex-direction: row;
+height: 32px;
+margin-top: 16px;
+`;
+
+const PaymentTypeView = styled(View)`
+height: 32px;
+width: 103px;
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+background-color: #F4F4F6;
+border-radius: 16px;
+padding-left: 8px;
+padding-right: 4px;
+margin-right: 8px;
+`;
+
+const PaymentTypeViewText = styled(Text)`
+font-weight: 500;
+font-size: 14px;
+line-height: 22px;
+color: ${props => props.theme.color.DarkGray};
+padding-right: 4px;
+`;
+
+const PaymentTypeViewCancelImage = styled(Image)`
+width: 18px;
+height: 18px;
+`;
+
+const TradeMemoContainer = styled(View)`
+display; flex;
+flex-direction: column;
+padding: 16px;
+`;
+
+const TradeMemoTitleText = styled(Text)`
+font-weight: 600;
+font-size: 16px;
+line-height: 24px;
+color: ${props => props.theme.color.White};
+`;
+
+const TradeMemoTextInputContainer = styled(View)`
+display: flex;
+flex-direction: column;
+height: 120px;
+padding-top: 16px;
+padding-bottom: 8px;
+`;
+
+const TradeMemoCountTextView = styled(View)`
+display: flex;
+flex-direction: row;
+height: 30px;
+background-color: #242D37;
+justify-content: flex-end;
+padding-bottom : 12px;
+padding-left: 16px;
+padding-right: 16px;                     
+`;
+
+const TradeMemoCountText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 15px;
+color: #8D97A2;
+`;
+
+const TradeConditionContainer = styled(View)`
+display: flex;
+flex-direction: column;
+padding: 16px;
+padding-bottom: 200px;
+`;
+
+const TradeConditionTitleText = styled(Text)`
+font-weight: 600;
+font-size: 16px;
+line-height: 24px;
+color: ${props => props.theme.color.White};
+`;
+
+const TradeConditionRowContainer = styled(View)`
+display: flex;
+flex-direction: row;
+height: 36px;
+align-items: center;
+margin-top: 14px;
+margin-bottom: 14px;
+`;
+
+const TradeConditionText = styled(Text)`
+font-weight: 400;
+font-size: 15px;
+line-height: 24px;
+color: ${props => props.theme.color.LightMidGray};
+`;
 
 
 
+// Progress Part 2 Style
 
+const ConfirmCardContainer = styled(View)`
+display: flex;
+flex-direction: column;
+padding: 16px;
+background-color: #242D37;
+border-radius: 8px;
+`;
 
+const ConfirmCardRowContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding-top: 8px;
+padding-bottom: 8px;
+`;
+
+const ConfirmCardTitle = styled(Text)`
+font-weight: 400;
+font-size: 15px;
+line-height: 24px;
+color: ${props => props.theme.color.MidGray};
+`;
+
+const ConfirmCardTradePriceText = styled(Text)`
+font-weight: 700;
+font-size: 20px;
+line-height: 24px;
+color: ${props => props.theme.color.White};
+`;
+
+const ConfirmCardSecondText = styled(Text)`
+font-weight: 600;
+font-size: 16px;
+line-height: 24px;
+color: ${props => props.theme.color.White};
+`;
+
+const ConfirmCardThirdText = styled(Text)`
+font-weight: 400;
+font-size: 15px;
+line-height: 18px;
+color: ${props => props.theme.color.White};
+`;
+
+const ConfirmCardPaymentContainer = styled(View)`
+display: flex;
+flex-direction: row;
+align-items: center;
+`;
+
+const ConfirmCardPaymentImage = styled(Image)`
+width: 28px;
+height: 28px;
+margin-right: 4px;
+`;
+
+const ConfirmCardColumnContainer = styled(View)`
+display: flex;
+flex-direction: column;
+padding-top: 8px;
+padding-bottom: 8px;
+`;
+
+const ConfirmCardSmallTitle = styled(Text)`
+font-weight: 400;
+font-size: 15px;
+line-height: 24px;
+color: ${props => props.theme.color.Gray};
+`;
+
+const ConfirmCardFourthText = styled(Text)`
+font-weight: 500;
+font-size: 13px;
+line-height: 20px;
+color: ${props => props.theme.color.White};
+padding-top: 4px;
+`;
+
+const ConfirmRulesContainer = styled(View)`
+display; flex;
+flex-direction: row;
+height: 30px;
+justify-content: center;
+align-items: center;
+margin-top: 40px;
+`;
+const ConfirmUnClickView = styled(View)`
+width: 16px;
+height: 16px;
+background-color: #5F5C70;
+border-radius: 75px;
+`;
+
+const ConfirmImage = styled(Image)`
+width: 16px;
+height: 16px;
+`;
+
+const ConfirmRulesText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 18px;
+color: ${props => props.theme.color.Gray};
+padding-left: 8px;
+`;
+
+const ConfirmRulesNegativeText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 18px;
+color: ${props => props.theme.color.SecondaryLight};
+`;
+
+const ConfirmButtonContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding-top: 20px;
+padding-bottom: 100px;
+`;
+
+const ConfirmUpdateButton = styled(TouchableOpacity)`
+height: 44px;
+width: 30%;
+border: 1px solid #6699CC;
+border-radius: 4px;
+justify-content: center;
+align-items: center;
+`;
+
+const ConfirmUpdateButtonText = styled(Text)`
+font-weight: 500;
+font-size: 14px;
+line-height: 22px;
+color: #6699CC;
+`;
+
+const ConfirmButton = styled(TouchableOpacity)`
+height: 44px;
+width: 65%;
+background-color: #3D6A97
+border-radius: 4px;
+justify-content: center;
+align-items: center;
+`;
+
+const ConfirmButtonText = styled(Text)`
+font-weight: 500;
+font-size: 14px;
+line-height: 22px;
+color: ${props => props.theme.color.White};
+`;
 
 
 
@@ -813,11 +1094,33 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
 
     // 是否可以進行下一步
     const handleNextStep = () => {
-        if (true) {
-            return false
+        if (swapProgress === 0) {
+            if (
+                inputPrice != "" &&
+                inputQuantity != "" &&
+                inputMinLimitPrice != "" &&
+                inputMaxLimitPrice != ""
+                 /* &&
+                parseFloat(inputQuantity) <= parseFloat(currentWalletBalance) */) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (swapProgress === 1) {
+            if (
+                chosenPaymentType != []
+            ) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return true
+            return false;
         }
+    };
+
+    const handleSwapProgress = (swapProgress: number) => {
+        setSwapProgress(swapProgress += 1)
     };
 
     // 切換進度條
@@ -876,7 +1179,21 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
     const [inputQuantity, setInputQuantity] = useState("");
     const [inputMinLimitPrice, setInputMinLimitPrice] = useState("");
     const [inputMaxLimitPrice, setInputMaxLimitPrice] = useState("");
-    const [inputLimitTime, setInputLimitTime] = useState();
+    const [inputLimitTime, setInputLimitTime] = useState(15);
+
+    // 付款方式選擇
+    const [paymentList, setPaymentList] = useState(['BANK', 'LINEPAY', 'JKOS']); // 獲取用戶已有付款方式
+    const [chosenPaymentType, setChosenPaymentType] = useState(['BANK', 'LINEPAY', 'JKOS']);
+
+    // 交易備註 Input
+    const [inputTradeMemo, setInputTradeMemo] = useState("");
+
+    // 交易方條件 Input
+    const [inputConditionLimitOrder, setInputConditionLimitOrder] = useState("0");
+    const [inputConditionLimitSignUp, setinputConditionLimitSignUp] = useState("0");
+
+    // 同意條款勾選
+    const [confirmRules, setConfirmRules] = useState(false);
 
     // 獲取廣告單幣種列表
     const [cryptoAssetList, setCryptoAssetList] = useState([]);
@@ -990,8 +1307,10 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
             getUserInfo();
         }
 
+        handleNextStep()
 
     }, [])
+
 
 
     return (
@@ -1007,14 +1326,22 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                     </TouchableOpacity>
                     <HeaderTitleText>發佈廣告</HeaderTitleText>
                     {
-                        handleNextStep() === true ?
-                            <TouchableOpacity onPress={() => { }}>
+                        swapProgress !== 2 &&
+                        (handleNextStep() === true &&
+                            <TouchableOpacity onPress={() => { handleSwapProgress(swapProgress) }}>
                                 <HeaderTitleNextStepWhiteText>下一步</HeaderTitleNextStepWhiteText>
-                            </TouchableOpacity> :
+                            </TouchableOpacity>)
+                    }
+                    {
+                        swapProgress !== 2 &&
+                        (handleNextStep() !== true &&
                             <TouchableOpacity disabled={true}>
                                 <HeaderTitleNextStepGrayText>下一步</HeaderTitleNextStepGrayText>
-                            </TouchableOpacity>
-
+                            </TouchableOpacity>)
+                    }
+                    {
+                        swapProgress === 2 &&
+                        <HeaderTitleNextStepGrayText style={{ paddingRight: 50 }} />
                     }
                 </HeaderTitleContainer>
             </HeaderContainer>
@@ -1252,8 +1579,8 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                             width: '30%',
                                             color: '#FFFFFF'
                                         }}
-                                        value={inputMinLimitPrice}
-                                        onChangeText={(text) => { setInputMinLimitPrice(text) }}
+                                        value={inputMaxLimitPrice}
+                                        onChangeText={(text) => { setInputMaxLimitPrice(text) }}
                                         placeholder={"最小"}
                                         placeholderTextColor={'#8D97A2'}
                                         keyboardType={"decimal-pad"}
@@ -1281,6 +1608,204 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                             <TradeFeeNotifyText>廣告預估手續費 ??? {cryptoAssetType}</TradeFeeNotifyText>
                         </TradeFeeNotifyContainer>
 
+                    </SwapPageContainer>
+                }
+
+                {
+                    swapProgress === 1 &&
+                    <SwapPageContainer>
+                        <PaymentContainer>
+                            <PaymentTitleRowContainer>
+                                <PaymentTitleText>付款方式</PaymentTitleText>
+                                <PaymentAddImage source={require("../../assets/images/c2c/add.png")} />
+                            </PaymentTitleRowContainer>
+                            <PaymentRowContainer horizontal={true}>
+                                {
+                                    chosenPaymentType.includes('BANK') &&
+                                    <PaymentTypeView>
+                                        <PaymentTypeViewText>銀行轉帳</PaymentTypeViewText>
+                                        <TouchableOpacity onPress={() => { setChosenPaymentType(chosenPaymentType.filter(payment => payment !== 'BANK')) }}>
+                                            <PaymentTypeViewCancelImage source={require("../../assets/images/c2c/cancel_circle.png")} />
+                                        </TouchableOpacity>
+                                    </PaymentTypeView>
+                                }
+                                {
+                                    chosenPaymentType.includes('LINEPAY') &&
+                                    <PaymentTypeView>
+                                        <PaymentTypeViewText>Line Pay</PaymentTypeViewText>
+                                        <TouchableOpacity onPress={() => { setChosenPaymentType(chosenPaymentType.filter(payment => payment !== 'LINEPAY')) }}>
+                                            <PaymentTypeViewCancelImage source={require("../../assets/images/c2c/cancel_circle.png")} />
+                                        </TouchableOpacity>
+                                    </PaymentTypeView>
+                                }
+                                {
+                                    chosenPaymentType.includes('JKOS') &&
+                                    <PaymentTypeView>
+                                        <PaymentTypeViewText>街口支付</PaymentTypeViewText>
+                                        <TouchableOpacity onPress={() => { setChosenPaymentType(chosenPaymentType.filter(payment => payment !== 'JKOS')) }}>
+                                            <PaymentTypeViewCancelImage source={require("../../assets/images/c2c/cancel_circle.png")} />
+                                        </TouchableOpacity>
+                                    </PaymentTypeView>
+                                }
+                            </PaymentRowContainer>
+                        </PaymentContainer>
+
+                        <TradeMemoContainer>
+                            <TradeMemoTitleText>交易備註</TradeMemoTitleText>
+                            <TradeMemoTextInputContainer>
+                                <TextInput
+                                    style={{
+                                        height: 90,
+                                        backgroundColor: '#242D37',
+                                        paddingBottom: 12,
+                                        paddingTop: 12,
+                                        paddingLeft: 16,
+                                        paddingRight: 16,
+                                        color: '#FFFFFF'
+                                    }}
+                                    value={inputTradeMemo}
+                                    onChangeText={(text) => { setInputTradeMemo(text) }}
+                                    placeholder={"您的交易備註將在交易方下單前顯示"}
+                                    placeholderTextColor={'#8D97A2'}
+                                    multiline={true}
+                                    maxLength={100}
+                                />
+                                <TradeMemoCountTextView>
+                                    <TradeMemoCountText>{inputTradeMemo.length}/100</TradeMemoCountText>
+                                </TradeMemoCountTextView>
+                            </TradeMemoTextInputContainer>
+                        </TradeMemoContainer>
+
+                        <TradeConditionContainer>
+                            <TradeConditionTitleText>交易方條件</TradeConditionTitleText>
+                            <TradeConditionRowContainer>
+                                <TradeConditionText>交易方最少完成</TradeConditionText>
+                                <TextInput
+                                    style={{
+                                        height: 36,
+                                        width: 60,
+                                        backgroundColor: '#242D37',
+                                        paddingBottom: 8,
+                                        paddingTop: 8,
+                                        paddingLeft: 12,
+                                        paddingRight: 12,
+                                        marginLeft: 8,
+                                        marginRight: 8,
+                                        color: '#FFFFFF',
+                                        textAlign: 'center'
+                                    }}
+                                    value={inputConditionLimitOrder}
+                                    onChangeText={(text) => { setInputConditionLimitOrder(text) }}
+                                    defaultValue={"0"}
+                                    keyboardType={"number-pad"}
+                                />
+                                <TradeConditionText>筆交易</TradeConditionText>
+                            </TradeConditionRowContainer>
+                            <TradeConditionRowContainer>
+                                <TradeConditionText>註冊帳戶不少於</TradeConditionText>
+                                <TextInput
+                                    style={{
+                                        height: 36,
+                                        width: 60,
+                                        backgroundColor: '#242D37',
+                                        paddingBottom: 8,
+                                        paddingTop: 8,
+                                        paddingLeft: 12,
+                                        paddingRight: 12,
+                                        marginLeft: 8,
+                                        marginRight: 8,
+                                        color: '#FFFFFF',
+                                        textAlign: 'center'
+                                    }}
+                                    value={inputConditionLimitSignUp}
+                                    onChangeText={(text) => { setinputConditionLimitSignUp(text) }}
+                                    keyboardType={"number-pad"}
+                                />
+                                <TradeConditionText>天</TradeConditionText>
+                            </TradeConditionRowContainer>
+                        </TradeConditionContainer>
+                    </SwapPageContainer>
+                }
+
+                {
+                    swapProgress === 2 &&
+                    <SwapPageContainer style={{ padding: 16 }}>
+                        <ConfirmCardContainer>
+                            <ConfirmCardRowContainer>
+                                <ConfirmCardTitle>交易價格</ConfirmCardTitle>
+                                {
+                                    priceType === 0 ?
+                                        <ConfirmCardTradePriceText>{inputPrice} {fiatCurrencyType}/{cryptoAssetType}</ConfirmCardTradePriceText> :
+                                        <ConfirmCardTradePriceText>浮動價格 {fiatCurrencyType}/{cryptoAssetType}</ConfirmCardTradePriceText>
+                                }
+                            </ConfirmCardRowContainer>
+                            <ConfirmCardRowContainer>
+                                <ConfirmCardTitle>定價方式</ConfirmCardTitle>
+                                <ConfirmCardSecondText>{priceType === 0 ? "固定價格" : "浮動價格"}</ConfirmCardSecondText>
+                            </ConfirmCardRowContainer>
+                            <ConfirmCardRowContainer>
+                                <ConfirmCardTitle>交易數量</ConfirmCardTitle>
+                                <ConfirmCardSecondText>{inputQuantity}</ConfirmCardSecondText>
+                            </ConfirmCardRowContainer>
+                            <ConfirmCardRowContainer>
+                                <ConfirmCardTitle>單筆限額</ConfirmCardTitle>
+                                <ConfirmCardThirdText>{fiatCurrencyType} {inputMinLimitPrice} - {inputMaxLimitPrice}</ConfirmCardThirdText>
+                            </ConfirmCardRowContainer>
+                            <ConfirmCardRowContainer>
+                                <ConfirmCardTitle>放行時限</ConfirmCardTitle>
+                                <ConfirmCardThirdText>{inputLimitTime} 分鐘</ConfirmCardThirdText>
+                            </ConfirmCardRowContainer>
+                            <ConfirmCardRowContainer>
+                                <ConfirmCardTitle>付款方式</ConfirmCardTitle>
+                                <ConfirmCardPaymentContainer>
+                                    {
+                                        chosenPaymentType.includes("BANK") &&
+                                        <ConfirmCardPaymentImage source={require("../../assets/images/c2c/payment.png")} />
+                                    }
+                                    {
+                                        chosenPaymentType.includes("LINEPAY") &&
+                                        <ConfirmCardPaymentImage source={require("../../assets/images/c2c/line_pay.png")} />
+                                    }
+                                    {
+                                        chosenPaymentType.includes("JKOS") &&
+                                        <ConfirmCardPaymentImage source={require("../../assets/images/c2c/JKO_pay.png")} />
+                                    }
+                                </ConfirmCardPaymentContainer>
+                            </ConfirmCardRowContainer>
+                            <ConfirmCardColumnContainer>
+                                <ConfirmCardSmallTitle>備註</ConfirmCardSmallTitle>
+                                <ConfirmCardFourthText>請買家務必於時限內付款，勿卡單。</ConfirmCardFourthText>
+                            </ConfirmCardColumnContainer>
+                            <ConfirmCardColumnContainer>
+                                <ConfirmCardSmallTitle>交易方條件</ConfirmCardSmallTitle>
+                                <ConfirmCardFourthText>
+                                    交易方最少完成 {inputConditionLimitOrder} 筆交易、註冊帳戶不少於 {inputConditionLimitSignUp} 天
+                                </ConfirmCardFourthText>
+                            </ConfirmCardColumnContainer>
+                        </ConfirmCardContainer>
+                        <ConfirmRulesContainer>
+                            {
+                                confirmRules ?
+                                    <TouchableOpacity onPress={() => { setConfirmRules(false) }}>
+                                        <ConfirmImage source={require("../../assets/images/c2c/check.png")} />
+                                    </TouchableOpacity> :
+                                    <TouchableOpacity onPress={() => { setConfirmRules(true) }}>
+                                        <ConfirmUnClickView />
+                                    </TouchableOpacity>
+                            }
+                            <ConfirmRulesText>我已閱讀並同意</ConfirmRulesText>
+                            <TouchableOpacity onPress={() => { }}>
+                                <ConfirmRulesNegativeText>《交易條例》</ConfirmRulesNegativeText>
+                            </TouchableOpacity>
+                        </ConfirmRulesContainer>
+                        <ConfirmButtonContainer>
+                            <ConfirmUpdateButton onPress={() => { setSwapProgress(0) }}>
+                                <ConfirmUpdateButtonText>修改</ConfirmUpdateButtonText>
+                            </ConfirmUpdateButton>
+                            <ConfirmButton onPress={() => { }}>
+                                <ConfirmButtonText>確認並發佈</ConfirmButtonText>
+                            </ConfirmButton>
+                        </ConfirmButtonContainer>
                     </SwapPageContainer>
                 }
             </BodyContainer>
