@@ -11,6 +11,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
 import { SearchBar } from "@rneui/themed";
 import { Picker } from '@react-native-picker/picker';
+import { Feather } from '@expo/vector-icons';
+import { useTogglePasswordVisibility } from '../../hooks/useTogglePasswordVisibility';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -76,6 +78,7 @@ flex-direction: column;
 const HeaderProgressContainer = styled(View)`
 display: flex;
 flex-direction: column;
+padding-top: 10px;
 padding-left: 16px;
 padding-right: 16px;
 padding-bottom: 16px;
@@ -154,8 +157,42 @@ background-color: #BCC2C8;
 
 const SwapPageContainer = styled(ScrollView)``;
 
+const PostCompleteContiner = styled(View)`
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+`;
 
+const PostCompleteImage = styled(Image)`
+width: 135px;
+height: 135px;
+`;
 
+const PostCompleteText = styled(Text)`
+font-weight: 600;
+font-size: 16px;
+line-height: 24px;
+color: ${props => props.theme.color.White};
+padding-top: 16px;
+`;
+
+const PostCompleteButton = styled(TouchableOpacity)`
+height: 44px;
+justify-content: center;
+align-items: center;
+background-color: ${props => props.theme.color.PrimaryDark};
+border-radius: 4px;
+margin-top: 32px;
+margin-bottom: 100px;
+`;
+
+const PostCompleteButtonText = styled(Text)`
+font-weight: 500;
+font-size: 14px;
+line-height: 22px;
+color: ${props => props.theme.color.White};
+`;
 
 
 // Progress Part 0 Style
@@ -1085,43 +1122,90 @@ color: ${props => props.theme.color.MidGray};
 const TimeLmitPickerContainer = styled(View)``;
 
 
+// Password Modal Style
+const PasswordModalContainer = styled(View)`
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding-top: 16px;
+padding-left: 16px;
+padding-right: 16px;
+`;
+
+const PasswordModalHeaderText = styled(Text)`
+font-weight: 500;
+font-size: 16px;
+line-height: 20px;
+color: ${props => props.theme.color.White};
+`;
+
+const PasswordModalHeaderDetailText = styled(Text)`
+font-weight: 400;
+font-size: 14px;
+line-height: 18px;
+color: ${props => props.theme.color.LightGray};
+margin-top: 8px;
+`;
+
+const PasswordModalRowLine = styled(View)`
+height: 1px;
+width: 100%;
+background-color: #3B393E;
+margin-top: 16px;
+`;
+
+const PasswordModalButtonContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+padding-right: 16px;
+padding-left: 16px;
+`;
+
+const PasswordModalCancelButton = styled(TouchableOpacity)`
+height: 43px;
+width: 45%;
+border-bottom-left-radius: 18px;
+justify-content: center;
+align-items: center;
+`;
+
+const PasswordModalCancelButtonText = styled(Text)`
+font-weight: 400;
+font-size: 16px;
+line-height: 20px;
+color: #98999A;
+`;
+
+const PasswordModalButtonLine = styled(View)`
+height: 43px;
+width: 1px;
+background-color: #3B393E;
+`;
+
+const PasswordModalSubmitButton = styled(TouchableOpacity)`
+height: 43px;
+width: 45%;
+border-bottom-right-radius: 18px;
+justify-content: center;
+align-items: center;
+`;
+
+const PasswordModalSubmitButtonText = styled(Text)`
+font-weight: 500;
+font-size: 16px;
+line-height: 20px;
+color: #0A84FF;
+`;
+
+
 
 
 
 const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">) => {
 
     const insets = useSafeAreaInsets();
-
-    // 是否可以進行下一步
-    const handleNextStep = () => {
-        if (swapProgress === 0) {
-            if (
-                inputPrice != "" &&
-                inputQuantity != "" &&
-                inputMinLimitPrice != "" &&
-                inputMaxLimitPrice != ""
-                 /* &&
-                parseFloat(inputQuantity) <= parseFloat(currentWalletBalance) */) {
-                return true;
-            } else {
-                return false;
-            }
-        } else if (swapProgress === 1) {
-            if (
-                chosenPaymentType != []
-            ) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    };
-
-    const handleSwapProgress = (swapProgress: number) => {
-        setSwapProgress(swapProgress += 1)
-    };
 
     // 切換進度條
     const [swapProgress, setSwapProgress] = useState(0);
@@ -1134,6 +1218,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
     const [isFiatCurrencyModalVisible, setIsFiatCurrencyModalVisible] = useState(false);
     const [isPriceTypeModalVisible, setIsPriceTypeModalVisible] = useState(false);
     const [isTimeLimitModalVisible, setIsTimeLimitModalVisible] = useState(false);
+    const [isPassordModalVisible, setIsPasswordModalVisible] = useState(false);
 
     const [loading, setLoading] = useState(false);
 
@@ -1182,8 +1267,30 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
     const [inputLimitTime, setInputLimitTime] = useState(15);
 
     // 付款方式選擇
-    const [paymentList, setPaymentList] = useState(['BANK', 'LINEPAY', 'JKOS']); // 獲取用戶已有付款方式
-    const [chosenPaymentType, setChosenPaymentType] = useState(['BANK', 'LINEPAY', 'JKOS']);
+    const [paymentList, setPaymentList] = useState([]); // 獲取用戶已有付款方式
+    const [chosenPaymentType, setChosenPaymentType] = useState<any[]>([]);
+
+    const getUserPayment = () => {  
+        api.get("/user/payment")
+        .then((x) => {
+            if (x.status != 400 && x.status != 401) {
+                setPaymentList(x.data);
+                
+            } else {
+                Alert.alert(x.data.msg);
+            }
+        
+        })
+        .catch((Error) => console.log(Error))
+    };
+
+    const handleChosenPayment = () => {
+        paymentList.map((x: any) => {
+            setChosenPaymentType(prev => {return {...prev, x.id}})
+        })
+        console.log(chosenPaymentType)
+    };
+
 
     // 交易備註 Input
     const [inputTradeMemo, setInputTradeMemo] = useState("");
@@ -1194,6 +1301,53 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
 
     // 同意條款勾選
     const [confirmRules, setConfirmRules] = useState(false);
+
+    // 是否可以進行下一步
+    const handleNextStep = () => {
+
+        if (swapProgress === 0) {
+            if (priceType === 0) {
+                if (
+                    inputPrice != "" &&
+                    inputQuantity != "" &&
+                    inputMinLimitPrice != "" &&
+                    inputMaxLimitPrice != ""
+                     /* &&
+                    parseFloat(inputQuantity) <= parseFloat(currentWalletBalance) */) {
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+            if (priceType === 1) {
+                if (
+                    inputQuantity != "" &&
+                    inputMinLimitPrice != "" &&
+                    inputMaxLimitPrice != ""
+             /* &&
+            parseFloat(inputQuantity) <= parseFloat(currentWalletBalance) */) {
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+        };
+
+
+
+        if (swapProgress === 1) {
+            if (chosenPaymentType != []) {
+                return true;
+            } else {
+                return false;
+            };
+
+        }
+    };
+
+    const handleSwapProgress = (swapProgress: number) => {
+        setSwapProgress(swapProgress += 1)
+    };
 
     // 獲取廣告單幣種列表
     const [cryptoAssetList, setCryptoAssetList] = useState([]);
@@ -1275,7 +1429,6 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                 if (x.status != 400 && x.status != 401) {
                     setUserInfo(x);
                     setUserWalletBalance(x.wallet.coins);
-                    console.log(userWalletBalance)
                 }
                 else {
                     Alert.alert("用戶資訊獲取失敗，請重新操作")
@@ -1294,6 +1447,62 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
         return currentWalletBalance;
     };
 
+    // 用戶資金密碼
+    const [password, setPassword] = useState("");
+    const { passwordVisibility, rightIcon, handlePasswordVisibility } =
+        useTogglePasswordVisibility();
+
+
+    // 新增廣告單  POST
+    const [postComplete, setPostComplete] = useState(false);
+
+    const postAdvertisement = () => {
+        setLoading(true);
+        api.postData("/otc/api/advertisement/", {
+            type: swapPage,
+            cryptoAsset: cryptoAssetType,
+            fiatCurrency: fiatCurrencyType,
+            priceType: priceType,
+            price: parseFloat(inputPrice),
+            totalTradingAmount: parseFloat(inputQuantity),
+            orderLimitMin: parseFloat(inputMinLimitPrice),
+            orderLimitMax: parseFloat(inputMaxLimitPrice),
+            paymentTimeLimit: (inputLimitTime * 60 * 1000),
+            payments: chosenPaymentType,
+            conditionCompleteOrders: parseFloat(inputConditionLimitOrder),
+            conditionRegisteredDays: parseFloat(inputConditionLimitSignUp),
+            terms: inputTradeMemo,
+            financePassword: password
+        })
+            .then((x) => {
+                setLoading(false)
+                setIsPasswordModalVisible(false)
+                if (x.status != 400 && x.status != 401 && x.status != 493) {
+                    setSwapProgress(3)
+                    setPostComplete(true)
+                } else if (x.status == 493) {
+                    Alert.alert("資金密碼錯誤")
+                } else {
+                    Alert.alert(x.data.msg)
+                };
+            })
+            .catch((Error) => { console.log(Error) })
+    };
+
+    const [handlePaymentList, setHandlePaymentList] = useState<any[]>([]);
+
+    const handlePayment = () => {
+
+        Object.values(paymentList).map((x: any) => {
+            if (chosenPaymentType.includes("BANK")) {
+                setHandlePaymentList([{'type':x.id}]);
+                
+            }
+        })
+    };
+
+
+    // useEffect
 
     useEffect(async () => {
         let token = await AsyncStorage.getItem("token");
@@ -1305,9 +1514,11 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
             getCryptoAssetList();
             getFiatCurrencyList();
             getUserInfo();
+            getUserPayment();
         }
 
         handleNextStep()
+        handlePayment()
 
     }, [])
 
@@ -1326,83 +1537,95 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                     </TouchableOpacity>
                     <HeaderTitleText>發佈廣告</HeaderTitleText>
                     {
-                        swapProgress !== 2 &&
+                        (swapProgress !== 2 && swapProgress !== 3) &&
                         (handleNextStep() === true &&
                             <TouchableOpacity onPress={() => { handleSwapProgress(swapProgress) }}>
                                 <HeaderTitleNextStepWhiteText>下一步</HeaderTitleNextStepWhiteText>
                             </TouchableOpacity>)
                     }
                     {
-                        swapProgress !== 2 &&
+                        (swapProgress !== 2 && swapProgress !== 3) &&
                         (handleNextStep() !== true &&
                             <TouchableOpacity disabled={true}>
                                 <HeaderTitleNextStepGrayText>下一步</HeaderTitleNextStepGrayText>
                             </TouchableOpacity>)
                     }
                     {
-                        swapProgress === 2 &&
+                        (swapProgress === 2) &&
+                        <HeaderTitleNextStepGrayText style={{ paddingRight: 50 }} />
+                    }
+                    {
+                        (postComplete === true) &&
                         <HeaderTitleNextStepGrayText style={{ paddingRight: 50 }} />
                     }
                 </HeaderTitleContainer>
             </HeaderContainer>
             <BodyContainer>
-                <HeaderProgressContainer>
-
-                    {
-                        swapProgress === 0 &&
-                        <HeaderProgressTopContainer>
-                            <HeaderProgressPrimaryCircle />
-                            <HeaderProgressGrayLine />
-                            <HeaderProgressGrayCircle />
-                            <HeaderProgressGrayLine />
-                            <HeaderProgressGrayCircle />
-                        </HeaderProgressTopContainer>
-                    }
-                    {
-                        swapProgress === 1 &&
-                        <HeaderProgressTopContainer>
-                            <HeaderProgressLightGrayCircle />
-                            <HeaderProgressLightGrayLine />
-                            <HeaderProgressPrimaryCircle />
-                            <HeaderProgressGrayLine />
-                            <HeaderProgressGrayCircle />
-                        </HeaderProgressTopContainer>
-                    }
-                    {
-                        swapProgress === 2 &&
-                        <HeaderProgressTopContainer>
-                            <HeaderProgressLightGrayCircle />
-                            <HeaderProgressLightGrayLine />
-                            <HeaderProgressLightGrayCircle />
-                            <HeaderProgressLightGrayLine />
-                            <HeaderProgressPrimaryCircle />
-                        </HeaderProgressTopContainer>
-                    }
-                    {
-                        swapProgress === 0 &&
-                        <HeaderProgressBottomContainer>
-                            <HeaderProgressWhiteText>價格數量</HeaderProgressWhiteText>
-                            <HeaderProgressGrayText>交易方式</HeaderProgressGrayText>
-                            <HeaderProgressGrayText>廣告確認</HeaderProgressGrayText>
-                        </HeaderProgressBottomContainer>
-                    }
-                    {
-                        swapProgress === 1 &&
-                        <HeaderProgressBottomContainer>
-                            <HeaderProgressLightGrayText>價格數量</HeaderProgressLightGrayText>
-                            <HeaderProgressWhiteText>交易方式</HeaderProgressWhiteText>
-                            <HeaderProgressGrayText>廣告確認</HeaderProgressGrayText>
-                        </HeaderProgressBottomContainer>
-                    }
-                    {
-                        swapProgress === 2 &&
-                        <HeaderProgressBottomContainer>
-                            <HeaderProgressLightGrayText>價格數量</HeaderProgressLightGrayText>
-                            <HeaderProgressLightGrayText>交易方式</HeaderProgressLightGrayText>
-                            <HeaderProgressWhiteText>廣告確認</HeaderProgressWhiteText>
-                        </HeaderProgressBottomContainer>
-                    }
-                </HeaderProgressContainer>
+                {
+                    !postComplete ?
+                        <HeaderProgressContainer>
+                            {
+                                swapProgress === 0 &&
+                                <HeaderProgressTopContainer>
+                                    <HeaderProgressPrimaryCircle />
+                                    <HeaderProgressGrayLine />
+                                    <HeaderProgressGrayCircle />
+                                    <HeaderProgressGrayLine />
+                                    <HeaderProgressGrayCircle />
+                                </HeaderProgressTopContainer>
+                            }
+                            {
+                                swapProgress === 1 &&
+                                <HeaderProgressTopContainer>
+                                    <HeaderProgressLightGrayCircle />
+                                    <HeaderProgressLightGrayLine />
+                                    <HeaderProgressPrimaryCircle />
+                                    <HeaderProgressGrayLine />
+                                    <HeaderProgressGrayCircle />
+                                </HeaderProgressTopContainer>
+                            }
+                            {
+                                swapProgress === 2 &&
+                                <HeaderProgressTopContainer>
+                                    <HeaderProgressLightGrayCircle />
+                                    <HeaderProgressLightGrayLine />
+                                    <HeaderProgressLightGrayCircle />
+                                    <HeaderProgressLightGrayLine />
+                                    <HeaderProgressPrimaryCircle />
+                                </HeaderProgressTopContainer>
+                            }
+                            {
+                                swapProgress === 0 &&
+                                <HeaderProgressBottomContainer>
+                                    <HeaderProgressWhiteText>價格數量</HeaderProgressWhiteText>
+                                    <HeaderProgressGrayText>交易方式</HeaderProgressGrayText>
+                                    <HeaderProgressGrayText>廣告確認</HeaderProgressGrayText>
+                                </HeaderProgressBottomContainer>
+                            }
+                            {
+                                swapProgress === 1 &&
+                                <HeaderProgressBottomContainer>
+                                    <HeaderProgressLightGrayText>價格數量</HeaderProgressLightGrayText>
+                                    <HeaderProgressWhiteText>交易方式</HeaderProgressWhiteText>
+                                    <HeaderProgressGrayText>廣告確認</HeaderProgressGrayText>
+                                </HeaderProgressBottomContainer>
+                            }
+                            {
+                                swapProgress === 2 &&
+                                <HeaderProgressBottomContainer>
+                                    <HeaderProgressLightGrayText>價格數量</HeaderProgressLightGrayText>
+                                    <HeaderProgressLightGrayText>交易方式</HeaderProgressLightGrayText>
+                                    <HeaderProgressWhiteText>廣告確認</HeaderProgressWhiteText>
+                                </HeaderProgressBottomContainer>
+                            }
+                        </HeaderProgressContainer> :
+                        <HeaderProgressContainer>
+                            <PostCompleteContiner>
+                                <PostCompleteImage source={require("../../assets/images/c2c/post_complete.png")} />
+                                <PostCompleteText>廣告已發佈</PostCompleteText>
+                            </PostCompleteContiner>
+                        </HeaderProgressContainer>
+                }
 
                 {
                     swapProgress === 0 &&
@@ -1431,7 +1654,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                             <CurrencyTypeRowContainer>
                                 <CurrencyTypeLeftColumnContainer>
                                     <CurrencyTypeTitleText>幣種</CurrencyTypeTitleText>
-                                    <CurrencyTypeButton onPress={() => { setIsCryptoAssetModalVisible(true) }}>
+                                    <CurrencyTypeButton onPress={() => { setIsCryptoAssetModalVisible(true), handleChosenPayment() }}>
                                         <CurrencyTypeButtonText>{cryptoAssetType}</CurrencyTypeButtonText>
                                         <CurrencyTypeForwardImage source={require("../../assets/images/c2c/next.png")} />
                                     </CurrencyTypeButton>
@@ -1581,7 +1804,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                         }}
                                         value={inputMaxLimitPrice}
                                         onChangeText={(text) => { setInputMaxLimitPrice(text) }}
-                                        placeholder={"最小"}
+                                        placeholder={"最大"}
                                         placeholderTextColor={'#8D97A2'}
                                         keyboardType={"decimal-pad"}
                                     />
@@ -1741,7 +1964,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
                                 <ConfirmCardTitle>定價方式</ConfirmCardTitle>
-                                <ConfirmCardSecondText>{priceType === 0 ? "固定價格" : "浮動價格"}</ConfirmCardSecondText>
+                                <ConfirmCardSecondText>{handlePriceText()}</ConfirmCardSecondText>
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
                                 <ConfirmCardTitle>交易數量</ConfirmCardTitle>
@@ -1802,10 +2025,72 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                             <ConfirmUpdateButton onPress={() => { setSwapProgress(0) }}>
                                 <ConfirmUpdateButtonText>修改</ConfirmUpdateButtonText>
                             </ConfirmUpdateButton>
-                            <ConfirmButton onPress={() => { }}>
+                            <ConfirmButton onPress={() => { setIsPasswordModalVisible(true) }}>
                                 <ConfirmButtonText>確認並發佈</ConfirmButtonText>
                             </ConfirmButton>
                         </ConfirmButtonContainer>
+                    </SwapPageContainer>
+                }
+
+                {
+                    postComplete &&
+                    <SwapPageContainer style={{ padding: 16 }}>
+                        <ConfirmCardContainer>
+                            <ConfirmCardRowContainer>
+                                <ConfirmCardTitle>交易價格</ConfirmCardTitle>
+                                {
+                                    priceType === 0 ?
+                                        <ConfirmCardTradePriceText>{inputPrice} {fiatCurrencyType}/{cryptoAssetType}</ConfirmCardTradePriceText> :
+                                        <ConfirmCardTradePriceText>浮動價格 {fiatCurrencyType}/{cryptoAssetType}</ConfirmCardTradePriceText>
+                                }
+                            </ConfirmCardRowContainer>
+                            <ConfirmCardRowContainer>
+                                <ConfirmCardTitle>定價方式</ConfirmCardTitle>
+                                <ConfirmCardSecondText>{handlePriceText()}</ConfirmCardSecondText>
+                            </ConfirmCardRowContainer>
+                            <ConfirmCardRowContainer>
+                                <ConfirmCardTitle>交易數量</ConfirmCardTitle>
+                                <ConfirmCardSecondText>{inputQuantity}</ConfirmCardSecondText>
+                            </ConfirmCardRowContainer>
+                            <ConfirmCardRowContainer>
+                                <ConfirmCardTitle>單筆限額</ConfirmCardTitle>
+                                <ConfirmCardThirdText>{fiatCurrencyType} {inputMinLimitPrice} - {inputMaxLimitPrice}</ConfirmCardThirdText>
+                            </ConfirmCardRowContainer>
+                            <ConfirmCardRowContainer>
+                                <ConfirmCardTitle>放行時限</ConfirmCardTitle>
+                                <ConfirmCardThirdText>{inputLimitTime} 分鐘</ConfirmCardThirdText>
+                            </ConfirmCardRowContainer>
+                            <ConfirmCardRowContainer>
+                                <ConfirmCardTitle>付款方式</ConfirmCardTitle>
+                                <ConfirmCardPaymentContainer>
+                                    {
+                                        chosenPaymentType.includes("BANK") &&
+                                        <ConfirmCardPaymentImage source={require("../../assets/images/c2c/payment.png")} />
+                                    }
+                                    {
+                                        chosenPaymentType.includes("LINEPAY") &&
+                                        <ConfirmCardPaymentImage source={require("../../assets/images/c2c/line_pay.png")} />
+                                    }
+                                    {
+                                        chosenPaymentType.includes("JKOS") &&
+                                        <ConfirmCardPaymentImage source={require("../../assets/images/c2c/JKO_pay.png")} />
+                                    }
+                                </ConfirmCardPaymentContainer>
+                            </ConfirmCardRowContainer>
+                            <ConfirmCardColumnContainer>
+                                <ConfirmCardSmallTitle>備註</ConfirmCardSmallTitle>
+                                <ConfirmCardFourthText>請買家務必於時限內付款，勿卡單。</ConfirmCardFourthText>
+                            </ConfirmCardColumnContainer>
+                            <ConfirmCardColumnContainer>
+                                <ConfirmCardSmallTitle>交易方條件</ConfirmCardSmallTitle>
+                                <ConfirmCardFourthText>
+                                    交易方最少完成 {inputConditionLimitOrder} 筆交易、註冊帳戶不少於 {inputConditionLimitSignUp} 天
+                                </ConfirmCardFourthText>
+                            </ConfirmCardColumnContainer>
+                        </ConfirmCardContainer>
+                        <PostCompleteButton onPress={() => { navigation.goBack() }}>
+                            <PostCompleteButtonText>法幣交易總覽</PostCompleteButtonText>
+                        </PostCompleteButton>
                     </SwapPageContainer>
                 }
             </BodyContainer>
@@ -2039,6 +2324,77 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                             <Picker.Item label="35" value="35" />
                         </Picker>
                     </TimeLmitPickerContainer>
+                </View>
+            </Modal>
+
+            {/* // 檢查資金密碼Modal */}
+            <Modal
+                isVisible={isPassordModalVisible}
+                deviceHeight={windowHeight}
+                deviceWidth={windowWidth}
+                animationInTiming={500}
+                animationOutTiming={700}
+                backdropOpacity={0.9}
+                onBackdropPress={() => setIsPasswordModalVisible(false)}
+                onSwipeComplete={() => setIsPasswordModalVisible(false)}
+                swipeDirection={['down']}
+                style={{ justifyContent: 'center', margin: 0 }}
+                hideModalContentWhileAnimating={true}
+            >
+                <View style={{
+                    backgroundColor: 'rgba(40, 39, 42, 1)',
+                    borderTopLeftRadius: 18,
+                    borderTopRightRadius: 18,
+                    borderBottomLeftRadius: 18,
+                    borderBottomRightRadius: 18,
+                    marginLeft: 53,
+                    marginRight: 53,
+                }}>
+                    <PasswordModalContainer>
+                        <PasswordModalHeaderText>輸入資金密碼</PasswordModalHeaderText>
+                        <PasswordModalHeaderDetailText>進行出售，請輸入您設定的資金密碼</PasswordModalHeaderDetailText>
+
+                        <View style={{
+                            height: 32,
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            marginTop: 14,
+                            marginLeft: 16,
+                            marginRight: 16,
+                            paddingLeft: 12,
+                            paddingRight: 12,
+                            borderWidth: 1,
+                            borderColor: '#3B393E',
+                            borderRadius: 4,
+                            alignItems: 'center',
+                        }}>
+                            <TextInput
+                                style={{ width: '90%', color: '#FFFFFF' }}
+                                placeholder="輸入資金密碼"
+                                placeholderTextColor={'#98999A'}
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                textContentType="newPassword"
+                                secureTextEntry={passwordVisibility}
+                                value={password}
+                                enablesReturnKeyAutomatically
+                                onChangeText={text => setPassword(text)}
+                            />
+                            <TouchableOpacity onPress={handlePasswordVisibility}>
+                                <Feather name={rightIcon} size={16} color="#DBDCDD" />
+                            </TouchableOpacity>
+                        </View>
+                    </PasswordModalContainer>
+                    <PasswordModalRowLine></PasswordModalRowLine>
+                    <PasswordModalButtonContainer>
+                        <PasswordModalCancelButton onPress={() => { setIsPasswordModalVisible(false), setPassword("") }}>
+                            <PasswordModalCancelButtonText>取消</PasswordModalCancelButtonText>
+                        </PasswordModalCancelButton>
+                        <PasswordModalButtonLine />
+                        <PasswordModalSubmitButton onPress={() => { postAdvertisement() }}>
+                            <PasswordModalSubmitButtonText>確定</PasswordModalSubmitButtonText>
+                        </PasswordModalSubmitButton>
+                    </PasswordModalButtonContainer>
                 </View>
             </Modal>
         </Container>
