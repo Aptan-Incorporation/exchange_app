@@ -483,7 +483,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
 
     const getSellList = (cryptoAsset: string) => {
         setLoading(true)
-        api.get(`/otc/api/advertisement/?all=true&my=true&type=sell&cryptoAsset=${cryptoAsset}`)
+        api.get(`/otc/api/advertisement/?all=false&my=false&type=sell&cryptoAsset=${cryptoAsset}`)
             .then((x) => {
                 setLoading(false)
                 if (x.status != 400 && x.status != 401) {

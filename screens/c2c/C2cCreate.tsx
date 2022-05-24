@@ -1268,27 +1268,20 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
 
     // 付款方式選擇
     const [paymentList, setPaymentList] = useState([]); // 獲取用戶已有付款方式
-    const [chosenPaymentType, setChosenPaymentType] = useState<any[]>([]);
+    const [chosenPaymentType, setChosenPaymentType] = useState([]);
 
-    const getUserPayment = () => {  
+    const getUserPayment = () => {
         api.get("/user/payment")
-        .then((x) => {
-            if (x.status != 400 && x.status != 401) {
-                setPaymentList(x.data);
-                
-            } else {
-                Alert.alert(x.data.msg);
-            }
-        
-        })
-        .catch((Error) => console.log(Error))
-    };
+            .then((x) => {
+                if (x.status != 400 && x.status != 401) {
+                    setPaymentList(x.data);
+                    setChosenPaymentType(x.data);
+                } else {
+                    Alert.alert(x.data.msg);
+                }
 
-    const handleChosenPayment = () => {
-        paymentList.map((x: any) => {
-            setChosenPaymentType(prev => {return {...prev, x.id}})
-        })
-        console.log(chosenPaymentType)
+            })
+            .catch((Error) => console.log(Error))
     };
 
 
@@ -1412,11 +1405,11 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
     // 用戶資訊
     const [account, setAccount] = useState("");
     const [userId, setUserId] = useState("");
-    const [buyFeeRate, setBuyFeeRate] = useState();
-    const [sellFeeRate, setSellFeeRate] = useState();
-    const [userInfo, setUserInfo] = useState([]);
-    const [userWalletBalance, setUserWalletBalance] = useState([]);
+    const [userInfo, setUserInfo] = useState<any[]>([]);
+    const [buyFeeRate, setBuyFeeRate] = useState(1);
+    const [sellFeeRate, setSellFeeRate] = useState(1);
     const [currentWalletBalance, setCurrentWalletBalance] = useState("");
+
 
     // 獲取用戶資訊（幣種餘額）
 
@@ -1424,11 +1417,9 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
         setLoading(true)
         api.get(`/otc/api/user/${account}`)
             .then((x) => {
-
                 setLoading(false)
                 if (x.status != 400 && x.status != 401) {
                     setUserInfo(x);
-                    setUserWalletBalance(x.wallet.coins);
                 }
                 else {
                     Alert.alert("用戶資訊獲取失敗，請重新操作")
@@ -1438,13 +1429,27 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
     };
 
     const handleWalletCurrency = (cryptoAsset: string) => {
-        userWalletBalance.map((x: any, i) => {
+        /* userWalletBalance.map((x: any, i) => {
             if (x.coins.symbol === cryptoAsset) {
                 setCurrentWalletBalance(x.coins.balance)
             }
 
-        })
+        }) */
         return currentWalletBalance;
+    };
+
+    // 廣告費計算 (尚未計算浮動價格)
+    const handleCountFee = () => {
+        if (inputPrice !== "" && inputQuantity != "") {
+            if (swapPage === 0 && priceType === 0) {
+                return parseFloat(inputPrice) * parseFloat(inputQuantity) * buyFeeRate
+            }
+            if (swapPage === 1 && priceType === 0) {
+                return parseFloat(inputPrice) * parseFloat(inputQuantity) * sellFeeRate
+            }
+        } else {
+            return 0;
+        }
     };
 
     // 用戶資金密碼
@@ -1463,14 +1468,14 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
             cryptoAsset: cryptoAssetType,
             fiatCurrency: fiatCurrencyType,
             priceType: priceType,
-            price: parseFloat(inputPrice),
-            totalTradingAmount: parseFloat(inputQuantity),
-            orderLimitMin: parseFloat(inputMinLimitPrice),
-            orderLimitMax: parseFloat(inputMaxLimitPrice),
+            price: (parseFloat(inputPrice)).toFixed(2),
+            totalTradingAmount: (parseFloat(inputQuantity)).toFixed(2),
+            orderLimitMin: (parseFloat(inputMinLimitPrice)).toFixed(2),
+            orderLimitMax: (parseFloat(inputMaxLimitPrice)).toFixed(2),
             paymentTimeLimit: (inputLimitTime * 60 * 1000),
-            payments: chosenPaymentType,
-            conditionCompleteOrders: parseFloat(inputConditionLimitOrder),
-            conditionRegisteredDays: parseFloat(inputConditionLimitSignUp),
+            payments: (swapPage === 0 ? null : chosenPaymentType),
+            conditionCompleteOrders: parseInt(inputConditionLimitOrder),
+            conditionRegisteredDays: parseInt(inputConditionLimitSignUp),
             terms: inputTradeMemo,
             financePassword: password
         })
@@ -1487,18 +1492,6 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                 };
             })
             .catch((Error) => { console.log(Error) })
-    };
-
-    const [handlePaymentList, setHandlePaymentList] = useState<any[]>([]);
-
-    const handlePayment = () => {
-
-        Object.values(paymentList).map((x: any) => {
-            if (chosenPaymentType.includes("BANK")) {
-                setHandlePaymentList([{'type':x.id}]);
-                
-            }
-        })
     };
 
 
@@ -1518,7 +1511,11 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
         }
 
         handleNextStep()
-        handlePayment()
+
+        if (userInfo != []) {
+            setBuyFeeRate(userInfo.buyFeeRate);
+            setSellFeeRate(userId.sellFeeRate);
+        }
 
     }, [])
 
@@ -1654,7 +1651,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                             <CurrencyTypeRowContainer>
                                 <CurrencyTypeLeftColumnContainer>
                                     <CurrencyTypeTitleText>幣種</CurrencyTypeTitleText>
-                                    <CurrencyTypeButton onPress={() => { setIsCryptoAssetModalVisible(true), handleChosenPayment() }}>
+                                    <CurrencyTypeButton onPress={() => { setIsCryptoAssetModalVisible(true) }}>
                                         <CurrencyTypeButtonText>{cryptoAssetType}</CurrencyTypeButtonText>
                                         <CurrencyTypeForwardImage source={require("../../assets/images/c2c/next.png")} />
                                     </CurrencyTypeButton>
@@ -1717,11 +1714,11 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                             </PriceTypeInputContainer>
                             <PriceBottomRowContainer style={{ paddingTop: 16 }}>
                                 <PriceSmallTitleText>市場參考價</PriceSmallTitleText>
-                                <PriceMarketValueText>$$$ {fiatCurrencyType} / {cryptoAssetType}</PriceMarketValueText>
+                                <PriceMarketValueText>{inputPrice} {fiatCurrencyType} / {cryptoAssetType}</PriceMarketValueText>
                             </PriceBottomRowContainer>
                             <PriceBottomRowContainer>
                                 <PriceSmallTitleText>交易價格</PriceSmallTitleText>
-                                <PriceTradeText>$$$ {fiatCurrencyType} / {cryptoAssetType}</PriceTradeText>
+                                <PriceTradeText>{inputPrice} {fiatCurrencyType} / {cryptoAssetType}</PriceTradeText>
                             </PriceBottomRowContainer>
                         </PriceContainer>
 
@@ -1828,7 +1825,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
 
                         <TradeFeeNotifyContainer>
                             <TradeFeeNotifyImage source={require("../../assets/images/c2c/funds.png")} />
-                            <TradeFeeNotifyText>廣告預估手續費 ??? {cryptoAssetType}</TradeFeeNotifyText>
+                            <TradeFeeNotifyText>廣告預估手續費 {handleCountFee()} {cryptoAssetType}</TradeFeeNotifyText>
                         </TradeFeeNotifyContainer>
 
                     </SwapPageContainer>
@@ -1844,28 +1841,28 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                             </PaymentTitleRowContainer>
                             <PaymentRowContainer horizontal={true}>
                                 {
-                                    chosenPaymentType.includes('BANK') &&
+                                    chosenPaymentType.some((x: any) => { return x.type == 'BANK' }) &&
                                     <PaymentTypeView>
                                         <PaymentTypeViewText>銀行轉帳</PaymentTypeViewText>
-                                        <TouchableOpacity onPress={() => { setChosenPaymentType(chosenPaymentType.filter(payment => payment !== 'BANK')) }}>
+                                        <TouchableOpacity onPress={() => { setChosenPaymentType(chosenPaymentType.filter((x: any) => { return x.type != 'BANK' })) }}>
                                             <PaymentTypeViewCancelImage source={require("../../assets/images/c2c/cancel_circle.png")} />
                                         </TouchableOpacity>
                                     </PaymentTypeView>
                                 }
                                 {
-                                    chosenPaymentType.includes('LINEPAY') &&
+                                    chosenPaymentType.some((x: any) => { return x.type == 'LINEPAY' }) &&
                                     <PaymentTypeView>
                                         <PaymentTypeViewText>Line Pay</PaymentTypeViewText>
-                                        <TouchableOpacity onPress={() => { setChosenPaymentType(chosenPaymentType.filter(payment => payment !== 'LINEPAY')) }}>
+                                        <TouchableOpacity onPress={() => { setChosenPaymentType(chosenPaymentType.filter((x: any) => { return x.type != 'LINEPAY' })) }}>
                                             <PaymentTypeViewCancelImage source={require("../../assets/images/c2c/cancel_circle.png")} />
                                         </TouchableOpacity>
                                     </PaymentTypeView>
                                 }
                                 {
-                                    chosenPaymentType.includes('JKOS') &&
+                                    chosenPaymentType.some((x: any) => { return x.type == 'JKOPAY' }) &&
                                     <PaymentTypeView>
                                         <PaymentTypeViewText>街口支付</PaymentTypeViewText>
-                                        <TouchableOpacity onPress={() => { setChosenPaymentType(chosenPaymentType.filter(payment => payment !== 'JKOS')) }}>
+                                        <TouchableOpacity onPress={() => { setChosenPaymentType(chosenPaymentType.filter((x: any) => { return x.type != 'JKOPAY' })) }}>
                                             <PaymentTypeViewCancelImage source={require("../../assets/images/c2c/cancel_circle.png")} />
                                         </TouchableOpacity>
                                     </PaymentTypeView>
@@ -1982,15 +1979,15 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                 <ConfirmCardTitle>付款方式</ConfirmCardTitle>
                                 <ConfirmCardPaymentContainer>
                                     {
-                                        chosenPaymentType.includes("BANK") &&
+                                        chosenPaymentType.some((x: any) => { return x.type == 'BANK' }) &&
                                         <ConfirmCardPaymentImage source={require("../../assets/images/c2c/payment.png")} />
                                     }
                                     {
-                                        chosenPaymentType.includes("LINEPAY") &&
+                                        chosenPaymentType.some((x: any) => { return x.type == 'LINEPAY' }) &&
                                         <ConfirmCardPaymentImage source={require("../../assets/images/c2c/line_pay.png")} />
                                     }
                                     {
-                                        chosenPaymentType.includes("JKOS") &&
+                                        chosenPaymentType.some((x: any) => { return x.type == 'JKOPAY' }) &&
                                         <ConfirmCardPaymentImage source={require("../../assets/images/c2c/JKO_pay.png")} />
                                     }
                                 </ConfirmCardPaymentContainer>
@@ -2025,7 +2022,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                             <ConfirmUpdateButton onPress={() => { setSwapProgress(0) }}>
                                 <ConfirmUpdateButtonText>修改</ConfirmUpdateButtonText>
                             </ConfirmUpdateButton>
-                            <ConfirmButton onPress={() => { setIsPasswordModalVisible(true) }}>
+                            <ConfirmButton onPress={() => { confirmRules && setIsPasswordModalVisible(true) }}>
                                 <ConfirmButtonText>確認並發佈</ConfirmButtonText>
                             </ConfirmButton>
                         </ConfirmButtonContainer>
@@ -2064,15 +2061,15 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                 <ConfirmCardTitle>付款方式</ConfirmCardTitle>
                                 <ConfirmCardPaymentContainer>
                                     {
-                                        chosenPaymentType.includes("BANK") &&
+                                        chosenPaymentType.some((x: any) => { return x.type == 'BANK' }) &&
                                         <ConfirmCardPaymentImage source={require("../../assets/images/c2c/payment.png")} />
                                     }
                                     {
-                                        chosenPaymentType.includes("LINEPAY") &&
+                                        chosenPaymentType.some((x: any) => { return x.type == 'LINEPAY' }) &&
                                         <ConfirmCardPaymentImage source={require("../../assets/images/c2c/line_pay.png")} />
                                     }
                                     {
-                                        chosenPaymentType.includes("JKOS") &&
+                                        chosenPaymentType.some((x: any) => { return x.type == 'JKOPAY' }) &&
                                         <ConfirmCardPaymentImage source={require("../../assets/images/c2c/JKO_pay.png")} />
                                     }
                                 </ConfirmCardPaymentContainer>
