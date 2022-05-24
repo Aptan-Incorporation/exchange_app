@@ -1403,19 +1403,28 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
     };
 
     // 用戶資訊
-    const [account, setAccount] = useState("");
-    const [userId, setUserId] = useState("");
-    const [userInfo, setUserInfo] = useState<any[]>([]);
+    interface userInfoDetail {
+        account?: string,
+        buyFeeRate?: number,
+        sellFeeRate?: number,
+        wallet?: {
+            coins?: [],
+            id?: string
+        }
+    };
+
+    const [userInfo, setUserInfo] = useState<userInfoDetail[]>([]);
     const [buyFeeRate, setBuyFeeRate] = useState(1);
     const [sellFeeRate, setSellFeeRate] = useState(1);
-    const [currentWalletBalance, setCurrentWalletBalance] = useState("");
+    const [currentWalletBalance, setCurrentWalletBalance] = useState(0);
 
 
     // 獲取用戶資訊（幣種餘額）
 
-    const getUserInfo = () => {
+    const getUserInfo = async () => {
+        let user = await AsyncStorage.getItem("user");
         setLoading(true)
-        api.get(`/otc/api/user/${account}`)
+        api.get(`/otc/api/user/${JSON.parse(user!).account}`)
             .then((x) => {
                 setLoading(false)
                 if (x.status != 400 && x.status != 401) {
@@ -1426,16 +1435,6 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                 }
             })
             .catch((Error) => console.log(Error));
-    };
-
-    const handleWalletCurrency = (cryptoAsset: string) => {
-        /* userWalletBalance.map((x: any, i) => {
-            if (x.coins.symbol === cryptoAsset) {
-                setCurrentWalletBalance(x.coins.balance)
-            }
-
-        }) */
-        return currentWalletBalance;
     };
 
     // 廣告費計算 (尚未計算浮動價格)
@@ -1500,25 +1499,27 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
     useEffect(async () => {
         let token = await AsyncStorage.getItem("token");
         let user = await AsyncStorage.getItem("user");
-        setAccount(JSON.parse(user!).account);
-        setUserId(JSON.parse(user!).userId);
 
         if (token) {
             getCryptoAssetList();
             getFiatCurrencyList();
-            getUserInfo();
             getUserPayment();
+            getUserInfo();
         }
 
         handleNextStep()
 
-        if (userInfo != []) {
-            setBuyFeeRate(userInfo.buyFeeRate);
-            setSellFeeRate(userId.sellFeeRate);
-        }
-
     }, [])
 
+
+    useEffect(() => {
+        if (userInfo) {
+            setBuyFeeRate(userInfo.buyFeeRate);
+            setSellFeeRate(userInfo.sellFeeRate);
+            console.log(((userInfo.wallet.coins).find((x: any) => { return x.symbol === cryptoAssetType })).balance);
+            console.log(userInfo)
+        }
+    }, [userInfo, cryptoAssetType])
 
 
     return (
@@ -1727,12 +1728,12 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                             <QuantityInputContainer>
                                 <QuantityInputTitleRowContainer>
                                     {
-                                        parseFloat(inputQuantity) > parseFloat(currentWalletBalance) ?
+                                        parseFloat(inputQuantity) > currentWalletBalance ?
                                             <QuanitityTradeQuantityTitleNegative>交易數量</QuanitityTradeQuantityTitleNegative> :
                                             <QuantitySmallTitleText>交易數量</QuantitySmallTitleText>
                                     }
                                     <QuantityTradeQuantityCurrentWalletBalanceText>
-                                        可用資產 {handleWalletCurrency(cryptoAssetType)} {cryptoAssetType}
+                                        可用資產 {currentWalletBalance} {cryptoAssetType}
                                     </QuantityTradeQuantityCurrentWalletBalanceText>
                                 </QuantityInputTitleRowContainer>
                                 <QuantityTradeQuantityRowContainer>
