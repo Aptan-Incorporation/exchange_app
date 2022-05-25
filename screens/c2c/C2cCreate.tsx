@@ -1419,19 +1419,37 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
     const [currentWalletBalance, setCurrentWalletBalance] = useState(0);
 
 
-    // 獲取用戶資訊（幣種餘額）
-
+    // 獲取用戶資訊（費率）
     const getUserInfo = async () => {
         let user = await AsyncStorage.getItem("user");
         setLoading(true)
         api.get(`/otc/api/user/${JSON.parse(user!).account}`)
-            .then((x) => {
+            .then((x: any) => {
                 setLoading(false)
                 if (x.status != 400 && x.status != 401) {
                     setUserInfo(x);
+                    setBuyFeeRate(x.buyFeeRate);
+                    setSellFeeRate(x.sellFeeRate);
                 }
                 else {
                     Alert.alert("用戶資訊獲取失敗，請重新操作")
+                }
+            })
+            .catch((Error) => console.log(Error));
+    };
+
+    // 獲取用戶資訊（幣種餘額）
+    const getUserBalanceInfo = async () => {
+        let user = await AsyncStorage.getItem("user");
+        setLoading(true)
+        api.get(`/otc/api/user/${JSON.parse(user!).account}`)
+            .then((x: any) => {
+                setLoading(false)
+                if (x.status != 400 && x.status != 401) {
+                    setCurrentWalletBalance(((x.wallet.coins).find((x: any) => { return x.symbol === cryptoAssetType })).balance)
+                }
+                else {
+                    Alert.alert("用戶餘額獲取失敗，請重新操作")
                 }
             })
             .catch((Error) => console.log(Error));
@@ -1512,14 +1530,13 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
     }, [])
 
 
-    useEffect(() => {
-        if (userInfo) {
-            setBuyFeeRate(userInfo.buyFeeRate);
-            setSellFeeRate(userInfo.sellFeeRate);
-            console.log(((userInfo.wallet.coins).find((x: any) => { return x.symbol === cryptoAssetType })).balance);
-            console.log(userInfo)
+    useEffect(async () => {
+        let token = await AsyncStorage.getItem("token");
+
+        if (token) {
+            getUserBalanceInfo();
         }
-    }, [userInfo, cryptoAssetType])
+    }, [cryptoAssetType])
 
 
     return (
