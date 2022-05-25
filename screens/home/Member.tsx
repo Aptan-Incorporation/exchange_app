@@ -76,7 +76,7 @@ const Member = ({ navigation }: RootStackScreenProps<"Member">) => {
             <IconImg source={require("../../assets/images/home/security.png")} />
             <Text style={{color:"white",fontSize:15,marginLeft:16}}>安全設置</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{display:"flex",flexDirection:"row",height:56,alignItems:"center",borderBottomWidth:1,borderBottomColor: "#242D37"}}>
+          <TouchableOpacity style={{display:"flex",flexDirection:"row",height:56,alignItems:"center",borderBottomWidth:1,borderBottomColor: "#242D37"}} onPress={()=>{navigation.navigate("Payments")}}>
             <IconImg source={require("../../assets/images/home/account.png")} />
             <Text style={{color:"white",fontSize:15,marginLeft:16}}>帳戶設置</Text>
           </TouchableOpacity>

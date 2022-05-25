@@ -33,6 +33,8 @@ import GoogleVerifyStep3 from "../screens/home/GoogleVerifyStep3";
 import FundPassword from "../screens/home/FundPassword";
 import IdentityVerifyStep1 from "../screens/home/IdentityVerifyStep1";
 import IdentityVerifyStep2 from "../screens/home/IdentityVerifyStep2";
+import Payments from '../screens/home/Payments';
+import PaymentsCreate from '../screens/home/PaymentsCreate';
 import Web from "../screens/home/Web";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
@@ -68,6 +70,8 @@ function RootNavigator() {
       <Stack.Screen name="EmailVerify" component={EmailVerify} options={{ headerShown: false }} />
       <Stack.Screen name="IdentityVerifyStep1" component={IdentityVerifyStep1} options={{ headerShown: false }} />
       <Stack.Screen name="IdentityVerifyStep2" component={IdentityVerifyStep2} options={{ headerShown: false }} />
+      <Stack.Screen name="Payments" component={Payments} options={{ headerShown: false }} />
+      <Stack.Screen name="PaymentsCreate" component={PaymentsCreate} options={{ headerShown: false }} />
       <Stack.Screen name="Web" component={Web} options={{ headerShown: false }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />

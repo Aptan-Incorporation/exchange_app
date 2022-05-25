@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Text, View, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native"
+import { Text, View, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Alert } from "react-native"
 import { RootStackScreenProps } from "../../types";
 import styled from "styled-components"
 import { useEffect, useState } from "react";
@@ -118,7 +118,6 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
 
     // Props From Previous Screen
     const { Id } = route.params; // 購買商品ID
-    const { MyUSD } = route.params; //帳戶剩餘資產
     const { Owner } = route.params; // 售出者
     const { CryptoAsset } = route.params; // USDT, BTC..
     const { FiatCurrency } = route.params; //法幣
@@ -349,9 +348,11 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
                     swapPage === 2 &&
                     <C2cSellSecond
                         Id={Id}
-                        MyUSD={MyUSD}
-                        Account={Account}
-                        CurrencyType={CurrencyType}
+                        MyCurrency={userWalletBalance}
+                        Account={account}
+                        Owner={Owner}
+                        CurrencyType={CryptoAsset}
+                        FiatCurrency={FiatCurrency}
                         SuccessRate={SuccessRate}
                         AvailableNum={AvailableNum}
                         LimitFrom={LimitFrom}
@@ -364,6 +365,7 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
                         BuyNumber={inputNumber}
                         ChosenPayType={choosePayType}
                         BuyId={buyId}
+                        IsWaitFinish={isWaitFinish}
                         onChangeSetSwapPage={setSwapPage}
                         onChangeISWaitFinish={setIsWaitFinish}
                     />
@@ -372,8 +374,8 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
                     swapPage === 3 &&
                     <C2cSellLast
                         Id={Id}
-                        MyUSD={MyUSD}
-                        CurrencyType={CurrencyType}
+                        CurrencyType={CryptoAsset}
+                        FiatCurrency={FiatCurrency}
                         Price={Price}
                         BuyPrice={inputPrice}
                         BuyNumber={inputNumber}

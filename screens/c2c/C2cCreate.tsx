@@ -2307,7 +2307,9 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
             >
                 <View style={{ backgroundColor: '#242D37', paddingBottom: 30 }}>
                     <ModalTitleBarHeaderContainer>
-                        <ModalCancelImage source={require("../../assets/images/c2c/cancel.png")} />
+                        <TouchableOpacity onPress={() => { setIsTimeLimitModalVisible(false) }}>
+                            <ModalCancelImage source={require("../../assets/images/c2c/cancel.png")} />
+                        </TouchableOpacity>
                         {
                             swapPage === 0 ?
                                 <ModalHeaderTitleText>放行時限</ModalHeaderTitleText> :
