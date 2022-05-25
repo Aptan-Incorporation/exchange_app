@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Text, View, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native"
+import { Text, View, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Alert } from "react-native"
 import { RootStackScreenProps } from "../../types";
 import styled from "styled-components"
 import { useEffect, useState } from "react";
@@ -12,6 +12,7 @@ import CountdownTimer from "../../components/c2c/CountdownTimer";
 import axios from "axios"
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import Spinner from "react-native-loading-spinner-overlay/lib";
 
 const Container = styled(View) <{ insets: number }>`
     display: flex ;
@@ -119,6 +120,10 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
     const payTypeTouchnGo = true; // TouchnGo付款 Boolean
     const payTypePpay = true; // Ppay付款 Boolean
 
+    /* const [payTypeAccount, setPayTypeAccount] = useState(false);
+    const [payTypeTouchnGo, setPayTypeTouchnGo] = useState(false);
+    const [payTypePpay, setPayTypePpay] = useState(false);
+ */
 
     // Input Price
     const [inputPrice, setInputPrice] = useState("");
@@ -148,18 +153,38 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
 
     const [payTimeLimit, setPayTimeLimit] = useState(Number);
 
+    const [loading, setLoading] = useState(false);
 
 
-    const getUserInfo = () => {
-        api.get(`/otc/api/user/${account}`).then((x) => {
+
+    const getUserInfo = async () => {
+        let user = await AsyncStorage.getItem("user")
+        api.get(`/otc/api/user/${JSON.parse(user!).account}`).then((x) => {
 
             if (x.status != 400 && x.status != 401) {
                 setBuyFeeRate(x.buyFeeRate);
                 setSellFeeRate(x.sellFeeRate);
                 /* setUserWalletBalance(x.wallet.coins.find((x: any) => x.symbol === CryptoAsset).balance); */
-                setUserWalletBalance('500');
+                setUserWalletBalance(0);
             }
         })
+    };
+
+    // 獲取用戶資訊（幣種餘額）
+    const getUserBalanceInfo = async () => {
+        let user = await AsyncStorage.getItem("user");
+        setLoading(true)
+        api.get(`/otc/api/user/${JSON.parse(user!).account}`)
+            .then((x: any) => {
+                setLoading(false)
+                if (x.status != 400 && x.status != 401) {
+                    setUserWalletBalance((((x.wallet.coins).find((x: any) => { return x.symbol === CryptoAsset })).balance).toString());
+                }
+                else {
+                    Alert.alert("用戶餘額獲取失敗，請重新操作")
+                }
+            })
+            .catch((Error) => console.log(Error));
     };
 
     useEffect(async () => {
@@ -173,10 +198,41 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
         }
     }, [])
 
+    useEffect(async () => {
+        let token = await AsyncStorage.getItem("token");
+
+        if (token) {
+            getUserBalanceInfo();
+        }
+    }, [CryptoAsset]);
+    
+
+    /* useEffect(() => {
+        if (Payments.some((x: any) => { return x.type == 'BANK' })) {
+            setPayTypeAccount(true);
+        } else {
+            setPayTypeAccount(false);
+        };
+        if (Payments.some((x: any) => { return x.type == 'TOUCHNGO' })) {
+            setPayTypeTouchnGo(true)
+        } else {
+            setPayTypeTouchnGo(false)
+        };
+        if (Payments.some((x: any) => { return x.type == 'PPAY' })) {
+            setPayTypePpay(true)
+        } else {
+            setPayTypePpay(false)
+        };
+    }, [Payments]); */
+
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <Container insets={insets.top}>
+            {
+                loading &&
+                <Spinner visible={true} textContent={''} color={'#FFFFFF'} textStyle={{ color: '#FFFFFF' }} />
+            }
                 <HeaderContainer>
                     <TouchableOpacity onPress={() => { navigation.goBack() }}>
                         <PreviousIcon source={require("../../assets/images/global/previous.png")} />

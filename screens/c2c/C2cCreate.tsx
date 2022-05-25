@@ -1229,8 +1229,8 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
     const [fiatCurrencyType, setFiatCurrencyType] = useState('USD');
 
     // 法幣 Search Bar
-    const [searchQuery, setSearchQuery] = React.useState('');
-    const onChangeSearch = (query: any) => setSearchQuery(query);
+    const [inputSearch, setInputSearch] = useState('');
+    const onChangeSearch = (query: any) => setInputSearch(query);
 
     // 定價方式
     const [priceType, setPriceType] = useState(0); // 0 = 固定價格 ; 1 = 浮動價格
@@ -1373,7 +1373,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
     };
 
     // 獲取廣告單法幣列表
-    const [fiatCurrencyList, setFiatCurrencyList] = useState([]);
+    const [fiatCurrencyList, setFiatCurrencyList] = useState<any[]>([]);
 
     const getFiatCurrencyList = () => {
         setLoading(true)
@@ -1527,7 +1527,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
 
         handleNextStep()
 
-    }, [])
+    }, []);
 
 
     useEffect(async () => {
@@ -1536,7 +1536,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
         if (token) {
             getUserBalanceInfo();
         }
-    }, [cryptoAssetType])
+    }, [cryptoAssetType]);
 
 
     return (
@@ -2190,37 +2190,60 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                         <SearchBar
                             placeholder="請輸入法幣"
                             onChangeText={onChangeSearch}
-                            value={searchQuery}
+                            value={inputSearch}
                             containerStyle={{ height: 48, backgroundColor: '#242D37', borderWidth: 0, borderTopWidth: 0, borderBottomWidth: 0, marginBottom: 10 }}
                             inputContainerStyle={{ height: 32, backgroundColor: '#242D37' }}
                         />
                     </FiatCurrenctModalSearchbarContainer>
                     <FiatCurrencyModalContainer>
                         {
-                            fiatCurrencyList.map((x: any, i) => {
-                                return (
-                                    <FiatCurrencyModalCardContainer>
-                                        <TouchableOpacity onPress={() => (setFiatCurrencyType(x.name), setIsFiatCurrencyModalVisible(false))}>
-                                            <FiatCurrencyModalRowContainer>
-                                                <FiatCurrencyModalInRowContainer>
-                                                    <FiatCurrencyModalIconView>
-                                                        <FiatCurrencyModalIconText>{handleFiatCurrencyIconText(x.name)}</FiatCurrencyModalIconText>
-                                                    </FiatCurrencyModalIconView>
-                                                    <FiatCurrencyModalText>{x.name}</FiatCurrencyModalText>
-                                                </FiatCurrencyModalInRowContainer>
-                                                {
-                                                    fiatCurrencyType === x.name &&
-                                                    <ModalSelectImage source={require("../../assets/images/trade/selected.png")} />
-                                                }
-                                            </FiatCurrencyModalRowContainer>
-                                        </TouchableOpacity>
-                                        {
-                                            i !== fiatCurrencyList.length - 1 &&
-                                            <FiatCurrencyModalLine />
-                                        }
-                                    </FiatCurrencyModalCardContainer>
-                                )
-                            })
+                            inputSearch === '' ?
+                                fiatCurrencyList.map((x: any, i) => {
+                                    return (
+                                        <FiatCurrencyModalCardContainer>
+                                            <TouchableOpacity onPress={() => (setFiatCurrencyType(x.name), setIsFiatCurrencyModalVisible(false))}>
+                                                <FiatCurrencyModalRowContainer>
+                                                    <FiatCurrencyModalInRowContainer>
+                                                        <FiatCurrencyModalIconView>
+                                                            <FiatCurrencyModalIconText>{handleFiatCurrencyIconText(x.name)}</FiatCurrencyModalIconText>
+                                                        </FiatCurrencyModalIconView>
+                                                        <FiatCurrencyModalText>{x.name}</FiatCurrencyModalText>
+                                                    </FiatCurrencyModalInRowContainer>
+                                                    {
+                                                        fiatCurrencyType === x.name &&
+                                                        <ModalSelectImage source={require("../../assets/images/trade/selected.png")} />
+                                                    }
+                                                </FiatCurrencyModalRowContainer>
+                                            </TouchableOpacity>
+                                            {
+                                                i !== fiatCurrencyList.length - 1 &&
+                                                <FiatCurrencyModalLine />
+                                            }
+                                        </FiatCurrencyModalCardContainer>
+                                    )
+                                }) :
+                                fiatCurrencyList.map((x: any) => {
+                                    if (x.name == inputSearch.toUpperCase()) {
+                                        return (
+                                            <FiatCurrencyModalCardContainer>
+                                                <TouchableOpacity onPress={() => (setFiatCurrencyType(x.name), setIsFiatCurrencyModalVisible(false))}>
+                                                    <FiatCurrencyModalRowContainer>
+                                                        <FiatCurrencyModalInRowContainer>
+                                                            <FiatCurrencyModalIconView>
+                                                                <FiatCurrencyModalIconText>{handleFiatCurrencyIconText(x.name)}</FiatCurrencyModalIconText>
+                                                            </FiatCurrencyModalIconView>
+                                                            <FiatCurrencyModalText>{x.name}</FiatCurrencyModalText>
+                                                        </FiatCurrencyModalInRowContainer>
+                                                        {
+                                                            fiatCurrencyType === x.name &&
+                                                            <ModalSelectImage source={require("../../assets/images/trade/selected.png")} />
+                                                        }
+                                                    </FiatCurrencyModalRowContainer>
+                                                </TouchableOpacity>
+                                            </FiatCurrencyModalCardContainer>
+                                        )
+                                    }
+                                })
                         }
                     </FiatCurrencyModalContainer>
                 </View>

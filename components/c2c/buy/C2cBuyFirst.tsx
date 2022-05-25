@@ -313,9 +313,9 @@ const C2cBuyFirst = (props: {
     // 以限額為依據判斷 （數量>限額）
     const handleOnChangeAllPrice = () => {
         if (parseFloat(MyCurrency) < parseFloat(LimitTo)) {
-            setInputPrice(parseFloat(MyCurrency).toFixed(2))
+            setInputPrice(parseFloat(MyCurrency).toFixed(2));
         } else {
-            setInputPrice(parseFloat(LimitTo).toFixed(2))
+            setInputPrice(parseFloat(LimitTo).toFixed(2));
         }
     };
 

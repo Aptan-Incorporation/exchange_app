@@ -398,7 +398,7 @@ const C2cSellFirst = (props: {
             setInputPrice(parseFloat(MyCurrency).toFixed(2))
         } else {
             setInputPrice(parseFloat(LimitTo).toFixed(2))
-        }
+        };
     };
 
     const handleOnChangeAllNumber = () => {
