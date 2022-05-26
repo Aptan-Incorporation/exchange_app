@@ -118,13 +118,14 @@ const Api = {
         Authorization: token
       }
     };
-    await axios.delete(url + api, config)
+    const response = await axios.delete(url + api, config)
       .then((res) => {
         return res.data
       })
       .catch((error) => {
         return error.response
       })
+    return response
   }
 }
 

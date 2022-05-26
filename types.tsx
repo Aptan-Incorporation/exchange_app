@@ -57,7 +57,7 @@ export type RootStackParamList = {
   IdentityVerifyStep1:undefined;
   IdentityVerifyStep2:undefined;
   FundPassword:undefined;
-  Payments:undefined;
+  Payments:{returnFunction: Function};
   PaymentsCreate:undefined;
   Web:undefined;
 };

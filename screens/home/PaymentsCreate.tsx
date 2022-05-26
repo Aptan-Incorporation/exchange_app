@@ -10,6 +10,7 @@ import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Picker } from '@react-native-picker/picker';
+import { CommonActions } from '@react-navigation/native';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -200,7 +201,7 @@ const ModalPickerContainer = styled(View)``;
 
 
 
-const PaymentsCreate = ({ navigation }: RootStackScreenProps<"PaymentsCreate">) => {
+const PaymentsCreate = ({ navigation, route }: RootStackScreenProps<"PaymentsCreate">) => {
 
     const insets = useSafeAreaInsets();
 
@@ -227,6 +228,45 @@ const PaymentsCreate = ({ navigation }: RootStackScreenProps<"PaymentsCreate">) 
         }
     };
 
+    // 新增帳戶 （ＢＡＮＫ）
+    const createBANK = () => {
+        setLoading(true)
+        api.postData("/user/payment", {
+            type: 'BANK',
+            name: inputBankAccountOwnerName,
+            code: inputBankCode,
+            account: inputBankAccount
+        })
+            .then((x: any) => {
+                setLoading(false)
+                if (x.status != 400 && x.status != 401) {
+                    createPaymentSuccessAlert();
+                } else {
+                    Alert.alert(x.data.msg)
+                };
+            })
+            .catch(() => {
+                console.log(Error);
+            })
+    };
+
+    
+    const createPaymentSuccessAlert = () => {
+        Alert.alert(
+            "帳戶新增成功",
+            "",
+            [
+                {
+                    text: '確定',
+                    onPress: () => {
+                        navigation.goBack()
+                    }
+                }
+            ]
+
+        );
+    };
+
     return (
         <Container insets={insets.top}>
             {
@@ -247,7 +287,7 @@ const PaymentsCreate = ({ navigation }: RootStackScreenProps<"PaymentsCreate">) 
             <BodyContainer>
                 <PaymentTypeContainer>
                     <BodyTitleText>帳戶類型</BodyTitleText>
-                    <PaymentTypeButton onPress={() => { setIsPaymentTypeModalVisible(true) }}>
+                    <PaymentTypeButton onPress={() => { setIsPaymentTypeModalVisible(true) }} disabled={true}>
                         <PaymentTypeButtonText>{handlePaymentType(inputPaymentType)}</PaymentTypeButtonText>
                         <PaymentTypeForwardImage source={require("../../assets/images/home/next.png")} />
                     </PaymentTypeButton>
@@ -316,7 +356,7 @@ const PaymentsCreate = ({ navigation }: RootStackScreenProps<"PaymentsCreate">) 
                         {
                             inputBankAccountOwnerName !== "" && inputBankCode !== "" && inputBankAccount !== "" ?
                                 <CreateButtonContainer>
-                                    <CreateButton onPress={() => { }}>
+                                    <CreateButton onPress={() => { createBANK() }}>
                                         <CreateButtonText>新增</CreateButtonText>
                                     </CreateButton>
                                 </CreateButtonContainer> :
@@ -332,7 +372,7 @@ const PaymentsCreate = ({ navigation }: RootStackScreenProps<"PaymentsCreate">) 
             </BodyContainer>
 
             {/* 帳戶類型 Modal*/}
-            <Modal
+            {/* <Modal
                 isVisible={isPaymentTypeModalVisible}
                 deviceHeight={windowHeight}
                 deviceWidth={windowWidth}
@@ -369,7 +409,7 @@ const PaymentsCreate = ({ navigation }: RootStackScreenProps<"PaymentsCreate">) 
                         </Picker>
                     </ModalPickerContainer>
                 </View>
-            </Modal>
+            </Modal> */}
 
         </Container>
     )

@@ -9,6 +9,7 @@ import axios from "axios"
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { CommonActions, useFocusEffect } from '@react-navigation/native';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -166,19 +167,19 @@ width: 28px;
 const DetailCardLine = styled(View)`
 height: 1px;
 background-color: #18222D;
-margin-top: 16px;
-margin-bottom: 16px;
+margin-top: 4px;
+margin-bottom: 4px;
 `;
 
 
 
 
-const Payments = ({ navigation }: RootStackScreenProps<"Payments">) => {
+const Payments = ({ navigation, route }: RootStackScreenProps<"Payments">) => {
+
 
     const insets = useSafeAreaInsets();
 
     const [loading, setLoading] = useState(false);
-
 
     // 編輯
     const [isEdit, setIsEdit] = useState(false);
@@ -225,12 +226,68 @@ const Payments = ({ navigation }: RootStackScreenProps<"Payments">) => {
         return "../../assets/images/home/account.png"
     };
 
+    // 刪除帳戶
+    const deletePayment = (paymentID: string) => {
+        setLoading(true)
+        api.delete(`/user/payment/${paymentID}`)
+            .then((x: any) => {
+                console.log(x)
+                if (x.status != 400 && x.status != 401) {
+                    refreshPageAlert();
+                } else {
+                    Alert.alert(x.data.msg)
+                }
+            })
+            .catch(() => {
+                console.log(Error);
+            })
+    };
+
+    const deletePaymentAlert = (paymentID: string) => {
+        Alert.alert(
+            "確定移除？",
+            "您使用此收款/付款方式的在線廣告將會被暫時中止。",
+            [
+                {
+                    text: '取消',
+                    onPress: () => { console.log("Cancel") },
+                    style: 'cancel'
+                },
+                {
+                    text: '確定',
+                    onPress: () => { deletePayment(paymentID) }
+                }
+            ]
+        )
+    };
+
+    const refreshPageAlert = () => {
+        Alert.alert(
+            "帳戶刪除成功！",
+            "",
+            [
+                {
+                    text: '確定',
+                    onPress: () => { getUserInfoPayments() }
+                }
+            ]
+        )
+    };
+
+    const addListener = () => {
+        navigation.addListener('focus', () => getUserInfoPayments());
+    };
+
+
     useEffect(async () => {
         let token = await AsyncStorage.getItem("token")
         if (token) {
             getUserInfoPayments();
         }
+
+        addListener();
     }, [])
+
 
     return (
         <Container insets={insets.top}>
@@ -240,7 +297,7 @@ const Payments = ({ navigation }: RootStackScreenProps<"Payments">) => {
             }
             <HeaderContainer>
                 <PreviousIconContainer>
-                    <TouchableOpacity onPress={() => { }}>
+                    <TouchableOpacity onPress={() => { navigation.goBack() }}>
                         <PreviousIcon source={require("../../assets/images/global/previous.png")} />
                     </TouchableOpacity>
                 </PreviousIconContainer>
@@ -258,7 +315,9 @@ const Payments = ({ navigation }: RootStackScreenProps<"Payments">) => {
                             <TouchableOpacity onPress={() => { setIsEdit(true) }}>
                                 <HeaderFunctionIcon source={require("../../assets/images/global/edit.png")} style={{ marginRight: 20 }} />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => { navigation.navigate("PaymentsCreate") }}>
+                            <TouchableOpacity onPress={() => {
+                                navigation.navigate("PaymentsCreate")
+                            }}>
                                 <HeaderFunctionIcon source={require("../../assets/images/global/add.png")} />
                             </TouchableOpacity>
                         </HeaderFunctionIconContainer>
@@ -282,7 +341,7 @@ const Payments = ({ navigation }: RootStackScreenProps<"Payments">) => {
                                     <CardRightRowContainer>
                                         {
                                             isEdit &&
-                                            <TouchableOpacity onPress={() => { }}>
+                                            <TouchableOpacity onPress={() => { deletePaymentAlert(x.id) }}>
                                                 <CardRemoveImage source={require("../../assets/images/home/remove_circle.png")} />
                                             </TouchableOpacity>
                                         }
