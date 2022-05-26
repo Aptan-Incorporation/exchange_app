@@ -278,7 +278,6 @@ const Payments = ({ navigation, route }: RootStackScreenProps<"Payments">) => {
         navigation.addListener('focus', () => getUserInfoPayments());
     };
 
-
     useEffect(async () => {
         let token = await AsyncStorage.getItem("token")
         if (token) {
