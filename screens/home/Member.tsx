@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as React from "react";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Container = styled(View)`
@@ -42,7 +42,7 @@ const Member = ({ navigation }: RootStackScreenProps<"Member">) => {
   const [active, setActive] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [userId, setUserId] = React.useState("");
-  useEffect(async ()=>{
+  useEffect(async () => {
     let user = await AsyncStorage.getItem("user")
     setEmail(JSON.parse(user!).account)
     setUserId(JSON.parse(user!).userId)
@@ -62,39 +62,39 @@ const Member = ({ navigation }: RootStackScreenProps<"Member">) => {
         </View>
       </Header>
       <View style={{ padding: 16 }}>
-        <View style={{ display: "flex", flexDirection: "row",alignItems:"center" }}>
+        <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
           <View style={{ width: 52, height: 52, borderRadius: 26, backgroundColor: "#A8C2DC", display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
             <Text style={{ color: "black", fontSize: 32, fontWeight: "600" }}>N</Text>
           </View>
-          <View style={{marginLeft:12}}>
-        <Text style={{color:"#F4F5F6",fontSize:16,fontWeight:"700"}}>{email.slice(0,3)+ "****"+email.slice(7)}</Text>
-            <Text style={{color:"#8D97A2",fontSize:13,fontWeight:"600",marginTop:4}}>ID: {userId.slice(0,12)}</Text>
+          <View style={{ marginLeft: 12 }}>
+            <Text style={{ color: "#F4F5F6", fontSize: 16, fontWeight: "700" }}>{email.slice(0, 3) + "****" + email.slice(7)}</Text>
+            <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "600", marginTop: 4 }}>ID: {userId.slice(0, 12)}</Text>
           </View>
         </View>
-        <View style={{marginTop:24}}>
-          <TouchableOpacity style={{display:"flex",flexDirection:"row",height:56,alignItems:"center",borderBottomWidth:1,borderBottomColor: "#242D37"}} onPress={()=>{navigation.navigate("Setting")}}>
+        <View style={{ marginTop: 24 }}>
+          <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }} onPress={() => { navigation.navigate("Setting") }}>
             <IconImg source={require("../../assets/images/home/security.png")} />
-            <Text style={{color:"white",fontSize:15,marginLeft:16}}>安全設置</Text>
+            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>安全設置</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{display:"flex",flexDirection:"row",height:56,alignItems:"center",borderBottomWidth:1,borderBottomColor: "#242D37"}} onPress={()=>{navigation.navigate("Payments")}}>
+          <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }} onPress={() => { navigation.navigate("Payments") }}>
             <IconImg source={require("../../assets/images/home/account.png")} />
-            <Text style={{color:"white",fontSize:15,marginLeft:16}}>帳戶設置</Text>
+            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>帳戶設置</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{display:"flex",flexDirection:"row",height:56,alignItems:"center",borderBottomWidth:1,borderBottomColor: "#242D37"}} onPress={() => {navigation.navigate("Advertisement")}}>
+          <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }} onPress={() => { navigation.navigate("Advertisement") }}>
             <IconImg source={require("../../assets/images/home/ad.png")} />
-            <Text style={{color:"white",fontSize:15,marginLeft:16}}>我的廣告</Text>
+            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>我的廣告</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{display:"flex",flexDirection:"row",height:56,alignItems:"center",borderBottomWidth:1,borderBottomColor: "#242D37"}}>
+          <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }}>
             <IconImg source={require("../../assets/images/home/bonus.png")} />
-            <Text style={{color:"white",fontSize:15,marginLeft:16}}>代理返佣</Text>
+            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>代理返佣</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{display:"flex",flexDirection:"row",height:56,alignItems:"center",borderBottomWidth:1,borderBottomColor: "#242D37"}} onPress={()=>{
-              AsyncStorage.removeItem("token")
-              AsyncStorage.removeItem("user")
-              navigation.goBack()
+          <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }} onPress={() => {
+            AsyncStorage.removeItem("token")
+            AsyncStorage.removeItem("user")
+            navigation.goBack()
           }}>
             <IconImg source={require("../../assets/images/home/logout.png")} />
-            <Text style={{color:"white",fontSize:15,marginLeft:16}}>登出</Text>
+            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>登出</Text>
           </TouchableOpacity>
         </View>
       </View>

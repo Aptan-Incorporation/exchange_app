@@ -560,14 +560,14 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                 </TouchableOpacity>
                             </HeaderTitleInlineRowContainer>
                     }
-                     <HeaderTitleInlineRowRightContainer> 
-                    <TouchableOpacity onPress={() => { navigation.navigate("C2cCreateScreen") }}>
-                        <HeaderTitleAddIcon source={require("../../assets/images/c2c/add.png")} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { navigation.navigate("C2cHistoryScreen") }}>
-                        <HeaderTitleOrderIcon source={require("../../assets/images/c2c/order.png")} />
-                    </TouchableOpacity>
-                    </HeaderTitleInlineRowRightContainer> 
+                    <HeaderTitleInlineRowRightContainer>
+                        <TouchableOpacity onPress={() => { navigation.navigate("C2cCreateScreen") }}>
+                            <HeaderTitleAddIcon source={require("../../assets/images/c2c/add.png")} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => { navigation.navigate("C2cHistoryScreen") }}>
+                            <HeaderTitleOrderIcon source={require("../../assets/images/c2c/order.png")} />
+                        </TouchableOpacity>
+                    </HeaderTitleInlineRowRightContainer>
                 </HeaderTitleContainer>
                 {/* Buy Page CryptoAsset Swap */}
                 {
@@ -799,7 +799,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                             LimitTo: x.orderLimitMax,
                                             Price: x.price,
                                             Payments: x.payments,
-                                            
+
                                         } as any)
                                     }}
                                     /* disabled={isNavigate()} */
@@ -902,7 +902,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                             LimitTo: x.orderLimitMax,
                                             Price: x.price,
                                             Payments: x.payments,
-                                            
+
                                         } as any)
                                     }}
                                         /* disabled={isNavigate()} */>
