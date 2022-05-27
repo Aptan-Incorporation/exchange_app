@@ -10,7 +10,6 @@ import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Picker } from '@react-native-picker/picker';
-import { CommonActions } from '@react-navigation/native';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;

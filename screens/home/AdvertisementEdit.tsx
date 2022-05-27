@@ -1203,7 +1203,7 @@ color: #0A84FF;
 
 
 
-const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">) => {
+const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"AdvertisementEdit">) => {
 
     const insets = useSafeAreaInsets();
 
@@ -1222,21 +1222,36 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
 
     const [loading, setLoading] = useState(false);
 
+    const { ID } = route.params;
+    const { createDate } = route.params;
+    const { type } = route.params;
+    const { cryptoAsset } = route.params;
+    const { fiatCurrency } = route.params;
+    const { priceType } = route.params;
+    const { price } = route.params;
+    const { totalTradingAmount } = route.params;
+    const { orderLimitMin } = route.params;
+    const { orderLimitMax } = route.params;
+    const { payments } = route.params;
+    const { paymentTimeLimit } = route.params;
+    const { terms } = route.params;
+    const { conditionRegisteredDays } = route.params;
+    const { conditionCompleteOrders } = route.params;
+
     // 選擇幣種
-    const [cryptoAssetType, setCryptoAssetType] = useState('USDT');
+    const [cryptoAssetType, setCryptoAssetType] = useState(cryptoAsset);
 
     // 選擇法幣
-    const [fiatCurrencyType, setFiatCurrencyType] = useState('USD');
+    const [fiatCurrencyType, setFiatCurrencyType] = useState(fiatCurrency);
 
     // 法幣 Search Bar
     const [inputSearch, setInputSearch] = useState('');
     const onChangeSearch = (query: any) => setInputSearch(query);
 
     // 定價方式
-    const [priceType, setPriceType] = useState(0); // 0 = 固定價格 ; 1 = 浮動價格
-
+    const [PriceTypeValue, setPriceTypeValue] = useState(priceType); // 0 = 固定價格 ; 1 = 浮動價格
     const handlePriceText = () => {
-        if (priceType === 0) {
+        if (PriceTypeValue === 0) {
             return '固定價格'
         } else {
             return '浮動價格'
@@ -1258,13 +1273,13 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
     };
 
     // 價格 Input
-    const [inputPrice, setInputPrice] = useState("");
+    const [inputPrice, setInputPrice] = useState(`${price}`);
 
     // 數量 Input
-    const [inputQuantity, setInputQuantity] = useState("");
-    const [inputMinLimitPrice, setInputMinLimitPrice] = useState("");
-    const [inputMaxLimitPrice, setInputMaxLimitPrice] = useState("");
-    const [inputLimitTime, setInputLimitTime] = useState(15);
+    const [inputQuantity, setInputQuantity] = useState(`${totalTradingAmount}`);
+    const [inputMinLimitPrice, setInputMinLimitPrice] = useState(`${orderLimitMin}`);
+    const [inputMaxLimitPrice, setInputMaxLimitPrice] = useState(`${orderLimitMax}`);
+    const [inputLimitTime, setInputLimitTime] = useState(paymentTimeLimit / 60000);
 
     // 付款方式選擇
     const [paymentList, setPaymentList] = useState([]); // 獲取用戶已有付款方式
@@ -1286,11 +1301,11 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
 
 
     // 交易備註 Input
-    const [inputTradeMemo, setInputTradeMemo] = useState("");
+    const [inputTradeMemo, setInputTradeMemo] = useState(terms);
 
     // 交易方條件 Input
-    const [inputConditionLimitOrder, setInputConditionLimitOrder] = useState("0");
-    const [inputConditionLimitSignUp, setinputConditionLimitSignUp] = useState("0");
+    const [inputConditionLimitOrder, setInputConditionLimitOrder] = useState(`${conditionCompleteOrders}`);
+    const [inputConditionLimitSignUp, setinputConditionLimitSignUp] = useState(`${conditionRegisteredDays}`);
 
     // 同意條款勾選
     const [confirmRules, setConfirmRules] = useState(false);
@@ -1299,7 +1314,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
     const handleNextStep = () => {
 
         if (swapProgress === 0) {
-            if (priceType === 0) {
+            if (PriceTypeValue === 0) {
                 if (
                     inputPrice != "" &&
                     inputQuantity != "" &&
@@ -1312,7 +1327,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                     return false;
                 }
             };
-            if (priceType === 1) {
+            if (PriceTypeValue === 1) {
                 if (
                     inputQuantity != "" &&
                     inputMinLimitPrice != "" &&
@@ -1458,10 +1473,10 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
     // 廣告費計算 (尚未計算浮動價格)
     const handleCountFee = () => {
         if (inputPrice !== "" && inputQuantity != "") {
-            if (swapPage === 0 && priceType === 0) {
+            if (swapPage === 0 && PriceTypeValue === 0) {
                 return parseFloat(inputPrice) * parseFloat(inputQuantity) * buyFeeRate
             }
-            if (swapPage === 1 && priceType === 0) {
+            if (swapPage === 1 && PriceTypeValue === 0) {
                 return parseFloat(inputPrice) * parseFloat(inputQuantity) * sellFeeRate
             }
         } else {
@@ -1475,16 +1490,13 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
         useTogglePasswordVisibility();
 
 
-    // 新增廣告單  POST
+    // 修改廣告單  PUT
     const [postComplete, setPostComplete] = useState(false);
 
     const postAdvertisement = () => {
         setLoading(true);
-        api.postData("/otc/api/advertisement/", {
-            type: swapPage,
-            cryptoAsset: cryptoAssetType,
-            fiatCurrency: fiatCurrencyType,
-            priceType: priceType,
+        api.put(`/otc/api/advertisement/${ID}`, {
+            priceType: PriceTypeValue,
             price: (parseFloat(inputPrice)).toFixed(2),
             totalTradingAmount: (parseFloat(inputQuantity)).toFixed(2),
             orderLimitMin: (parseFloat(inputMinLimitPrice)).toFixed(2),
@@ -1550,7 +1562,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                     <TouchableOpacity onPress={() => { navigation.goBack() }} style={{ paddingRight: 21 }}>
                         <HeaderTitlePreviousIcon source={require("../../assets/images/global/previous.png")} />
                     </TouchableOpacity>
-                    <HeaderTitleText>發佈廣告</HeaderTitleText>
+                    <HeaderTitleText>編輯廣告</HeaderTitleText>
                     {
                         (swapProgress !== 2 && swapProgress !== 3) &&
                         (handleNextStep() === true &&
@@ -1637,7 +1649,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                         <HeaderProgressContainer>
                             <PostCompleteContiner>
                                 <PostCompleteImage source={require("../../assets/images/c2c/post_complete.png")} />
-                                <PostCompleteText>廣告已發佈</PostCompleteText>
+                                <PostCompleteText>廣告編輯成功</PostCompleteText>
                             </PostCompleteContiner>
                         </HeaderProgressContainer>
                 }
@@ -1696,7 +1708,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                             <PriceTypeInputContainer>
                                 <PriceSmallTitleText>{handlePriceText()}</PriceSmallTitleText>
                                 {
-                                    priceType === 0 ?
+                                    PriceTypeValue === 0 ?
                                         <PriceRowContainer>
                                             <TextInput
                                                 style={{
@@ -1972,7 +1984,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                             <ConfirmCardRowContainer>
                                 <ConfirmCardTitle>交易價格</ConfirmCardTitle>
                                 {
-                                    priceType === 0 ?
+                                    PriceTypeValue === 0 ?
                                         <ConfirmCardTradePriceText>{inputPrice} {fiatCurrencyType}/{cryptoAssetType}</ConfirmCardTradePriceText> :
                                         <ConfirmCardTradePriceText>浮動價格 {fiatCurrencyType}/{cryptoAssetType}</ConfirmCardTradePriceText>
                                 }
@@ -2054,7 +2066,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                             <ConfirmCardRowContainer>
                                 <ConfirmCardTitle>交易價格</ConfirmCardTitle>
                                 {
-                                    priceType === 0 ?
+                                    PriceTypeValue === 0 ?
                                         <ConfirmCardTradePriceText>{inputPrice} {fiatCurrencyType}/{cryptoAssetType}</ConfirmCardTradePriceText> :
                                         <ConfirmCardTradePriceText>浮動價格 {fiatCurrencyType}/{cryptoAssetType}</ConfirmCardTradePriceText>
                                 }
@@ -2104,7 +2116,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                             </ConfirmCardColumnContainer>
                         </ConfirmCardContainer>
                         <PostCompleteButton onPress={() => { navigation.goBack() }}>
-                            <PostCompleteButtonText>法幣交易總覽</PostCompleteButtonText>
+                            <PostCompleteButtonText>我的廣告</PostCompleteButtonText>
                         </PostCompleteButton>
                     </SwapPageContainer>
                 }
@@ -2268,21 +2280,21 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                         <ModalHeaderTitleText>定價方式</ModalHeaderTitleText>
                     </ModalHeaderContainer>
                     <PriceModalContainer>
-                        <TouchableOpacity onPress={() => { setPriceType(0), setIsPriceTypeModalVisible(false) }}>
+                        <TouchableOpacity onPress={() => { setPriceTypeValue(0), setIsPriceTypeModalVisible(false) }}>
                             <PriceRowContainer>
                                 <PriceModalText>固定價格</PriceModalText>
                                 {
-                                    priceType === 0 &&
+                                    PriceTypeValue === 0 &&
                                     <ModalSelectImage source={require("../../assets/images/trade/selected.png")} />
                                 }
                             </PriceRowContainer>
                         </TouchableOpacity>
                         <PriceModalLine />
-                        <TouchableOpacity onPress={() => { setPriceType(1), setIsPriceTypeModalVisible(false) }}>
+                        <TouchableOpacity onPress={() => { setPriceTypeValue(1), setIsPriceTypeModalVisible(false) }}>
                             <PriceRowContainer>
                                 <PriceModalText>浮動價格</PriceModalText>
                                 {
-                                    priceType === 1 &&
+                                    PriceTypeValue === 1 &&
                                     <ModalSelectImage source={require("../../assets/images/trade/selected.png")} />
                                 }
                             </PriceRowContainer>
@@ -2441,4 +2453,4 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
     )
 }
 
-export default C2cCreateScreen
+export default AdvertisementEdit

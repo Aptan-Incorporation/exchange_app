@@ -99,10 +99,10 @@ const Api = {
     let token = await AsyncStorage.getItem("token")
     let config = {
       headers: {
-        Authorization: token
+        Authorization: "Bearer " + token
       }
     };
-    var response = await axios.put(url + api, data, config)
+    const response = await axios.put(url + api, data, config)
       .then((res) => {
         return res.data
       })

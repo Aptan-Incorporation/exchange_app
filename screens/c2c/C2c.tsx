@@ -515,6 +515,10 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
         }
     };
 
+    const addListener = () => {
+        navigation.addListener('focus', () => getBuyList(swapBuyCurrencyType));
+    };
+
 
     useEffect(async () => {
         let token = await AsyncStorage.getItem("token")
@@ -524,6 +528,8 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
         } else {
             Alert.alert("請先登入");
         }
+
+        addListener();
 
     }, []);
 

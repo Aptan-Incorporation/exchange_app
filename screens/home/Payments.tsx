@@ -9,7 +9,6 @@ import axios from "axios"
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
-import { CommonActions, useFocusEffect } from '@react-navigation/native';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
