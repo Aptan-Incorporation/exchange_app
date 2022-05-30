@@ -443,7 +443,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                 console.log(Error)
             })
     };
-    
+
 
     const [account, setAccount] = useState("");
     const [userId, setUserId] = useState("");
