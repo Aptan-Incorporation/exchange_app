@@ -471,11 +471,16 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                                 }
                                                 <CardTitleInlineContainer>
                                                     {
-                                                        x.payments.map((m: any, n) => {
-                                                            return (
-                                                                <CardPaymentIcon source={handlePaymentImage(m.type)} />
-                                                            )
-                                                        })
+                                                        x.payments.some((m: any) => { return m.type == 'BANK' }) &&
+                                                        <CardPaymentIcon source={handlePaymentImage("BANK")} />
+                                                    }
+                                                    {
+                                                        x.payments.some((m: any) => { return m.type == 'TOUCHNGO' }) &&
+                                                        <CardPaymentIcon source={handlePaymentImage("TOUCHNGO")} />
+                                                    }
+                                                    {
+                                                        x.payments.some((m: any) => { return m.type == 'PPAY' }) &&
+                                                        <CardPaymentIcon source={handlePaymentImage("PPAY")} />
                                                     }
                                                 </CardTitleInlineContainer>
                                             </CardTitleContainer>
@@ -548,11 +553,16 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                                 }
                                                 <CardTitleInlineContainer>
                                                     {
-                                                        x.payments.map((m: any, n) => {
-                                                            return (
-                                                                <CardPaymentIcon source={handlePaymentImage(m.type)} />
-                                                            )
-                                                        })
+                                                        x.payments.some((m: any) => { return m.type == 'BANK' }) &&
+                                                        <CardPaymentIcon source={handlePaymentImage("BANK")} />
+                                                    }
+                                                    {
+                                                        x.payments.some((m: any) => { return m.type == 'TOUCHNGO' }) &&
+                                                        <CardPaymentIcon source={handlePaymentImage("TOUCHNGO")} />
+                                                    }
+                                                    {
+                                                        x.payments.some((m: any) => { return m.type == 'PPAY' }) &&
+                                                        <CardPaymentIcon source={handlePaymentImage("PPAY")} />
                                                     }
                                                 </CardTitleInlineContainer>
                                             </CardTitleContainer>

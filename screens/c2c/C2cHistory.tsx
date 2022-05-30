@@ -14,6 +14,7 @@ const Container = styled(View) <{ insets: number }>`
     display: flex ;
     flex-direction: column;
     padding-top: ${props => props.insets}px;
+    background-color: #18222D;
     justify-content: space-between;
 `;
 
