@@ -1880,19 +1880,19 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
                                     </PaymentTypeView>
                                 }
                                 {
-                                    chosenPaymentType.some((x: any) => { return x.type == 'LINEPAY' }) &&
+                                    chosenPaymentType.some((x: any) => { return x.type == 'TOUCHNGO' }) &&
                                     <PaymentTypeView>
                                         <PaymentTypeViewText>Line Pay</PaymentTypeViewText>
-                                        <TouchableOpacity onPress={() => { setChosenPaymentType(chosenPaymentType.filter((x: any) => { return x.type != 'LINEPAY' })) }}>
+                                        <TouchableOpacity onPress={() => { setChosenPaymentType(chosenPaymentType.filter((x: any) => { return x.type != 'TOUCHNGO' })) }}>
                                             <PaymentTypeViewCancelImage source={require("../../assets/images/c2c/cancel_circle.png")} />
                                         </TouchableOpacity>
                                     </PaymentTypeView>
                                 }
                                 {
-                                    chosenPaymentType.some((x: any) => { return x.type == 'JKOPAY' }) &&
+                                    chosenPaymentType.some((x: any) => { return x.type == 'PPAY' }) &&
                                     <PaymentTypeView>
                                         <PaymentTypeViewText>街口支付</PaymentTypeViewText>
-                                        <TouchableOpacity onPress={() => { setChosenPaymentType(chosenPaymentType.filter((x: any) => { return x.type != 'JKOPAY' })) }}>
+                                        <TouchableOpacity onPress={() => { setChosenPaymentType(chosenPaymentType.filter((x: any) => { return x.type != 'PPAY' })) }}>
                                             <PaymentTypeViewCancelImage source={require("../../assets/images/c2c/cancel_circle.png")} />
                                         </TouchableOpacity>
                                     </PaymentTypeView>
@@ -2013,12 +2013,12 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
                                         <ConfirmCardPaymentImage source={require("../../assets/images/c2c/payment.png")} />
                                     }
                                     {
-                                        chosenPaymentType.some((x: any) => { return x.type == 'LINEPAY' }) &&
-                                        <ConfirmCardPaymentImage source={require("../../assets/images/c2c/line_pay.png")} />
+                                        chosenPaymentType.some((x: any) => { return x.type == 'TOUCHNGO' }) &&
+                                        <ConfirmCardPaymentImage source={require("../../assets/images/c2c/touchn_go.png")} />
                                     }
                                     {
-                                        chosenPaymentType.some((x: any) => { return x.type == 'JKOPAY' }) &&
-                                        <ConfirmCardPaymentImage source={require("../../assets/images/c2c/JKO_pay.png")} />
+                                        chosenPaymentType.some((x: any) => { return x.type == 'PPAY' }) &&
+                                        <ConfirmCardPaymentImage source={require("../../assets/images/c2c/p_pay.png")} />
                                     }
                                 </ConfirmCardPaymentContainer>
                             </ConfirmCardRowContainer>
@@ -2095,12 +2095,12 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
                                         <ConfirmCardPaymentImage source={require("../../assets/images/c2c/payment.png")} />
                                     }
                                     {
-                                        chosenPaymentType.some((x: any) => { return x.type == 'LINEPAY' }) &&
-                                        <ConfirmCardPaymentImage source={require("../../assets/images/c2c/line_pay.png")} />
+                                        chosenPaymentType.some((x: any) => { return x.type == 'TOUCHNGO' }) &&
+                                        <ConfirmCardPaymentImage source={require("../../assets/images/c2c/touchn_go.png")} />
                                     }
                                     {
-                                        chosenPaymentType.some((x: any) => { return x.type == 'JKOPAY' }) &&
-                                        <ConfirmCardPaymentImage source={require("../../assets/images/c2c/JKO_pay.png")} />
+                                        chosenPaymentType.some((x: any) => { return x.type == 'PPAY' }) &&
+                                        <ConfirmCardPaymentImage source={require("../../assets/images/c2c/p_pay.png")} />
                                     }
                                 </ConfirmCardPaymentContainer>
                             </ConfirmCardRowContainer>
