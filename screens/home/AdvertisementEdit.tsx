@@ -155,7 +155,9 @@ height: 2px;
 background-color: #BCC2C8;
 `;
 
-const SwapPageContainer = styled(ScrollView)``;
+const SwapPageContainer = styled(ScrollView)`
+padding-bottom: 200px;
+`;
 
 const PostCompleteContiner = styled(View)`
 display: flex;
@@ -1199,28 +1201,91 @@ line-height: 20px;
 color: #0A84FF;
 `;
 
+// Payment Modal Style
+const PaymentModalContainer = styled(ScrollView)`
+display: flex;
+flex-direction: column;
+padding-top: 32px;
+padding-left: 16px;
+padding-right: 16px;
+padding-bottom: 500px;
+`;
 
+const PaymentModalCardContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+`;
+
+const PaymentModalCardIconContainer = styled(View)`
+width: 10%;
+justify-content: center;
+align-items: center;
+`;
+
+const PaymentModalCardDetailContainer = styled(View)`
+width: 80%;
+display: flex;
+flex-direction: column;
+justify-content: center;
+`;
+
+const PaymentModalCardSelectContainer = styled(View)`
+width: 10%;
+justify-content: center;
+align-items: center;
+`;
+
+const PaymentModalRemindText = styled(Text)`
+font-weight: 400;
+font-size: 15px;
+line-height: 24px;
+color: ${props => props.theme.color.White};
+padding-top: 16px;
+padding-left: 16px;
+padding-right: 16px;
+padding-bottom: 4px;
+`;
+
+const PaymentModalDetailTitleText = styled(Text)`
+font-weight: 400;
+font-size: 15px;
+line-height: 24px;
+color: ${props => props.theme.color.White};
+`;
+
+const PaymentModalDetailNumberText = styled(Text)`
+font-weight: 500;
+font-size: 13px;
+line-height: 20px;
+color: ${props => props.theme.color.MidGray};
+`;
+
+const PaymentTypeImage = styled(Image)`
+width: 28px;
+height: 28px;
+`;
+
+const PaymentModalLine = styled(View)`
+height: 1px;
+background-color: #242D37;
+margin-top: 16px;
+margin-bottom: 16px;
+`;
+
+const PaymentText = styled(Text)`
+font-weight: 400;
+font-size: 15px;
+line-height: 24px;
+color: ${props => props.theme.color.MidGray};
+`;
 
 
 
 const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"AdvertisementEdit">) => {
 
     const insets = useSafeAreaInsets();
-
-    // 切換進度條
-    const [swapProgress, setSwapProgress] = useState(0);
-
-    // 切換購買/出售頁面
-    const [swapPage, setSwapPage] = useState(0);
-
-    // Modal Visible
-    const [isCryptoAssetModalVisible, setIsCryptoAssetModalVisible] = useState(false);
-    const [isFiatCurrencyModalVisible, setIsFiatCurrencyModalVisible] = useState(false);
-    const [isPriceTypeModalVisible, setIsPriceTypeModalVisible] = useState(false);
-    const [isTimeLimitModalVisible, setIsTimeLimitModalVisible] = useState(false);
-    const [isPassordModalVisible, setIsPasswordModalVisible] = useState(false);
-
-    const [loading, setLoading] = useState(false);
 
     const { ID } = route.params;
     const { createDate } = route.params;
@@ -1237,6 +1302,22 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
     const { terms } = route.params;
     const { conditionRegisteredDays } = route.params;
     const { conditionCompleteOrders } = route.params;
+
+    // 切換進度條
+    const [swapProgress, setSwapProgress] = useState(0);
+
+    // 切換購買/出售頁面
+    const [swapPage, setSwapPage] = useState(type);
+
+    // Modal Visible
+    const [isCryptoAssetModalVisible, setIsCryptoAssetModalVisible] = useState(false);
+    const [isFiatCurrencyModalVisible, setIsFiatCurrencyModalVisible] = useState(false);
+    const [isPriceTypeModalVisible, setIsPriceTypeModalVisible] = useState(false);
+    const [isTimeLimitModalVisible, setIsTimeLimitModalVisible] = useState(false);
+    const [isPassordModalVisible, setIsPasswordModalVisible] = useState(false);
+    const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
+
+    const [loading, setLoading] = useState(false);
 
     // 選擇幣種
     const [cryptoAssetType, setCryptoAssetType] = useState(cryptoAsset);
@@ -1283,18 +1364,17 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
 
     // 付款方式選擇
     const [paymentList, setPaymentList] = useState([]); // 獲取用戶已有付款方式
-    const [chosenPaymentType, setChosenPaymentType] = useState([]);
+    const [chosenPaymentType, setChosenPaymentType] = useState(payments);// 最終選擇的付款方式
+    const [modalPaymentType, setModalPaymentType] = useState<any[]>([]); // 判斷
 
     const getUserPayment = () => {
         api.get("/user/payment")
             .then((x) => {
                 if (x.status != 400 && x.status != 401) {
                     setPaymentList(x.data);
-                    setChosenPaymentType(x.data);
                 } else {
                     Alert.alert(x.data.msg);
                 }
-
             })
             .catch((Error) => console.log(Error))
     };
@@ -1344,12 +1424,15 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
 
 
         if (swapProgress === 1) {
-            if (chosenPaymentType != []) {
-                return true;
+            if (swapPage === 1) {
+                if (chosenPaymentType.length >= 1) {
+                    return true;
+                } else {
+                    return false;
+                };
             } else {
-                return false;
-            };
-
+                return true;
+            }
         }
     };
 
@@ -1387,6 +1470,29 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
         }
     };
 
+    // 判斷帳戶圖片
+    const handlePaymentImage = (payment: string) => {
+        if (payment === 'BANK') {
+            return require('../../assets/images/c2c/payment.png')
+        } else if (payment === 'TOUCHNGO') {
+            return require('../../assets/images/c2c/touchn_go.png')
+        } else if (payment === 'PPAY') {
+            return require('../../assets/images/c2c/p_pay.png')
+        }
+        return "../../assets/images/c2c/payment.png"
+    };
+
+    // 判斷帳戶類型
+    const handlePaymentType = (payment: string) => {
+        if (payment === 'BANK') {
+            return '銀行帳戶'
+        } else if (payment === 'TOUCHNGO') {
+            return 'TouchnGO'
+        } else if (payment === 'PPAY') {
+            return 'Ppay'
+        }
+    };
+
     // 獲取廣告單法幣列表
     const [fiatCurrencyList, setFiatCurrencyList] = useState<any[]>([]);
 
@@ -1414,6 +1520,37 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
             return '$';
         } else {
             return '$';
+        }
+    };
+
+    // 篩選付款資訊
+    const handleChosenPayment = (paymentID: string) => {
+        if (modalPaymentType.some((x: any) => { return x == paymentID })) {
+            setModalPaymentType(modalPaymentType.filter((x: any) => { return x != paymentID }));
+        } else {
+            setModalPaymentType(modalPaymentType => [...modalPaymentType, paymentID]);
+        }
+    };
+
+    // 更新ChosenPaymentType
+    const updateChosenPaymentType = () => {
+        setChosenPaymentType([])
+        for (let i = 0; i <= modalPaymentType.length; i++) {
+            paymentList.filter((m: any) => { if (m.id == modalPaymentType[i]) return (setChosenPaymentType(chosenPaymentType => [...chosenPaymentType, m])) })
+        }
+    };
+
+    // 刪除付款方式
+    const deletePayment = (paymentType: string) => {
+        setChosenPaymentType(chosenPaymentType.filter((x: any) => { return x.type != paymentType }));
+    };
+
+    // 更新ModalPaymentType
+    const handleModalPaymentType = () => {
+        setModalPaymentType([])
+        for (const n of chosenPaymentType) {
+            paymentList.filter((m: any) => { if (m.id == n.id) return (setModalPaymentType(modalPaymentType => [...modalPaymentType, m.id])) })
+
         }
     };
 
@@ -1660,18 +1797,18 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
                         {
                             swapPage === 0 ?
                                 <SwapContainer>
-                                    <SwapButtonClicked onPress={() => { setSwapPage(0) }}>
+                                    <SwapButtonClicked onPress={() => { setSwapPage(0) }} disabled={true}>
                                         <SwapButtonClickedText>我想購買</SwapButtonClickedText>
                                     </SwapButtonClicked>
-                                    <SwapButton onPress={() => { setSwapPage(1) }}>
+                                    <SwapButton onPress={() => { setSwapPage(1) }} disabled={true}>
                                         <SwapButtonText>我想出售</SwapButtonText>
                                     </SwapButton>
                                 </SwapContainer> :
                                 <SwapContainer>
-                                    <SwapButton onPress={() => { setSwapPage(0) }}>
+                                    <SwapButton onPress={() => { setSwapPage(0) }} disabled={true}>
                                         <SwapButtonText>我想購買</SwapButtonText>
                                     </SwapButton>
-                                    <SwapButtonClicked onPress={() => { setSwapPage(1) }}>
+                                    <SwapButtonClicked onPress={() => { setSwapPage(1) }} disabled={true}>
                                         <SwapButtonClickedText>我想出售</SwapButtonClickedText>
                                     </SwapButtonClicked>
                                 </SwapContainer>
@@ -1681,14 +1818,14 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
                             <CurrencyTypeRowContainer>
                                 <CurrencyTypeLeftColumnContainer>
                                     <CurrencyTypeTitleText>幣種</CurrencyTypeTitleText>
-                                    <CurrencyTypeButton onPress={() => { setIsCryptoAssetModalVisible(true) }}>
+                                    <CurrencyTypeButton onPress={() => { setIsCryptoAssetModalVisible(true) }} disabled={true}>
                                         <CurrencyTypeButtonText>{cryptoAssetType}</CurrencyTypeButtonText>
                                         <CurrencyTypeForwardImage source={require("../../assets/images/c2c/next.png")} />
                                     </CurrencyTypeButton>
                                 </CurrencyTypeLeftColumnContainer>
                                 <CurrencyTypeRightColumnContainer>
                                     <CurrencyTypeTitleText>法幣</CurrencyTypeTitleText>
-                                    <CurrencyTypeButton onPress={() => { setIsFiatCurrencyModalVisible(true) }}>
+                                    <CurrencyTypeButton onPress={() => { setIsFiatCurrencyModalVisible(true) }} disabled={true}>
                                         <CurrencyTypeButtonText>{fiatCurrencyType}</CurrencyTypeButtonText>
                                         <CurrencyTypeForwardImage source={require("../../assets/images/c2c/next.png")} />
                                     </CurrencyTypeButton>
@@ -1864,41 +2001,52 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
                 {
                     swapProgress === 1 &&
                     <SwapPageContainer>
-                        <PaymentContainer>
-                            <PaymentTitleRowContainer>
-                                <PaymentTitleText>付款方式</PaymentTitleText>
-                                <PaymentAddImage source={require("../../assets/images/c2c/add.png")} />
-                            </PaymentTitleRowContainer>
-                            <PaymentRowContainer horizontal={true}>
+                        {
+                            swapPage === 1 &&
+                            (<PaymentContainer>
+                                <PaymentTitleRowContainer>
+                                    <PaymentTitleText>付款方式</PaymentTitleText>
+                                    <TouchableOpacity onPress={() => { setIsPaymentModalVisible(true), handleModalPaymentType() }}>
+                                        <PaymentAddImage source={require("../../assets/images/c2c/add.png")} />
+                                    </TouchableOpacity>
+                                </PaymentTitleRowContainer>
                                 {
-                                    chosenPaymentType.some((x: any) => { return x.type == 'BANK' }) &&
-                                    <PaymentTypeView>
-                                        <PaymentTypeViewText>銀行轉帳</PaymentTypeViewText>
-                                        <TouchableOpacity onPress={() => { setChosenPaymentType(chosenPaymentType.filter((x: any) => { return x.type != 'BANK' })) }}>
-                                            <PaymentTypeViewCancelImage source={require("../../assets/images/c2c/cancel_circle.png")} />
-                                        </TouchableOpacity>
-                                    </PaymentTypeView>
+                                    chosenPaymentType.length < 1 ?
+                                        <PaymentRowContainer>
+                                            <PaymentText>請添加至少一種付款方式</PaymentText>
+                                        </PaymentRowContainer> :
+                                        <PaymentRowContainer horizontal={true}>
+                                            {
+                                                chosenPaymentType.some((x: any) => { return x.type == 'BANK' }) &&
+                                                <PaymentTypeView>
+                                                    <PaymentTypeViewText>銀行轉帳</PaymentTypeViewText>
+                                                    <TouchableOpacity onPress={() => { deletePayment('BANK') }}>
+                                                        <PaymentTypeViewCancelImage source={require("../../assets/images/c2c/cancel_circle.png")} />
+                                                    </TouchableOpacity>
+                                                </PaymentTypeView>
+                                            }
+                                            {
+                                                chosenPaymentType.some((x: any) => { return x.type == 'TOUCHNGO' }) &&
+                                                <PaymentTypeView>
+                                                    <PaymentTypeViewText>TouchnGo</PaymentTypeViewText>
+                                                    <TouchableOpacity onPress={() => { deletePayment('TOUCHNGO') }}>
+                                                        <PaymentTypeViewCancelImage source={require("../../assets/images/c2c/cancel_circle.png")} />
+                                                    </TouchableOpacity>
+                                                </PaymentTypeView>
+                                            }
+                                            {
+                                                chosenPaymentType.some((x: any) => { return x.type == 'PPAY' }) &&
+                                                <PaymentTypeView>
+                                                    <PaymentTypeViewText>Ppay</PaymentTypeViewText>
+                                                    <TouchableOpacity onPress={() => { deletePayment('PPAY') }}>
+                                                        <PaymentTypeViewCancelImage source={require("../../assets/images/c2c/cancel_circle.png")} />
+                                                    </TouchableOpacity>
+                                                </PaymentTypeView>
+                                            }
+                                        </PaymentRowContainer>
                                 }
-                                {
-                                    chosenPaymentType.some((x: any) => { return x.type == 'TOUCHNGO' }) &&
-                                    <PaymentTypeView>
-                                        <PaymentTypeViewText>Line Pay</PaymentTypeViewText>
-                                        <TouchableOpacity onPress={() => { setChosenPaymentType(chosenPaymentType.filter((x: any) => { return x.type != 'TOUCHNGO' })) }}>
-                                            <PaymentTypeViewCancelImage source={require("../../assets/images/c2c/cancel_circle.png")} />
-                                        </TouchableOpacity>
-                                    </PaymentTypeView>
-                                }
-                                {
-                                    chosenPaymentType.some((x: any) => { return x.type == 'PPAY' }) &&
-                                    <PaymentTypeView>
-                                        <PaymentTypeViewText>街口支付</PaymentTypeViewText>
-                                        <TouchableOpacity onPress={() => { setChosenPaymentType(chosenPaymentType.filter((x: any) => { return x.type != 'PPAY' })) }}>
-                                            <PaymentTypeViewCancelImage source={require("../../assets/images/c2c/cancel_circle.png")} />
-                                        </TouchableOpacity>
-                                    </PaymentTypeView>
-                                }
-                            </PaymentRowContainer>
-                        </PaymentContainer>
+                            </PaymentContainer>)
+                        }
 
                         <TradeMemoContainer>
                             <TradeMemoTitleText>交易備註</TradeMemoTitleText>
@@ -2447,6 +2595,68 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
                             <PasswordModalSubmitButtonText>確定</PasswordModalSubmitButtonText>
                         </PasswordModalSubmitButton>
                     </PasswordModalButtonContainer>
+                </View>
+            </Modal>
+
+            {/* 交易方式 Modal */}
+            <Modal
+                isVisible={isPaymentModalVisible}
+                deviceHeight={windowHeight}
+                deviceWidth={windowWidth}
+                animationInTiming={500}
+                animationOutTiming={700}
+                backdropOpacity={0.7}
+                onBackdropPress={() => setIsPaymentModalVisible(false)}
+                onSwipeComplete={() => setIsPaymentModalVisible(false)}
+                style={{ justifyContent: 'flex-start', margin: 0, height: windowHeight, width: windowWidth }}
+                hideModalContentWhileAnimating={true}
+            >
+                <View style={{
+                    backgroundColor: '#18222D',
+                    borderTopLeftRadius: 8,
+                    borderTopRightRadius: 8,
+                    paddingTop: 16,
+                    paddingBottom: 200
+                }}>
+                    <ModalFullScreenHeaderContainer insets={insets.top} >
+                        <TouchableOpacity onPress={() => { setIsPaymentModalVisible(false), updateChosenPaymentType() }} >
+                            <ModalCancelImage source={require("../../assets/images/global/previous.png")} />
+                        </TouchableOpacity>
+                        <ModalHeaderTitleText>付款方式</ModalHeaderTitleText>
+                        <TouchableOpacity onPress={() => { navigation.navigate("PaymentsCreate") }}>
+                            <PaymentAddImage source={require("../../assets/images/c2c/add.png")} />
+                        </TouchableOpacity>
+                    </ModalFullScreenHeaderContainer>
+                    <PaymentModalRemindText>請選擇最少一種付款方式</PaymentModalRemindText>
+                    <PaymentModalContainer>
+                        {
+                            paymentList.map((x: any, i) => {
+                                return (
+                                    <TouchableOpacity onPress={() => { handleChosenPayment(x.id) }}>
+                                        <PaymentModalCardContainer>
+                                            <PaymentModalCardIconContainer>
+                                                <PaymentTypeImage source={handlePaymentImage(x.type)} />
+                                            </PaymentModalCardIconContainer>
+                                            <PaymentModalCardDetailContainer>
+                                                <PaymentModalDetailTitleText>{handlePaymentType(x.type)}</PaymentModalDetailTitleText>
+                                                <PaymentModalDetailNumberText>({x.code}) {x.account}</PaymentModalDetailNumberText>
+                                            </PaymentModalCardDetailContainer>
+                                            <PaymentModalCardSelectContainer>
+                                                {
+                                                    modalPaymentType.some((m: any) => { return (m == x.id) }) &&
+                                                    <ModalSelectImage source={require("../../assets/images/c2c/selected.png")} />
+                                                }
+                                            </PaymentModalCardSelectContainer>
+                                        </PaymentModalCardContainer>
+                                        {
+                                            i !== paymentList.length - 1 &&
+                                            <PaymentModalLine />
+                                        }
+                                    </TouchableOpacity>
+                                )
+                            })
+                        }
+                    </PaymentModalContainer>
                 </View>
             </Modal>
         </Container>
