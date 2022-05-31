@@ -9,6 +9,7 @@ flex-direction: column;
 background-color: #18222D;
 padding-left: 16px;
 padding-right: 16px;
+padding-bottom: 200px;
 `;
 
 // First Card Style
@@ -34,7 +35,7 @@ const FirstCardRowContainer = styled(View)`
 display: flex;
 flex-direction: row;
 justify-content: space-between;
-align-items: baseline;
+align-items: center;
 margin-top: 16px;
 `;
 
@@ -156,7 +157,7 @@ const C2cSellLast = (props: {
     BuyPrice: string;
     BuyNumber: string;
     BuyID: string;
-    ChosenPayType: string;
+    //ChosenPayType: string;
     BuyTime: number;
 }) => {
 
@@ -168,14 +169,14 @@ const C2cSellLast = (props: {
         BuyPrice,
         BuyNumber,
         BuyID,
-        ChosenPayType,
+        //ChosenPayType,
         BuyTime
     } = props;
 
     const navigation = useNavigation();
 
     // 付款方式
-    const handleChange = () => {
+    /* const handleChange = () => {
         if (ChosenPayType == 'Account') {
             return '銀行卡';
         } else if (ChosenPayType == 'TouchnGo') {
@@ -183,7 +184,7 @@ const C2cSellLast = (props: {
         } else if (ChosenPayType == 'Ppay') {
             return 'Ppay';
         }
-    };
+    }; */
 
     return (
         <Container>
@@ -206,10 +207,13 @@ const C2cSellLast = (props: {
                 </FirstCardRowContainer>
                 <FirstCardRowContainer>
                     <FirstCardSmallTitleText>單號</FirstCardSmallTitleText>
-                    <FirstCardSmallValueText>{BuyID}</FirstCardSmallValueText>
+                    <View style={{alignItems: 'flex-end'}}>
+                        <FirstCardSmallValueText>{BuyID.slice(0, 28)}</FirstCardSmallValueText>
+                        <FirstCardSmallValueText>{BuyID.slice(28)}</FirstCardSmallValueText>
+                    </View>
                 </FirstCardRowContainer>
             </FirstCardContainer>
-            <SecondCardContainer>
+            {/* <SecondCardContainer>
                 <SecondCardTitleText>收款資訊</SecondCardTitleText>
                 <SecondCardFirstRowContainer>
                     <SecondCardSmallTitleText>收款方式</SecondCardSmallTitleText>
@@ -219,7 +223,7 @@ const C2cSellLast = (props: {
                     <SecondCardSmallTitleText>訂單時間</SecondCardSmallTitleText>
                     <SecondCardSmallValueText>{BuyTime}</SecondCardSmallValueText>
                 </SecondCardRowContainer>
-            </SecondCardContainer>
+            </SecondCardContainer> */}
             <ReturnButton onPress={() => { navigation.goBack() }}>
                 <ReturnButtonText>查看現貨帳戶</ReturnButtonText>
             </ReturnButton>

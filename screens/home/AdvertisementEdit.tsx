@@ -1381,7 +1381,7 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
 
 
     // 交易備註 Input
-    const [inputTradeMemo, setInputTradeMemo] = useState(terms);
+    const [inputTradeMemo, setInputTradeMemo] = useState(terms == null ? "" : terms);
 
     // 交易方條件 Input
     const [inputConditionLimitOrder, setInputConditionLimitOrder] = useState(`${conditionCompleteOrders}`);

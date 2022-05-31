@@ -16,6 +16,7 @@ const Container = styled(View) <{ insets: number }>`
     padding-top: ${props => props.insets}px;
     background-color: #18222D;
     justify-content: space-between;
+    padding-bottom: 500px;
 `;
 
 const HeaderContainer = styled(View)`

@@ -467,7 +467,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
 
     const getBuyList = (cryptoAsset: string) => {
         setLoading(true)
-        api.get(`/otc/api/advertisement/?all=false&my=false&type=buy&cryptoAsset=${cryptoAsset}`)
+        api.get(`/otc/api/advertisement/?all=false&my=false&type=sell&cryptoAsset=${cryptoAsset}`)
             .then((x) => {
                 setLoading(false)
                 if (x.status != 400 && x.status != 401) {
@@ -483,7 +483,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
 
     const getSellList = (cryptoAsset: string) => {
         setLoading(true)
-        api.get(`/otc/api/advertisement/?all=false&my=false&type=sell&cryptoAsset=${cryptoAsset}`)
+        api.get(`/otc/api/advertisement/?all=false&my=false&type=buy&cryptoAsset=${cryptoAsset}`)
             .then((x) => {
                 setLoading(false)
                 if (x.status != 400 && x.status != 401) {
@@ -798,8 +798,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                             LimitFrom: x.orderLimitMin,
                                             LimitTo: x.orderLimitMax,
                                             Price: x.price,
-                                            Payments: x.payments,
-
+                                            Payments: x.payments
                                         } as any)
                                     }}
                                     /* disabled={isNavigate()} */
@@ -810,6 +809,206 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                 {/* 找出 BuyArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
                                 {
                                     x.cryptoAsset === 'USDT' &&
+                                    i !== buyList.length - 1 &&
+                                    <DetailCardLine></DetailCardLine>
+                                }
+                            </DetailCardContainer>
+                        )
+                    }))
+
+                }
+                {/* 購買頁面 >> BTC頁面  */}
+                {
+                    swapBuySell === 0 &&
+                    swapBuyCurrencyType === 'BTC' &&
+                    (buyList.map((x: any, i) => {
+                        /* const payTypeAccount = () => {
+                            if (x.payments[0].type === 'BANK' || x.payments[1].type === 'BANK' || x.payments[2].type === 'BANK') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypeTouchnGo = () => {
+                            if (x.payments[0].type === 'TOUCHNGO' || x.payments[1].type === 'TOUCHNGO' || x.payments[2].type === 'TOUCHNGO') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypePpay = () => {
+                            if (x.payments[0].type === 'PPAY' || x.payments[1].type === 'PPAY' || x.payments[2].type === 'PPAY') {
+                                return true
+                            }
+                            return false
+                        } */
+                        return (
+                            /* 在 BuyArray 中尋找符合 BTC 的 OBject */
+                            x.cryptoAsset === 'BTC' &&
+                            <DetailCardContainer>
+                                <DeatilCardTopContainer>
+                                    <PhotoButton onPress={() => { }}>
+                                        {/* 取 account 中第一個字位於頭像 */}
+                                        <PhotoButtonText>{(x.owner).charAt(0).toUpperCase()}</PhotoButtonText>
+                                    </PhotoButton>
+                                    <EmailText>{x.owner}</EmailText>
+                                    <SuccessRateText>(???%)</SuccessRateText>
+                                </DeatilCardTopContainer>
+                                <DetailCardMiddleContainer>
+                                    <DetailCardMiddleLeftColumnContainer>
+                                        <DetailCardMiddleLeftRowContainer>
+                                            <SmallTitleText>數量</SmallTitleText>
+                                            <SmallValueText>{x.totalTradingAmount} {x.cryptoAsset}</SmallValueText>
+                                        </DetailCardMiddleLeftRowContainer>
+                                        <DetailCardMiddleLeftRowContainer>
+                                            <SmallTitleText>限額</SmallTitleText>
+                                            <SmallValueText>{x.orderLimitMin} - {x.orderLimitMax} {x.fiatCurrency}</SmallValueText>
+                                        </DetailCardMiddleLeftRowContainer>
+                                    </DetailCardMiddleLeftColumnContainer>
+                                    <DetailCardMiddleRightRowContainer>
+                                        <BuyPriceText>{x.price}</BuyPriceText>
+                                        <BuyCurrencyText>{x.cryptoAsset}</BuyCurrencyText>
+                                    </DetailCardMiddleRightRowContainer>
+                                </DetailCardMiddleContainer>
+                                <DetailCardBottomContainer>
+                                    {/* 顯示支援付款的Icon */}
+                                    <DetailCardBottomRowContainer>
+                                        {/* {
+                                            payTypeAccount() === true &&
+                                            <AccountIcon source={require("../../assets/images/c2c/account.png")} />
+                                        }
+                                        {
+                                            payTypeTouchnGo() === true &&
+                                            <TouchnGoIcon source={require("../../assets/images/c2c/touchn_go.png")} />
+                                        }
+
+                                        {
+                                            payTypePpay() === true &&
+                                            <PpayIcon source={require("../../assets/images/c2c/p_pay.png")} />
+                                        } */}
+                                    </DetailCardBottomRowContainer>
+                                    <BuyButton onPress={() => {
+                                        navigation.navigate('C2cBuyScreen', {
+                                            Id: x.id,
+                                            CryptoAsset: x.cryptoAsset,
+                                            FiatCurrency: x.fiatCurrency,
+                                            Owner: x.owner,
+                                            SuccessRate: "???",
+                                            AvailableNum: x.totalTradingAmount,
+                                            LimitFrom: x.orderLimitMin,
+                                            LimitTo: x.orderLimitMax,
+                                            Price: x.price,
+                                            Payments: x.payments
+                                        } as any)
+                                    }}
+                                    /* disabled={isNavigate()} */
+                                    >
+                                        <BuyButtonText>購買</BuyButtonText>
+                                    </BuyButton>
+                                </DetailCardBottomContainer>
+                                {/* 找出 BuyArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
+                                {
+                                    x.cryptoAsset === 'BTC' &&
+                                    i !== buyList.length - 1 &&
+                                    <DetailCardLine></DetailCardLine>
+                                }
+                            </DetailCardContainer>
+                        )
+                    }))
+
+                }
+                {/* 購買頁面 >> ETH頁面  */}
+                {
+                    swapBuySell === 0 &&
+                    swapBuyCurrencyType === 'ETH' &&
+                    (buyList.map((x: any, i) => {
+                        /* const payTypeAccount = () => {
+                            if (x.payments[0].type === 'BANK' || x.payments[1].type === 'BANK' || x.payments[2].type === 'BANK') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypeTouchnGo = () => {
+                            if (x.payments[0].type === 'TOUCHNGO' || x.payments[1].type === 'TOUCHNGO' || x.payments[2].type === 'TOUCHNGO') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypePpay = () => {
+                            if (x.payments[0].type === 'PPAY' || x.payments[1].type === 'PPAY' || x.payments[2].type === 'PPAY') {
+                                return true
+                            }
+                            return false
+                        } */
+                        return (
+                            /* 在 BuyArray 中尋找符合 ETH 的 OBject */
+                            x.cryptoAsset === 'ETH' &&
+                            <DetailCardContainer>
+                                <DeatilCardTopContainer>
+                                    <PhotoButton onPress={() => { }}>
+                                        {/* 取 account 中第一個字位於頭像 */}
+                                        <PhotoButtonText>{(x.owner).charAt(0).toUpperCase()}</PhotoButtonText>
+                                    </PhotoButton>
+                                    <EmailText>{x.owner}</EmailText>
+                                    <SuccessRateText>(???%)</SuccessRateText>
+                                </DeatilCardTopContainer>
+                                <DetailCardMiddleContainer>
+                                    <DetailCardMiddleLeftColumnContainer>
+                                        <DetailCardMiddleLeftRowContainer>
+                                            <SmallTitleText>數量</SmallTitleText>
+                                            <SmallValueText>{x.totalTradingAmount} {x.cryptoAsset}</SmallValueText>
+                                        </DetailCardMiddleLeftRowContainer>
+                                        <DetailCardMiddleLeftRowContainer>
+                                            <SmallTitleText>限額</SmallTitleText>
+                                            <SmallValueText>{x.orderLimitMin} - {x.orderLimitMax} {x.fiatCurrency}</SmallValueText>
+                                        </DetailCardMiddleLeftRowContainer>
+                                    </DetailCardMiddleLeftColumnContainer>
+                                    <DetailCardMiddleRightRowContainer>
+                                        <BuyPriceText>{x.price}</BuyPriceText>
+                                        <BuyCurrencyText>{x.cryptoAsset}</BuyCurrencyText>
+                                    </DetailCardMiddleRightRowContainer>
+                                </DetailCardMiddleContainer>
+                                <DetailCardBottomContainer>
+                                    {/* 顯示支援付款的Icon */}
+                                    <DetailCardBottomRowContainer>
+                                        {/* {
+                                            payTypeAccount() === true &&
+                                            <AccountIcon source={require("../../assets/images/c2c/account.png")} />
+                                        }
+                                        {
+                                            payTypeTouchnGo() === true &&
+                                            <TouchnGoIcon source={require("../../assets/images/c2c/touchn_go.png")} />
+                                        }
+
+                                        {
+                                            payTypePpay() === true &&
+                                            <PpayIcon source={require("../../assets/images/c2c/p_pay.png")} />
+                                        } */}
+                                    </DetailCardBottomRowContainer>
+                                    <BuyButton onPress={() => {
+                                        navigation.navigate('C2cBuyScreen', {
+                                            Id: x.id,
+                                            CryptoAsset: x.cryptoAsset,
+                                            FiatCurrency: x.fiatCurrency,
+                                            Owner: x.owner,
+                                            SuccessRate: "???",
+                                            AvailableNum: x.totalTradingAmount,
+                                            LimitFrom: x.orderLimitMin,
+                                            LimitTo: x.orderLimitMax,
+                                            Price: x.price,
+                                            Payments: x.payments
+                                        } as any)
+                                    }}
+                                    /* disabled={isNavigate()} */
+                                    >
+                                        <BuyButtonText>購買</BuyButtonText>
+                                    </BuyButton>
+                                </DetailCardBottomContainer>
+                                {/* 找出 BuyArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
+                                {
+                                    x.cryptoAsset === 'ETH' &&
                                     i !== buyList.length - 1 &&
                                     <DetailCardLine></DetailCardLine>
                                 }
@@ -901,12 +1100,11 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                             LimitFrom: x.orderLimitMin,
                                             LimitTo: x.orderLimitMax,
                                             Price: x.price,
-                                            Payments: x.payments,
-
+                                            Payments: x.payments
                                         } as any)
                                     }}
                                         /* disabled={isNavigate()} */>
-                                        <SellButtonText>購買</SellButtonText>
+                                        <SellButtonText>出售</SellButtonText>
                                     </SellButton>
                                 </DetailCardBottomContainer>
                                 {/* 找出 SellArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
@@ -919,6 +1117,205 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                         )
                     })
 
+                }
+                {/* 出售頁面 >> BTC頁面  */}
+                {
+                    swapBuySell === 1 &&
+                    swapBuyCurrencyType === 'BTC' &&
+                    sellList.map((x: any, i) => {
+
+                        /* const payTypeAccount = () => {
+                            if (x.payments[0].type === 'BANK' || x.payments[1].type === 'BANK' || x.payments[2].type === 'BANK') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypeTouchnGo = () => {
+                            if (x.payments[0].type === 'TOUCHNGO' || x.payments[1].type === 'TOUCHNGO' || x.payments[2].type === 'TOUCHNGO') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypePpay = () => {
+                            if (x.payments[0].type === 'PPAY' || x.payments[1].type === 'PPAY' || x.payments[2].type === 'PPAY') {
+                                return true
+                            }
+                            return false
+                        } */
+                        return (
+                            /* 在 SellArray 中尋找符合 BTC 的 OBject */
+                            x.cryptoAsset === 'BTC' &&
+                            <DetailCardContainer>
+                                <DeatilCardTopContainer>
+                                    <PhotoButton onPress={() => { }}>
+                                        {/* 取 account 中第一個字位於頭像 */}
+                                        <PhotoButtonText>{(x.owner).charAt(0).toUpperCase()}</PhotoButtonText>
+                                    </PhotoButton>
+                                    <EmailText>{x.owner}</EmailText>
+                                    <SuccessRateText>(???%)</SuccessRateText>
+                                </DeatilCardTopContainer>
+                                <DetailCardMiddleContainer>
+                                    <DetailCardMiddleLeftColumnContainer>
+                                        <DetailCardMiddleLeftRowContainer>
+                                            <SmallTitleText>數量</SmallTitleText>
+                                            <SmallValueText>{x.totalTradingAmount} {x.cryptoAsset}</SmallValueText>
+                                        </DetailCardMiddleLeftRowContainer>
+                                        <DetailCardMiddleLeftRowContainer>
+                                            <SmallTitleText>限額</SmallTitleText>
+                                            <SmallValueText>{x.orderLimitMin} - {x.orderLimitMax} {x.fiatCurrency}</SmallValueText>
+                                        </DetailCardMiddleLeftRowContainer>
+                                    </DetailCardMiddleLeftColumnContainer>
+                                    <DetailCardMiddleRightRowContainer>
+                                        <SellPriceText>{x.price}</SellPriceText>
+                                        <SellCurrencyText>{x.cryptoAsset}</SellCurrencyText>
+                                    </DetailCardMiddleRightRowContainer>
+                                </DetailCardMiddleContainer>
+                                <DetailCardBottomContainer>
+                                    {/* 顯示支援付款的Icon */}
+                                    <DetailCardBottomRowContainer>
+                                        {/* {
+                                            payTypeAccount() === true &&
+                                            <AccountIcon source={require("../../assets/images/c2c/account.png")} />
+                                        }
+                                        {
+                                            payTypeTouchnGo() === true &&
+                                            <TouchnGoIcon source={require("../../assets/images/c2c/touchn_go.png")} />
+                                        }
+
+                                        {
+                                            payTypePpay() === true &&
+                                            <PpayIcon source={require("../../assets/images/c2c/p_pay.png")} />
+                                        } */}
+                                    </DetailCardBottomRowContainer>
+                                    <SellButton onPress={() => {
+                                        navigation.navigate('C2cSellScreen', {
+                                            Id: x.id,
+                                            CryptoAsset: x.cryptoAsset,
+                                            FiatCurrency: x.fiatCurrency,
+                                            Owner: x.owner,
+                                            SuccessRate: "???",
+                                            AvailableNum: x.totalTradingAmount,
+                                            LimitFrom: x.orderLimitMin,
+                                            LimitTo: x.orderLimitMax,
+                                            Price: x.price,
+                                            Payments: x.payments
+                                        } as any)
+                                    }}
+                                        /* disabled={isNavigate()} */>
+                                        <SellButtonText>出售</SellButtonText>
+                                    </SellButton>
+                                </DetailCardBottomContainer>
+                                {/* 找出 SellArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
+                                {
+                                    x.cryptoAsset === 'BTC' &&
+                                    i !== sellList.length - 1 &&
+                                    <DetailCardLine></DetailCardLine>
+                                }
+                            </DetailCardContainer>
+                        )
+                    })
+
+                }
+                {/* 出售頁面 >> ETH頁面  */}
+                {
+                    swapBuySell === 1 &&
+                    swapBuyCurrencyType === 'ETH' &&
+                    sellList.map((x: any, i) => {
+
+                        /* const payTypeAccount = () => {
+                            if (x.payments[0].type === 'BANK' || x.payments[1].type === 'BANK' || x.payments[2].type === 'BANK') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypeTouchnGo = () => {
+                            if (x.payments[0].type === 'TOUCHNGO' || x.payments[1].type === 'TOUCHNGO' || x.payments[2].type === 'TOUCHNGO') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypePpay = () => {
+                            if (x.payments[0].type === 'PPAY' || x.payments[1].type === 'PPAY' || x.payments[2].type === 'PPAY') {
+                                return true
+                            }
+                            return false
+                        } */
+                        return (
+                            /* 在 SellArray 中尋找符合 ETH 的 OBject */
+                            x.cryptoAsset === 'ETH' &&
+                            <DetailCardContainer>
+                                <DeatilCardTopContainer>
+                                    <PhotoButton onPress={() => { }}>
+                                        {/* 取 account 中第一個字位於頭像 */}
+                                        <PhotoButtonText>{(x.owner).charAt(0).toUpperCase()}</PhotoButtonText>
+                                    </PhotoButton>
+                                    <EmailText>{x.owner}</EmailText>
+                                    <SuccessRateText>(???%)</SuccessRateText>
+                                </DeatilCardTopContainer>
+                                <DetailCardMiddleContainer>
+                                    <DetailCardMiddleLeftColumnContainer>
+                                        <DetailCardMiddleLeftRowContainer>
+                                            <SmallTitleText>數量</SmallTitleText>
+                                            <SmallValueText>{x.totalTradingAmount} {x.cryptoAsset}</SmallValueText>
+                                        </DetailCardMiddleLeftRowContainer>
+                                        <DetailCardMiddleLeftRowContainer>
+                                            <SmallTitleText>限額</SmallTitleText>
+                                            <SmallValueText>{x.orderLimitMin} - {x.orderLimitMax} {x.fiatCurrency}</SmallValueText>
+                                        </DetailCardMiddleLeftRowContainer>
+                                    </DetailCardMiddleLeftColumnContainer>
+                                    <DetailCardMiddleRightRowContainer>
+                                        <SellPriceText>{x.price}</SellPriceText>
+                                        <SellCurrencyText>{x.cryptoAsset}</SellCurrencyText>
+                                    </DetailCardMiddleRightRowContainer>
+                                </DetailCardMiddleContainer>
+                                <DetailCardBottomContainer>
+                                    {/* 顯示支援付款的Icon */}
+                                    <DetailCardBottomRowContainer>
+                                        {/* {
+                                            payTypeAccount() === true &&
+                                            <AccountIcon source={require("../../assets/images/c2c/account.png")} />
+                                        }
+                                        {
+                                            payTypeTouchnGo() === true &&
+                                            <TouchnGoIcon source={require("../../assets/images/c2c/touchn_go.png")} />
+                                        }
+
+                                        {
+                                            payTypePpay() === true &&
+                                            <PpayIcon source={require("../../assets/images/c2c/p_pay.png")} />
+                                        } */}
+                                    </DetailCardBottomRowContainer>
+                                    <SellButton onPress={() => {
+                                        navigation.navigate('C2cSellScreen', {
+                                            Id: x.id,
+                                            CryptoAsset: x.cryptoAsset,
+                                            FiatCurrency: x.fiatCurrency,
+                                            Owner: x.owner,
+                                            SuccessRate: "???",
+                                            AvailableNum: x.totalTradingAmount,
+                                            LimitFrom: x.orderLimitMin,
+                                            LimitTo: x.orderLimitMax,
+                                            Price: x.price,
+                                            Payments: x.payments
+                                        } as any)
+                                    }}
+                                        /* disabled={isNavigate()} */>
+                                        <SellButtonText>出售</SellButtonText>
+                                    </SellButton>
+                                </DetailCardBottomContainer>
+                                {/* 找出 SellArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
+                                {
+                                    x.cryptoAsset === 'ETH' &&
+                                    i !== sellList.length - 1 &&
+                                    <DetailCardLine></DetailCardLine>
+                                }
+                            </DetailCardContainer>
+                        )
+                    })
                 }
                 {/* 預留 Padding */}
                 <EmptyDiv></EmptyDiv>

@@ -20,6 +20,7 @@ const Container = styled(View) <{ insets: number }>`
     padding-top: ${props => props.insets}px;
     background-color: #18222D;
     justify-content: space-between;
+    padding-bottom: 200px;
 `;
 
 const HeaderContainer = styled(View)`
@@ -127,12 +128,12 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
     const { LimitFrom } = route.params; // 限額
     const { LimitTo } = route.params; // 限額
     const { Price } = route.params; // 單價
-    const { Payments } = route.params; // 付款方式Array
+    //const { Payments } = route.params; // 付款方式Array
 
     // 先用假資料等之後再將Payments Array內容轉成以下
-    const payTypeAccount = true; // 帳戶付款 Boolean
-    const payTypeTouchnGo = true; // TouchnGo付款 Boolean
-    const payTypePpay = true; // Ppay付款 Boolean
+    //const payTypeAccount = true; // 帳戶付款 Boolean
+    //const payTypeTouchnGo = true; // TouchnGo付款 Boolean
+    //const payTypePpay = true; // Ppay付款 Boolean
 
     /* const [payTypeAccount, setPayTypeAccount] = useState(false);
     const [payTypeTouchnGo, setPayTypeTouchnGo] = useState(false);
@@ -166,6 +167,9 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
     const [buyFeeRate, setBuyFeeRate] = useState();
     const [sellFeeRate, setSellFeeRate] = useState();
     const [userWalletBalance, setUserWalletBalance] = useState(Object);
+
+    // Payment
+    const [paymentList, setpaymentList] = useState<any[]>([]);
 
     // 付款確認 等待放行
     const [isWaitFinish, setIsWaitFinish] = useState(0);
@@ -206,6 +210,22 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
             .catch((Error) => console.log(Error));
     };
 
+    // 獲取訂單付款資訊
+    const getOrderPayments = async () => {
+        setLoading(true)
+        api.get(`/user/payment`)
+            .then((x: any) => {
+                setLoading(false)
+                if (x.status != 400 && x.status != 401) {
+                    setpaymentList(x.data)
+                }
+                else {
+                    Alert.alert("付款資料獲取失敗，請重新操作")
+                }
+            })
+            .catch((Error) => console.log(Error));
+    }
+
     useEffect(async () => {
         let token = await AsyncStorage.getItem("token");
         let user = await AsyncStorage.getItem("user");
@@ -214,6 +234,7 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
 
         if (token) {
             getUserInfo()
+            getOrderPayments()
         };
 
     }, []);
@@ -274,10 +295,10 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
                         LimitFrom={LimitFrom}
                         LimitTo={LimitTo}
                         Price={Price}
-                        PayTypeAccount={payTypeAccount}
-                        PayTypeTouchnGo={payTypeTouchnGo}
-                        PayTypePpay={payTypePpay}
-                        Payments={Payments}
+                        //PayTypeAccount={payTypeAccount}
+                        //PayTypeTouchnGo={payTypeTouchnGo}
+                        //PayTypePpay={payTypePpay}
+                        Payments={paymentList}
                         onValueChangeInputPrice={setInputPrice}
                         onValueChangeInputNumber={setInputNumber}
                         onChangeSetSwapPage={setSwapPage}
@@ -359,9 +380,9 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
                         LimitFrom={LimitFrom}
                         LimitTo={LimitTo}
                         Price={Price}
-                        PayTypeAccount={payTypeAccount}
-                        PayTypeTouchnGo={payTypeTouchnGo}
-                        PayTypePpay={payTypePpay}
+                        //PayTypeAccount={payTypeAccount}
+                        //PayTypeTouchnGo={payTypeTouchnGo}
+                        //PayTypePpay={payTypePpay}
                         BuyPrice={inputPrice}
                         BuyNumber={inputNumber}
                         ChosenPayType={choosePayType}
@@ -381,7 +402,7 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
                         BuyPrice={inputPrice}
                         BuyNumber={inputNumber}
                         BuyID={buyId}
-                        ChosenPayType={choosePayType}
+                        //ChosenPayType={choosePayType}
                         BuyTime={buyTime}
                     />
                 }

@@ -348,10 +348,10 @@ const C2cSellFirst = (props: {
     LimitFrom: string;
     LimitTo: string;
     Price: string;
-    PayTypeAccount: boolean;
-    PayTypeTouchnGo: boolean;
-    PayTypePpay: boolean;
-    Payments: [];
+    //PayTypeAccount: boolean;
+    //PayTypeTouchnGo: boolean;
+    //PayTypePpay: boolean;
+    Payments: any[];
     onValueChangeInputPrice: React.Dispatch<React.SetStateAction<string>>;
     onValueChangeInputNumber: React.Dispatch<React.SetStateAction<string>>;
     onChangeSetSwapPage: React.Dispatch<React.SetStateAction<number>>;
@@ -372,9 +372,9 @@ const C2cSellFirst = (props: {
         LimitFrom,
         LimitTo,
         Price,
-        PayTypeAccount,
-        PayTypeTouchnGo,
-        PayTypePpay,
+        //PayTypeAccount,
+        //PayTypeTouchnGo,
+        //PayTypePpay,
         Payments,
         onChangeSetSwapPage,
         onValueChangeInputPrice,
@@ -429,7 +429,7 @@ const C2cSellFirst = (props: {
 
 
     // 資金密碼Modal
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    /* const [isModalVisible, setIsModalVisible] = useState(false);
 
     const toggleModalVisible = () => {
         if (((parseFloat(inputPrice) / parseFloat(Price)).toFixed(2)) == parseFloat(inputNumber).toFixed(2) && (parseFloat(inputPrice) <= parseFloat(MyCurrency))) {
@@ -459,7 +459,7 @@ const C2cSellFirst = (props: {
                     Alert.alert("系統異常，請重新操作")
                 }
             })
-    };
+    }; */
 
     // 送出訂單
     const firstPostReturn = () => {
@@ -472,7 +472,7 @@ const C2cSellFirst = (props: {
             .then((x) => {
                 setLoading(false)
                 console.log(x)
-                if (x.status != 400 && x.status != 401) {
+                if (x.status != 400 && x.status != 401 && x.status != 500) {
                     onValueChangeSetBuyId(x.id)
                     onValueChangeSetBuyTime(x.createdDate)
                     onValueChangeIsWaitFinish(x.status)
@@ -491,23 +491,27 @@ const C2cSellFirst = (props: {
 
     // Buy Button
     const handleBuyButton = () => {
-        if (((parseFloat(inputPrice) / parseFloat(Price)).toFixed(2)) == parseFloat(inputNumber).toFixed(2) && (parseFloat(inputPrice) <= parseFloat(MyCurrency))) {
+        /* if (((parseFloat(inputPrice) / parseFloat(Price)).toFixed(2)) == parseFloat(inputNumber).toFixed(2) && (parseFloat(inputPrice) <= parseFloat(MyCurrency))) {
             toggleModalVisible()
-        }
+
+        } */
+        handleSubmitForm()
     }
 
 
     // Submit Form
     const handleSubmitForm = () => {
 
-        postPasswordCheck();
+        /* postPasswordCheck();
 
         if (checkPassword === true) {
 
             setIsModalVisible(false)
             firstPostReturn()
 
-        }
+        } */
+
+        firstPostReturn()
     };
 
 
@@ -592,7 +596,7 @@ const C2cSellFirst = (props: {
                     <EmailText>{Account}</EmailText>
                     <SuccessRateText>({SuccessRate})%</SuccessRateText>
                 </BottomDetailTopContainer>
-                <BottomDetailSmallTitleText>收款方式</BottomDetailSmallTitleText>
+                {/* <BottomDetailSmallTitleText>收款方式</BottomDetailSmallTitleText>
                 <BottomDetailPayTypeContainer>
                     {
                         PayTypeAccount == true &&
@@ -613,7 +617,7 @@ const C2cSellFirst = (props: {
                         </PayTypeView>
                     }
                 </BottomDetailPayTypeContainer>
-                <BottomDetailLine></BottomDetailLine>
+                <BottomDetailLine></BottomDetailLine> */}
                 <BottomDetailSmallTitleText>放行時限</BottomDetailSmallTitleText>
                 <BottomDetailSmallValueText>15分鐘</BottomDetailSmallValueText>
                 <BottomDetailLine></BottomDetailLine>
@@ -622,7 +626,7 @@ const C2cSellFirst = (props: {
             </BottomDetailContainer>
 
             {/* // Modal */}
-            <Modal
+            {/* <Modal
                 isVisible={isModalVisible}
                 deviceHeight={windowHeight}
                 deviceWidth={windowWidth}
@@ -690,7 +694,7 @@ const C2cSellFirst = (props: {
                         </ModalSubmitButton>
                     </ModalButtonContainer>
                 </View>
-            </Modal>
+            </Modal> */}
         </View>
     )
 }
