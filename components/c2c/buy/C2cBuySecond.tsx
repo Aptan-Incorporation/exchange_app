@@ -112,7 +112,12 @@ color: ${props => props.theme.color.LightMidGray};
 margin-top: 8px;
 `;
 
-const SecondCardPayTypeRowContainer = styled(View)`
+const SecondCardPaymentContainer = styled(View)`
+display: flex;
+flex-direction: column;
+`;
+
+const SecondCardPayTypeRowContainer = styled(ScrollView)`
 display: flex;
 flex-direction: row;
 margin-top: 24px;
@@ -401,11 +406,12 @@ const C2cBuySecond = (props: {
 
     //選擇付款方式
     const [choosePayType, setChoosePaytype] = useState("");
+    const [choosePayTypeID, setChoosePayTypeID] = useState("");
 
     //付款資料
-    const [accountDetail, setAccountDetail] = useState([]);
-    const [touchnGoDetail, setTouchnGoDetail] = useState([]);
-    const [pPayDetail, setPpayDetail] = useState([]);
+    const [accountDetail, setAccountDetail] = useState<any[]>([]);
+    const [touchnGoDetail, setTouchnGoDetail] = useState<any[]>([]);
+    const [pPayDetail, setPpayDetail] = useState<any[]>([]);
 
 
     // QRCode Modal
@@ -477,11 +483,7 @@ const C2cBuySecond = (props: {
 
     const postRequestPaid = () => { //送出付款訊息
         api.postData(`/otc/api/otcOrder/${BuyId}/paid`, {
-            payment: [
-                {
-                    id: undefined
-                }
-            ]
+            payment: paymentList.filter((x: any) => { return x.id === choosePayTypeID })
         })
             .then((x) => {
                 if (x.status != 400 && x.status != 401) {
@@ -540,17 +542,20 @@ const C2cBuySecond = (props: {
     };
 
     // 獲取付款資訊
+    const [paymentList, setPaymentList] = useState<any[]>([]);
+
     const getPaymentsDetail = () => {
         api.get(`/otc/api/otcOrder/${BuyId}/payments/`)
             .then((x => {
                 if (x.status != 400 && x.status != 401) {
+                    setPaymentList(x)
                     x.map((data: any) => {
                         if (data.type === 'BANK') {
-                            setAccountDetail(data)
+                            setAccountDetail(payment => [...payment, data])
                         } else if (data.type === 'TOUCHNGO') {
-                            setTouchnGoDetail(data)
+                            setTouchnGoDetail(payment => [...payment, data])
                         } else if (data.type === 'PPAY') {
-                            setPpayDetail(data)
+                            setPpayDetail(payment => [...payment, data])
                         }
                     })
                 } else {
@@ -560,23 +565,23 @@ const C2cBuySecond = (props: {
     };
 
     // 更新訂單訊息
-    const getBuyStatus = () => { // 按下付款後獲取訂單狀態，用以切換頁面
-        api.get(`/otc/api/otcOrder/${BuyId}`)
-            .then((x => {
-                if (x.status != 400 && x.status != 401) {
-                    if (x.status === 1) {
-                        onValueChangeIsWaitFinish(1)
-                    } else if (x.status === 2) {
-                        onValueChangeIsWaitFinish(2)
-                        onChangeSetSwapPage(3)
-                    } else {
-                        Alert.alert("訂單錯誤，請重新操作")
-                    }
-                } else {
-                    Alert.alert(x.data.msg)
-                }
-            }))
-    };
+    /*  const getBuyStatus = () => { // 按下付款後獲取訂單狀態，用以切換頁面
+         api.get(`/otc/api/otcOrder/${BuyId}`)
+             .then((x => {
+                 if (x.status != 400 && x.status != 401) {
+                     if (x.status === 1) {
+                         onValueChangeIsWaitFinish(1)
+                     } else if (x.status === 2) {
+                         onValueChangeIsWaitFinish(2)
+                         onChangeSetSwapPage(3)
+                     } else {
+                         Alert.alert("訂單錯誤，請重新操作")
+                     }
+                 } else {
+                     Alert.alert(x.data.msg)
+                 }
+             }))
+     }; */
 
 
     useEffect(() => { // 每10秒更新訂單狀態
@@ -585,7 +590,9 @@ const C2cBuySecond = (props: {
 
         const interval = setInterval(() => {
             if (submitText === '放行中...') {
-                getBuyStatus()
+                //getBuyStatus()
+                onValueChangeIsWaitFinish(2)
+                onChangeSetSwapPage(3)
             }
 
         }, 10000);
@@ -621,113 +628,155 @@ const C2cBuySecond = (props: {
             <SecondCardContainer>
                 <SecondCardTitleText>付款方式</SecondCardTitleText>
                 <SecondCardDetailText>以下為賣方的收款資訊，請您務必使用本人名下的支付方式自行轉帳，戶名需對應至您驗證帳號身份的姓名，平台並不會自動為您轉帳。</SecondCardDetailText>
-                <SecondCardPayTypeRowContainer>
+                <SecondCardPayTypeRowContainer horizontal={true}>
                     {
                         PayTypeAccount &&
-                        (choosePayType == 'Account' ?
-                            <BankAccountButtonClicked onPress={() => { setChoosePaytype('Account') }} disabled={handleButtonDisabled()}>
-                                <PayTypeButtonClickedText>銀行卡</PayTypeButtonClickedText>
-                            </BankAccountButtonClicked> :
-                            <BankAccountButton onPress={() => { setChoosePaytype('Account') }} disabled={handleButtonDisabled()}>
-                                <PayTypeButtonText>銀行卡</PayTypeButtonText>
-                            </BankAccountButton>)
+                        (accountDetail.map((x: any) => {
+                            if (choosePayType == 'BANK') {
+                                return (
+                                    <BankAccountButtonClicked onPress={() => { setChoosePaytype(x.type), setChoosePayTypeID("") }} disabled={handleButtonDisabled()}>
+                                        <PayTypeButtonClickedText>銀行卡</PayTypeButtonClickedText>
+                                    </BankAccountButtonClicked>
+                                )
+                            } else {
+                                return (
+                                    <BankAccountButton onPress={() => { setChoosePaytype(x.type), setChoosePayTypeID(x.id) }} disabled={handleButtonDisabled()}>
+                                        <PayTypeButtonText>銀行卡</PayTypeButtonText>
+                                    </BankAccountButton>
+                                )
+                            }
+                        }))
                     }
                     {
                         PayTypeTouchnGo &&
-                        (choosePayType == 'TouchnGo' ?
-                            <TouchnGoButtonClicked onPress={() => { setChoosePaytype('TouchnGo') }} disabled={handleButtonDisabled()}>
-                                <PayTypeButtonClickedText>Touch'n Go</PayTypeButtonClickedText>
-                            </TouchnGoButtonClicked> :
-                            <TouchnGoButton onPress={() => { setChoosePaytype('TouchnGo') }} disabled={handleButtonDisabled()}>
-                                <PayTypeButtonText>Touch'n Go</PayTypeButtonText>
-                            </TouchnGoButton>)
+                        (touchnGoDetail.map((x: any) => {
+                            if (choosePayType == 'TOUCHNGO') {
+                                return (
+                                    <TouchnGoButtonClicked onPress={() => { setChoosePaytype(x.type), setChoosePayTypeID("") }} disabled={handleButtonDisabled()}>
+                                        <PayTypeButtonClickedText>Touch'n Go</PayTypeButtonClickedText>
+                                    </TouchnGoButtonClicked>
+                                )
+                            } else {
+                                return (
+                                    <TouchnGoButton onPress={() => { setChoosePaytype(x.type), setChoosePayTypeID(x.id) }} disabled={handleButtonDisabled()}>
+                                        <PayTypeButtonText>Touch'n Go</PayTypeButtonText>
+                                    </TouchnGoButton>
+                                )
+                            }
+                        }))
                     }
                     {
                         PayTypePpay &&
-                        (choosePayType == 'Ppay' ?
-                            <PpayButtonClicked onPress={() => { setChoosePaytype('Ppay') }} disabled={handleButtonDisabled()}>
-                                <PayTypeButtonClickedText>Ppay</PayTypeButtonClickedText>
-                            </PpayButtonClicked> :
-                            <PpayButton onPress={() => { setChoosePaytype('Ppay') }} disabled={handleButtonDisabled()}>
-                                <PayTypeButtonText>Ppay</PayTypeButtonText>
-                            </PpayButton>)
+                        (pPayDetail.map((x: any) => {
+                            if (choosePayType == 'PPAY') {
+                                return (
+                                    <PpayButtonClicked onPress={() => { setChoosePaytype(x.type), setChoosePayTypeID("") }} disabled={handleButtonDisabled()}>
+                                        <PayTypeButtonClickedText>Ppay</PayTypeButtonClickedText>
+                                    </PpayButtonClicked>
+                                )
+                            } else {
+                                return (
+                                    <PpayButton onPress={() => { setChoosePaytype(x.type), setChoosePayTypeID(x.id) }} disabled={handleButtonDisabled()}>
+                                        <PayTypeButtonText>Ppay</PayTypeButtonText>
+                                    </PpayButton>
+                                )
+                            }
+                        }))
                     }
                 </SecondCardPayTypeRowContainer>
                 {
-                    choosePayType === 'Account' &&
-                    <PayBottomContainer>
-                        <SecondCardPayDetailContainer>
-                            <SecondCardPayDetailTitleText>帳戶姓名</SecondCardPayDetailTitleText>
-                            <SecondCardPayDetailInRowContainer>
-                                <SecondCardPayDetailValueText>{accountDetail.name}</SecondCardPayDetailValueText>
-                                <DuplicateIcon source={require("../../../assets/images/c2c/copy.png")} />
-                            </SecondCardPayDetailInRowContainer>
-                        </SecondCardPayDetailContainer>
-                        <SecondCardPayDetailContainer>
-                            <SecondCardPayDetailTitleText>銀行名稱</SecondCardPayDetailTitleText>
-                            <SecondCardPayDetailInRowContainer>
-                                <SecondCardPayDetailValueText>{accountDetail.code}</SecondCardPayDetailValueText>
-                                <DuplicateIcon source={require("../../../assets/images/c2c/copy.png")} />
-                            </SecondCardPayDetailInRowContainer>
-                        </SecondCardPayDetailContainer>
-                        <SecondCardPayDetailContainer>
-                            <SecondCardPayDetailTitleText>銀行帳號</SecondCardPayDetailTitleText>
-                            <SecondCardPayDetailInRowContainer>
-                                <SecondCardPayDetailValueText>{accountDetail.account}</SecondCardPayDetailValueText>
-                                <DuplicateIcon source={require("../../../assets/images/c2c/copy.png")} />
-                            </SecondCardPayDetailInRowContainer>
-                        </SecondCardPayDetailContainer>
-                    </PayBottomContainer>
+                    choosePayType === 'BANK' &&
+                    accountDetail.map((x: any) => {
+                        if (x.id === choosePayTypeID) {
+                            return (
+                                <PayBottomContainer>
+                                    <SecondCardPayDetailContainer>
+                                        <SecondCardPayDetailTitleText>帳戶姓名</SecondCardPayDetailTitleText>
+                                        <SecondCardPayDetailInRowContainer>
+                                            <SecondCardPayDetailValueText>{x.name}</SecondCardPayDetailValueText>
+                                            <DuplicateIcon source={require("../../../assets/images/c2c/copy.png")} />
+                                        </SecondCardPayDetailInRowContainer>
+                                    </SecondCardPayDetailContainer>
+                                    <SecondCardPayDetailContainer>
+                                        <SecondCardPayDetailTitleText>銀行名稱</SecondCardPayDetailTitleText>
+                                        <SecondCardPayDetailInRowContainer>
+                                            <SecondCardPayDetailValueText>{x.code}</SecondCardPayDetailValueText>
+                                            <DuplicateIcon source={require("../../../assets/images/c2c/copy.png")} />
+                                        </SecondCardPayDetailInRowContainer>
+                                    </SecondCardPayDetailContainer>
+                                    <SecondCardPayDetailContainer>
+                                        <SecondCardPayDetailTitleText>銀行帳號</SecondCardPayDetailTitleText>
+                                        <SecondCardPayDetailInRowContainer>
+                                            <SecondCardPayDetailValueText>{x.account}</SecondCardPayDetailValueText>
+                                            <DuplicateIcon source={require("../../../assets/images/c2c/copy.png")} />
+                                        </SecondCardPayDetailInRowContainer>
+                                    </SecondCardPayDetailContainer>
+                                </PayBottomContainer>
+                            )
+                        }
+                    })
                 }
                 {
-                    choosePayType === 'TouchnGo' &&
-                    <PayBottomContainer>
-                        <SecondCardPayDetailContainer>
-                            <SecondCardPayDetailTitleText>帳戶姓名</SecondCardPayDetailTitleText>
-                            <SecondCardPayDetailInRowContainer>
-                                <SecondCardPayDetailValueText>{PayTouchnGoArray.name}</SecondCardPayDetailValueText>
-                                <DuplicateIcon source={require("../../../assets/images/c2c/copy.png")} />
-                            </SecondCardPayDetailInRowContainer>
-                        </SecondCardPayDetailContainer>
-                        <SecondCardPayDetailContainer>
-                            <SecondCardPayDetailTitleText>支付帳號</SecondCardPayDetailTitleText>
-                            <SecondCardPayDetailInRowContainer>
-                                <SecondCardPayDetailValueText>{PayTouchnGoArray.account}</SecondCardPayDetailValueText>
-                                <DuplicateIcon source={require("../../../assets/images/c2c/copy.png")} />
-                            </SecondCardPayDetailInRowContainer>
-                        </SecondCardPayDetailContainer>
-                        <SecondCardPayDetailContainer>
-                            <SecondCardPayDetailTitleText>二維碼</SecondCardPayDetailTitleText>
-                            <TouchableOpacity onPress={() => { toggleQRCodeModal() }}>
-                                <QRCodeText>查看</QRCodeText>
-                            </TouchableOpacity>
-                        </SecondCardPayDetailContainer>
-                    </PayBottomContainer>
+                    choosePayType === 'TOUCHNGO' &&
+                    touchnGoDetail.map((x: any) => {
+                        if (x.id === choosePayTypeID) {
+                            return (
+                                <PayBottomContainer>
+                                    <SecondCardPayDetailContainer>
+                                        <SecondCardPayDetailTitleText>帳戶姓名</SecondCardPayDetailTitleText>
+                                        <SecondCardPayDetailInRowContainer>
+                                            <SecondCardPayDetailValueText>{x.name}</SecondCardPayDetailValueText>
+                                            <DuplicateIcon source={require("../../../assets/images/c2c/copy.png")} />
+                                        </SecondCardPayDetailInRowContainer>
+                                    </SecondCardPayDetailContainer>
+                                    <SecondCardPayDetailContainer>
+                                        <SecondCardPayDetailTitleText>支付帳號</SecondCardPayDetailTitleText>
+                                        <SecondCardPayDetailInRowContainer>
+                                            <SecondCardPayDetailValueText>{x.account}</SecondCardPayDetailValueText>
+                                            <DuplicateIcon source={require("../../../assets/images/c2c/copy.png")} />
+                                        </SecondCardPayDetailInRowContainer>
+                                    </SecondCardPayDetailContainer>
+                                    <SecondCardPayDetailContainer>
+                                        <SecondCardPayDetailTitleText>二維碼</SecondCardPayDetailTitleText>
+                                        <TouchableOpacity onPress={() => { toggleQRCodeModal() }}>
+                                            <QRCodeText>查看</QRCodeText>
+                                        </TouchableOpacity>
+                                    </SecondCardPayDetailContainer>
+                                </PayBottomContainer>
+                            )
+                        }
+                    })
                 }
                 {
-                    choosePayType === 'Ppay' &&
-                    <PayBottomContainer>
-                        <SecondCardPayDetailContainer>
-                            <SecondCardPayDetailTitleText>帳戶姓名</SecondCardPayDetailTitleText>
-                            <SecondCardPayDetailInRowContainer>
-                                <SecondCardPayDetailValueText>{PpayArray.name}</SecondCardPayDetailValueText>
-                                <DuplicateIcon source={require("../../../assets/images/c2c/copy.png")} />
-                            </SecondCardPayDetailInRowContainer>
-                        </SecondCardPayDetailContainer>
-                        <SecondCardPayDetailContainer>
-                            <SecondCardPayDetailTitleText>支付帳號</SecondCardPayDetailTitleText>
-                            <SecondCardPayDetailInRowContainer>
-                                <SecondCardPayDetailValueText>{PpayArray.account}</SecondCardPayDetailValueText>
-                                <DuplicateIcon source={require("../../../assets/images/c2c/copy.png")} />
-                            </SecondCardPayDetailInRowContainer>
-                        </SecondCardPayDetailContainer>
-                        <SecondCardPayDetailContainer>
-                            <SecondCardPayDetailTitleText>二維碼</SecondCardPayDetailTitleText>
-                            <TouchableOpacity onPress={() => { toggleQRCodeModal() }}>
-                                <QRCodeText>查看</QRCodeText>
-                            </TouchableOpacity>
-                        </SecondCardPayDetailContainer>
-                    </PayBottomContainer>
+                    choosePayType === 'PPAY' &&
+                    pPayDetail.map((x: any) => {
+                        if (x.id === choosePayTypeID) {
+                            return (
+                                <PayBottomContainer>
+                                    <SecondCardPayDetailContainer>
+                                        <SecondCardPayDetailTitleText>帳戶姓名</SecondCardPayDetailTitleText>
+                                        <SecondCardPayDetailInRowContainer>
+                                            <SecondCardPayDetailValueText>{x.name}</SecondCardPayDetailValueText>
+                                            <DuplicateIcon source={require("../../../assets/images/c2c/copy.png")} />
+                                        </SecondCardPayDetailInRowContainer>
+                                    </SecondCardPayDetailContainer>
+                                    <SecondCardPayDetailContainer>
+                                        <SecondCardPayDetailTitleText>支付帳號</SecondCardPayDetailTitleText>
+                                        <SecondCardPayDetailInRowContainer>
+                                            <SecondCardPayDetailValueText>{x.account}</SecondCardPayDetailValueText>
+                                            <DuplicateIcon source={require("../../../assets/images/c2c/copy.png")} />
+                                        </SecondCardPayDetailInRowContainer>
+                                    </SecondCardPayDetailContainer>
+                                    <SecondCardPayDetailContainer>
+                                        <SecondCardPayDetailTitleText>二維碼</SecondCardPayDetailTitleText>
+                                        <TouchableOpacity onPress={() => { toggleQRCodeModal() }}>
+                                            <QRCodeText>查看</QRCodeText>
+                                        </TouchableOpacity>
+                                    </SecondCardPayDetailContainer>
+                                </PayBottomContainer>
+                            )
+                        }
+                    })
                 }
             </SecondCardContainer>
             <BottomButtonContainer>
@@ -762,7 +811,7 @@ const C2cBuySecond = (props: {
                     </ModalHeaderContainer>
 
                     {
-                        choosePayType === 'TouchnGo' &&
+                        choosePayType === 'TOUCHNGO' &&
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                             <QRCodeContainer>
                                 <QRCodeImage source={require(TouchnGoQRCode)} />
@@ -771,7 +820,7 @@ const C2cBuySecond = (props: {
                         </View>
                     }
                     {
-                        choosePayType === 'Ppay' &&
+                        choosePayType === 'PPAY' &&
                         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                             <QRCodeContainer>
                                 <QRCodeImage source={require(PpayQRCode)} />

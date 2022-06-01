@@ -128,6 +128,7 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
     const { LimitFrom } = route.params; // 限額
     const { LimitTo } = route.params; // 限額
     const { Price } = route.params; // 單價
+    const { PaymentTimeLimit } = route.params;
     //const { Payments } = route.params; // 付款方式Array
 
     // 先用假資料等之後再將Payments Array內容轉成以下
@@ -299,6 +300,7 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
                         //PayTypeTouchnGo={payTypeTouchnGo}
                         //PayTypePpay={payTypePpay}
                         Payments={paymentList}
+                        PaymentTimeLimit={PaymentTimeLimit}
                         onValueChangeInputPrice={setInputPrice}
                         onValueChangeInputNumber={setInputNumber}
                         onChangeSetSwapPage={setSwapPage}

@@ -269,6 +269,7 @@ const C2cBuyFirst = (props: {
     PayTypeAccount: boolean;
     PayTypeTouchnGo: boolean;
     PayTypePpay: boolean;
+    PaymentTimeLimit: number;
     onValueChangeInputPrice: React.Dispatch<React.SetStateAction<string>>;
     onValueChangeInputNumber: React.Dispatch<React.SetStateAction<string>>;
     onChangeSetSwapPage: React.Dispatch<React.SetStateAction<number>>;
@@ -293,6 +294,7 @@ const C2cBuyFirst = (props: {
         PayTypeAccount,
         PayTypeTouchnGo,
         PayTypePpay,
+        PaymentTimeLimit,
         onChangeSetSwapPage,
         onValueChangeInputPrice,
         onValueChangeInputNumber,
@@ -355,7 +357,7 @@ const C2cBuyFirst = (props: {
             .then((x) => {
                 setLoading(false)
                 console.log(x)
-                if (x.status != 400 && x.status != 401) {
+                if (x.status != 400 && x.status != 401 && x.status != 500) {
                     onValueChangeSetBuyId(x.id)
                     onValueChangeSetBuyTime(x.createdDate)
                     onValueChangeIsWaitFinish(x.status)
@@ -491,7 +493,7 @@ const C2cBuyFirst = (props: {
                 </BottomDetailPayTypeContainer>
                 <BottomDetailLine></BottomDetailLine>
                 <BottomDetailSmallTitleText>付款時限</BottomDetailSmallTitleText>
-                <BottomDetailSmallValueText>15分鐘</BottomDetailSmallValueText>
+                <BottomDetailSmallValueText>{PaymentTimeLimit / 60000}分鐘</BottomDetailSmallValueText>
                 <BottomDetailLine></BottomDetailLine>
                 <BottomDetailSmallTitleText>備註</BottomDetailSmallTitleText>
                 <BottomDetailSmallValueText>請於時限內付款，不要卡單，轉帳時請不要備註任何相關字眼，備註一率不放幣。</BottomDetailSmallValueText>

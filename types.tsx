@@ -33,6 +33,7 @@ export type RootStackParamList = {
     LimitTo: string,
     Price: string,
     Payments: [],
+    PaymentTimeLimit: number
   };
   C2cBuyScreen: undefined;
   C2cSellScreen: undefined;

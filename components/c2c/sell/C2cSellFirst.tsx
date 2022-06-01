@@ -352,6 +352,7 @@ const C2cSellFirst = (props: {
     //PayTypeTouchnGo: boolean;
     //PayTypePpay: boolean;
     Payments: any[];
+    PaymentTimeLimit: number;
     onValueChangeInputPrice: React.Dispatch<React.SetStateAction<string>>;
     onValueChangeInputNumber: React.Dispatch<React.SetStateAction<string>>;
     onChangeSetSwapPage: React.Dispatch<React.SetStateAction<number>>;
@@ -376,6 +377,7 @@ const C2cSellFirst = (props: {
         //PayTypeTouchnGo,
         //PayTypePpay,
         Payments,
+        PaymentTimeLimit,
         onChangeSetSwapPage,
         onValueChangeInputPrice,
         onValueChangeInputNumber,
@@ -619,7 +621,7 @@ const C2cSellFirst = (props: {
                 </BottomDetailPayTypeContainer>
                 <BottomDetailLine></BottomDetailLine> */}
                 <BottomDetailSmallTitleText>放行時限</BottomDetailSmallTitleText>
-                <BottomDetailSmallValueText>15分鐘</BottomDetailSmallValueText>
+                <BottomDetailSmallValueText>{PaymentTimeLimit / 60000}分鐘</BottomDetailSmallValueText>
                 <BottomDetailLine></BottomDetailLine>
                 <BottomDetailSmallTitleText>備註</BottomDetailSmallTitleText>
                 <BottomDetailSmallValueText>請於時限內放行，不要卡單。</BottomDetailSmallValueText>

@@ -114,17 +114,17 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
     const { LimitTo } = route.params; // 限額
     const { Price } = route.params; // 單價
     const { Payments } = route.params; // 付款方式Array
-    const { PaymentTimeLimit } = route.params; // 付款時限
+    const { PaymentTimeLimit } = route.params;
 
     // 先用假資料等之後再將Payments Array內容轉成以下
-    const payTypeAccount = true; // 帳戶付款 Boolean
-    const payTypeTouchnGo = true; // TouchnGo付款 Boolean
-    const payTypePpay = true; // Ppay付款 Boolean
+    // const payTypeAccount = true; // 帳戶付款 Boolean
+    // const payTypeTouchnGo = true; // TouchnGo付款 Boolean
+    // const payTypePpay = true; // Ppay付款 Boolean
 
-    /* const [payTypeAccount, setPayTypeAccount] = useState(false);
+    const [payTypeAccount, setPayTypeAccount] = useState(false);
     const [payTypeTouchnGo, setPayTypeTouchnGo] = useState(false);
     const [payTypePpay, setPayTypePpay] = useState(false);
- */
+
 
     // Input Price
     const [inputPrice, setInputPrice] = useState("");
@@ -188,6 +188,19 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
             .catch((Error) => console.log(Error));
     };
 
+    // 判斷付款類型
+    const checkPaymentType = () => {
+        if (Payments.some((x: any) => { return x.type == 'BANK' })) {
+            setPayTypeAccount(true)
+        }
+        if (Payments.some((x: any) => { return x.type == 'TOUCHNGO' })) {
+            setPayTypeTouchnGo(true)
+        }
+        if (Payments.some((x: any) => { return x.type == 'PPAY' })) {
+            setPayTypePpay(true)
+        }
+    };
+
     useEffect(async () => {
         let token = await AsyncStorage.getItem("token")
         let user = await AsyncStorage.getItem("user")
@@ -196,6 +209,7 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
 
         if (token) {
             getUserInfo()
+            checkPaymentType()
         }
     }, [])
 
@@ -206,7 +220,7 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
             getUserBalanceInfo();
         }
     }, [CryptoAsset]);
-    
+
 
     /* useEffect(() => {
         if (Payments.some((x: any) => { return x.type == 'BANK' })) {
@@ -230,10 +244,10 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <Container insets={insets.top}>
-            {
-                loading &&
-                <Spinner visible={true} textContent={''} color={'#FFFFFF'} textStyle={{ color: '#FFFFFF' }} />
-            }
+                {
+                    loading &&
+                    <Spinner visible={true} textContent={''} color={'#FFFFFF'} textStyle={{ color: '#FFFFFF' }} />
+                }
                 <HeaderContainer>
                     <TouchableOpacity onPress={() => { navigation.goBack() }}>
                         <PreviousIcon source={require("../../assets/images/global/previous.png")} />
@@ -258,6 +272,7 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
                         PayTypeAccount={payTypeAccount}
                         PayTypeTouchnGo={payTypeTouchnGo}
                         PayTypePpay={payTypePpay}
+                        PaymentTimeLimit={PaymentTimeLimit}
                         onValueChangeInputPrice={setInputPrice}
                         onValueChangeInputNumber={setInputNumber}
                         onChangeSetSwapPage={setSwapPage}

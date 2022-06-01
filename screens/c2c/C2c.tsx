@@ -798,7 +798,8 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                             LimitFrom: x.orderLimitMin,
                                             LimitTo: x.orderLimitMax,
                                             Price: x.price,
-                                            Payments: x.payments
+                                            Payments: x.payments,
+                                            PaymentTimeLimit: x.paymentTimeLimit
                                         } as any)
                                     }}
                                     /* disabled={isNavigate()} */
@@ -898,7 +899,8 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                             LimitFrom: x.orderLimitMin,
                                             LimitTo: x.orderLimitMax,
                                             Price: x.price,
-                                            Payments: x.payments
+                                            Payments: x.payments,
+                                            PaymentTimeLimit: x.paymentTimeLimit
                                         } as any)
                                     }}
                                     /* disabled={isNavigate()} */
@@ -998,7 +1000,8 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                             LimitFrom: x.orderLimitMin,
                                             LimitTo: x.orderLimitMax,
                                             Price: x.price,
-                                            Payments: x.payments
+                                            Payments: x.payments,
+                                            PaymentTimeLimit: x.paymentTimeLimit
                                         } as any)
                                     }}
                                     /* disabled={isNavigate()} */
@@ -1100,7 +1103,8 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                             LimitFrom: x.orderLimitMin,
                                             LimitTo: x.orderLimitMax,
                                             Price: x.price,
-                                            Payments: x.payments
+                                            PaymentTimeLimit: x.paymentTimeLimit
+                                            //Payments: x.payments
                                         } as any)
                                     }}
                                         /* disabled={isNavigate()} */>
@@ -1200,7 +1204,8 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                             LimitFrom: x.orderLimitMin,
                                             LimitTo: x.orderLimitMax,
                                             Price: x.price,
-                                            Payments: x.payments
+                                            PaymentTimeLimit: x.paymentTimeLimit
+                                            //Payments: x.payments
                                         } as any)
                                     }}
                                         /* disabled={isNavigate()} */>
@@ -1300,7 +1305,8 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                             LimitFrom: x.orderLimitMin,
                                             LimitTo: x.orderLimitMax,
                                             Price: x.price,
-                                            Payments: x.payments
+                                            PaymentTimeLimit: x.paymentTimeLimit
+                                            //Payments: x.payments
                                         } as any)
                                     }}
                                         /* disabled={isNavigate()} */>
