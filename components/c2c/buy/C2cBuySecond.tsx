@@ -37,7 +37,7 @@ const FirstCardRowContainer = styled(View)`
 display: flex;
 flex-direction: row;
 justify-content: space-between;
-align-items: baseline;
+align-items: center;
 margin-top: 8px;
 `;
 
@@ -483,7 +483,9 @@ const C2cBuySecond = (props: {
 
     const postRequestPaid = () => { //送出付款訊息
         api.postData(`/otc/api/otcOrder/${BuyId}/paid`, {
-            payment: paymentList.filter((x: any) => { return x.id === choosePayTypeID })
+            payment: {
+                "id": choosePayTypeID
+            }
         })
             .then((x) => {
                 if (x.status != 400 && x.status != 401) {
@@ -494,7 +496,7 @@ const C2cBuySecond = (props: {
                     Alert.alert(x.data.msg)
                 }
             })
-
+            .catch(() => { console.log(Error) })
     };
 
 
@@ -546,7 +548,7 @@ const C2cBuySecond = (props: {
 
     const getPaymentsDetail = () => {
         api.get(`/otc/api/otcOrder/${BuyId}/payments/`)
-            .then((x => {
+            .then((x) => {
                 if (x.status != 400 && x.status != 401) {
                     setPaymentList(x)
                     x.map((data: any) => {
@@ -561,12 +563,13 @@ const C2cBuySecond = (props: {
                 } else {
                     Alert.alert(x.data.msg)
                 }
-            }))
+            })
+            .catch(() => { console.log(Error) })
     };
 
     // 更新訂單訊息
-    /*  const getBuyStatus = () => { // 按下付款後獲取訂單狀態，用以切換頁面
-         api.get(`/otc/api/otcOrder/${BuyId}`)
+    const getBuyStatus = () => { // 按下付款後獲取訂單狀態，用以切換頁面
+        /*  api.get(`/otc/api/otcOrder/${BuyId}`)
              .then((x => {
                  if (x.status != 400 && x.status != 401) {
                      if (x.status === 1) {
@@ -580,19 +583,20 @@ const C2cBuySecond = (props: {
                  } else {
                      Alert.alert(x.data.msg)
                  }
-             }))
-     }; */
+             })) */
+        onValueChangeIsWaitFinish(2)
+        onChangeSetSwapPage(3)
+    };
 
+    useEffect(() => {
+        getPaymentsDetail();
+    }, [])
 
     useEffect(() => { // 每10秒更新訂單狀態
 
-        getPaymentsDetail();
-
         const interval = setInterval(() => {
             if (submitText === '放行中...') {
-                //getBuyStatus()
-                onValueChangeIsWaitFinish(2)
-                onChangeSetSwapPage(3)
+                getBuyStatus()
             }
 
         }, 10000);
@@ -622,7 +626,10 @@ const C2cBuySecond = (props: {
                 </FirstCardRowContainer>
                 <FirstCardRowContainer>
                     <FirstCardTitleText>單號</FirstCardTitleText>
-                    <FirstCardValueText>{BuyId}</FirstCardValueText>
+                    <View style={{alignItems: 'flex-end'}}>
+                        <FirstCardValueText>{BuyId.slice(0, 28)}</FirstCardValueText>
+                        <FirstCardValueText>{BuyId.slice(28)}</FirstCardValueText>
+                    </View>
                 </FirstCardRowContainer>
             </FirstCardContainer>
             <SecondCardContainer>
@@ -630,17 +637,16 @@ const C2cBuySecond = (props: {
                 <SecondCardDetailText>以下為賣方的收款資訊，請您務必使用本人名下的支付方式自行轉帳，戶名需對應至您驗證帳號身份的姓名，平台並不會自動為您轉帳。</SecondCardDetailText>
                 <SecondCardPayTypeRowContainer horizontal={true}>
                     {
-                        PayTypeAccount &&
                         (accountDetail.map((x: any) => {
-                            if (choosePayType == 'BANK') {
+                            if (choosePayType == 'BANK' && choosePayTypeID == x.id) {
                                 return (
-                                    <BankAccountButtonClicked onPress={() => { setChoosePaytype(x.type), setChoosePayTypeID("") }} disabled={handleButtonDisabled()}>
+                                    <BankAccountButtonClicked onPress={() => { setChoosePaytype('BANK'), setChoosePayTypeID("") }} disabled={handleButtonDisabled()}>
                                         <PayTypeButtonClickedText>銀行卡</PayTypeButtonClickedText>
                                     </BankAccountButtonClicked>
                                 )
                             } else {
                                 return (
-                                    <BankAccountButton onPress={() => { setChoosePaytype(x.type), setChoosePayTypeID(x.id) }} disabled={handleButtonDisabled()}>
+                                    <BankAccountButton onPress={() => { setChoosePaytype('BANK'), setChoosePayTypeID(x.id) }} disabled={handleButtonDisabled()}>
                                         <PayTypeButtonText>銀行卡</PayTypeButtonText>
                                     </BankAccountButton>
                                 )
@@ -650,15 +656,15 @@ const C2cBuySecond = (props: {
                     {
                         PayTypeTouchnGo &&
                         (touchnGoDetail.map((x: any) => {
-                            if (choosePayType == 'TOUCHNGO') {
+                            if (choosePayType == 'TOUCHNGO' && choosePayTypeID == x.id) {
                                 return (
-                                    <TouchnGoButtonClicked onPress={() => { setChoosePaytype(x.type), setChoosePayTypeID("") }} disabled={handleButtonDisabled()}>
+                                    <TouchnGoButtonClicked onPress={() => { setChoosePaytype('TOUCHNGO'), setChoosePayTypeID("") }} disabled={handleButtonDisabled()}>
                                         <PayTypeButtonClickedText>Touch'n Go</PayTypeButtonClickedText>
                                     </TouchnGoButtonClicked>
                                 )
                             } else {
                                 return (
-                                    <TouchnGoButton onPress={() => { setChoosePaytype(x.type), setChoosePayTypeID(x.id) }} disabled={handleButtonDisabled()}>
+                                    <TouchnGoButton onPress={() => { setChoosePaytype('TOUCHNGO'), setChoosePayTypeID(x.id) }} disabled={handleButtonDisabled()}>
                                         <PayTypeButtonText>Touch'n Go</PayTypeButtonText>
                                     </TouchnGoButton>
                                 )
@@ -668,15 +674,15 @@ const C2cBuySecond = (props: {
                     {
                         PayTypePpay &&
                         (pPayDetail.map((x: any) => {
-                            if (choosePayType == 'PPAY') {
+                            if (choosePayType == 'PPAY' && choosePayTypeID == x.id) {
                                 return (
-                                    <PpayButtonClicked onPress={() => { setChoosePaytype(x.type), setChoosePayTypeID("") }} disabled={handleButtonDisabled()}>
+                                    <PpayButtonClicked onPress={() => { setChoosePaytype('PPAY'), setChoosePayTypeID("") }} disabled={handleButtonDisabled()}>
                                         <PayTypeButtonClickedText>Ppay</PayTypeButtonClickedText>
                                     </PpayButtonClicked>
                                 )
                             } else {
                                 return (
-                                    <PpayButton onPress={() => { setChoosePaytype(x.type), setChoosePayTypeID(x.id) }} disabled={handleButtonDisabled()}>
+                                    <PpayButton onPress={() => { setChoosePaytype('PPAY'), setChoosePayTypeID(x.id) }} disabled={handleButtonDisabled()}>
                                         <PayTypeButtonText>Ppay</PayTypeButtonText>
                                     </PpayButton>
                                 )

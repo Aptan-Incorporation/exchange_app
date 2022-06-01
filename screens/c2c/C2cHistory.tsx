@@ -512,12 +512,12 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                         x.buyUser === account ?
                                             <CardTitleContainer>
                                                 <CardBuyTitleText>買</CardBuyTitleText>
-                                                <CardBuyTitleCurrencyText>{x.type}/USD</CardBuyTitleCurrencyText>
+                                                <CardBuyTitleCurrencyText>{x.cryptoAsset}/{x.fiatCurrency}</CardBuyTitleCurrencyText>
                                             </CardTitleContainer>
                                             :
                                             <CardTitleContainer>
                                                 <CardSellTitleText>賣</CardSellTitleText>
-                                                <CardSellTitleCurrencyText>{x.type}/USD</CardSellTitleCurrencyText>
+                                                <CardSellTitleCurrencyText>{x.cryptoAsset}/{x.fiatCurrency}</CardSellTitleCurrencyText>
                                             </CardTitleContainer>
                                     }
                                     <CardMiddleContainer>

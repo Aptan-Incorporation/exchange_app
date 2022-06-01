@@ -9,6 +9,7 @@ flex-direction: column;
 background-color: #18222D;
 padding-left: 16px;
 padding-right: 16px;
+padding-bottom: 100px;
 `;
 
 // First Card Style
@@ -106,7 +107,7 @@ const SecondCardFirstRowContainer = styled(View)`
 display: flex;
 flex-direction: row;
 justify-content: space-between;
-align-items: baseline;
+align-items: center;
 margin-top: 20px;
 `;
 
@@ -176,11 +177,11 @@ const C2cBuyLast = (props: {
 
     // 付款方式
     const handleChange = () => {
-        if (ChosenPayType == 'Account') {
+        if (ChosenPayType == 'BANK') {
             return '銀行卡';
-        } else if (ChosenPayType == 'TouchnGo') {
+        } else if (ChosenPayType == 'TOUCHNGO') {
             return 'Touch’n Go';
-        } else if (ChosenPayType == 'Ppay') {
+        } else if (ChosenPayType == 'PPAY') {
             return 'Ppay';
         }
     };
@@ -206,7 +207,10 @@ const C2cBuyLast = (props: {
                 </FirstCardRowContainer>
                 <FirstCardRowContainer>
                     <FirstCardSmallTitleText>單號</FirstCardSmallTitleText>
-                    <FirstCardSmallValueText>{BuyID}</FirstCardSmallValueText>
+                    <View style={{alignItems: 'flex-end'}}>
+                        <FirstCardSmallValueText>{BuyID.slice(0, 28)}</FirstCardSmallValueText>
+                        <FirstCardSmallValueText>{BuyID.slice(28)}</FirstCardSmallValueText>
+                    </View>
                 </FirstCardRowContainer>
             </FirstCardContainer>
             <SecondCardContainer>

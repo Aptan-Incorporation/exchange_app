@@ -528,7 +528,7 @@ const C2cSellFirst = (props: {
                     <TopDetailPriceRowContainer>
                         <TopDetailTitleText>單價</TopDetailTitleText>
                         <TopDetailPriceText>{Price}</TopDetailPriceText>
-                        <TopDetailCurrencyText>{CurrencyType}</TopDetailCurrencyText>
+                        <TopDetailCurrencyText>{FiatCurrency}</TopDetailCurrencyText>
                     </TopDetailPriceRowContainer>
                     <TopDetailRowContainer>
                         <TopDetailTitleText>數量</TopDetailTitleText>

@@ -767,7 +767,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                     </DetailCardMiddleLeftColumnContainer>
                                     <DetailCardMiddleRightRowContainer>
                                         <BuyPriceText>{x.price}</BuyPriceText>
-                                        <BuyCurrencyText>{x.cryptoAsset}</BuyCurrencyText>
+                                        <BuyCurrencyText>{x.fiatCurrency}</BuyCurrencyText>
                                     </DetailCardMiddleRightRowContainer>
                                 </DetailCardMiddleContainer>
                                 <DetailCardBottomContainer>
@@ -868,7 +868,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                     </DetailCardMiddleLeftColumnContainer>
                                     <DetailCardMiddleRightRowContainer>
                                         <BuyPriceText>{x.price}</BuyPriceText>
-                                        <BuyCurrencyText>{x.cryptoAsset}</BuyCurrencyText>
+                                        <BuyCurrencyText>{x.fiatCurrency}</BuyCurrencyText>
                                     </DetailCardMiddleRightRowContainer>
                                 </DetailCardMiddleContainer>
                                 <DetailCardBottomContainer>
@@ -969,7 +969,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                     </DetailCardMiddleLeftColumnContainer>
                                     <DetailCardMiddleRightRowContainer>
                                         <BuyPriceText>{x.price}</BuyPriceText>
-                                        <BuyCurrencyText>{x.cryptoAsset}</BuyCurrencyText>
+                                        <BuyCurrencyText>{x.fiatCurrency}</BuyCurrencyText>
                                     </DetailCardMiddleRightRowContainer>
                                 </DetailCardMiddleContainer>
                                 <DetailCardBottomContainer>
@@ -1072,7 +1072,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                     </DetailCardMiddleLeftColumnContainer>
                                     <DetailCardMiddleRightRowContainer>
                                         <SellPriceText>{x.price}</SellPriceText>
-                                        <SellCurrencyText>{x.cryptoAsset}</SellCurrencyText>
+                                        <SellCurrencyText>{x.fiatCurrency}</SellCurrencyText>
                                     </DetailCardMiddleRightRowContainer>
                                 </DetailCardMiddleContainer>
                                 <DetailCardBottomContainer>
@@ -1173,7 +1173,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                     </DetailCardMiddleLeftColumnContainer>
                                     <DetailCardMiddleRightRowContainer>
                                         <SellPriceText>{x.price}</SellPriceText>
-                                        <SellCurrencyText>{x.cryptoAsset}</SellCurrencyText>
+                                        <SellCurrencyText>{x.fiatCurrency}</SellCurrencyText>
                                     </DetailCardMiddleRightRowContainer>
                                 </DetailCardMiddleContainer>
                                 <DetailCardBottomContainer>
@@ -1274,7 +1274,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                     </DetailCardMiddleLeftColumnContainer>
                                     <DetailCardMiddleRightRowContainer>
                                         <SellPriceText>{x.price}</SellPriceText>
-                                        <SellCurrencyText>{x.cryptoAsset}</SellCurrencyText>
+                                        <SellCurrencyText>{x.fiatCurrency}</SellCurrencyText>
                                     </DetailCardMiddleRightRowContainer>
                                 </DetailCardMiddleContainer>
                                 <DetailCardBottomContainer>

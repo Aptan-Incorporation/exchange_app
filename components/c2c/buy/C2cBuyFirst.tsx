@@ -352,7 +352,7 @@ const C2cBuyFirst = (props: {
         api.postData(`/otc/api/advertisement/${Id}/otcOrder/`, {
             price: Price,
             quantity: inputNumber,
-            payments: [null]
+            payments: null
         })
             .then((x) => {
                 setLoading(false)
@@ -375,9 +375,10 @@ const C2cBuyFirst = (props: {
     };
 
     const handleSubmitForm = () => {
-        if (((parseFloat(inputPrice) / parseFloat(Price)).toFixed(2)) == parseFloat(inputNumber).toFixed(2) && (parseFloat(inputPrice) <= parseFloat(MyCurrency))) {
+       /*  if (((parseFloat(inputPrice) / parseFloat(Price)).toFixed(2)) == parseFloat(inputNumber).toFixed(2) && (parseFloat(inputPrice) <= parseFloat(MyCurrency))) {
             firstPostReturn()
-        }
+        } */
+        firstPostReturn()
     };
 
     /* useEffect(async () => {
@@ -400,7 +401,7 @@ const C2cBuyFirst = (props: {
                     <TopDetailPriceRowContainer>
                         <TopDetailTitleText>單價</TopDetailTitleText>
                         <TopDetailPriceText>{Price}</TopDetailPriceText>
-                        <TopDetailCurrencyText>{CurrencyType}</TopDetailCurrencyText>
+                        <TopDetailCurrencyText>{FiatCurrency}</TopDetailCurrencyText>
                     </TopDetailPriceRowContainer>
                     <TopDetailRowContainer>
                         <TopDetailTitleText>數量</TopDetailTitleText>
