@@ -248,7 +248,7 @@ margin-bottom: 16px;
 
 // Empty Bottom
 const BottomPaddingView = styled(View)`
-padding-bottom: 200px;
+padding-bottom: 300px;
 `;
 
 
@@ -399,6 +399,19 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
             .catch(() => console.log(Error))
     };
 
+    // 轉換日期
+    const handleCreateTime = (UnixTime: number) => {
+        let unix = new Date(UnixTime);
+        let year = unix.getFullYear();
+        let month = unix.getMonth() + 1;
+        let day = unix.getDate();
+        let hours = unix.getHours();
+        let minutes = unix.getMinutes();
+        let seconds = unix.getSeconds();
+
+        return (`${year}-${month}-${day} ${hours}:${seconds}:${seconds}`)
+    };
+
     const addListener = () => {
         navigation.addListener('focus', () => getAdvertisement());
     };
@@ -516,7 +529,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                                     </CardDetailColumnContainer>
                                                     <CardDetailColumnContainer>
                                                         <CardSmallTitleText>創建時間</CardSmallTitleText>
-                                                        <CardSmallValueText>{x.createdDate}</CardSmallValueText>
+                                                        <CardSmallValueText>{handleCreateTime(x.createdDate)}</CardSmallValueText>
                                                     </CardDetailColumnContainer>
                                                 </CardDetailRowContainer>
                                                 <CardDetailRowContainer>
@@ -598,7 +611,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                                     </CardDetailColumnContainer>
                                                     <CardDetailColumnContainer>
                                                         <CardSmallTitleText>創建時間</CardSmallTitleText>
-                                                        <CardSmallValueText>{x.createdDate}</CardSmallValueText>
+                                                        <CardSmallValueText>{handleCreateTime(x.createdDate)}</CardSmallValueText>
                                                     </CardDetailColumnContainer>
                                                 </CardDetailRowContainer>
                                                 <CardDetailRowContainer>
