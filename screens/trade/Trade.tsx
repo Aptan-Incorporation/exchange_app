@@ -14,6 +14,7 @@ import axios from "axios"
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
+import { useIsFocused } from '@react-navigation/native';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -228,6 +229,9 @@ const TradeTableRowContainer = styled(View)`
 display: flex;
 flex-direction: row;
 justify-content: space-between;
+margin-bottom:5px;
+align-items:center;
+padding-top:2px;
 `;
 
 const TradeTableBuyPriceText = styled(Text)`
@@ -685,7 +689,7 @@ const TradePositionCardBigValueText = styled(Text)`
 font-weight: 700;
 font-size: 16px;
 line-height: 20px;
-color: ${props => props.theme.color.ExtraLightGray};
+color: ${props => props.theme.color.Secondary};
 `;
 
 const TradePositionCardSmallValueText = styled(Text)`
@@ -1327,7 +1331,7 @@ const TradeScreen = ({
     
     const getDepth = () => {
         axios
-            .get("https://api1.binance.com/api/v3/depth?symbol=BTCUSDT&limit=8")
+            .get("https://api1.binance.com/api/v3/depth?symbol=BTCUSDT&limit=6")
             .then((x) => {
                 setAsksArray(x.data.asks.reverse());
                 setBidsArray(x.data.bids);
@@ -1356,34 +1360,43 @@ const TradeScreen = ({
             }
         });
     };
-
+    const isFocused = useIsFocused();
     useEffect(async () => {
-        let token = await AsyncStorage.getItem("token")
-        let leverage = await AsyncStorage.getItem("leverage")
-        
-        if(leverage){
-            setLeverageViewNum(parseInt(leverage))
-        }
-        getDepth();
-        if (token) {
-            getEntrust();
-            getPosition();
-            getBalance();
-        }
-        getPrice();
-        const interval = setInterval(() => {
-            getDepth();
+        if(isFocused){
+            
+            let token = await AsyncStorage.getItem("token")
+            if(!token){
+                setEntrustArray([])
+                setPositionArray([])
+                setBalance(0)
+            }
             if (token) {
                 getEntrust();
                 getPosition();
-                // getBalance();
+                getBalance();
             }
+            let leverage = await AsyncStorage.getItem("leverage")
+            if(leverage){
+                setLeverageViewNum(parseInt(leverage))
+            }
+            getDepth();
             
-        }, 2000);
+            getPrice();
+            const interval = setInterval(() => {
+                getDepth();
+                if (token) {
+                    getEntrust();
+                    getPosition();
+                    getBalance();
+                }
+                
+            }, 2000);
+            
+            return () => clearInterval(interval); 
+        }
         
-        return () => clearInterval(interval); 
         
-    }, []);
+    }, [isFocused]);
 
 
     return (
@@ -1452,7 +1465,7 @@ const TradeScreen = ({
                                                 }
                                                 return (
 
-                                                    <LinearGradient colors={['transparent', 'rgba(251, 76, 81, 0.2)']} start={{ x: percent, y: 0.0 }} end={{ x: percent, y: 0.0 }}>
+                                                    <LinearGradient colors={['transparent', 'rgba(251, 76, 81, 0.2)']} start={{ x: 0, y: 0.0 }} end={{ x: percent, y: 0.0 }}>
                                                         <TradeTableRowContainer>
 
                                                             <TradeTableSellPriceText>{x[0].slice(0, 2) + "," + x[0].slice(2, -6)}</TradeTableSellPriceText>
@@ -1482,7 +1495,7 @@ const TradeScreen = ({
                                                     percent = parseInt((parseFloat(x[0].slice(0, 2) + "," + x[0].slice(2, -9))*parseFloat(x[1].slice(0, -5))+20).toString().slice(-2))/100
                                                 }
                                                 return (
-                                                    <LinearGradient colors={['transparent', 'rgba(47, 178, 100, 0.2)']} start={{ x: percent, y: 0.0 }} end={{ x: percent, y: 0.0 }}>
+                                                    <LinearGradient colors={['transparent', 'rgba(47, 178, 100, 0.2)']} start={{ x: 0, y: 0.0 }} end={{ x: percent, y: 0.0 }}>
                                                         <TradeTableRowContainer>
                                                             <TradeTableBuyPriceText>{x[0].slice(0, 2) + "," + x[0].slice(2, -6)}</TradeTableBuyPriceText>
                                                             <TradeTableNumberText>{x[1].slice(0, -5)}</TradeTableNumberText>
@@ -1795,12 +1808,14 @@ const TradeScreen = ({
                                                         <TradePositionCardContainer>
                                                             <TradePositionCardTitleContainer>
                                                                 <TradePositionCardTitleRowContainer>
-                                                                    <TradePositionCardTitleText>{x.profitAndLoss}</TradePositionCardTitleText>
+                                                                    {x.side === "BUY" ?                                                                    <TradePositionCardTitleText>多 BTC/USDT</TradePositionCardTitleText>
+ :                                                                    <TradePositionCardTitleText style={{color:"#FB4C51"}}>空 BTC/USDT</TradePositionCardTitleText>
+}
                                                                     <TradePositionCardSmallTitleText>未實現盈虧</TradePositionCardSmallTitleText>
                                                                 </TradePositionCardTitleRowContainer>
                                                                 <TradePositionCardTitleRowContainer>
                                                                     <TradePositionCardTitleValueText>{x.type === 'FULL' ? '全倉' : '逐倉'} {x.leverage}X</TradePositionCardTitleValueText>
-                                                                    <TradePositionCardBigValueText>{x.value} USDT</TradePositionCardBigValueText>
+                                                                    {x.profitAndLoss > 0 ? <TradePositionCardBigValueText>{x.profitAndLoss}</TradePositionCardBigValueText>:<TradePositionCardBigValueText style={{color:"#FB4C51"}}>{x.profitAndLoss}</TradePositionCardBigValueText>} 
                                                                 </TradePositionCardTitleRowContainer>
                                                             </TradePositionCardTitleContainer>
                                                             <TradePositionCardDetailRowContainer>

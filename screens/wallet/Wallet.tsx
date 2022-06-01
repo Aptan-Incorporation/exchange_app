@@ -6,6 +6,8 @@ import { useState,useEffect } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from '@react-navigation/native';
+import Spinner from 'react-native-loading-spinner-overlay'
 
 const Container = styled(View) <{ insets: number }>`
     display: flex ;
@@ -350,6 +352,105 @@ const TextContener = styled(View)`
 
 `;
 
+// Trade Page Position Style
+const TradePositionContainer = styled(View)`
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding-bottom: 280px;
+`;
+
+const TradePositionBackgroundImage = styled(Image)`
+width: 99px;
+height: 135px;
+`;
+
+const TradePositionCardContainer = styled(View)`
+display: flex;
+flex-direction: column;
+`;
+
+const TradePositionCardTitleContainer = styled(View)`
+display: flex;
+flex-direction: column;
+padding-top: 20px;
+`;
+
+const TradePositionCardTitleRowContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+`;
+
+const TradePositionCardTitleText = styled(Text)`
+font-weight: 700;
+font-size: 20px;
+line-height: 24px;
+color: ${props => props.theme.color.Secondary};
+`;
+
+const TradePositionCardTitleValueText = styled(Text)`
+font-weight: 500;
+font-size: 13px;
+line-height: 20px;
+color: ${props => props.theme.color.ExtraLightGray};
+`;
+
+const TradePositionCardDetailRowContainer = styled(View)`
+display: flex;
+flex-direction: row;
+padding-top: 12px;
+`;
+
+const TradePositionCardDetailColumnContainer = styled(View)`
+display: flex;
+flex-direction: column;
+width: 50%;
+`;
+
+const TradePositionCardSmallTitleText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 18px;
+color: ${props => props.theme.color.MidGray};
+`;
+
+const TradePositionCardBigValueText = styled(Text)`
+font-weight: 700;
+font-size: 16px;
+line-height: 20px;
+color: ${props => props.theme.color.Secondary};
+`;
+
+const TradePositionCardSmallValueText = styled(Text)`
+font-weight: 600;
+font-size: 13px;
+line-height: 16px;
+color: ${props => props.theme.color.ExtraLightGray};
+`;
+
+const TradePositionCardButtonContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+padding-top: 12px;
+`;
+
+const TradePositionCardButton = styled(TouchableOpacity)`
+height: 26px;
+width: 48%;
+justify-content: center;
+align-items: center;
+background-color: ${props => props.theme.color.DarkGray};
+`;
+
+const TradePositionCardButtonText = styled(Text)`
+font-weight: 400;
+font-size: 12px;
+line-height: 18px;
+color: ${props => props.theme.color.White};
+`;
 
 
 const WalletScreen = ({
@@ -361,6 +462,9 @@ const WalletScreen = ({
     const [spotBalance,setSpotBalance] = useState(0)
     const [totalBalance,setTotalBalance] = useState(0)
     const [position,setPosition] = useState(0)
+    const [positionArray,setPositionArray] = useState([])
+    const [loading,setLoading] = useState(false);
+
     const getBalance = () => {
         api.get("/investor/property").then(x=>{
             if(x.status != 400 && x.status != 401){
@@ -378,32 +482,48 @@ const WalletScreen = ({
 
     const getPosition = () => {
         api.get("/investor/position").then((x) => {
+            setPositionArray(x.data)
             if(x.status != 400 && x.status != 401){
                 if(x.data.length != 0){
-                    setPosition(x.data[0].profitAndLoss)
+                    setPosition(x.data[0].profitAndLoss)                
                 }
             }
         })
     }
+    const isFocused = useIsFocused();
 
     useEffect(async ()=>{
-        let token = await AsyncStorage.getItem("token")
-        if(token){
-            getBalance()
-            getPosition()
-        }
-
-        const interval = setInterval(() => {
+        if(isFocused){
+            let token = await AsyncStorage.getItem("token")
+            if(!token){
+                setFuturesBalance(0)
+                setTotalBalance(0)
+                setSpotBalance(0)
+                setPosition(0)
+                setPositionArray([])
+            }
             if(token){
                 getBalance()
                 getPosition()
             }
-        }, 2000);
+
+            const interval = setInterval(() => {
+                if(token){
+                    getBalance()
+                    getPosition()
+                }
+            }, 2000);
+            return () => clearInterval(interval); 
+
+        }
         
-        return () => clearInterval(interval); 
-    },[])
+        
+    },[isFocused])
     return (
         <Container insets={insets.top}>
+            {loading && 
+                <Spinner visible={true} textContent={''} />
+            }
             <Row>
                 <TouchableOpacity onPress={() => setIndex(0)} style={{marginRight:24}}>
                     <Text style={index === 0 ? {color:"white",fontSize:20,fontWeight:"600"} : {color:"#5C6670",fontSize:16,fontWeight:"600"}}>總覽</Text>
@@ -602,6 +722,67 @@ const WalletScreen = ({
                             }}>
                         <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>資金劃轉</Text>
                     </TouchableOpacity>
+                    <TradePositionContainer>
+                                            {
+                                                positionArray.map((x:any, i) => {
+                                                    return (
+                                                        <TradePositionCardContainer>
+                                                            <TradePositionCardTitleContainer>
+                                                                <TradePositionCardTitleRowContainer>
+                                                                    {x.side === "BUY" ?                                                                    <TradePositionCardTitleText>多 BTC/USDT</TradePositionCardTitleText>
+ :                                                                    <TradePositionCardTitleText style={{color:"#FB4C51"}}>空 BTC/USDT</TradePositionCardTitleText>
+}
+                                                                    <TradePositionCardSmallTitleText>未實現盈虧</TradePositionCardSmallTitleText>
+                                                                </TradePositionCardTitleRowContainer>
+                                                                <TradePositionCardTitleRowContainer>
+                                                                    <TradePositionCardTitleValueText>{x.type === 'FULL' ? '全倉' : '逐倉'} {x.leverage}X</TradePositionCardTitleValueText>
+                                                                    {x.profitAndLoss > 0 ? <TradePositionCardBigValueText>{x.profitAndLoss}</TradePositionCardBigValueText>:<TradePositionCardBigValueText style={{color:"#FB4C51"}}>{x.profitAndLoss}</TradePositionCardBigValueText>} 
+                                                                </TradePositionCardTitleRowContainer>
+                                                            </TradePositionCardTitleContainer>
+                                                            <TradePositionCardDetailRowContainer>
+                                                                <TradePositionCardDetailColumnContainer>
+                                                                    <TradePositionCardSmallTitleText>持倉量</TradePositionCardSmallTitleText>
+                                                                    <TradePositionCardSmallValueText>{x.quantity}</TradePositionCardSmallValueText>
+                                                                </TradePositionCardDetailColumnContainer>
+                                                                <TradePositionCardDetailColumnContainer>
+                                                                    <TradePositionCardSmallTitleText>入場價</TradePositionCardSmallTitleText>
+                                                                    <TradePositionCardSmallValueText>{x.avgPrice}</TradePositionCardSmallValueText>
+                                                                </TradePositionCardDetailColumnContainer>
+                                                            </TradePositionCardDetailRowContainer>
+                                                            <TradePositionCardDetailRowContainer>
+                                                                <TradePositionCardDetailColumnContainer>
+                                                                    <TradePositionCardSmallTitleText>標記價</TradePositionCardSmallTitleText>
+                                                                    <TradePositionCardSmallValueText>{x.avgPrice}</TradePositionCardSmallValueText>
+                                                                </TradePositionCardDetailColumnContainer>
+                                                                <TradePositionCardDetailColumnContainer>
+                                                                    <TradePositionCardSmallTitleText>強平價</TradePositionCardSmallTitleText>
+                                                                    <TradePositionCardSmallValueText>{x.forceClose}</TradePositionCardSmallValueText>
+                                                                </TradePositionCardDetailColumnContainer>
+                                                            </TradePositionCardDetailRowContainer>
+                                                            <TradePositionCardButtonContainer>
+                                                                <TradePositionCardButton onPress={() => { navigation.push("StopPositionScreen") }}>
+                                                                    <TradePositionCardButtonText>止盈/止損</TradePositionCardButtonText>
+                                                                </TradePositionCardButton>
+                                                                <TradePositionCardButton onPress={()=>{
+                                                                    setLoading(true)
+                                                                    api.postData("/order/position/close-position",{positionId:x.positionId}).then(x=>{
+                                                                        setLoading(false)
+                                                                        if(x.status !== 400){
+                                                                           getPosition()
+                                                                           getBalance() 
+                                                                        }else{
+                                                                            Alert.alert(x.data.msg)
+                                                                        }
+                                                                    })
+                                                                }}>
+                                                                    <TradePositionCardButtonText>平倉</TradePositionCardButtonText>
+                                                                </TradePositionCardButton>
+                                                            </TradePositionCardButtonContainer>
+                                                        </TradePositionCardContainer>
+                                                    )
+                                                })
+                                            }
+                                        </TradePositionContainer>
                 </>
             }
             {index === 3 &&

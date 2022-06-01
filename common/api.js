@@ -67,9 +67,9 @@ const Api = {
         return res.data
       })
       .catch((error) => {
-        if (error.response.status === 401) {
-          // AsyncStorage.removeItem("token")
-          // AsyncStorage.removeItem("user")
+        if(error.response.status === 401){
+          AsyncStorage.removeItem("token")
+          AsyncStorage.removeItem("user")
           // alert("登入過期，請重新登入")
           // window.location.reload()
         } else {
