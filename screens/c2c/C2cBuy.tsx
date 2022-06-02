@@ -127,7 +127,7 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
 
 
     // Input Price
-    const [inputPrice, setInputPrice] = useState("");
+    const [inputAmount, setInputAmount] = useState("");
 
     // Input Number
     const [inputNumber, setInputNumber] = useState("");
@@ -144,7 +144,6 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
     const [userId, setUserId] = useState("");
     const [buyFeeRate, setBuyFeeRate] = useState();
     const [sellFeeRate, setSellFeeRate] = useState();
-    const [userWalletBalance, setUserWalletBalance] = useState(Object);
 
     // Sent Buy Response
     const [buyId, setBuyId] = useState("");
@@ -165,27 +164,8 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
             if (x.status != 400 && x.status != 401) {
                 setBuyFeeRate(x.buyFeeRate);
                 setSellFeeRate(x.sellFeeRate);
-                /* setUserWalletBalance(x.wallet.coins.find((x: any) => x.symbol === CryptoAsset).balance); */
-                setUserWalletBalance(0);
             }
         })
-    };
-
-    // 獲取用戶資訊（幣種餘額）
-    const getUserBalanceInfo = async () => {
-        let user = await AsyncStorage.getItem("user");
-        setLoading(true)
-        api.get(`/otc/api/user/${JSON.parse(user!).account}`)
-            .then((x: any) => {
-                setLoading(false)
-                if (x.status != 400 && x.status != 401) {
-                    setUserWalletBalance((((x.wallet.coins).find((x: any) => { return x.symbol === CryptoAsset })).balance).toString());
-                }
-                else {
-                    Alert.alert("用戶餘額獲取失敗，請重新操作")
-                }
-            })
-            .catch((Error) => console.log(Error));
     };
 
     // 判斷付款類型
@@ -212,14 +192,6 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
             checkPaymentType()
         }
     }, [])
-
-    useEffect(async () => {
-        let token = await AsyncStorage.getItem("token");
-
-        if (token) {
-            getUserBalanceInfo();
-        }
-    }, [CryptoAsset]);
 
 
     /* useEffect(() => {
@@ -259,7 +231,6 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
                     swapPage === 1 &&
                     <C2cBuyFirst
                         Id={Id}
-                        MyCurrency={userWalletBalance}
                         Account={account}
                         Owner={Owner}
                         CurrencyType={CryptoAsset}
@@ -273,7 +244,7 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
                         PayTypeTouchnGo={payTypeTouchnGo}
                         PayTypePpay={payTypePpay}
                         PaymentTimeLimit={PaymentTimeLimit}
-                        onValueChangeInputPrice={setInputPrice}
+                        onValueChangeInputAmount={setInputAmount}
                         onValueChangeInputNumber={setInputNumber}
                         onChangeSetSwapPage={setSwapPage}
                         onValueChangeSetBuyId={setBuyId}
@@ -344,7 +315,6 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
                     swapPage === 2 &&
                     <C2cBuySecond
                         Id={Id}
-                        MyCurrency={userWalletBalance}
                         Account={account}
                         Owner={Owner}
                         CurrencyType={CryptoAsset}
@@ -357,7 +327,7 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
                         PayTypeAccount={payTypeAccount}
                         PayTypeTouchnGo={payTypeTouchnGo}
                         PayTypePpay={payTypePpay}
-                        BuyPrice={inputPrice}
+                        BuyAmount={inputAmount}
                         BuyNumber={inputNumber}
                         onChangeSetSwapPage={setSwapPage}
                         onChangeSetChoosePayType={setChoosePaytype}
@@ -375,7 +345,7 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
                             CurrencyType={CryptoAsset}
                             FiatCurrency={FiatCurrency}
                             Price={Price}
-                            BuyPrice={inputPrice}
+                            BuyAmount={inputAmount}
                             BuyNumber={inputNumber}
                             BuyID={buyId}
                             ChosenPayType={choosePayType}

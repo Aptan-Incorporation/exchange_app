@@ -352,7 +352,6 @@ const PpayQRCode = '../../../assets/images/c2c/qrcode.png'
 
 const C2cSellSecond = (props: {
     Id?: string;
-    MyCurrency: string;
     Account: string;
     Owner: string;
     CurrencyType: string;
@@ -365,7 +364,7 @@ const C2cSellSecond = (props: {
     //PayTypeAccount: boolean;
     //PayTypeTouchnGo: boolean;
     //PayTypePpay: boolean;
-    BuyPrice: string;
+    BuyAmount: string;
     BuyNumber: string;
     ChosenPayType: string;
     BuyId: string;
@@ -376,7 +375,6 @@ const C2cSellSecond = (props: {
 
     const {
         Id,
-        MyCurrency,
         Account,
         Owner,
         CurrencyType,
@@ -389,7 +387,7 @@ const C2cSellSecond = (props: {
         //PayTypeAccount,
         //PayTypeTouchnGo,
         //PayTypePpay,
-        BuyPrice,
+        BuyAmount,
         BuyNumber,
         ChosenPayType,
         BuyId,
@@ -522,11 +520,12 @@ const C2cSellSecond = (props: {
             })) */
         onChangeISWaitFinish(1)
         setSubmitText('確認收款並放行')
+        getPaidStatus()
     };
 
 
 
-    useEffect(() => { // 每10秒更新訂單狀態
+    /* useEffect(() => { // 每10秒更新訂單狀態
 
         //getPaymentsDetail();
 
@@ -540,7 +539,7 @@ const C2cSellSecond = (props: {
         return () => clearInterval(interval);
     });
 
-
+ */
 
 
 
@@ -550,7 +549,7 @@ const C2cSellSecond = (props: {
                 <FirstCardFirstRowContainer>
                     <FirstCardTitleText>總價</FirstCardTitleText>
                     <FirstCardFirstInRowContainer>
-                        <FirstCardPriceText>{BuyPrice}</FirstCardPriceText>
+                        <FirstCardPriceText>{BuyAmount}</FirstCardPriceText>
                         <FirstCardPriceCurrencyText>{FiatCurrency}</FirstCardPriceCurrencyText>
                     </FirstCardFirstInRowContainer>
                 </FirstCardFirstRowContainer>

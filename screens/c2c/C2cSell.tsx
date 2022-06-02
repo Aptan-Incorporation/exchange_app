@@ -142,7 +142,7 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
  */
 
     // Input Price
-    const [inputPrice, setInputPrice] = useState("");
+    const [inputAmount, setInputAmount] = useState("");
 
     // Input Number
     const [inputNumber, setInputNumber] = useState("");
@@ -167,7 +167,6 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
     const [userId, setUserId] = useState("");
     const [buyFeeRate, setBuyFeeRate] = useState();
     const [sellFeeRate, setSellFeeRate] = useState();
-    const [userWalletBalance, setUserWalletBalance] = useState(Object);
 
     // Payment
     const [paymentList, setpaymentList] = useState<any[]>([]);
@@ -194,22 +193,6 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
         })
     };
 
-    // 獲取用戶資訊（幣種餘額）
-    const getUserBalanceInfo = async () => {
-        let user = await AsyncStorage.getItem("user");
-        setLoading(true)
-        api.get(`/otc/api/user/${JSON.parse(user!).account}`)
-            .then((x: any) => {
-                setLoading(false)
-                if (x.status != 400 && x.status != 401) {
-                    setUserWalletBalance((((x.wallet.coins).find((x: any) => { return x.symbol === CryptoAsset })).balance).toString());
-                }
-                else {
-                    Alert.alert("用戶餘額獲取失敗，請重新操作")
-                }
-            })
-            .catch((Error) => console.log(Error));
-    };
 
     // 獲取訂單付款資訊
     const getOrderPayments = async () => {
@@ -239,14 +222,6 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
         };
 
     }, []);
-
-    useEffect(async () => {
-        let token = await AsyncStorage.getItem("token");
-
-        if (token) {
-            getUserBalanceInfo();
-        }
-    }, [CryptoAsset]);
 
     /* useEffect(() => {
         if (Payments.some((x: any) => { return x.type == 'BANK' })) {
@@ -286,7 +261,6 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
                     swapPage === 1 &&
                     <C2cSellFirst
                         Id={Id}
-                        MyCurrency={userWalletBalance}
                         Owner={Owner}
                         Account={account}
                         CurrencyType={CryptoAsset}
@@ -301,7 +275,7 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
                         //PayTypePpay={payTypePpay}
                         Payments={paymentList}
                         PaymentTimeLimit={PaymentTimeLimit}
-                        onValueChangeInputPrice={setInputPrice}
+                        onValueChangeInputAmount={setInputAmount}
                         onValueChangeInputNumber={setInputNumber}
                         onChangeSetSwapPage={setSwapPage}
                         onValueChangeSetBuyId={setBuyId}
@@ -372,7 +346,6 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
                     swapPage === 2 &&
                     <C2cSellSecond
                         Id={Id}
-                        MyCurrency={userWalletBalance}
                         Account={account}
                         Owner={Owner}
                         CurrencyType={CryptoAsset}
@@ -385,7 +358,7 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
                         //PayTypeAccount={payTypeAccount}
                         //PayTypeTouchnGo={payTypeTouchnGo}
                         //PayTypePpay={payTypePpay}
-                        BuyPrice={inputPrice}
+                        BuyAmount={inputAmount}
                         BuyNumber={inputNumber}
                         ChosenPayType={choosePayType}
                         BuyId={buyId}
@@ -401,7 +374,7 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
                         CurrencyType={CryptoAsset}
                         FiatCurrency={FiatCurrency}
                         Price={Price}
-                        BuyPrice={inputPrice}
+                        BuyAmount={inputAmount}
                         BuyNumber={inputNumber}
                         BuyID={buyId}
                         //ChosenPayType={choosePayType}

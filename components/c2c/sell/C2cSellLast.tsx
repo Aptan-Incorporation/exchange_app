@@ -154,7 +154,7 @@ const C2cSellLast = (props: {
     CurrencyType: string;
     FiatCurrency: string;
     Price: string;
-    BuyPrice: string;
+    BuyAmount: string;
     BuyNumber: string;
     BuyID: string;
     //ChosenPayType: string;
@@ -166,7 +166,7 @@ const C2cSellLast = (props: {
         CurrencyType,
         FiatCurrency,
         Price,
-        BuyPrice,
+        BuyAmount,
         BuyNumber,
         BuyID,
         //ChosenPayType,
@@ -206,7 +206,7 @@ const C2cSellLast = (props: {
                 <FirstCardFirstRowContainer>
                     <FirstCardSmallTitleText>總價</FirstCardSmallTitleText>
                     <FirstCardFirstInRowContainer>
-                        <FirstCardPriceText>{BuyPrice}</FirstCardPriceText>
+                        <FirstCardPriceText>{BuyAmount}</FirstCardPriceText>
                         <FirstCardPriceCurrencyText>{FiatCurrency}</FirstCardPriceCurrencyText>
                     </FirstCardFirstInRowContainer>
                 </FirstCardFirstRowContainer>

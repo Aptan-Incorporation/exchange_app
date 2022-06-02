@@ -356,7 +356,6 @@ const PpayQRCode = '../../../assets/images/c2c/qrcode.png'
 
 const C2cBuySecond = (props: {
     Id?: string;
-    MyCurrency: string;
     Account: string;
     Owner: string;
     CurrencyType: string;
@@ -369,7 +368,7 @@ const C2cBuySecond = (props: {
     PayTypeAccount: boolean;
     PayTypeTouchnGo: boolean;
     PayTypePpay: boolean;
-    BuyPrice: string;
+    BuyAmount: string;
     BuyNumber: string;
     BuyTime: number;
     BuyId: string,
@@ -381,7 +380,6 @@ const C2cBuySecond = (props: {
 
     const {
         Id,
-        MyCurrency,
         Account,
         Owner,
         CurrencyType,
@@ -394,7 +392,7 @@ const C2cBuySecond = (props: {
         PayTypeAccount,
         PayTypeTouchnGo,
         PayTypePpay,
-        BuyPrice,
+        BuyAmount,
         BuyNumber,
         BuyTime,
         BuyId,
@@ -492,6 +490,8 @@ const C2cBuySecond = (props: {
                     setSubmitText('放行中...')
                     onChangeSetChoosePayType(choosePayType);
                     onValueChangeIsWaitFinish(1)
+
+                    getBuyStatus()
                 } else {
                     Alert.alert(x.data.msg)
                 }
@@ -592,7 +592,7 @@ const C2cBuySecond = (props: {
         getPaymentsDetail();
     }, [])
 
-    useEffect(() => { // 每10秒更新訂單狀態
+    /* useEffect(() => { // 每10秒更新訂單狀態
 
         const interval = setInterval(() => {
             if (submitText === '放行中...') {
@@ -602,7 +602,7 @@ const C2cBuySecond = (props: {
         }, 10000);
 
         return () => clearInterval(interval);
-    });
+    }); */
 
 
 
@@ -612,7 +612,7 @@ const C2cBuySecond = (props: {
                 <FirstCardFirstRowContainer>
                     <FirstCardTitleText>總價</FirstCardTitleText>
                     <FirstCardFirstInRowContainer>
-                        <FirstCardPriceText>{BuyPrice}</FirstCardPriceText>
+                        <FirstCardPriceText>{BuyAmount}</FirstCardPriceText>
                         <FirstCardPriceCurrencyText>{FiatCurrency}</FirstCardPriceCurrencyText>
                     </FirstCardFirstInRowContainer>
                 </FirstCardFirstRowContainer>

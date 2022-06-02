@@ -338,7 +338,6 @@ color: #0A84FF;
 
 const C2cSellFirst = (props: {
     Id?: string;
-    MyCurrency: string;
     Owner: string;
     Account: string;
     CurrencyType: string;
@@ -353,7 +352,7 @@ const C2cSellFirst = (props: {
     //PayTypePpay: boolean;
     Payments: any[];
     PaymentTimeLimit: number;
-    onValueChangeInputPrice: React.Dispatch<React.SetStateAction<string>>;
+    onValueChangeInputAmount: React.Dispatch<React.SetStateAction<string>>;
     onValueChangeInputNumber: React.Dispatch<React.SetStateAction<string>>;
     onChangeSetSwapPage: React.Dispatch<React.SetStateAction<number>>;
     onValueChangeSetBuyId: React.Dispatch<React.SetStateAction<string>>;
@@ -364,7 +363,6 @@ const C2cSellFirst = (props: {
 
     const {
         Id,
-        MyCurrency,
         Account,
         CurrencyType,
         FiatCurrency,
@@ -379,7 +377,7 @@ const C2cSellFirst = (props: {
         Payments,
         PaymentTimeLimit,
         onChangeSetSwapPage,
-        onValueChangeInputPrice,
+        onValueChangeInputAmount,
         onValueChangeInputNumber,
         onValueChangeSetBuyId,
         onValueChangeSetBuyTime,
@@ -388,44 +386,40 @@ const C2cSellFirst = (props: {
     } = props;
 
     // Input Price
-    const [inputPrice, setInputPrice] = useState("");
+    const [inputAmount, setInputAmount] = useState("");
 
     // Input Number
     const [inputNumber, setInputNumber] = useState("");
 
     const [loading, setLoading] = useState(false);
 
-    const handleOnChangeAllPrice = () => {
-        if (parseFloat(MyCurrency) < parseFloat(LimitTo)) {
-            setInputPrice(parseFloat(MyCurrency).toFixed(2))
-        } else {
-            setInputPrice(parseFloat(LimitTo).toFixed(2))
-        };
+    const handleOnChangeAllAmount = () => {
+        setInputAmount((parseFloat(LimitTo)).toFixed(2));
+        setInputNumber("");
     };
 
     const handleOnChangeAllNumber = () => {
-        let str = ""
-        if (parseFloat(MyCurrency) <= parseFloat(LimitTo)) {
-            str = (parseFloat(MyCurrency) / parseFloat(Price)).toFixed(2);
-            if (str <= AvailableNum) {
-                setInputNumber(str);
-            } else {
-                setInputNumber(AvailableNum);
-            }
+        let num = ((parseFloat(LimitTo) / parseFloat(Price))).toString()
+        let index = (num).indexOf('.')
+        let slice = num.slice(0, index + 3)
+        if ((parseFloat(slice)) <= (parseFloat(AvailableNum))) {
+            setInputNumber(slice)
         } else {
-            str = (parseFloat(LimitTo) / parseFloat(Price)).toFixed(2);
-            setInputNumber(str);
+            setInputNumber((parseFloat(AvailableNum)).toFixed(2))
         }
+        setInputAmount("")
     };
 
     const handleOnChangeExchange = () => {
-        if (inputPrice != "" && parseFloat(inputPrice) <= parseFloat(MyCurrency)) {
-            setInputNumber((parseFloat(inputPrice) / parseFloat(Price)).toFixed(2));
-        } else if (inputNumber != "" && parseFloat(inputNumber) * parseFloat(Price) <= parseFloat(MyCurrency)) {
-            setInputPrice((parseFloat(inputNumber) * parseFloat(Price)).toFixed(2));
-        } else {
-            handleOnChangeAllNumber()
-            handleOnChangeAllPrice()
+        if (inputAmount == "" && inputNumber == "") {
+            setInputAmount((parseFloat(LimitTo)).toFixed(2));
+            setInputNumber("");
+        } else if (inputAmount == "") {
+            setInputAmount((parseFloat(inputNumber) * parseFloat(Price)).toFixed(2))
+            setInputNumber("")
+        } else if (inputNumber == "") {
+            setInputNumber((parseFloat(inputAmount) / parseFloat(Price)).toFixed(2))
+            setInputAmount("")
         }
     };
 
@@ -468,7 +462,8 @@ const C2cSellFirst = (props: {
         setLoading(true)
         api.postData(`/otc/api/advertisement/${Id}/otcOrder/`, {
             price: Price,
-            quantity: inputNumber,
+            quantity: (inputNumber == "" ? null : inputNumber),
+            amount: (inputAmount == "" ? null : inputAmount),
             payments: Payments // 出售必填
         })
             .then((x) => {
@@ -479,8 +474,8 @@ const C2cSellFirst = (props: {
                     onValueChangeSetBuyTime(x.createdDate)
                     onValueChangeIsWaitFinish(x.status)
                     onValueChangePayTimeLimit(x.paymentTimeLimit)
-                    onValueChangeInputPrice(inputPrice)
-                    onValueChangeInputNumber(inputNumber)
+                    onValueChangeInputAmount((x.amount).toFixed(2))
+                    onValueChangeInputNumber((x.quantity).toFixed(2))
                     onChangeSetSwapPage(2)
                 } else {
                     Alert.alert(x.data.msg)
@@ -544,8 +539,8 @@ const C2cSellFirst = (props: {
                         <TopInputLeftRowContainer>
                             <TextInput
                                 placeholder={"請輸入金額"}
-                                value={inputPrice}
-                                onChangeText={inputPrice => setInputPrice(inputPrice)}
+                                value={inputAmount}
+                                onChangeText={inputAmount => setInputAmount(inputAmount)}
                                 placeholderTextColor={'#8D97A2'}
                                 autoCorrect={false}
                                 keyboardType={"number-pad"}
@@ -555,7 +550,7 @@ const C2cSellFirst = (props: {
                                 <TopInputCurrencyText>{FiatCurrency}</TopInputCurrencyText>
                             </TopInputCurrencyTextContainer>
                             <TopInputAllButtonContainer>
-                                <TouchableOpacity onPress={() => { handleOnChangeAllPrice() }}>
+                                <TouchableOpacity onPress={() => { handleOnChangeAllAmount() }}>
                                     <TopInputAllButtonText>全部</TopInputAllButtonText>
                                 </TouchableOpacity>
                             </TopInputAllButtonContainer>
