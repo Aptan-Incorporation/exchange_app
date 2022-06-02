@@ -4,6 +4,7 @@ import { RootStackParamList } from "../types";
 import C2cScreen from "../screens/c2c/C2c";
 import C2cBuyScreen from "../screens/c2c/C2cBuy"
 import C2cSellScreen from "../screens/c2c/C2cSell";
+import C2cCreateScreen from "../screens/c2c/C2cCreate";
 import C2cHistoryScreen from "../screens/c2c/C2cHistory";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -18,6 +19,9 @@ const C2cStack = () => {
       </Stack.Group>
       <Stack.Group screenOptions={{ headerShown: false }}>
         <Stack.Screen name="C2cHistoryScreen" component={C2cHistoryScreen} />
+      </Stack.Group>
+      <Stack.Group screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="C2cCreateScreen" component={C2cCreateScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );

@@ -9,6 +9,7 @@ flex-direction: column;
 background-color: #18222D;
 padding-left: 16px;
 padding-right: 16px;
+padding-bottom: 100px;
 `;
 
 // First Card Style
@@ -106,7 +107,7 @@ const SecondCardFirstRowContainer = styled(View)`
 display: flex;
 flex-direction: row;
 justify-content: space-between;
-align-items: baseline;
+align-items: center;
 margin-top: 20px;
 `;
 
@@ -150,22 +151,22 @@ color: ${props => props.theme.color.Primary};
 
 const C2cBuyLast = (props: {
     Id?: string;
-    MyUSD: string;
     CurrencyType: string;
+    FiatCurrency: string;
     Price: string;
-    BuyPrice: string;
+    BuyAmount: string;
     BuyNumber: string;
     BuyID: string;
     ChosenPayType: string;
-    BuyTime: string;
+    BuyTime: number;
 }) => {
 
     const {
         Id,
-        MyUSD,
         CurrencyType,
+        FiatCurrency,
         Price,
-        BuyPrice,
+        BuyAmount,
         BuyNumber,
         BuyID,
         ChosenPayType,
@@ -176,13 +177,26 @@ const C2cBuyLast = (props: {
 
     // 付款方式
     const handleChange = () => {
-        if (ChosenPayType == 'Account') {
+        if (ChosenPayType == 'BANK') {
             return '銀行卡';
-        } else if (ChosenPayType == 'TouchnGo') {
+        } else if (ChosenPayType == 'TOUCHNGO') {
             return 'Touch’n Go';
-        } else if (ChosenPayType == 'Ppay') {
+        } else if (ChosenPayType == 'PPAY') {
             return 'Ppay';
         }
+    };
+
+    // 轉換日期
+    const handleCreateTime = (UnixTime: number) => {
+        let unix = new Date(UnixTime);
+        let year = unix.getFullYear();
+        let month = unix.getMonth() + 1;
+        let day = unix.getDate();
+        let hours = unix.getHours();
+        let minutes = unix.getMinutes();
+        let seconds = unix.getSeconds();
+
+        return (`${year}-${month}-${day} ${hours}:${seconds}:${seconds}`)
     };
 
     return (
@@ -192,8 +206,8 @@ const C2cBuyLast = (props: {
                 <FirstCardFirstRowContainer>
                     <FirstCardSmallTitleText>總價</FirstCardSmallTitleText>
                     <FirstCardFirstInRowContainer>
-                        <FirstCardPriceText>{BuyPrice}</FirstCardPriceText>
-                        <FirstCardPriceCurrencyText>USD</FirstCardPriceCurrencyText>
+                        <FirstCardPriceText>{BuyAmount}</FirstCardPriceText>
+                        <FirstCardPriceCurrencyText>{FiatCurrency}</FirstCardPriceCurrencyText>
                     </FirstCardFirstInRowContainer>
                 </FirstCardFirstRowContainer>
                 <FirstCardRowContainer>
@@ -202,11 +216,14 @@ const C2cBuyLast = (props: {
                 </FirstCardRowContainer>
                 <FirstCardRowContainer>
                     <FirstCardSmallTitleText>單價</FirstCardSmallTitleText>
-                    <FirstCardSmallValueText>{Price} USD</FirstCardSmallValueText>
+                    <FirstCardSmallValueText>{Price} {FiatCurrency}</FirstCardSmallValueText>
                 </FirstCardRowContainer>
                 <FirstCardRowContainer>
                     <FirstCardSmallTitleText>單號</FirstCardSmallTitleText>
-                    <FirstCardSmallValueText>{BuyID}</FirstCardSmallValueText>
+                    <View style={{alignItems: 'flex-end'}}>
+                        <FirstCardSmallValueText>{BuyID.slice(0, 28)}</FirstCardSmallValueText>
+                        <FirstCardSmallValueText>{BuyID.slice(28)}</FirstCardSmallValueText>
+                    </View>
                 </FirstCardRowContainer>
             </FirstCardContainer>
             <SecondCardContainer>
@@ -217,7 +234,7 @@ const C2cBuyLast = (props: {
                 </SecondCardFirstRowContainer>
                 <SecondCardRowContainer>
                     <SecondCardSmallTitleText>訂單時間</SecondCardSmallTitleText>
-                    <SecondCardSmallValueText>{BuyTime}</SecondCardSmallValueText>
+                    <SecondCardSmallValueText>{handleCreateTime(BuyTime)}</SecondCardSmallValueText>
                 </SecondCardRowContainer>
             </SecondCardContainer>
             <ReturnButton onPress={() => { navigation.goBack() }}>

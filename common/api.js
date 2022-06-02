@@ -10,18 +10,18 @@ const Api = {
     let token = await AsyncStorage.getItem("token")
     let config = {
       headers: {
-        Authorization: token
+        Authorization: "Bearer " + token
       }
     };
-    return axios.post(url + api, data,config).then((res) => {
+    return axios.post(url + api, data, config).then((res) => {
       return res.data
     })
       .catch((error) => {
-        if(error.response.status === 401){
+        if (error.response.status === 401) {
           AsyncStorage.removeItem("token")
           AsyncStorage.removeItem("user")
           alert("登入過期，請重新登入")
-        }else{
+        } else {
           alert(error.response.data.msg)
         }
         return error.response
@@ -31,10 +31,10 @@ const Api = {
     let token = await AsyncStorage.getItem("token")
     let config = {
       headers: {
-        Authorization: token
+        Authorization: "Bearer " + token
       }
     };
-    return axios.post(url + api, data,config).then((res) => {
+    return axios.post(url + api, data, config).then((res) => {
       return res.data
     })
       .catch((error) => {
@@ -48,7 +48,7 @@ const Api = {
         Authorization: token
       }
     };
-    return axios.post(url + api, data,{headers: { 'content-type': 'multipart/form-data',Authorization: token }}).then((res) => {
+    return axios.post(url + api, data, { headers: { 'content-type': 'multipart/form-data', Authorization: token } }).then((res) => {
       return res.data
     })
       .catch((error) => {
@@ -59,7 +59,7 @@ const Api = {
     let token = await AsyncStorage.getItem("token")
     let config = {
       headers: {
-        Authorization: token
+        Authorization: "Bearer " + token
       }
     };
     const response = await axios.get(url + api, config)
@@ -72,7 +72,7 @@ const Api = {
           AsyncStorage.removeItem("user")
           // alert("登入過期，請重新登入")
           // window.location.reload()
-        }else{
+        } else {
           // alert(error.response.data.msg)
         }
         return error.response
@@ -99,10 +99,10 @@ const Api = {
     let token = await AsyncStorage.getItem("token")
     let config = {
       headers: {
-        Authorization: token
+        Authorization: "Bearer " + token
       }
     };
-    var response = await axios.put(url + api, data,config)
+    const response = await axios.put(url + api, data, config)
       .then((res) => {
         return res.data
       })
@@ -118,13 +118,14 @@ const Api = {
         Authorization: token
       }
     };
-    await axios.delete(url + api,config)
+    const response = await axios.delete(url + api, config)
       .then((res) => {
         return res.data
       })
       .catch((error) => {
         return error.response
       })
+    return response
   }
 }
 

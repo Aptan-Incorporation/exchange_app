@@ -9,7 +9,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {}
+    interface RootParamList extends RootStackParamList { }
   }
 }
 
@@ -17,49 +17,68 @@ export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
   Modal: undefined;
   NotFound: undefined;
-  HomeScreen:undefined;
-  MarketScreen:undefined;
-  TradeScreen:undefined;
-  StopPositionScreen:undefined;
-  HistoryScreen:undefined;
-  C2cScreen:{
+  HomeScreen: undefined;
+  MarketScreen: undefined;
+  TradeScreen: undefined;
+  StopPositionScreen: undefined;
+  HistoryScreen: undefined;
+  C2cScreen: {
     Id: string,
-    MyUSD: string,
-    CurrencyType: string,
-    Account: string,
+    CryptoAsset: string,
+    fiatCurrency: string,
+    Owner: string,
     SuccessRate: number,
     AvailableNum: string,
     LimitFrom: string,
     LimitTo: string,
     Price: string,
-    payTypeAccount: boolean,
-    payTypeTouchnGo: boolean,
-    payTypePpay: boolean,
-    userPassword: string
+    Payments: [],
+    PaymentTimeLimit: number
   };
   C2cBuyScreen: undefined;
   C2cSellScreen: undefined;
+  C2cCreateScreen: undefined;
   C2cHistoryScreen: undefined;
-  ProfileScreen:undefined;
-  WalletScreen:undefined;
-  Login:undefined;
-  Member:undefined;
-  Register:undefined;
-  EmailVerify:undefined;
-  Recharge:undefined;
-  Withdraw:undefined;
-  Funds:undefined;
-  History:undefined;
-  Setting:undefined;
-  PhoneVerify:undefined;
-  PhoneInput:undefined;
-  GoogleVerifyStep1:undefined;
-  GoogleVerifyStep2:undefined;
-  GoogleVerifyStep3:undefined;
-  IdentityVerifyStep1:undefined;
-  IdentityVerifyStep2:undefined;
-  FundPassword:undefined;
-  Web:undefined;
+  ProfileScreen: undefined;
+  WalletScreen: undefined;
+  Login: undefined;
+  Member: undefined;
+  Register: undefined;
+  EmailVerify: undefined;
+  Recharge: undefined;
+  Withdraw: undefined;
+  Funds: undefined;
+  History: undefined;
+  Setting: undefined;
+  PhoneVerify: undefined;
+  PhoneInput: undefined;
+  GoogleVerifyStep1: undefined;
+  GoogleVerifyStep2: undefined;
+  GoogleVerifyStep3: undefined;
+  IdentityVerifyStep1: undefined;
+  IdentityVerifyStep2: undefined;
+  FundPassword: undefined;
+  Payments: undefined;
+  PaymentsCreate: undefined;
+  Advertisement: {
+    ID: string,
+    createDate: number,
+    type: number,
+    cryptoAsset: string,
+    fiatCurrency: string,
+    priceType: number,
+    price: number,
+    totalTradingAmount: number,
+    orderLimitMin: number,
+    orderLimitMax: number,
+    payments: [],
+    paymentTimeLimit: number,
+    terms: string,
+    conditionRegisteredDays: number,
+    conditionCompleteOrders: number
+  };
+  AdvertisementEdit: undefined;
+  Web: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
@@ -70,11 +89,11 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> = Nati
 export type RootTabParamList = {
   TabOne: undefined;
   TabTwo: undefined;
-  Home:undefined;
-  Market:undefined;
-  Trade:undefined;
-  C2c:undefined;
-  Wallet:undefined;
+  Home: undefined;
+  Market: undefined;
+  Trade: undefined;
+  C2c: undefined;
+  Wallet: undefined;
 };
 
 export type RootTabScreenProps<Screen extends keyof RootTabParamList> = CompositeScreenProps<

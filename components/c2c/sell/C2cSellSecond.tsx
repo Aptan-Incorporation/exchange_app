@@ -3,6 +3,10 @@ import { Text, View, ScrollView, Image, TouchableOpacity, Dimensions, Alert } fr
 import Modal from "react-native-modal";
 import styled from "styled-components"
 import { useEffect, useState } from "react";
+import axios from "axios"
+import api from "../../../common/api"
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Spinner from 'react-native-loading-spinner-overlay'
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -14,6 +18,7 @@ flex-direction: column;
 background-color: #18222D;
 padding-left: 16px;
 padding-right: 16px;
+padding-bottom: 200px;
 `;
 
 
@@ -33,7 +38,7 @@ const FirstCardRowContainer = styled(View)`
 display: flex;
 flex-direction: row;
 justify-content: space-between;
-align-items: baseline;
+align-items: center;
 margin-top: 8px;
 `;
 
@@ -347,42 +352,46 @@ const PpayQRCode = '../../../assets/images/c2c/qrcode.png'
 
 const C2cSellSecond = (props: {
     Id?: string;
-    MyUSD: string;
     Account: string;
+    Owner: string;
     CurrencyType: string;
+    FiatCurrency: string;
     SuccessRate: number;
     AvailableNum: string;
     LimitFrom: string;
     LimitTo: string;
     Price: string;
-    PayTypeAccount: boolean;
-    PayTypeTouchnGo: boolean;
-    PayTypePpay: boolean;
-    BuyPrice: string;
+    //PayTypeAccount: boolean;
+    //PayTypeTouchnGo: boolean;
+    //PayTypePpay: boolean;
+    BuyAmount: string;
     BuyNumber: string;
     ChosenPayType: string;
     BuyId: string;
+    IsWaitFinish: number;
     onChangeSetSwapPage: React.Dispatch<React.SetStateAction<number>>;
-    onChangeISWaitFinish: React.Dispatch<React.SetStateAction<boolean>>;
+    onChangeISWaitFinish: React.Dispatch<React.SetStateAction<number>>;
 }) => {
 
     const {
         Id,
-        MyUSD,
         Account,
+        Owner,
         CurrencyType,
+        FiatCurrency,
         SuccessRate,
         AvailableNum,
         LimitFrom,
         LimitTo,
         Price,
-        PayTypeAccount,
-        PayTypeTouchnGo,
-        PayTypePpay,
-        BuyPrice,
+        //PayTypeAccount,
+        //PayTypeTouchnGo,
+        //PayTypePpay,
+        BuyAmount,
         BuyNumber,
         ChosenPayType,
         BuyId,
+        IsWaitFinish,
         onChangeSetSwapPage,
         onChangeISWaitFinish,
     } = props;
@@ -405,15 +414,6 @@ const C2cSellSecond = (props: {
 
     const [submitText, setSubmitText] = useState('付款中...');
 
-    useEffect(() => {
-        setTimeout(() => { handleSwap() }, 5000)
-    });
-
-    const handleSwap = () => {
-        onChangeISWaitFinish(true);
-        setSubmitText("確認收款並放行");
-    }
-
 
     const SubmitAlert = () => {
 
@@ -426,14 +426,30 @@ const C2cSellSecond = (props: {
                     onPress: () => console.log("Cancel Pressed"),
                     style: "cancel"
                 },
-                { text: "確定", onPress: () => { onChangeSetSwapPage(3) } }
+                { text: "確定", onPress: () => { handleConfirm() } }
             ]
         );
 
     };
 
+    // 驗證是否已放行 （暫時不驗證）
+    const handleConfirm = () => {
+        /*  api.postData(`/otc/api/otcOrder/${BuyId}/confirm`)
+             .then((x) => {
+                 if (x.status != 400 && x.status != 401) {
+                     onChangeISWaitFinish(2)
+                     onChangeSetSwapPage(3)
+                 } else {
+                     Alert.alert(x.data.msg)
+                 }
+             }) */
+        onChangeISWaitFinish(2)
+        onChangeSetSwapPage(3)
+        
+    };
 
 
+    // Button Style
     const handleButtonDisabled = () => {
         if (submitText === '確認收款並放行') {
             return false;
@@ -460,14 +476,76 @@ const C2cSellSecond = (props: {
         }
     };
 
+    // 獲取付款資訊
 
-    const handleSubmit = () => {
-        if (choosePayType != "") {
-            onChangeSetSwapPage(3);
-        }
+    //付款資料
+    /* const [accountDetail, setAccountDetail] = useState([]);
+    const [touchnGoDetail, setTouchnGoDetail] = useState([]);
+    const [pPayDetail, setPpayDetail] = useState([]);
+
+    const getPaymentsDetail = () => {
+        api.get(`/otc/api/otcOrder/${BuyId}/payments/`)
+            .then((x => {
+                if (x.status != 400 && x.status != 401) {
+                    x.map((data: any) => {
+                        if (data.type === 'BANK') {
+                            setAccountDetail(data)
+                        } else if (data.type === 'TOUCHNGO') {
+                            setTouchnGoDetail(data)
+                        } else if (data.type === 'PPAY') {
+                            setPpayDetail(data)
+                        }
+                    })
+                } else {
+                    Alert.alert(x.data.msg)
+                }
+            }))
+    }; */
+
+    // 更新訂單訊息
+    const getPaidStatus = () => { // 按下付款後獲取訂單狀態，用以切換頁面
+        /* api.get(`/otc/api/otcOrder/${BuyId}`)
+            .then((x => {
+                if (x.status != 400 && x.status != 401) {
+                    if (x.status === 0) {
+                        onChangeISWaitFinish(0)
+                    } else if (x.status === 1) {
+                        onChangeISWaitFinish(1)
+                        setSubmitText('確認收款並放行')
+                    } else {
+                        Alert.alert("訂單錯誤，請重新操作")
+                    }
+                } else {
+                    Alert.alert(x.data.msg)
+                }
+            })) */
+        onChangeISWaitFinish(1)
+        setSubmitText('確認收款並放行')
     };
 
 
+
+    /* useEffect(() => { // 每10秒更新訂單狀態
+
+        //getPaymentsDetail();
+
+        const interval = setInterval(() => {
+            if (submitText === '付款中...') {
+                getPaidStatus()
+            }
+
+        }, 10000);
+
+        return () => clearInterval(interval);
+    });
+
+ */
+
+    useEffect(() => {
+        if (submitText === '付款中...') {
+            getPaidStatus()
+        }
+    }, [])
 
 
 
@@ -477,8 +555,8 @@ const C2cSellSecond = (props: {
                 <FirstCardFirstRowContainer>
                     <FirstCardTitleText>總價</FirstCardTitleText>
                     <FirstCardFirstInRowContainer>
-                        <FirstCardPriceText>{BuyPrice}</FirstCardPriceText>
-                        <FirstCardPriceCurrencyText>USD</FirstCardPriceCurrencyText>
+                        <FirstCardPriceText>{BuyAmount}</FirstCardPriceText>
+                        <FirstCardPriceCurrencyText>{FiatCurrency}</FirstCardPriceCurrencyText>
                     </FirstCardFirstInRowContainer>
                 </FirstCardFirstRowContainer>
                 <FirstCardRowContainer>
@@ -487,14 +565,17 @@ const C2cSellSecond = (props: {
                 </FirstCardRowContainer>
                 <FirstCardRowContainer>
                     <FirstCardTitleText>單價</FirstCardTitleText>
-                    <FirstCardValueText>{Price} USD</FirstCardValueText>
+                    <FirstCardValueText>{Price} {FiatCurrency}</FirstCardValueText>
                 </FirstCardRowContainer>
                 <FirstCardRowContainer>
                     <FirstCardTitleText>單號</FirstCardTitleText>
-                    <FirstCardValueText>{BuyId}</FirstCardValueText>
+                    <View style={{alignItems: 'flex-end'}}>
+                        <FirstCardValueText>{BuyId.slice(0, 28)}</FirstCardValueText>
+                        <FirstCardValueText>{BuyId.slice(28)}</FirstCardValueText>
+                    </View>
                 </FirstCardRowContainer>
             </FirstCardContainer>
-            <SecondCardContainer>
+            {/*  <SecondCardContainer>
                 <SecondCardTitleText>收款方式</SecondCardTitleText>
                 <SecondCardDetailText>等待買方選擇欲付款方式並完成付款</SecondCardDetailText>
                 <SecondCardPayTypeRowContainer>
@@ -535,19 +616,19 @@ const C2cSellSecond = (props: {
                         <SecondCardPayDetailContainer>
                             <SecondCardPayDetailTitleText>帳戶姓名</SecondCardPayDetailTitleText>
                             <SecondCardPayDetailInRowContainer>
-                                <SecondCardPayDetailValueText>{PayAccountArray.name}</SecondCardPayDetailValueText>
+                                <SecondCardPayDetailValueText>{accountDetail.name}</SecondCardPayDetailValueText>
                             </SecondCardPayDetailInRowContainer>
                         </SecondCardPayDetailContainer>
                         <SecondCardPayDetailContainer>
                             <SecondCardPayDetailTitleText>銀行名稱</SecondCardPayDetailTitleText>
                             <SecondCardPayDetailInRowContainer>
-                                <SecondCardPayDetailValueText>{PayAccountArray.bank}</SecondCardPayDetailValueText>
+                                <SecondCardPayDetailValueText>{accountDetail.code}</SecondCardPayDetailValueText>
                             </SecondCardPayDetailInRowContainer>
                         </SecondCardPayDetailContainer>
                         <SecondCardPayDetailContainer>
                             <SecondCardPayDetailTitleText>銀行帳號</SecondCardPayDetailTitleText>
                             <SecondCardPayDetailInRowContainer>
-                                <SecondCardPayDetailValueText>{PayAccountArray.account}</SecondCardPayDetailValueText>
+                                <SecondCardPayDetailValueText>{accountDetail.account}</SecondCardPayDetailValueText>
                             </SecondCardPayDetailInRowContainer>
                         </SecondCardPayDetailContainer>
                     </PayBottomContainer>
@@ -598,14 +679,14 @@ const C2cSellSecond = (props: {
                         </SecondCardPayDetailContainer>
                     </PayBottomContainer>
                 }
-            </SecondCardContainer>
+            </SecondCardContainer> */}
             <BottomButtonContainer>
                 <SubmitButton onPress={() => { SubmitAlert() }} disabled={handleButtonDisabled()} style={{ backgroundColor: handleSubmitButtonStyle() }}>
                     <SubmitButtonText style={{ color: handleSubmitButtonTextStyle() }}>{submitText}</SubmitButtonText>
                 </SubmitButton>
             </BottomButtonContainer>
 
-            <Modal
+            {/* <Modal
                 isVisible={isQRCodeModalVisible}
                 deviceHeight={windowHeight}
                 deviceWidth={windowWidth}
@@ -647,7 +728,7 @@ const C2cSellSecond = (props: {
                     }
 
                 </View>
-            </Modal>
+            </Modal> */}
 
         </Container>
     )

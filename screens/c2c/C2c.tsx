@@ -1,14 +1,19 @@
 import * as React from "react"
-import { Text, View, Image, TouchableOpacity, ScrollView } from "react-native"
+import { Text, View, Image, TouchableOpacity, ScrollView, Alert } from "react-native"
 import { RootStackScreenProps } from "../../types";
 import styled from "styled-components"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import axios from "axios"
+import api from "../../common/api"
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Spinner from 'react-native-loading-spinner-overlay'
 
 const Container = styled(View) <{ insets: number }>`
     display: flex ;
     flex-direction: column;
     padding-top: ${props => props.insets}px;
+    background-color: #131B24;
 `;
 
 //Header Style
@@ -37,6 +42,14 @@ align-items: center;
 width: 100px;
 `;
 
+const HeaderTitleInlineRowRightContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: flex-end;
+align-items: center;
+width: 100px;
+`;
+
 const HeaderTitleTextClicked = styled(Text)`
 font-weight: 600;
 font-size: 20px;
@@ -54,6 +67,12 @@ color: ${props => props.theme.color.Gray};
 const HeaderTitleOrderIcon = styled(Image)`
 width: 28px;
 height: 28px;
+`;
+
+const HeaderTitleAddIcon = styled(Image)`
+width: 32px;
+height: 32px;
+margin-right: 15px;
 `;
 
 const HeaderCurrencyPageContainer = styled(View)`
@@ -101,6 +120,7 @@ flex-direction: column;
 padding-top: 20px;
 padding-left: 16px;
 padding-right: 12px;
+padding-bottom: 500px;
 background-color: #131B24;
 `;
 
@@ -131,6 +151,7 @@ flex-direction: column;
 const DetailCardMiddleLeftRowContainer = styled(View)`
 display: flex;
 flex-direction: row;
+align-items: center;
 `;
 
 const DetailCardMiddleRightRowContainer = styled(View)`
@@ -413,7 +434,8 @@ const SellArray = [
         limitFrom: '100.00',
         limitTo: '5,202.00',
         price: '1.02',
-        payType: {
+        payType:
+        {
             account: false,
             touchnGo: true,
             ppay: false
@@ -439,100 +461,259 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
     // Swap Buy Currency
     const [swapBuyCurrencyType, setSwapBuyCurrencyType] = useState("USDT");
 
+    const [buyList, setBuyList] = useState([]);
+    const [sellList, setSellList] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    const getBuyList = (cryptoAsset: string) => {
+        setLoading(true)
+        api.get(`/otc/api/advertisement/?all=false&my=false&type=sell&cryptoAsset=${cryptoAsset}`)
+            .then((x) => {
+                setLoading(false)
+                if (x.status != 400 && x.status != 401) {
+                    setBuyList(x);
+                } else {
+                    Alert.alert(x.data.msg);
+                }
+            })
+            .catch(() => {
+                console.log(Error)
+            })
+    };
+
+    const getSellList = (cryptoAsset: string) => {
+        setLoading(true)
+        api.get(`/otc/api/advertisement/?all=false&my=false&type=buy&cryptoAsset=${cryptoAsset}`)
+            .then((x) => {
+                setLoading(false)
+                if (x.status != 400 && x.status != 401) {
+                    setSellList(x);
+                } else {
+                    Alert.alert(x.data.msg);
+                }
+            })
+            .catch(() => {
+                console.log(Error)
+            })
+    };
+
+    async function swapPageRefreshBuy(cryptoAsset: string) {
+        let token = await AsyncStorage.getItem("token")
+        if (token) {
+            getBuyList(cryptoAsset);
+        } else {
+            Alert.alert("請先登入");
+        }
+    };
+
+    async function swapPageRefreshSell(cryptoAsset: string) {
+        let token = await AsyncStorage.getItem("token")
+        if (token) {
+            getSellList(cryptoAsset);
+        } else {
+            Alert.alert("請先登入");
+        }
+    };
+
+    const addListener = () => {
+        navigation.addListener('focus', () => getBuyList(swapBuyCurrencyType));
+    };
+
+
+    useEffect(async () => {
+        let token = await AsyncStorage.getItem("token")
+
+        if (token) {
+            getBuyList(swapBuyCurrencyType);
+        } else {
+            Alert.alert("請先登入");
+        }
+
+        addListener();
+
+    }, []);
+
     return (
         <Container insets={insets.top}>
+            {
+                loading &&
+                <Spinner visible={true} textContent={'載入中'} color={'#FFFFFF'} textStyle={{ color: '#FFFFFF' }} />
+            }
             <HeaderContainer>
                 <HeaderTitleContainer>
                     {
                         swapBuySell === 0 ?
                             <HeaderTitleInlineRowContainer>
-                                <TouchableOpacity onPress={() => { setSwapBuySell(0) }}>
+                                <TouchableOpacity onPress={() => { setSwapBuySell(0), setSwapBuyCurrencyType('USDT'), swapPageRefreshBuy('USDT') }}>
                                     <HeaderTitleTextClicked>購買</HeaderTitleTextClicked>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { setSwapBuySell(1) }}>
+                                <TouchableOpacity onPress={() => { setSwapBuySell(1), setSwapBuyCurrencyType('USDT'), swapPageRefreshSell('USDT') }}>
                                     <HeaderTitleText>出售</HeaderTitleText>
                                 </TouchableOpacity>
                             </HeaderTitleInlineRowContainer> :
                             <HeaderTitleInlineRowContainer>
-                                <TouchableOpacity onPress={() => { setSwapBuySell(0) }}>
+                                <TouchableOpacity onPress={() => { setSwapBuySell(0), setSwapBuyCurrencyType('USDT'), swapPageRefreshBuy('USDT') }}>
                                     <HeaderTitleText>購買</HeaderTitleText>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { setSwapBuySell(1) }}>
+                                <TouchableOpacity onPress={() => { setSwapBuySell(1), setSwapBuyCurrencyType('USDT'), swapPageRefreshSell('USDT') }}>
                                     <HeaderTitleTextClicked>出售</HeaderTitleTextClicked>
                                 </TouchableOpacity>
                             </HeaderTitleInlineRowContainer>
                     }
-                    <TouchableOpacity onPress={() => { navigation.navigate("C2cHistoryScreen") }}>
-                        <HeaderTitleOrderIcon source={require("../../assets/images/c2c/order.png")} />
-                    </TouchableOpacity>
+                    <HeaderTitleInlineRowRightContainer>
+                        <TouchableOpacity onPress={() => { navigation.navigate("C2cCreateScreen") }}>
+                            <HeaderTitleAddIcon source={require("../../assets/images/c2c/add.png")} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => { navigation.navigate("C2cHistoryScreen") }}>
+                            <HeaderTitleOrderIcon source={require("../../assets/images/c2c/order.png")} />
+                        </TouchableOpacity>
+                    </HeaderTitleInlineRowRightContainer>
                 </HeaderTitleContainer>
+                {/* Buy Page CryptoAsset Swap */}
                 {
-                    swapBuyCurrencyType === 'USDT' &&
-                    <HeaderCurrencyPageContainer>
-                        <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('USDT') }}>
-                            <HeaderCurrencyButtonTextClicked>USDT</HeaderCurrencyButtonTextClicked>
-                        </HeaderCurrencyButtonClicked>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC') }}>
-                            <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH') }}>
-                            <HeaderCurrencyButtonText>ETH</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE') }}>
-                            <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                    </HeaderCurrencyPageContainer>
+                    swapBuySell === 0 &&
+                    (swapBuyCurrencyType === 'USDT' &&
+                        <HeaderCurrencyPageContainer>
+                            <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshBuy('USDT') }}>
+                                <HeaderCurrencyButtonTextClicked>USDT</HeaderCurrencyButtonTextClicked>
+                            </HeaderCurrencyButtonClicked>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshBuy('BTC') }}>
+                                <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshBuy('ETH') }}>
+                                <HeaderCurrencyButtonText>ETH</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshBuy('DOGE') }}>
+                                <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                        </HeaderCurrencyPageContainer>)
                 }
                 {
-                    swapBuyCurrencyType === 'BTC' &&
-                    <HeaderCurrencyPageContainer>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT') }}>
-                            <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                        <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('BTC') }}>
-                            <HeaderCurrencyButtonTextClicked>BTC</HeaderCurrencyButtonTextClicked>
-                        </HeaderCurrencyButtonClicked>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH') }}>
-                            <HeaderCurrencyButtonText>ETH</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE') }}>
-                            <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                    </HeaderCurrencyPageContainer>
+                    swapBuySell === 0 &&
+                    (swapBuyCurrencyType === 'BTC' &&
+                        <HeaderCurrencyPageContainer>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshBuy('USDT') }}>
+                                <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshBuy('BTC') }}>
+                                <HeaderCurrencyButtonTextClicked>BTC</HeaderCurrencyButtonTextClicked>
+                            </HeaderCurrencyButtonClicked>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshBuy('ETH') }}>
+                                <HeaderCurrencyButtonText>ETH</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshBuy('DOGE') }}>
+                                <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                        </HeaderCurrencyPageContainer>)
                 }
                 {
-                    swapBuyCurrencyType === 'ETH' &&
-                    <HeaderCurrencyPageContainer>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT') }}>
-                            <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC') }}>
-                            <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                        <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('ETH') }}>
-                            <HeaderCurrencyButtonTextClicked>ETH</HeaderCurrencyButtonTextClicked>
-                        </HeaderCurrencyButtonClicked>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE') }}>
-                            <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                    </HeaderCurrencyPageContainer>
+                    swapBuySell === 0 &&
+                    (swapBuyCurrencyType === 'ETH' &&
+                        <HeaderCurrencyPageContainer>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshBuy('USDT') }}>
+                                <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshBuy('BTC') }}>
+                                <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshBuy('ETH') }}>
+                                <HeaderCurrencyButtonTextClicked>ETH</HeaderCurrencyButtonTextClicked>
+                            </HeaderCurrencyButtonClicked>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshBuy('DOGE') }}>
+                                <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                        </HeaderCurrencyPageContainer>)
                 }
                 {
-                    swapBuyCurrencyType === 'DOGE' &&
-                    <HeaderCurrencyPageContainer>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT') }}>
-                            <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC') }}>
-                            <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                        <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH') }}>
-                            <HeaderCurrencyButtonText>ETH</HeaderCurrencyButtonText>
-                        </HeaderCurrencyButton>
-                        <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('DOGE') }}>
-                            <HeaderCurrencyButtonTextClicked>DOGE</HeaderCurrencyButtonTextClicked>
-                        </HeaderCurrencyButtonClicked>
-                    </HeaderCurrencyPageContainer>
+                    swapBuySell === 0 &&
+                    (swapBuyCurrencyType === 'DOGE' &&
+                        <HeaderCurrencyPageContainer>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshBuy('USDT') }}>
+                                <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshBuy('BTC') }}>
+                                <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshBuy('ETH') }}>
+                                <HeaderCurrencyButtonText>ETH</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshBuy('DOGE') }}>
+                                <HeaderCurrencyButtonTextClicked>DOGE</HeaderCurrencyButtonTextClicked>
+                            </HeaderCurrencyButtonClicked>
+                        </HeaderCurrencyPageContainer>)
+                }
+                {/* Sell Page CryptoAsset Swap */}
+                {
+                    swapBuySell === 1 &&
+                    (swapBuyCurrencyType === 'USDT' &&
+                        <HeaderCurrencyPageContainer>
+                            <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshSell('USDT') }}>
+                                <HeaderCurrencyButtonTextClicked>USDT</HeaderCurrencyButtonTextClicked>
+                            </HeaderCurrencyButtonClicked>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshSell('BTC') }}>
+                                <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshSell('ETH') }}>
+                                <HeaderCurrencyButtonText>ETH</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshSell('DOGE') }}>
+                                <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                        </HeaderCurrencyPageContainer>)
+                }
+                {
+                    swapBuySell === 1 &&
+                    (swapBuyCurrencyType === 'BTC' &&
+                        <HeaderCurrencyPageContainer>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshSell('USDT') }}>
+                                <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshSell('BTC') }}>
+                                <HeaderCurrencyButtonTextClicked>BTC</HeaderCurrencyButtonTextClicked>
+                            </HeaderCurrencyButtonClicked>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshSell('ETH') }}>
+                                <HeaderCurrencyButtonText>ETH</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshSell('DOGE') }}>
+                                <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                        </HeaderCurrencyPageContainer>)
+                }
+                {
+                    swapBuySell === 1 &&
+                    (swapBuyCurrencyType === 'ETH' &&
+                        <HeaderCurrencyPageContainer>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshSell('USDT') }}>
+                                <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshSell('BTC') }}>
+                                <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshSell('ETH') }}>
+                                <HeaderCurrencyButtonTextClicked>ETH</HeaderCurrencyButtonTextClicked>
+                            </HeaderCurrencyButtonClicked>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshSell('DOGE') }}>
+                                <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                        </HeaderCurrencyPageContainer>)
+                }
+                {
+                    swapBuySell === 1 &&
+                    (swapBuyCurrencyType === 'DOGE' &&
+                        <HeaderCurrencyPageContainer>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshSell('USDT') }}>
+                                <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshSell('BTC') }}>
+                                <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshSell('ETH') }}>
+                                <HeaderCurrencyButtonText>ETH</HeaderCurrencyButtonText>
+                            </HeaderCurrencyButton>
+                            <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshSell('DOGE') }}>
+                                <HeaderCurrencyButtonTextClicked>DOGE</HeaderCurrencyButtonTextClicked>
+                            </HeaderCurrencyButtonClicked>
+                        </HeaderCurrencyPageContainer>)
                 }
             </HeaderContainer>
             <DetailContainer>
@@ -540,66 +721,85 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                 {
                     swapBuySell === 0 &&
                     swapBuyCurrencyType === 'USDT' &&
-                    BuyArray.map((x, i) => {
+                    (buyList.map((x: any, i) => {
+                        /* const payTypeAccount = () => {
+                            if (x.payments[0].type === 'BANK' || x.payments[1].type === 'BANK' || x.payments[2].type === 'BANK') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypeTouchnGo = () => {
+                            if (x.payments[0].type === 'TOUCHNGO' || x.payments[1].type === 'TOUCHNGO' || x.payments[2].type === 'TOUCHNGO') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypePpay = () => {
+                            if (x.payments[0].type === 'PPAY' || x.payments[1].type === 'PPAY' || x.payments[2].type === 'PPAY') {
+                                return true
+                            }
+                            return false
+                        } */
                         return (
                             /* 在 BuyArray 中尋找符合 USDT 的 OBject */
-                            x.type === 'USDT' &&
+                            x.cryptoAsset === 'USDT' &&
                             <DetailCardContainer>
                                 <DeatilCardTopContainer>
                                     <PhotoButton onPress={() => { }}>
                                         {/* 取 account 中第一個字位於頭像 */}
-                                        <PhotoButtonText>{(x.account).charAt(0).toUpperCase()}</PhotoButtonText>
+                                        <PhotoButtonText>{(x.owner).charAt(0).toUpperCase()}</PhotoButtonText>
                                     </PhotoButton>
-                                    <EmailText>{x.account}</EmailText>
-                                    <SuccessRateText>({x.successRate}%)</SuccessRateText>
+                                    <EmailText>{x.owner}</EmailText>
+                                    <SuccessRateText>(???%)</SuccessRateText>
                                 </DeatilCardTopContainer>
                                 <DetailCardMiddleContainer>
                                     <DetailCardMiddleLeftColumnContainer>
                                         <DetailCardMiddleLeftRowContainer>
                                             <SmallTitleText>數量</SmallTitleText>
-                                            <SmallValueText>{x.number} USDT</SmallValueText>
+                                            <SmallValueText>{x.totalTradingAmount} {x.cryptoAsset}</SmallValueText>
                                         </DetailCardMiddleLeftRowContainer>
                                         <DetailCardMiddleLeftRowContainer>
                                             <SmallTitleText>限額</SmallTitleText>
-                                            <SmallValueText>{x.limitFrom} - {x.limitTo} USD</SmallValueText>
+                                            <SmallValueText>{x.orderLimitMin} - {x.orderLimitMax} {x.fiatCurrency}</SmallValueText>
                                         </DetailCardMiddleLeftRowContainer>
                                     </DetailCardMiddleLeftColumnContainer>
                                     <DetailCardMiddleRightRowContainer>
                                         <BuyPriceText>{x.price}</BuyPriceText>
-                                        <BuyCurrencyText>USDT</BuyCurrencyText>
+                                        <BuyCurrencyText>{x.fiatCurrency}</BuyCurrencyText>
                                     </DetailCardMiddleRightRowContainer>
                                 </DetailCardMiddleContainer>
                                 <DetailCardBottomContainer>
                                     {/* 顯示支援付款的Icon */}
                                     <DetailCardBottomRowContainer>
-                                        {
-                                            x.payType.account === true &&
+                                        {/* {
+                                            payTypeAccount() === true &&
                                             <AccountIcon source={require("../../assets/images/c2c/account.png")} />
                                         }
                                         {
-                                            x.payType.touchnGo === true &&
+                                            payTypeTouchnGo() === true &&
                                             <TouchnGoIcon source={require("../../assets/images/c2c/touchn_go.png")} />
                                         }
 
                                         {
-                                            x.payType.ppay === true &&
+                                            payTypePpay() === true &&
                                             <PpayIcon source={require("../../assets/images/c2c/p_pay.png")} />
-                                        }
+                                        } */}
                                     </DetailCardBottomRowContainer>
                                     <BuyButton onPress={() => {
                                         navigation.navigate('C2cBuyScreen', {
                                             Id: x.id,
-                                            MyUSD: MyUSD,
-                                            CurrencyType: x.type,
-                                            Account: x.account,
-                                            SuccessRate: x.successRate,
-                                            AvailableNum: x.number,
-                                            LimitFrom: x.limitFrom,
-                                            LimitTo: x.limitTo,
+                                            CryptoAsset: x.cryptoAsset,
+                                            FiatCurrency: x.fiatCurrency,
+                                            Owner: x.owner,
+                                            SuccessRate: "???",
+                                            AvailableNum: x.totalTradingAmount,
+                                            LimitFrom: x.orderLimitMin,
+                                            LimitTo: x.orderLimitMax,
                                             Price: x.price,
-                                            payTypeAccount: x.payType.account,
-                                            payTypeTouchnGo: x.payType.touchnGo,
-                                            payTypePpay: x.payType.ppay
+                                            Payments: x.payments,
+                                            PaymentTimeLimit: x.paymentTimeLimit
                                         } as any)
                                     }}
                                     /* disabled={isNavigate()} */
@@ -609,13 +809,215 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                 </DetailCardBottomContainer>
                                 {/* 找出 BuyArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
                                 {
-                                    x.type === 'USDT' &&
-                                    i !== BuyArray.length - 1 &&
+                                    x.cryptoAsset === 'USDT' &&
+                                    i !== buyList.length - 1 &&
                                     <DetailCardLine></DetailCardLine>
                                 }
                             </DetailCardContainer>
                         )
-                    })
+                    }))
+
+                }
+                {/* 購買頁面 >> BTC頁面  */}
+                {
+                    swapBuySell === 0 &&
+                    swapBuyCurrencyType === 'BTC' &&
+                    (buyList.map((x: any, i) => {
+                        /* const payTypeAccount = () => {
+                            if (x.payments[0].type === 'BANK' || x.payments[1].type === 'BANK' || x.payments[2].type === 'BANK') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypeTouchnGo = () => {
+                            if (x.payments[0].type === 'TOUCHNGO' || x.payments[1].type === 'TOUCHNGO' || x.payments[2].type === 'TOUCHNGO') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypePpay = () => {
+                            if (x.payments[0].type === 'PPAY' || x.payments[1].type === 'PPAY' || x.payments[2].type === 'PPAY') {
+                                return true
+                            }
+                            return false
+                        } */
+                        return (
+                            /* 在 BuyArray 中尋找符合 BTC 的 OBject */
+                            x.cryptoAsset === 'BTC' &&
+                            <DetailCardContainer>
+                                <DeatilCardTopContainer>
+                                    <PhotoButton onPress={() => { }}>
+                                        {/* 取 account 中第一個字位於頭像 */}
+                                        <PhotoButtonText>{(x.owner).charAt(0).toUpperCase()}</PhotoButtonText>
+                                    </PhotoButton>
+                                    <EmailText>{x.owner}</EmailText>
+                                    <SuccessRateText>(???%)</SuccessRateText>
+                                </DeatilCardTopContainer>
+                                <DetailCardMiddleContainer>
+                                    <DetailCardMiddleLeftColumnContainer>
+                                        <DetailCardMiddleLeftRowContainer>
+                                            <SmallTitleText>數量</SmallTitleText>
+                                            <SmallValueText>{x.totalTradingAmount} {x.cryptoAsset}</SmallValueText>
+                                        </DetailCardMiddleLeftRowContainer>
+                                        <DetailCardMiddleLeftRowContainer>
+                                            <SmallTitleText>限額</SmallTitleText>
+                                            <SmallValueText>{x.orderLimitMin} - {x.orderLimitMax} {x.fiatCurrency}</SmallValueText>
+                                        </DetailCardMiddleLeftRowContainer>
+                                    </DetailCardMiddleLeftColumnContainer>
+                                    <DetailCardMiddleRightRowContainer>
+                                        <BuyPriceText>{x.price}</BuyPriceText>
+                                        <BuyCurrencyText>{x.fiatCurrency}</BuyCurrencyText>
+                                    </DetailCardMiddleRightRowContainer>
+                                </DetailCardMiddleContainer>
+                                <DetailCardBottomContainer>
+                                    {/* 顯示支援付款的Icon */}
+                                    <DetailCardBottomRowContainer>
+                                        {/* {
+                                            payTypeAccount() === true &&
+                                            <AccountIcon source={require("../../assets/images/c2c/account.png")} />
+                                        }
+                                        {
+                                            payTypeTouchnGo() === true &&
+                                            <TouchnGoIcon source={require("../../assets/images/c2c/touchn_go.png")} />
+                                        }
+
+                                        {
+                                            payTypePpay() === true &&
+                                            <PpayIcon source={require("../../assets/images/c2c/p_pay.png")} />
+                                        } */}
+                                    </DetailCardBottomRowContainer>
+                                    <BuyButton onPress={() => {
+                                        navigation.navigate('C2cBuyScreen', {
+                                            Id: x.id,
+                                            CryptoAsset: x.cryptoAsset,
+                                            FiatCurrency: x.fiatCurrency,
+                                            Owner: x.owner,
+                                            SuccessRate: "???",
+                                            AvailableNum: x.totalTradingAmount,
+                                            LimitFrom: x.orderLimitMin,
+                                            LimitTo: x.orderLimitMax,
+                                            Price: x.price,
+                                            Payments: x.payments,
+                                            PaymentTimeLimit: x.paymentTimeLimit
+                                        } as any)
+                                    }}
+                                    /* disabled={isNavigate()} */
+                                    >
+                                        <BuyButtonText>購買</BuyButtonText>
+                                    </BuyButton>
+                                </DetailCardBottomContainer>
+                                {/* 找出 BuyArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
+                                {
+                                    x.cryptoAsset === 'BTC' &&
+                                    i !== buyList.length - 1 &&
+                                    <DetailCardLine></DetailCardLine>
+                                }
+                            </DetailCardContainer>
+                        )
+                    }))
+
+                }
+                {/* 購買頁面 >> ETH頁面  */}
+                {
+                    swapBuySell === 0 &&
+                    swapBuyCurrencyType === 'ETH' &&
+                    (buyList.map((x: any, i) => {
+                        /* const payTypeAccount = () => {
+                            if (x.payments[0].type === 'BANK' || x.payments[1].type === 'BANK' || x.payments[2].type === 'BANK') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypeTouchnGo = () => {
+                            if (x.payments[0].type === 'TOUCHNGO' || x.payments[1].type === 'TOUCHNGO' || x.payments[2].type === 'TOUCHNGO') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypePpay = () => {
+                            if (x.payments[0].type === 'PPAY' || x.payments[1].type === 'PPAY' || x.payments[2].type === 'PPAY') {
+                                return true
+                            }
+                            return false
+                        } */
+                        return (
+                            /* 在 BuyArray 中尋找符合 ETH 的 OBject */
+                            x.cryptoAsset === 'ETH' &&
+                            <DetailCardContainer>
+                                <DeatilCardTopContainer>
+                                    <PhotoButton onPress={() => { }}>
+                                        {/* 取 account 中第一個字位於頭像 */}
+                                        <PhotoButtonText>{(x.owner).charAt(0).toUpperCase()}</PhotoButtonText>
+                                    </PhotoButton>
+                                    <EmailText>{x.owner}</EmailText>
+                                    <SuccessRateText>(???%)</SuccessRateText>
+                                </DeatilCardTopContainer>
+                                <DetailCardMiddleContainer>
+                                    <DetailCardMiddleLeftColumnContainer>
+                                        <DetailCardMiddleLeftRowContainer>
+                                            <SmallTitleText>數量</SmallTitleText>
+                                            <SmallValueText>{x.totalTradingAmount} {x.cryptoAsset}</SmallValueText>
+                                        </DetailCardMiddleLeftRowContainer>
+                                        <DetailCardMiddleLeftRowContainer>
+                                            <SmallTitleText>限額</SmallTitleText>
+                                            <SmallValueText>{x.orderLimitMin} - {x.orderLimitMax} {x.fiatCurrency}</SmallValueText>
+                                        </DetailCardMiddleLeftRowContainer>
+                                    </DetailCardMiddleLeftColumnContainer>
+                                    <DetailCardMiddleRightRowContainer>
+                                        <BuyPriceText>{x.price}</BuyPriceText>
+                                        <BuyCurrencyText>{x.fiatCurrency}</BuyCurrencyText>
+                                    </DetailCardMiddleRightRowContainer>
+                                </DetailCardMiddleContainer>
+                                <DetailCardBottomContainer>
+                                    {/* 顯示支援付款的Icon */}
+                                    <DetailCardBottomRowContainer>
+                                        {/* {
+                                            payTypeAccount() === true &&
+                                            <AccountIcon source={require("../../assets/images/c2c/account.png")} />
+                                        }
+                                        {
+                                            payTypeTouchnGo() === true &&
+                                            <TouchnGoIcon source={require("../../assets/images/c2c/touchn_go.png")} />
+                                        }
+
+                                        {
+                                            payTypePpay() === true &&
+                                            <PpayIcon source={require("../../assets/images/c2c/p_pay.png")} />
+                                        } */}
+                                    </DetailCardBottomRowContainer>
+                                    <BuyButton onPress={() => {
+                                        navigation.navigate('C2cBuyScreen', {
+                                            Id: x.id,
+                                            CryptoAsset: x.cryptoAsset,
+                                            FiatCurrency: x.fiatCurrency,
+                                            Owner: x.owner,
+                                            SuccessRate: "???",
+                                            AvailableNum: x.totalTradingAmount,
+                                            LimitFrom: x.orderLimitMin,
+                                            LimitTo: x.orderLimitMax,
+                                            Price: x.price,
+                                            Payments: x.payments,
+                                            PaymentTimeLimit: x.paymentTimeLimit
+                                        } as any)
+                                    }}
+                                    /* disabled={isNavigate()} */
+                                    >
+                                        <BuyButtonText>購買</BuyButtonText>
+                                    </BuyButton>
+                                </DetailCardBottomContainer>
+                                {/* 找出 BuyArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
+                                {
+                                    x.cryptoAsset === 'ETH' &&
+                                    i !== buyList.length - 1 &&
+                                    <DetailCardLine></DetailCardLine>
+                                }
+                            </DetailCardContainer>
+                        )
+                    }))
 
                 }
                 {/* ******************* */}
@@ -623,83 +1025,303 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                 {
                     swapBuySell === 1 &&
                     swapBuyCurrencyType === 'USDT' &&
-                    SellArray.map((x, i) => {
+                    sellList.map((x: any, i) => {
+
+                        /* const payTypeAccount = () => {
+                            if (x.payments[0].type === 'BANK' || x.payments[1].type === 'BANK' || x.payments[2].type === 'BANK') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypeTouchnGo = () => {
+                            if (x.payments[0].type === 'TOUCHNGO' || x.payments[1].type === 'TOUCHNGO' || x.payments[2].type === 'TOUCHNGO') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypePpay = () => {
+                            if (x.payments[0].type === 'PPAY' || x.payments[1].type === 'PPAY' || x.payments[2].type === 'PPAY') {
+                                return true
+                            }
+                            return false
+                        } */
                         return (
                             /* 在 SellArray 中尋找符合 USDT 的 OBject */
-                            x.type === 'USDT' &&
+                            x.cryptoAsset === 'USDT' &&
                             <DetailCardContainer>
                                 <DeatilCardTopContainer>
                                     <PhotoButton onPress={() => { }}>
                                         {/* 取 account 中第一個字位於頭像 */}
-                                        <PhotoButtonText>{(x.account).charAt(0).toUpperCase()}</PhotoButtonText>
+                                        <PhotoButtonText>{(x.owner).charAt(0).toUpperCase()}</PhotoButtonText>
                                     </PhotoButton>
-                                    <EmailText>{x.account}</EmailText>
-                                    <SuccessRateText>({x.successRate}%)</SuccessRateText>
+                                    <EmailText>{x.owner}</EmailText>
+                                    <SuccessRateText>(???%)</SuccessRateText>
                                 </DeatilCardTopContainer>
                                 <DetailCardMiddleContainer>
                                     <DetailCardMiddleLeftColumnContainer>
                                         <DetailCardMiddleLeftRowContainer>
                                             <SmallTitleText>數量</SmallTitleText>
-                                            <SmallValueText>{x.number} USDT</SmallValueText>
+                                            <SmallValueText>{x.totalTradingAmount} {x.cryptoAsset}</SmallValueText>
                                         </DetailCardMiddleLeftRowContainer>
                                         <DetailCardMiddleLeftRowContainer>
                                             <SmallTitleText>限額</SmallTitleText>
-                                            <SmallValueText>{x.limitFrom} - {x.limitTo} USD</SmallValueText>
+                                            <SmallValueText>{x.orderLimitMin} - {x.orderLimitMax} {x.fiatCurrency}</SmallValueText>
                                         </DetailCardMiddleLeftRowContainer>
                                     </DetailCardMiddleLeftColumnContainer>
                                     <DetailCardMiddleRightRowContainer>
                                         <SellPriceText>{x.price}</SellPriceText>
-                                        <SellCurrencyText>USDT</SellCurrencyText>
+                                        <SellCurrencyText>{x.fiatCurrency}</SellCurrencyText>
                                     </DetailCardMiddleRightRowContainer>
                                 </DetailCardMiddleContainer>
                                 <DetailCardBottomContainer>
                                     {/* 顯示支援付款的Icon */}
                                     <DetailCardBottomRowContainer>
-                                        {
-                                            x.payType.account === true &&
+                                        {/* {
+                                            payTypeAccount() === true &&
                                             <AccountIcon source={require("../../assets/images/c2c/account.png")} />
                                         }
                                         {
-                                            x.payType.touchnGo === true &&
+                                            payTypeTouchnGo() === true &&
                                             <TouchnGoIcon source={require("../../assets/images/c2c/touchn_go.png")} />
                                         }
 
                                         {
-                                            x.payType.ppay === true &&
+                                            payTypePpay() === true &&
                                             <PpayIcon source={require("../../assets/images/c2c/p_pay.png")} />
-                                        }
+                                        } */}
                                     </DetailCardBottomRowContainer>
                                     <SellButton onPress={() => {
                                         navigation.navigate('C2cSellScreen', {
                                             Id: x.id,
-                                            MyUSD: MyUSD,
-                                            CurrencyType: x.type,
-                                            Account: x.account,
-                                            SuccessRate: x.successRate,
-                                            AvailableNum: x.number,
-                                            LimitFrom: x.limitFrom,
-                                            LimitTo: x.limitTo,
+                                            CryptoAsset: x.cryptoAsset,
+                                            FiatCurrency: x.fiatCurrency,
+                                            Owner: x.owner,
+                                            SuccessRate: "???",
+                                            AvailableNum: x.totalTradingAmount,
+                                            LimitFrom: x.orderLimitMin,
+                                            LimitTo: x.orderLimitMax,
                                             Price: x.price,
-                                            payTypeAccount: x.payType.account,
-                                            payTypeTouchnGo: x.payType.touchnGo,
-                                            payTypePpay: x.payType.ppay,
-                                            userPassword: UserPassword
+                                            PaymentTimeLimit: x.paymentTimeLimit
+                                            //Payments: x.payments
                                         } as any)
                                     }}
                                         /* disabled={isNavigate()} */>
-                                        <SellButtonText>購買</SellButtonText>
+                                        <SellButtonText>出售</SellButtonText>
                                     </SellButton>
                                 </DetailCardBottomContainer>
                                 {/* 找出 SellArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
                                 {
-                                    x.type === 'USDT' &&
-                                    i !== SellArray.length - 1 &&
+                                    x.cryptoAsset === 'USDT' &&
+                                    i !== sellList.length - 1 &&
                                     <DetailCardLine></DetailCardLine>
                                 }
                             </DetailCardContainer>
                         )
                     })
 
+                }
+                {/* 出售頁面 >> BTC頁面  */}
+                {
+                    swapBuySell === 1 &&
+                    swapBuyCurrencyType === 'BTC' &&
+                    sellList.map((x: any, i) => {
+
+                        /* const payTypeAccount = () => {
+                            if (x.payments[0].type === 'BANK' || x.payments[1].type === 'BANK' || x.payments[2].type === 'BANK') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypeTouchnGo = () => {
+                            if (x.payments[0].type === 'TOUCHNGO' || x.payments[1].type === 'TOUCHNGO' || x.payments[2].type === 'TOUCHNGO') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypePpay = () => {
+                            if (x.payments[0].type === 'PPAY' || x.payments[1].type === 'PPAY' || x.payments[2].type === 'PPAY') {
+                                return true
+                            }
+                            return false
+                        } */
+                        return (
+                            /* 在 SellArray 中尋找符合 BTC 的 OBject */
+                            x.cryptoAsset === 'BTC' &&
+                            <DetailCardContainer>
+                                <DeatilCardTopContainer>
+                                    <PhotoButton onPress={() => { }}>
+                                        {/* 取 account 中第一個字位於頭像 */}
+                                        <PhotoButtonText>{(x.owner).charAt(0).toUpperCase()}</PhotoButtonText>
+                                    </PhotoButton>
+                                    <EmailText>{x.owner}</EmailText>
+                                    <SuccessRateText>(???%)</SuccessRateText>
+                                </DeatilCardTopContainer>
+                                <DetailCardMiddleContainer>
+                                    <DetailCardMiddleLeftColumnContainer>
+                                        <DetailCardMiddleLeftRowContainer>
+                                            <SmallTitleText>數量</SmallTitleText>
+                                            <SmallValueText>{x.totalTradingAmount} {x.cryptoAsset}</SmallValueText>
+                                        </DetailCardMiddleLeftRowContainer>
+                                        <DetailCardMiddleLeftRowContainer>
+                                            <SmallTitleText>限額</SmallTitleText>
+                                            <SmallValueText>{x.orderLimitMin} - {x.orderLimitMax} {x.fiatCurrency}</SmallValueText>
+                                        </DetailCardMiddleLeftRowContainer>
+                                    </DetailCardMiddleLeftColumnContainer>
+                                    <DetailCardMiddleRightRowContainer>
+                                        <SellPriceText>{x.price}</SellPriceText>
+                                        <SellCurrencyText>{x.fiatCurrency}</SellCurrencyText>
+                                    </DetailCardMiddleRightRowContainer>
+                                </DetailCardMiddleContainer>
+                                <DetailCardBottomContainer>
+                                    {/* 顯示支援付款的Icon */}
+                                    <DetailCardBottomRowContainer>
+                                        {/* {
+                                            payTypeAccount() === true &&
+                                            <AccountIcon source={require("../../assets/images/c2c/account.png")} />
+                                        }
+                                        {
+                                            payTypeTouchnGo() === true &&
+                                            <TouchnGoIcon source={require("../../assets/images/c2c/touchn_go.png")} />
+                                        }
+
+                                        {
+                                            payTypePpay() === true &&
+                                            <PpayIcon source={require("../../assets/images/c2c/p_pay.png")} />
+                                        } */}
+                                    </DetailCardBottomRowContainer>
+                                    <SellButton onPress={() => {
+                                        navigation.navigate('C2cSellScreen', {
+                                            Id: x.id,
+                                            CryptoAsset: x.cryptoAsset,
+                                            FiatCurrency: x.fiatCurrency,
+                                            Owner: x.owner,
+                                            SuccessRate: "???",
+                                            AvailableNum: x.totalTradingAmount,
+                                            LimitFrom: x.orderLimitMin,
+                                            LimitTo: x.orderLimitMax,
+                                            Price: x.price,
+                                            PaymentTimeLimit: x.paymentTimeLimit
+                                            //Payments: x.payments
+                                        } as any)
+                                    }}
+                                        /* disabled={isNavigate()} */>
+                                        <SellButtonText>出售</SellButtonText>
+                                    </SellButton>
+                                </DetailCardBottomContainer>
+                                {/* 找出 SellArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
+                                {
+                                    x.cryptoAsset === 'BTC' &&
+                                    i !== sellList.length - 1 &&
+                                    <DetailCardLine></DetailCardLine>
+                                }
+                            </DetailCardContainer>
+                        )
+                    })
+
+                }
+                {/* 出售頁面 >> ETH頁面  */}
+                {
+                    swapBuySell === 1 &&
+                    swapBuyCurrencyType === 'ETH' &&
+                    sellList.map((x: any, i) => {
+
+                        /* const payTypeAccount = () => {
+                            if (x.payments[0].type === 'BANK' || x.payments[1].type === 'BANK' || x.payments[2].type === 'BANK') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypeTouchnGo = () => {
+                            if (x.payments[0].type === 'TOUCHNGO' || x.payments[1].type === 'TOUCHNGO' || x.payments[2].type === 'TOUCHNGO') {
+                                return true
+                            }
+                            return false
+                        };
+
+                        const payTypePpay = () => {
+                            if (x.payments[0].type === 'PPAY' || x.payments[1].type === 'PPAY' || x.payments[2].type === 'PPAY') {
+                                return true
+                            }
+                            return false
+                        } */
+                        return (
+                            /* 在 SellArray 中尋找符合 ETH 的 OBject */
+                            x.cryptoAsset === 'ETH' &&
+                            <DetailCardContainer>
+                                <DeatilCardTopContainer>
+                                    <PhotoButton onPress={() => { }}>
+                                        {/* 取 account 中第一個字位於頭像 */}
+                                        <PhotoButtonText>{(x.owner).charAt(0).toUpperCase()}</PhotoButtonText>
+                                    </PhotoButton>
+                                    <EmailText>{x.owner}</EmailText>
+                                    <SuccessRateText>(???%)</SuccessRateText>
+                                </DeatilCardTopContainer>
+                                <DetailCardMiddleContainer>
+                                    <DetailCardMiddleLeftColumnContainer>
+                                        <DetailCardMiddleLeftRowContainer>
+                                            <SmallTitleText>數量</SmallTitleText>
+                                            <SmallValueText>{x.totalTradingAmount} {x.cryptoAsset}</SmallValueText>
+                                        </DetailCardMiddleLeftRowContainer>
+                                        <DetailCardMiddleLeftRowContainer>
+                                            <SmallTitleText>限額</SmallTitleText>
+                                            <SmallValueText>{x.orderLimitMin} - {x.orderLimitMax} {x.fiatCurrency}</SmallValueText>
+                                        </DetailCardMiddleLeftRowContainer>
+                                    </DetailCardMiddleLeftColumnContainer>
+                                    <DetailCardMiddleRightRowContainer>
+                                        <SellPriceText>{x.price}</SellPriceText>
+                                        <SellCurrencyText>{x.fiatCurrency}</SellCurrencyText>
+                                    </DetailCardMiddleRightRowContainer>
+                                </DetailCardMiddleContainer>
+                                <DetailCardBottomContainer>
+                                    {/* 顯示支援付款的Icon */}
+                                    <DetailCardBottomRowContainer>
+                                        {/* {
+                                            payTypeAccount() === true &&
+                                            <AccountIcon source={require("../../assets/images/c2c/account.png")} />
+                                        }
+                                        {
+                                            payTypeTouchnGo() === true &&
+                                            <TouchnGoIcon source={require("../../assets/images/c2c/touchn_go.png")} />
+                                        }
+
+                                        {
+                                            payTypePpay() === true &&
+                                            <PpayIcon source={require("../../assets/images/c2c/p_pay.png")} />
+                                        } */}
+                                    </DetailCardBottomRowContainer>
+                                    <SellButton onPress={() => {
+                                        navigation.navigate('C2cSellScreen', {
+                                            Id: x.id,
+                                            CryptoAsset: x.cryptoAsset,
+                                            FiatCurrency: x.fiatCurrency,
+                                            Owner: x.owner,
+                                            SuccessRate: "???",
+                                            AvailableNum: x.totalTradingAmount,
+                                            LimitFrom: x.orderLimitMin,
+                                            LimitTo: x.orderLimitMax,
+                                            Price: x.price,
+                                            PaymentTimeLimit: x.paymentTimeLimit
+                                            //Payments: x.payments
+                                        } as any)
+                                    }}
+                                        /* disabled={isNavigate()} */>
+                                        <SellButtonText>出售</SellButtonText>
+                                    </SellButton>
+                                </DetailCardBottomContainer>
+                                {/* 找出 SellArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
+                                {
+                                    x.cryptoAsset === 'ETH' &&
+                                    i !== sellList.length - 1 &&
+                                    <DetailCardLine></DetailCardLine>
+                                }
+                            </DetailCardContainer>
+                        )
+                    })
                 }
                 {/* 預留 Padding */}
                 <EmptyDiv></EmptyDiv>

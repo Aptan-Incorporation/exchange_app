@@ -9,6 +9,7 @@ flex-direction: column;
 background-color: #18222D;
 padding-left: 16px;
 padding-right: 16px;
+padding-bottom: 200px;
 `;
 
 // First Card Style
@@ -34,7 +35,7 @@ const FirstCardRowContainer = styled(View)`
 display: flex;
 flex-direction: row;
 justify-content: space-between;
-align-items: baseline;
+align-items: center;
 margin-top: 16px;
 `;
 
@@ -150,32 +151,32 @@ color: ${props => props.theme.color.Primary};
 
 const C2cSellLast = (props: {
     Id?: string;
-    MyUSD: string;
     CurrencyType: string;
+    FiatCurrency: string;
     Price: string;
-    BuyPrice: string;
+    BuyAmount: string;
     BuyNumber: string;
     BuyID: string;
-    ChosenPayType: string;
-    BuyTime: string;
+    //ChosenPayType: string;
+    BuyTime: number;
 }) => {
 
     const {
         Id,
-        MyUSD,
         CurrencyType,
+        FiatCurrency,
         Price,
-        BuyPrice,
+        BuyAmount,
         BuyNumber,
         BuyID,
-        ChosenPayType,
+        //ChosenPayType,
         BuyTime
     } = props;
 
     const navigation = useNavigation();
 
     // 付款方式
-    const handleChange = () => {
+    /* const handleChange = () => {
         if (ChosenPayType == 'Account') {
             return '銀行卡';
         } else if (ChosenPayType == 'TouchnGo') {
@@ -183,7 +184,20 @@ const C2cSellLast = (props: {
         } else if (ChosenPayType == 'Ppay') {
             return 'Ppay';
         }
-    };
+    }; */
+
+    // 轉換日期
+    /* const handleCreateTime = (UnixTime: number) => {
+        let unix = new Date(UnixTime);
+        let year = unix.getFullYear();
+        let month = unix.getMonth() + 1;
+        let day = unix.getDate();
+        let hours = unix.getHours();
+        let minutes = unix.getMinutes();
+        let seconds = unix.getSeconds();
+
+        return (`${year}-${month}-${day} ${hours}:${seconds}:${seconds}`)
+    }; */
 
     return (
         <Container>
@@ -192,8 +206,8 @@ const C2cSellLast = (props: {
                 <FirstCardFirstRowContainer>
                     <FirstCardSmallTitleText>總價</FirstCardSmallTitleText>
                     <FirstCardFirstInRowContainer>
-                        <FirstCardPriceText>{BuyPrice}</FirstCardPriceText>
-                        <FirstCardPriceCurrencyText>USD</FirstCardPriceCurrencyText>
+                        <FirstCardPriceText>{BuyAmount}</FirstCardPriceText>
+                        <FirstCardPriceCurrencyText>{FiatCurrency}</FirstCardPriceCurrencyText>
                     </FirstCardFirstInRowContainer>
                 </FirstCardFirstRowContainer>
                 <FirstCardRowContainer>
@@ -202,14 +216,17 @@ const C2cSellLast = (props: {
                 </FirstCardRowContainer>
                 <FirstCardRowContainer>
                     <FirstCardSmallTitleText>單價</FirstCardSmallTitleText>
-                    <FirstCardSmallValueText>{Price} USD</FirstCardSmallValueText>
+                    <FirstCardSmallValueText>{Price} {FiatCurrency}</FirstCardSmallValueText>
                 </FirstCardRowContainer>
                 <FirstCardRowContainer>
                     <FirstCardSmallTitleText>單號</FirstCardSmallTitleText>
-                    <FirstCardSmallValueText>{BuyID}</FirstCardSmallValueText>
+                    <View style={{alignItems: 'flex-end'}}>
+                        <FirstCardSmallValueText>{BuyID.slice(0, 28)}</FirstCardSmallValueText>
+                        <FirstCardSmallValueText>{BuyID.slice(28)}</FirstCardSmallValueText>
+                    </View>
                 </FirstCardRowContainer>
             </FirstCardContainer>
-            <SecondCardContainer>
+            {/* <SecondCardContainer>
                 <SecondCardTitleText>收款資訊</SecondCardTitleText>
                 <SecondCardFirstRowContainer>
                     <SecondCardSmallTitleText>收款方式</SecondCardSmallTitleText>
@@ -217,9 +234,9 @@ const C2cSellLast = (props: {
                 </SecondCardFirstRowContainer>
                 <SecondCardRowContainer>
                     <SecondCardSmallTitleText>訂單時間</SecondCardSmallTitleText>
-                    <SecondCardSmallValueText>{BuyTime}</SecondCardSmallValueText>
+                    <SecondCardSmallValueText>{handleCreateTime(BuyTime)}</SecondCardSmallValueText>
                 </SecondCardRowContainer>
-            </SecondCardContainer>
+            </SecondCardContainer> */}
             <ReturnButton onPress={() => { navigation.goBack() }}>
                 <ReturnButtonText>查看現貨帳戶</ReturnButtonText>
             </ReturnButton>
