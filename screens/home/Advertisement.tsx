@@ -504,18 +504,8 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                                         <CardSmallValueText>{x.totalTradingAmount}</CardSmallValueText>
                                                     </CardDetailColumnContainer>
                                                     <CardDetailColumnContainer>
-                                                        <CardSmallTitleText>實際成交</CardSmallTitleText>
-                                                        <CardSmallValueText>No Value</CardSmallValueText>
-                                                    </CardDetailColumnContainer>
-                                                </CardDetailRowContainer>
-                                                <CardDetailRowContainer>
-                                                    <CardDetailColumnContainer>
                                                         <CardSmallTitleText>限額({x.fiatCurrency})</CardSmallTitleText>
                                                         <CardSmallValueText>{x.orderLimitMin} - {x.orderLimitMax}</CardSmallValueText>
-                                                    </CardDetailColumnContainer>
-                                                    <CardDetailColumnContainer>
-                                                        <CardSmallTitleText>價格費率</CardSmallTitleText>
-                                                        <CardSmallValueText>{x.priceType === 0 ? '固定價格' : '浮動價格'}</CardSmallValueText>
                                                     </CardDetailColumnContainer>
                                                 </CardDetailRowContainer>
                                                 <CardDetailRowContainer>
@@ -586,18 +576,8 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                                         <CardSmallValueText>{x.totalTradingAmount}</CardSmallValueText>
                                                     </CardDetailColumnContainer>
                                                     <CardDetailColumnContainer>
-                                                        <CardSmallTitleText>實際成交</CardSmallTitleText>
-                                                        <CardSmallValueText>No Value</CardSmallValueText>
-                                                    </CardDetailColumnContainer>
-                                                </CardDetailRowContainer>
-                                                <CardDetailRowContainer>
-                                                    <CardDetailColumnContainer>
                                                         <CardSmallTitleText>限額({x.fiatCurrency})</CardSmallTitleText>
                                                         <CardSmallValueText>{x.orderLimitMin} - {x.orderLimitMax}</CardSmallValueText>
-                                                    </CardDetailColumnContainer>
-                                                    <CardDetailColumnContainer>
-                                                        <CardSmallTitleText>價格費率</CardSmallTitleText>
-                                                        <CardSmallValueText>{x.priceType === 0 ? '固定價格' : '浮動價格'}</CardSmallValueText>
                                                     </CardDetailColumnContainer>
                                                 </CardDetailRowContainer>
                                                 <CardDetailRowContainer>

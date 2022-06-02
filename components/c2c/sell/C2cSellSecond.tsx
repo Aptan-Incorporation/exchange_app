@@ -445,6 +445,7 @@ const C2cSellSecond = (props: {
              }) */
         onChangeISWaitFinish(2)
         onChangeSetSwapPage(3)
+        
     };
 
 
@@ -520,7 +521,6 @@ const C2cSellSecond = (props: {
             })) */
         onChangeISWaitFinish(1)
         setSubmitText('確認收款並放行')
-        getPaidStatus()
     };
 
 
@@ -540,6 +540,12 @@ const C2cSellSecond = (props: {
     });
 
  */
+
+    useEffect(() => {
+        if (submitText === '付款中...') {
+            getPaidStatus()
+        }
+    }, [])
 
 
 

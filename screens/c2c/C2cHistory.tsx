@@ -1,14 +1,18 @@
 import * as React from "react"
-import { Text, View, Image, TouchableOpacity, ScrollView, Alert } from "react-native"
+import { Text, View, Image, TouchableOpacity, ScrollView, Alert, Dimensions } from "react-native"
 import { RootStackScreenProps } from "../../types";
 import styled from "styled-components"
 import { useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CountdownTimer from "../../components/c2c/CountdownTimer";
+import Modal from "react-native-modal";
 import axios from "axios"
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
+
+const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get('window').width;
 
 const Container = styled(View) <{ insets: number }>`
     display: flex ;
@@ -334,6 +338,104 @@ const BottomPaddingView = styled(View)`
 padding-bottom: 200px;
 `;
 
+// Modal Style
+const ModalTitleBarHeaderContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding-top: 10px;
+padding-left: 16px;
+padding-right: 16px;
+padding-bottom: 10px;
+background-color: #18222D;
+`;
+
+const ModalCancelImage = styled(Image)`
+width: 28px;
+height: 28px;
+`;
+
+const ModalHeaderTitleText = styled(Text)`
+font-weight: 600;
+font-size: 16px;
+line-height: 24px;
+color: ${props => props.theme.color.White};
+`;
+
+const ModalRowContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+padding-top: 8px;
+padding-bottom: 8px;
+`;
+
+const ModalInlineContainer = styled(View)`
+display: flex;
+flex-direction: row;
+align-items: baseline;
+`;
+
+const ModalDetailTitle = styled(Text)`
+font-weight: 400;
+font-size: 15px;
+line-height: 24px;
+color: ${props => props.theme.color.LightMidGray};
+`;
+
+const ModalDetailPricePositiveText = styled(Text)`
+font-weight: 700;
+font-size: 24px;
+line-height: 30px;
+color: ${props => props.theme.color.Secondary};
+`;
+
+const ModalDetailPriceNegativeText = styled(Text)`
+font-weight: 700;
+font-size: 24px;
+line-height: 30px;
+color: ${props => props.theme.color.SecondaryLight};
+`;
+
+const ModalDetailPriceCurrencyPositiveText = styled(Text)`
+font-weight: 700;
+font-size: 16px;
+line-height: 20px;
+color: ${props => props.theme.color.Secondary};
+`;
+
+const ModalDetailPriceCurrencyNegativeText = styled(Text)`
+font-weight: 700;
+font-size: 16px;
+line-height: 20px;
+color: ${props => props.theme.color.SecondaryLight};
+`;
+
+const ModalDetailSecondText = styled(Text)`
+font-weight: 700;
+font-size: 16px;
+line-height: 20px;
+color: ${props => props.theme.color.White};
+`;
+
+const ModalDetailThirdText = styled(Text)`
+font-weight: 400;
+font-size: 15px;
+line-height: 24px;
+color: ${props => props.theme.color.LightMidGray};
+`;
+
+const ModalLine = styled(View)`
+height: 1px;
+background-color: #18222D;
+margin-top: 8px;
+margin-bottom: 8px;
+`;
+
+
+
 // Array
 const HistoryArray = [
     {
@@ -447,6 +549,75 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
             })
     };
 
+    // 詳情Modal
+    const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
+    const [detailModalInfo, setDetailModalInfo] = useState(
+        {
+            BuyId: "",
+            buyUser: "",
+            sellUser: "",
+            cryptoAsset: "",
+            fiatCurrency: "",
+            price: 0,
+            quantity: 0,
+            amount: 0,
+            payments: [],
+            payment: [],
+            createdDate: 0,
+            status: 0
+        }
+    );
+    const [modalTitle, setModalTitle] = useState("");
+
+    const handleUpdateModal = (
+        Title: string,
+        BuyId: string,
+        buyUser: string,
+        sellUser: string,
+        cryptoAsset: string,
+        fiatCurrency: string,
+        price: number,
+        quantity: number,
+        amount: number,
+        payments: [],
+        payment: [],
+        createdDate: number,
+        status: number
+    ) => {
+        setDetailModalInfo(
+            {
+                BuyId: BuyId,
+                buyUser: buyUser,
+                sellUser: sellUser,
+                cryptoAsset: cryptoAsset,
+                fiatCurrency: fiatCurrency,
+                price: price,
+                quantity: quantity,
+                amount: amount,
+                payments: payments,
+                payment: payment,
+                createdDate: createdDate,
+                status: status
+            }
+        )
+        setModalTitle(Title)
+        setIsDetailModalVisible(true)
+    };
+
+    // 轉換日期
+    const handleCreateTime = (UnixTime: number) => {
+        let unix = new Date(UnixTime);
+        let year = unix.getFullYear();
+        let month = unix.getMonth() + 1;
+        let day = unix.getDate();
+        let hours = unix.getHours();
+        let minutes = unix.getMinutes();
+        let seconds = unix.getSeconds();
+
+        return (`${year}-${month}-${day} ${hours}:${seconds}:${seconds}`)
+    };
+
+
 
     const [account, setAccount] = useState("");
     const [userId, setUserId] = useState("");
@@ -461,6 +632,8 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
         if (token) {
             getWaitingList()
             getCompleteList()
+
+            console.log(completeList)
         } else {
             Alert.alert("請先登入")
         }
@@ -564,7 +737,23 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                         <CountdownTimer targetDate={x.paymentTimeLimit} />
                                                     </TopContainerTimerContainer>
                                                 </CardBottomInRowContainer>
-                                                <CardBottomButton onPress={() => { }}>
+                                                <CardBottomButton onPress={() => {
+                                                    handleUpdateModal(
+                                                        "查看",
+                                                        x.id,
+                                                        x.buyUser,
+                                                        x.sellUser,
+                                                        x.cryptoAsset,
+                                                        x.fiatCurrency,
+                                                        x.price,
+                                                        x.quantity,
+                                                        x.amount,
+                                                        x.payments,
+                                                        x.payment,
+                                                        x.createdDate,
+                                                        x.status
+                                                    )
+                                                }}>
                                                     <CardBottomButtonText>查看</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>)
@@ -574,7 +763,23 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                         (x.status === 1 &&
                                             <CardBottomContainer>
                                                 <CardBottomStatusText>等待放行...</CardBottomStatusText>
-                                                <CardBottomButton onPress={() => { }}>
+                                                <CardBottomButton onPress={() => {
+                                                    handleUpdateModal(
+                                                        "查看",
+                                                        x.id,
+                                                        x.buyUser,
+                                                        x.sellUser,
+                                                        x.cryptoAsset,
+                                                        x.fiatCurrency,
+                                                        x.price,
+                                                        x.quantity,
+                                                        x.amount,
+                                                        x.payments,
+                                                        x.payment,
+                                                        x.createdDate,
+                                                        x.status
+                                                    )
+                                                }}>
                                                     <CardBottomButtonText>查看</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>)
@@ -586,7 +791,23 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                 <CardBottomInRowContainer>
                                                     <CardBottomStatusText>等待付款...</CardBottomStatusText>
                                                 </CardBottomInRowContainer>
-                                                <CardBottomButton onPress={() => { }}>
+                                                <CardBottomButton onPress={() => {
+                                                    handleUpdateModal(
+                                                        "查看",
+                                                        x.id,
+                                                        x.buyUser,
+                                                        x.sellUser,
+                                                        x.cryptoAsset,
+                                                        x.fiatCurrency,
+                                                        x.price,
+                                                        x.quantity,
+                                                        x.amount,
+                                                        x.payments,
+                                                        x.payment,
+                                                        x.createdDate,
+                                                        x.status
+                                                    )
+                                                }}>
                                                     <CardBottomButtonText>查看</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>)
@@ -601,7 +822,23 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                         <CountdownTimer targetDate={FIFTEENMINUTES} />
                                                     </TopContainerTimerContainer>
                                                 </CardBottomInRowContainer>
-                                                <CardBottomButton onPress={() => { }}>
+                                                <CardBottomButton onPress={() => {
+                                                    handleUpdateModal(
+                                                        "查看",
+                                                        x.id,
+                                                        x.buyUser,
+                                                        x.sellUser,
+                                                        x.cryptoAsset,
+                                                        x.fiatCurrency,
+                                                        x.price,
+                                                        x.quantity,
+                                                        x.amount,
+                                                        x.payments,
+                                                        x.payment,
+                                                        x.createdDate,
+                                                        x.status
+                                                    )
+                                                }}>
                                                     <CardBottomButtonText>查看</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>)
@@ -681,14 +918,46 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                         x.buyUser === account ?
                                             <CardBottomContainer>
                                                 <CardBottomStatusText>訂單完成</CardBottomStatusText>
-                                                <CardBottomButton onPress={() => { }}>
+                                                <CardBottomButton onPress={() => {
+                                                    handleUpdateModal(
+                                                        "詳情",
+                                                        x.id,
+                                                        x.buyUser,
+                                                        x.sellUser,
+                                                        x.cryptoAsset,
+                                                        x.fiatCurrency,
+                                                        x.price,
+                                                        x.quantity,
+                                                        x.amount,
+                                                        x.payments,
+                                                        x.payment,
+                                                        x.createdDate,
+                                                        x.status
+                                                    )
+                                                }}>
                                                     <CardBottomButtonText>詳情</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>
                                             :
                                             <CardBottomContainer>
                                                 <CardBottomStatusText>訂單完成</CardBottomStatusText>
-                                                <CardBottomButton onPress={() => { }}>
+                                                <CardBottomButton onPress={() => {
+                                                    handleUpdateModal(
+                                                        "查看",
+                                                        x.id,
+                                                        x.buyUser,
+                                                        x.sellUser,
+                                                        x.cryptoAsset,
+                                                        x.fiatCurrency,
+                                                        x.price,
+                                                        x.quantity,
+                                                        x.amount,
+                                                        x.payments,
+                                                        x.payment,
+                                                        x.createdDate,
+                                                        x.status
+                                                    )
+                                                }}>
                                                     <CardBottomButtonText>查看</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>
@@ -711,6 +980,94 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                 }
                 <BottomPaddingView></BottomPaddingView>
             </DetailContainer>
+
+            {/* Time Limit Modal 放行時限*/}
+            <Modal
+                isVisible={isDetailModalVisible}
+                deviceHeight={windowHeight}
+                deviceWidth={windowWidth}
+                animationInTiming={500}
+                animationOutTiming={700}
+                backdropOpacity={0.7}
+                onBackdropPress={() => setIsDetailModalVisible(false)}
+                onSwipeComplete={() => setIsDetailModalVisible(false)}
+                style={{ justifyContent: 'flex-end', margin: 0 }}
+                hideModalContentWhileAnimating={true}
+            >
+                <View style={{ backgroundColor: '#242D37', paddingBottom: 30 }}>
+                    <ModalTitleBarHeaderContainer>
+                        <View style={{
+                            width: 28,
+                            height: 28
+                        }} />
+                        <ModalHeaderTitleText>{modalTitle}</ModalHeaderTitleText>
+                        <TouchableOpacity onPress={() => { setIsDetailModalVisible(false) }}>
+                            <ModalCancelImage source={require("../../assets/images/c2c/cancel.png")} />
+                        </TouchableOpacity>
+                    </ModalTitleBarHeaderContainer>
+                    <View style={{ paddingTop: 24, paddingLeft: 16, paddingRight: 16 }}>
+                        <ModalRowContainer>
+                            <ModalDetailTitle>總價</ModalDetailTitle>
+                            {
+                                detailModalInfo.buyUser === account ?
+                                    <ModalInlineContainer>
+                                        <ModalDetailPricePositiveText>{detailModalInfo.amount}</ModalDetailPricePositiveText>
+                                        <ModalDetailPriceCurrencyPositiveText>{detailModalInfo.fiatCurrency}</ModalDetailPriceCurrencyPositiveText>
+                                    </ModalInlineContainer> :
+                                    <ModalInlineContainer>
+                                        <ModalDetailPriceNegativeText>{detailModalInfo.amount}</ModalDetailPriceNegativeText>
+                                        <ModalDetailPriceCurrencyNegativeText>{detailModalInfo.fiatCurrency}</ModalDetailPriceCurrencyNegativeText>
+                                    </ModalInlineContainer>
+                            }
+                        </ModalRowContainer>
+                        <ModalRowContainer>
+                            <ModalDetailTitle>數量</ModalDetailTitle>
+                            <ModalDetailSecondText>{detailModalInfo.quantity} {detailModalInfo.cryptoAsset}</ModalDetailSecondText>
+                        </ModalRowContainer>
+                        <ModalRowContainer>
+                            <ModalDetailTitle>單價</ModalDetailTitle>
+                            <ModalDetailSecondText>{detailModalInfo.price} {detailModalInfo.fiatCurrency}</ModalDetailSecondText>
+                        </ModalRowContainer>
+                        <ModalLine />
+                        <ModalRowContainer>
+                            <ModalDetailTitle>收款方式</ModalDetailTitle>
+                            {
+                                detailModalInfo.payments.map((x: any) => {
+                                    return (
+                                        <ModalDetailThirdText>{x.type == 'BANK' ? '銀行轉帳' : '其他'}</ModalDetailThirdText>
+                                    )
+                                })
+                            }
+                        </ModalRowContainer>
+                        {
+                            detailModalInfo.payment.length >= 1 &&
+                            <ModalRowContainer>
+                                <ModalDetailTitle>付款方式</ModalDetailTitle>
+                                {
+                                    detailModalInfo.status != 0 ?
+                                        detailModalInfo.payment.map((x: any) => {
+                                            return (
+                                                <ModalDetailThirdText>{x.type == 'BANK' ? '銀行轉帳' : '其他'}</ModalDetailThirdText>
+                                            )
+                                        }) :
+                                        <ModalDetailThirdText>尚未付款</ModalDetailThirdText>
+                                }
+                            </ModalRowContainer>
+                        }
+                        <ModalRowContainer>
+                            <ModalDetailTitle>訂單編號</ModalDetailTitle>
+                            <View style={{ alignItems: 'flex-end' }}>
+                                <ModalDetailThirdText>{((detailModalInfo.BuyId)).slice(0, 28)}</ModalDetailThirdText>
+                                <ModalDetailThirdText>{((detailModalInfo.BuyId)).slice(28)}</ModalDetailThirdText>
+                            </View>
+                        </ModalRowContainer>
+                        <ModalRowContainer style={{ paddingBottom: 30 }}>
+                            <ModalDetailTitle>訂單時間</ModalDetailTitle>
+                            <ModalDetailThirdText>{handleCreateTime(detailModalInfo.createdDate)}</ModalDetailThirdText>
+                        </ModalRowContainer>
+                    </View>
+                </View>
+            </Modal>
         </Container>
     );
 }

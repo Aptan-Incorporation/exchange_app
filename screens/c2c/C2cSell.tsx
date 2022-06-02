@@ -188,7 +188,6 @@ const C2cSellScreen = ({ navigation, route }: RootStackScreenProps<"C2cSellScree
             if (x.status != 400 && x.status != 401) {
                 setBuyFeeRate(x.buyFeeRate);
                 setSellFeeRate(x.sellFeeRate);
-                setUserWalletBalance(0);
             }
         })
     };
