@@ -372,6 +372,13 @@ padding-top: 8px;
 padding-bottom: 8px;
 `;
 
+const ModalInRowContainer = styled(View)`
+display: flex;
+flex-direction: row;
+justify-content: flex-end;
+align-items: center;
+`;
+
 const ModalInlineContainer = styled(View)`
 display: flex;
 flex-direction: row;
@@ -425,6 +432,14 @@ font-weight: 400;
 font-size: 15px;
 line-height: 24px;
 color: ${props => props.theme.color.LightMidGray};
+`;
+
+const ModalDetailPaymentText = styled(Text)`
+font-weight: 400;
+font-size: 15px;
+line-height: 24px;
+color: ${props => props.theme.color.LightMidGray};
+padding-left: 5px;
 `;
 
 const ModalLine = styled(View)`
@@ -562,7 +577,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
             quantity: 0,
             amount: 0,
             payments: [],
-            payment: [],
+            payment: { id: "", type: "" },
             createdDate: 0,
             status: 0
         }
@@ -580,7 +595,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
         quantity: number,
         amount: number,
         payments: [],
-        payment: [],
+        payment: { id: string, type: string },
         createdDate: number,
         status: number
     ) => {
@@ -749,7 +764,10 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                         x.quantity,
                                                         x.amount,
                                                         x.payments,
-                                                        x.payment,
+                                                        {
+                                                            id: x.payment.id,
+                                                            type: x.payment.type
+                                                        },
                                                         x.createdDate,
                                                         x.status
                                                     )
@@ -775,7 +793,10 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                         x.quantity,
                                                         x.amount,
                                                         x.payments,
-                                                        x.payment,
+                                                        {
+                                                            id: x.payment.id,
+                                                            type: x.payment.type
+                                                        },
                                                         x.createdDate,
                                                         x.status
                                                     )
@@ -803,7 +824,10 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                         x.quantity,
                                                         x.amount,
                                                         x.payments,
-                                                        x.payment,
+                                                        {
+                                                            id: x.payment.id,
+                                                            type: x.payment.type
+                                                        },
                                                         x.createdDate,
                                                         x.status
                                                     )
@@ -834,7 +858,10 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                         x.quantity,
                                                         x.amount,
                                                         x.payments,
-                                                        x.payment,
+                                                        {
+                                                            id: x.payment.id,
+                                                            type: x.payment.type
+                                                        },
                                                         x.createdDate,
                                                         x.status
                                                     )
@@ -930,7 +957,10 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                         x.quantity,
                                                         x.amount,
                                                         x.payments,
-                                                        x.payment,
+                                                        {
+                                                            id: x.payment.id,
+                                                            type: x.payment.type
+                                                        },
                                                         x.createdDate,
                                                         x.status
                                                     )
@@ -953,7 +983,10 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                         x.quantity,
                                                         x.amount,
                                                         x.payments,
-                                                        x.payment,
+                                                        {
+                                                            id: x.payment.id,
+                                                            type: x.payment.type
+                                                        },
                                                         x.createdDate,
                                                         x.status
                                                     )
@@ -1031,29 +1064,38 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                         <ModalLine />
                         <ModalRowContainer>
                             <ModalDetailTitle>收款方式</ModalDetailTitle>
-                            {
-                                detailModalInfo.payments.map((x: any) => {
-                                    return (
-                                        <ModalDetailThirdText>{x.type == 'BANK' ? '銀行轉帳' : '其他'}</ModalDetailThirdText>
-                                    )
-                                })
-                            }
+                            <ModalInRowContainer>
+                                {
+                                    detailModalInfo.payments != null &&
+                                    (detailModalInfo.payments.some((x: any) => { return x.type == 'BANK' }) &&
+                                        <ModalDetailPaymentText>銀行轉帳</ModalDetailPaymentText>)
+                                }
+                                {
+                                    detailModalInfo.payments != null &&
+                                    (detailModalInfo.payments.some((x: any) => { return x.type == 'TOUCHNGO' }) &&
+                                        <ModalDetailPaymentText>Touch'n Go</ModalDetailPaymentText>)
+                                }
+                                {
+                                    detailModalInfo.payments != null &&
+                                    (detailModalInfo.payments.some((x: any) => { return x.type == 'PPAY' }) &&
+                                        <ModalDetailPaymentText>Ppay</ModalDetailPaymentText>)
+                                }
+                            </ModalInRowContainer>
                         </ModalRowContainer>
-                        {
-                            detailModalInfo.payment.length >= 1 &&
-                            <ModalRowContainer>
-                                <ModalDetailTitle>付款方式</ModalDetailTitle>
+
+                        <ModalRowContainer>
+                            <ModalDetailTitle>付款方式</ModalDetailTitle>
+                            <ModalInRowContainer>
                                 {
                                     detailModalInfo.status != 0 ?
-                                        detailModalInfo.payment.map((x: any) => {
-                                            return (
-                                                <ModalDetailThirdText>{x.type == 'BANK' ? '銀行轉帳' : '其他'}</ModalDetailThirdText>
-                                            )
-                                        }) :
+                                        detailModalInfo.payment.type == 'BANK' &&
+                                        <ModalDetailPaymentText>銀行轉帳</ModalDetailPaymentText>
+                                        :
                                         <ModalDetailThirdText>尚未付款</ModalDetailThirdText>
                                 }
-                            </ModalRowContainer>
-                        }
+                            </ModalInRowContainer>
+                        </ModalRowContainer>
+
                         <ModalRowContainer>
                             <ModalDetailTitle>訂單編號</ModalDetailTitle>
                             <View style={{ alignItems: 'flex-end' }}>
