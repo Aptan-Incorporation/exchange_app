@@ -46,7 +46,7 @@ const Member = ({ navigation }: RootStackScreenProps<"Member">) => {
     let user = await AsyncStorage.getItem("user")
     setEmail(JSON.parse(user!).account)
     setUserId(JSON.parse(user!).userId)
-  })
+  },[])
   return (
     <Container>
       <Header insets={insets.top}>

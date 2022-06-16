@@ -56,7 +56,7 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
       // console.log(x)
       setKyc(x.data);
     });
-  });
+  },[]);
   return (
     <Container>
       <Header insets={insets.top}>

@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
-import { useState,useEffect } from "react";
+import { useState,useEffect,useContext } from "react";
 import GraphPage from "../../components/trade/GraphPage"
 import SliderContainer from "../../components/trade/Slider";
 import SmallSliderContainer from "../../components/trade/SmallSlider";
@@ -15,6 +15,7 @@ import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
 import { useIsFocused } from '@react-navigation/native';
+import { PriceContext } from "../../App" 
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -1187,6 +1188,7 @@ const TradeScreen = ({
     const [balance, setBalance] = useState(0);
     const [wareHousedPrice, setWareHousedPrice] = useState("");
     const [loading,setLoading] = useState(false);
+    const {btcPrice} = useContext(PriceContext)
 
     const toggleBuyTypeModal = () => {
         setIsBuyTypeModalVisible(!isBuyTypeModalVisible);
@@ -1480,12 +1482,12 @@ const TradeScreen = ({
                                     <TradeTableBottomTitleContainer>
                                         {
                                             isPositive === true ?
-                                                <TradeTableBottomTitlePriceRiseText>{wareHousedPrice}</TradeTableBottomTitlePriceRiseText> :
-                                                <TradeTableBottomTitlePriceFallText>{wareHousedPrice}</TradeTableBottomTitlePriceFallText>
+                                                <TradeTableBottomTitlePriceRiseText>{btcPrice}</TradeTableBottomTitlePriceRiseText> :
+                                                <TradeTableBottomTitlePriceFallText>{btcPrice}</TradeTableBottomTitlePriceFallText>
                                         }
                                     </TradeTableBottomTitleContainer>
                                     <TradeTableBottomTitleContainer>
-                                    <TradeTableBottomTitleOwnValueText>{wareHousedPrice}</TradeTableBottomTitleOwnValueText>
+                                    <TradeTableBottomTitleOwnValueText>{btcPrice}</TradeTableBottomTitleOwnValueText>
                                     </TradeTableBottomTitleContainer>
                                     <TradeTableBuyContainer>
                                         {

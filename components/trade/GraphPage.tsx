@@ -2,11 +2,12 @@ import * as React from "react";
 import { Text, TouchableOpacity, View, Image, ScrollView, Dimensions } from "react-native"
 import Modal from "react-native-modal";
 import styled from "styled-components"
-import { useState,useEffect } from "react";
+import { useState,useEffect,useContext } from "react";
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios"
 import { WebView } from 'react-native-webview';
+import { PriceContext } from "../../App" 
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -350,6 +351,8 @@ const GraphPage = () => {
             });
     };
 
+    const {btcPrice} = useContext(PriceContext)
+
     useEffect(() => {
         getPrice();
         getDepth();
@@ -455,11 +458,11 @@ const GraphPage = () => {
                 <GraphDetailPriceRowContainer>
                     <GraphDetailPriceColumnContainer>
                         <GraphDetailPriceLeftTitleText>最新價</GraphDetailPriceLeftTitleText>
-                        <GraphDetailLatestPriceText>{wareHousedPrice}</GraphDetailLatestPriceText>
+                        <GraphDetailLatestPriceText>{btcPrice}</GraphDetailLatestPriceText>
                     </GraphDetailPriceColumnContainer>
                     <GraphDetailPriceColumnContainer>
                         <GraphDetailPriceRightTitleText>指數價</GraphDetailPriceRightTitleText>
-                        <GraphDetailIndexPriceText>{wareHousedPrice}</GraphDetailIndexPriceText>
+                        <GraphDetailIndexPriceText>{btcPrice}</GraphDetailIndexPriceText>
                     </GraphDetailPriceColumnContainer>
                 </GraphDetailPriceRowContainer>
                 <GraphDetailContainer>

@@ -1,9 +1,9 @@
-import { Text, View,SafeAreaView,TouchableOpacity,TextInput } from "react-native";
+import { Text, View,SafeAreaView,TouchableOpacity,TextInput,Image,Pressable } from "react-native";
 import styled from "styled-components";
 import { RootStackScreenProps } from "../../types";
 import { PriceContext } from "../../App" 
 import * as React from "react";
-import {useContext,useState,useEffect } from "react";
+import {useContext,useState,useEffect,useRef } from "react";
 
 const Container = styled(SafeAreaView)`
   display: flex;
@@ -26,7 +26,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
       amount:"",
       rate:""
     }])
-
+    const TextEl = useRef<TextInput | null>(null);
     const filterByName = (filteredData:any) => {
       // Avoid filter for null value
       if (!search) {
@@ -86,16 +86,30 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
     <Container>
       
       <View style={{paddingHorizontal:16}}>
-      <TextInput
-          placeholder={"搜尋"}
-          value={search}
-          onChangeText={search => setSearch(search)}
-          placeholderTextColor={
-            '#8D97A2'
-          }
-          autoCorrect={false}
-          style={{ backgroundColor: '#242D37', width: '100%', height: 36, color: '#F4F5F6', borderTopLeftRadius: 4, borderBottomLeftRadius: 4, paddingLeft: 12,marginBottom:20 }}
-      />
+        <View style={{display:"flex",flexDirection:"row",width:"100%"}}>
+        <TextInput
+            ref={TextEl}
+            placeholder={"搜尋"}
+            value={search}
+            onChangeText={search => setSearch(search)}
+            placeholderTextColor={
+              '#8D97A2'
+            }
+            autoCorrect={false}
+            style={{ backgroundColor: '#242D37', width: '90%', height: 36, color: '#F4F5F6', borderTopLeftRadius: 4, borderBottomLeftRadius: 4, paddingLeft: 12,marginBottom:20 }}
+        />
+        <Pressable style={{backgroundColor: '#242D37',height:36,width: '10%',display:"flex",flexDirection:"row",justifyContent:"center",alignItems:"center"}} onPress={()=>{
+          TextEl.current!.blur()
+          TextEl.current!.clear()
+          setSearch("")
+        }}>
+            {search.length != 0 && 
+              <Image source={require("../../assets/images/trade/cancel.png")} style={{width:25,height:25}}/>
+
+             }
+        </Pressable>
+        </View>
+        
         <View
           style={{
             display: "flex",

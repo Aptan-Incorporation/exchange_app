@@ -106,9 +106,7 @@ const SliderContainer = (props: {
             setValue(100)
             setNewInputNum(positionNum)
         }
-    })
-
-
+    },[newInputNum,positionNum])
 
     return (
         <Container>
