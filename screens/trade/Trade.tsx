@@ -1,9 +1,9 @@
 import * as React from "react";
-import { Text, TextInput, TouchableOpacity, View, Image, ScrollView, Dimensions, Alert } from "react-native"
+import { Text, TextInput, TouchableOpacity, View, Image, ScrollView, Dimensions, Alert,StyleSheet } from "react-native"
 import { Slider } from '@miblanchard/react-native-slider';
 import Modal from "react-native-modal";
 import { LinearGradient } from 'expo-linear-gradient';
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
 import { useState,useEffect,useContext } from "react";
@@ -15,7 +15,17 @@ import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
 import { useIsFocused } from '@react-navigation/native';
-import { PriceContext } from "../../App" 
+import { ThreePriceContext } from "../../App" 
+import DropDownPicker from 'react-native-dropdown-picker';
+import DropDown from "react-native-paper-dropdown";
+import {
+    Appbar,
+    DarkTheme,
+    DefaultTheme,
+    Provider,
+    Surface,
+    ThemeProvider,
+  } from "react-native-paper";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -1188,7 +1198,7 @@ const TradeScreen = ({
     const [balance, setBalance] = useState(0);
     const [wareHousedPrice, setWareHousedPrice] = useState("");
     const [loading,setLoading] = useState(false);
-    const {btcPrice} = useContext(PriceContext)
+    const {btcPrice} = useContext(ThreePriceContext)
 
     const toggleBuyTypeModal = () => {
         setIsBuyTypeModalVisible(!isBuyTypeModalVisible);
@@ -1401,6 +1411,31 @@ const TradeScreen = ({
     }, [isFocused]);
 
 
+    const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    {label: 'Apple', value: 'apple'},
+    {label: 'Banana', value: 'banana'}
+  ]);
+  const [nightMode, setNightmode] = useState(false);
+  const [showDropDown, setShowDropDown] = useState(false);
+  const [gender, setGender] = useState("");
+  const [showMultiSelectDropDown, setShowMultiSelectDropDown] = useState(false);
+  const [colors, setColors] = ("");
+  const genderList = [
+    {
+      label: "Male",
+      value: "male",
+    },
+    {
+      label: "Female",
+      value: "female",
+    },
+    {
+      label: "Others",
+      value: "others",
+    },
+  ];
     return (
         <Container insets={insets.top}>
             {loading && 
@@ -1430,7 +1465,25 @@ const TradeScreen = ({
                     <MainSwapPageContainer>
                         <TradeHeaderContainer>
                             <TradeHeaderLeftContainer>
-                                <TradeHeaderTitleText>BTCUSDT</TradeHeaderTitleText>
+                            <Surface style={styles.containerStyle}>
+          <SafeAreaView style={styles.safeContainerStyle}>
+                            <Provider theme={DefaultTheme}>
+                             <ThemeProvider theme={DefaultTheme}>
+                                    <DropDown
+                                        label={"Gender"}
+                                        mode={"outlined"}
+                                        visible={showDropDown}
+                                        showDropDown={() => setShowDropDown(true)}
+                                        onDismiss={() => setShowDropDown(false)}
+                                        value={gender}
+                                        setValue={setGender}
+                                        list={genderList}
+                                        />
+                                        </ThemeProvider>
+                                </Provider>
+                                </SafeAreaView>
+                                </Surface>
+                                {/* <TradeHeaderTitleText>BTCUSDT</TradeHeaderTitleText> */}
                                 {/* {
                                     isPositive === true ?
                                         <TradeHeaderFluctuationRiseText>+2.90%</TradeHeaderFluctuationRiseText>
@@ -2195,5 +2248,19 @@ const TradeScreen = ({
 
     )
 }
+
+const styles = StyleSheet.create({
+    containerStyle: {
+      flex: 1,
+    },
+    spacerStyle: {
+      marginBottom: 15,
+    },
+    safeContainerStyle: {
+      flex: 1,
+      margin: 20,
+      justifyContent: "center",
+    },
+  });
 
 export default TradeScreen

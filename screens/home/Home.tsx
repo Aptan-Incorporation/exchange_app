@@ -4,10 +4,10 @@ import { RootStackScreenProps } from "../../types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as React from "react";
 import { useState,useEffect,useContext } from "react";
-import { PriceContext } from "../../App" 
+import { PriceContext,ThreePriceContext } from "../../App" 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Container = styled(ScrollView)`
+const Container = styled(View)`
   display: flex;
   flex-direction: column;
   background: #18222d;
@@ -90,7 +90,8 @@ const ColumnText = styled(Text)`
 const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
   const insets = useSafeAreaInsets();
   const [index, setIndex] = useState(0);
-  const {btcPrice,btcRate,btcAmt,ethPrice,ethRate,ethAmt,dogePrice,dogeRate,dogeAmt} = useContext(PriceContext)
+  const context = useContext(PriceContext)
+  const {btcPrice,btcRate,btcAmt,ethPrice,ethRate,ethAmt,dogePrice,dogeRate,dogeAmt} = useContext(ThreePriceContext)
   return (
     <Container>
       <Header insets={insets.top}>
@@ -138,8 +139,8 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
         </View>
         <View style={{ width: "100%", borderRadius: 8, backgroundColor: "#242D37", marginTop: 16 }}>
           <GrayHeader>
-            <IconImg source={require("../../assets/images/home/doge.png")} />
-            <GrayText>多吉幣 DOGEUSDT</GrayText>
+            <IconImg source={require("../../assets/images/home/bnb.png")} />
+            <GrayText>幣安幣 BNBUSDT</GrayText>
           </GrayHeader>
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 16 }}>
             <View>
@@ -182,91 +183,78 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
               </View>
             </View>
           </View>
-          { index === 0 && parseFloat(btcRate) > 0 &&
-            <TouchableOpacity style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 12, alignItems: "center" }} onPress={()=>{navigation.navigate("Trade")}}>
-            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>BTCUSDT</Text>
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{btcPrice}</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{btcAmt}</Text>
-              </View>
-              <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#2FB364", borderRadius: 4, alignItems: "center" }}>
-                <Text style={{ color: "white" }}>+{btcRate}%</Text>
-              </View>
-            </View>
-           </TouchableOpacity>
+          <ScrollView contentContainerStyle={{paddingBottom:500}}>
+                  {
+                    index === 0 && context && context.map((x:any)=>{
+                      return(
+                        <>
+                        {x.s === "BTCUSDT" && parseFloat(x.P) > 0 &&
+                        <TouchableOpacity style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 12, alignItems: "center" }} onPress={()=>{navigation.navigate("Trade")}}>
+                        <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.s}</Text>
+                    <View style={{ display: "flex", flexDirection: "row" }}>
+                      <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+                        <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.c.slice(0,-4)}</Text>
+                        <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{x.v}</Text>
+                      </View>
+                      <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#2FB364", borderRadius: 4, alignItems: "center" }}>
+                        <Text style={{ color: "white" }}>+{x.P}%</Text>
+                      </View>
+                    </View>
+                      </TouchableOpacity> }
+                      {x.s !== "BTCUSDT" && parseFloat(x.P) > 0 &&
+                        <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 12, alignItems: "center" }} onPress={()=>{navigation.navigate("Trade")}}>
+                        <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.s}</Text>
+                      <View style={{ display: "flex", flexDirection: "row" }}>
+                        <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+                          <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.c.slice(0,-4)}</Text>
+                          <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{x.v}</Text>
+                        </View>
+                        <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#2FB364", borderRadius: 4, alignItems: "center" }}>
+                          <Text style={{ color: "white" }}>+{x.P}%</Text>
+                        </View>
+                      </View>
+                    </View>
+                    }
+                </>
+              )
+            })
           }
-          { index === 1 && parseFloat(btcRate) < 0 &&
-            <TouchableOpacity style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 12, alignItems: "center" }} onPress={()=>{navigation.navigate("Trade")}}>
-            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>BTCUSDT</Text>
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{btcPrice}</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{btcAmt}</Text>
-              </View>
-              <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#FB4C51", borderRadius: 4, alignItems: "center" }}>
-                <Text style={{ color: "white" }}>{btcRate}%</Text>
-              </View>
-            </View>
-           </TouchableOpacity>
+          {
+                    index === 1 && context && context.map((x:any)=>{
+                      return(
+                        <>
+                        {x.s === "BTCUSDT" && parseFloat(x.P) < 0 &&
+                        <TouchableOpacity style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 12, alignItems: "center" }} onPress={()=>{navigation.navigate("Trade")}}>
+                        <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.s}</Text>
+                        <View style={{ display: "flex", flexDirection: "row" }}>
+                          <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+                            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.c.slice(0,-4)}</Text>
+                            <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{x.v}</Text>
+                          </View>
+                          <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#FB4C51", borderRadius: 4, alignItems: "center" }}>
+                            <Text style={{ color: "white" }}>{x.P}%</Text>
+                          </View>
+                        </View>
+                       </TouchableOpacity> }
+                      {x.s !== "BTCUSDT" && parseFloat(x.P) < 0 &&
+                        <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 24, alignItems: "center" }}>
+                        <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.s}</Text>
+                        <View style={{ display: "flex", flexDirection: "row" }}>
+                          <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+                            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.c.slice(0,-4)}</Text>
+                            <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{x.v}</Text>
+                          </View>
+                          <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#FB4C51", borderRadius: 4, alignItems: "center" }}>
+                            <Text style={{ color: "white" }}>{x.P}%</Text>
+                          </View>
+                        </View>
+                      </View>
+                    }
+                </>
+              )
+            })
           }
-          { index === 0 && parseFloat(ethRate) > 0 &&
-          <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 24, alignItems: "center" }}>
-            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>ETHUSDT</Text>
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{ethPrice}</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{ethAmt}</Text>
-              </View>
-              <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#2FB364", borderRadius: 4, alignItems: "center" }}>
-                <Text style={{ color: "white" }}>+{ethRate}%</Text>
-              </View>
-            </View>
-          </View>
-          }
-          { index === 1 && parseFloat(ethRate) < 0 &&
-          <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 24, alignItems: "center" }}>
-            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>ETHUSDT</Text>
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{ethPrice}</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{ethAmt}</Text>
-              </View>
-              <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#FB4C51", borderRadius: 4, alignItems: "center" }}>
-                <Text style={{ color: "white" }}>{ethRate}%</Text>
-              </View>
-            </View>
-          </View>
-          }
-          { index === 0 && parseFloat(dogeRate) > 0 &&
-          <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 24, alignItems: "center" }}>
-            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>DogeUSDT</Text>
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{dogePrice}</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{dogeAmt}</Text>
-              </View>
-              <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#2FB364", borderRadius: 4, alignItems: "center" }}>
-          <Text style={{ color: "white" }}>+{dogeRate}%</Text>
-              </View>
-            </View>
-          </View>
-          }
-          { index === 1 && parseFloat(dogeRate) < 0 &&
-          <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 24, alignItems: "center" }}>
-            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>DogeUSDT</Text>
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{dogePrice}</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{dogeAmt}</Text>
-              </View>
-              <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#FB4C51", borderRadius: 4, alignItems: "center" }}>
-                <Text style={{ color: "white" }}>{dogeRate}%</Text>
-              </View>
-            </View>
-          </View>
-          }
-
+          </ScrollView>
         </View>
       </View>
     </Container>

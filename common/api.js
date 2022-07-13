@@ -126,6 +126,23 @@ const Api = {
         return error.response
       })
     return response
+  },
+  async deleteData(api,data) {
+    let token = await AsyncStorage.getItem("token")
+    let config = {
+      data,
+      headers: {
+        Authorization: token
+      }
+    };
+    const response = await axios.delete(url + api, config)
+      .then((res) => {
+        return res.data
+      })
+      .catch((error) => {
+        return error.response
+      })
+    return response
   }
 }
 
