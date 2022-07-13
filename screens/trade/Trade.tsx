@@ -17,7 +17,7 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import { useIsFocused } from '@react-navigation/native';
 import { ThreePriceContext } from "../../App" 
 import DropDownPicker from 'react-native-dropdown-picker';
-import DropDown from "react-native-paper-dropdown";
+import { Dropdown } from 'react-native-element-dropdown';
 import {
     Appbar,
     DarkTheme,
@@ -29,6 +29,10 @@ import {
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
+
+const Dropdown2 = styled(Dropdown)`
+    background-color:black;
+`;
 
 const Container = styled(View) <{ insets: number }>`
     display: flex;
@@ -1422,20 +1426,17 @@ const TradeScreen = ({
   const [gender, setGender] = useState("");
   const [showMultiSelectDropDown, setShowMultiSelectDropDown] = useState(false);
   const [colors, setColors] = ("");
-  const genderList = [
-    {
-      label: "Male",
-      value: "male",
-    },
-    {
-      label: "Female",
-      value: "female",
-    },
-    {
-      label: "Others",
-      value: "others",
-    },
+  const data = [
+    { label: 'Item 1', value: '1' },
+    { label: 'Item 2', value: '2' },
+    { label: 'Item 3', value: '3' },
+    { label: 'Item 4', value: '4' },
+    { label: 'Item 5', value: '5' },
+    { label: 'Item 6', value: '6' },
+    { label: 'Item 7', value: '7' },
+    { label: 'Item 8', value: '8' },
   ];
+    const [isFocus, setIsFocus] = useState(false);
     return (
         <Container insets={insets.top}>
             {loading && 
@@ -1465,24 +1466,32 @@ const TradeScreen = ({
                     <MainSwapPageContainer>
                         <TradeHeaderContainer>
                             <TradeHeaderLeftContainer>
-                            <Surface style={styles.containerStyle}>
-          <SafeAreaView style={styles.safeContainerStyle}>
-                            <Provider theme={DefaultTheme}>
-                             <ThemeProvider theme={DefaultTheme}>
-                                    <DropDown
-                                        label={"Gender"}
-                                        mode={"outlined"}
-                                        visible={showDropDown}
-                                        showDropDown={() => setShowDropDown(true)}
-                                        onDismiss={() => setShowDropDown(false)}
-                                        value={gender}
-                                        setValue={setGender}
-                                        list={genderList}
-                                        />
-                                        </ThemeProvider>
-                                </Provider>
-                                </SafeAreaView>
-                                </Surface>
+                            <Dropdown
+                                style={styles.dropdown}
+                                placeholderStyle={styles.placeholderStyle}
+                                selectedTextStyle={styles.selectedTextStyle}
+                                iconStyle={styles.iconStyle}
+                                data={data}
+                                maxHeight={300}
+                                labelField="label"
+                                valueField="value"
+                                placeholder={!isFocus ? 'BTC-USDT' : '...'}
+                                value={value}
+                                onFocus={() => setIsFocus(true)}
+                                onBlur={() => setIsFocus(false)}
+                                onChange={item => {
+                                    setValue(item.value);
+                                    setIsFocus(false);
+                                }}
+                                // renderLeftIcon={() => (
+                                //     <AntDesign
+                                //     style={styles.icon}
+                                //     color={isFocus ? 'blue' : 'black'}
+                                //     name="Safety"
+                                //     size={20}
+                                //     />
+                                // )}
+                                />
                                 {/* <TradeHeaderTitleText>BTCUSDT</TradeHeaderTitleText> */}
                                 {/* {
                                     isPositive === true ?
@@ -2250,16 +2259,51 @@ const TradeScreen = ({
 }
 
 const styles = StyleSheet.create({
-    containerStyle: {
-      flex: 1,
+    container: {
+      backgroundColor: '#18222D',
+      padding: 16,
     },
-    spacerStyle: {
-      marginBottom: 15,
+    dropdown: {
+      width:120,
+      height: 30,
+      color:"white",
+      borderColor: 'gray',
+      borderWidth: 0.5,
+      borderRadius: 8,
+      paddingHorizontal: 8,
+      backgroundColor: '#18222D'
     },
-    safeContainerStyle: {
-      flex: 1,
-      margin: 20,
-      justifyContent: "center",
+    icon: {
+      marginRight: 5,
+    },
+    label: {
+      position: 'absolute',
+      backgroundColor: 'white',
+      left: 22,
+      top: 8,
+      zIndex: 999,
+      paddingHorizontal: 8,
+      fontSize: 14,
+    },
+    placeholderStyle: {
+      color:"white",
+      fontSize: 16,
+      backgroundColor: '#18222D',
+
+    },
+    selectedTextStyle: {
+      color:"white",
+      fontSize: 16,
+      backgroundColor: '#18222D',
+
+    },
+    iconStyle: {
+      width: 20,
+      height: 20,
+    },
+    inputSearchStyle: {
+      height: 40,
+      fontSize: 16,
     },
   });
 
