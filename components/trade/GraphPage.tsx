@@ -326,47 +326,53 @@ const BuyArray = [
 ];
 
 
-const GraphPage = () => {
-
+const GraphPage = (props: {
+    trade:string
+    asksArray:any
+    bidsArray:any
+    wareHousedPrice:any
+    price:any
+}) => {
+    const {trade,asksArray,bidsArray,wareHousedPrice,price} = props
     // Value is Positive
     const [isPositive, setIsPositive] = useState(true);
-    const [bidsArray, setBidsArray] = useState([]);
-    const [asksArray, setAsksArray] = useState([]);
-    const [wareHousedPrice, setWareHousedPrice] = useState("");
+    // const [bidsArray, setBidsArray] = useState([]);
+    // const [asksArray, setAsksArray] = useState([]);
+    // const [wareHousedPrice, setWareHousedPrice] = useState("");
 
-    const getDepth = () => {
-        axios
-            .get("https://api1.binance.com/api/v3/depth?symbol=BTCUSDT&limit=8")
-            .then((x) => {
-                setAsksArray(x.data.asks.reverse());
-                setBidsArray(x.data.bids);
-            });
-    };
+    // const getDepth = () => {
+    //     axios
+    //         .get("https://api1.binance.com/api/v3/depth?symbol=BTCUSDT&limit=8")
+    //         .then((x) => {
+    //             setAsksArray(x.data.asks.reverse());
+    //             setBidsArray(x.data.bids);
+    //         });
+    // };
     
-    const getPrice = () => {
-        axios
-            .get("https://api1.binance.com/api/v3/ticker/price?symbol=BTCUSDT")
-            .then((x) => {
-              setWareHousedPrice(x.data.price.slice(0, -6));
-            });
-    };
+    // const getPrice = () => {
+    //     axios
+    //         .get("https://api1.binance.com/api/v3/ticker/price?symbol=BTCUSDT")
+    //         .then((x) => {
+    //           setWareHousedPrice(x.data.price.slice(0, -6));
+    //         });
+    // };
 
-    const {btcPrice} = useContext(PriceContext)
+    // const {btcPrice} = useContext(PriceContext)
 
-    useEffect(() => {
-        getPrice();
-        getDepth();
-        const interval = setInterval(() => {
-            getDepth();
-        }, 2000);
-        return () => clearInterval(interval);         
-    }, []);
+    // useEffect(() => {
+    //     getPrice();
+    //     getDepth();
+    //     const interval = setInterval(() => {
+    //         getDepth();
+    //     }, 2000);
+    //     return () => clearInterval(interval);         
+    // }, []);
 
     return (
         <View style={{width:"100%"}}>
             <GraphHeaderContainer>
                 <GraphHeaderTopRowContainer>
-                    <GraphHeaderBigTitleText>BTCUSDT</GraphHeaderBigTitleText>
+                    <GraphHeaderBigTitleText>{trade}</GraphHeaderBigTitleText>
                     {/* {
                         isPositive === true ?
                             <GraphHeaderFluctuationRiseText>+2.90%</GraphHeaderFluctuationRiseText> :
@@ -376,17 +382,17 @@ const GraphPage = () => {
                 <GraphHeaderBottomRowContainer>
                     {
                         isPositive === true ?
-                            <GraphHeaderTitleRisePriceText>{wareHousedPrice}</GraphHeaderTitleRisePriceText> :
-                            <GraphHeaderTitleFallPriceText>{wareHousedPrice}</GraphHeaderTitleFallPriceText>
+                            <GraphHeaderTitleRisePriceText>{price}</GraphHeaderTitleRisePriceText> :
+                            <GraphHeaderTitleFallPriceText>{price}</GraphHeaderTitleFallPriceText>
                     }
                     <GraphHeaderBottomRowColumnContainer>
                         <GraphHeaderBottomInlineRowContainer>
                             <GraphHeaderSmallTitleText>標記價格</GraphHeaderSmallTitleText>
-                            <GraphHeaderSmallValueText>{wareHousedPrice}</GraphHeaderSmallValueText>
+                            <GraphHeaderSmallValueText>{price}</GraphHeaderSmallValueText>
                         </GraphHeaderBottomInlineRowContainer>
                         <GraphHeaderBottomInlineRowContainer>
                             <GraphHeaderSmallTitleText>指數價格</GraphHeaderSmallTitleText>
-                            <GraphHeaderSmallValueText>{wareHousedPrice}</GraphHeaderSmallValueText>
+                            <GraphHeaderSmallValueText>{price}</GraphHeaderSmallValueText>
                         </GraphHeaderBottomInlineRowContainer>
                         {/* <GraphHeaderBottomInlineRowContainer>
                             <GraphHeaderSmallTitleText>資金費率</GraphHeaderSmallTitleText>
@@ -399,7 +405,7 @@ const GraphPage = () => {
             <GraphContainer contentContainerStyle={{paddingBottom:350}}>
                 <GraphContentContainer>
                 <WebView style={{width:"100%",height:470}}
-                 source={{ uri: 'https://exchange-chart-staging.aptan.cloud' }}
+                 source={{ uri: `https://exchange-chart-staging.aptan.cloud?trade=${trade}USDT` }}
                 />
                 </GraphContentContainer>
                 <GraphDetailTitleText>掛單簿</GraphDetailTitleText>
@@ -422,7 +428,7 @@ const GraphPage = () => {
                     <GraphDetailBuyContainer>
 
                         {
-                            bidsArray.map((x:any, i) => {
+                            bidsArray.map((x:any) => {
                                 return (
                                     <GraphDetailBuyContainer>
                                         <GraphDetailBuyPriceTitleText>{x[0].slice(0, 2) + "," + x[0].slice(2, -6)}</GraphDetailBuyPriceTitleText>
@@ -433,7 +439,7 @@ const GraphPage = () => {
                     </GraphDetailBuyContainer>
                     <GraphDetailBuyContainer>
                         {
-                            bidsArray.map((x:any, i) => {
+                            bidsArray.map((x:any) => {
                                 return (
                                     <GraphDetailBuyContainer>
                                         <GraphDetailBuyDetailText>{x[1].slice(0, -5)}</GraphDetailBuyDetailText>
@@ -444,7 +450,7 @@ const GraphPage = () => {
                     </GraphDetailBuyContainer>
                     <GraphDetailBuyContainer>
                         {
-                            bidsArray.map((x:any, i) => {
+                            bidsArray.map((x:any) => {
                                 return (
                                     <GraphDetailBuyContainer>
                                         <GraphDetailBuyDetailText>{x[1].slice(0, -5)}</GraphDetailBuyDetailText>
@@ -458,17 +464,17 @@ const GraphPage = () => {
                 <GraphDetailPriceRowContainer>
                     <GraphDetailPriceColumnContainer>
                         <GraphDetailPriceLeftTitleText>最新價</GraphDetailPriceLeftTitleText>
-                        <GraphDetailLatestPriceText>{btcPrice}</GraphDetailLatestPriceText>
+                        <GraphDetailLatestPriceText>{price}</GraphDetailLatestPriceText>
                     </GraphDetailPriceColumnContainer>
                     <GraphDetailPriceColumnContainer>
                         <GraphDetailPriceRightTitleText>指數價</GraphDetailPriceRightTitleText>
-                        <GraphDetailIndexPriceText>{btcPrice}</GraphDetailIndexPriceText>
+                        <GraphDetailIndexPriceText>{price}</GraphDetailIndexPriceText>
                     </GraphDetailPriceColumnContainer>
                 </GraphDetailPriceRowContainer>
                 <GraphDetailContainer>
                     <GraphDetailSellContainer>
                         {
-                            asksArray.map((x:any, i) => {
+                            asksArray.map((x:any) => {
                                 return (
                                     <GraphDetailSellContainer>
                                         <GraphDetailSellPriceText>{x[0].slice(0, 2) + "," + x[0].slice(2, -6)}</GraphDetailSellPriceText>
@@ -479,7 +485,7 @@ const GraphPage = () => {
                     </GraphDetailSellContainer>
                     <GraphDetailSellContainer>
                         {
-                            asksArray.map((x:any, i) => {
+                            asksArray.map((x:any) => {
                                 return (
                                     <GraphDetailSellContainer>
                                         <GraphDetailSellDetailText>{x[1].slice(0, -5)}</GraphDetailSellDetailText>
@@ -490,7 +496,7 @@ const GraphPage = () => {
                     </GraphDetailSellContainer>
                     <GraphDetailSellContainer>
                         {
-                            asksArray.map((x:any, i) => {
+                            asksArray.map((x:any) => {
                                 return (
                                     <GraphDetailSellContainer>
                                         <GraphDetailSellDetailText>{x[1].slice(0, -5)}</GraphDetailSellDetailText>

@@ -49,9 +49,10 @@ const SliderContainer = (props: {
     onChangeSliderValue: React.Dispatch<React.SetStateAction<number>>;
     swapCurrency: number;
     balance: number;
+    trade:string
 
 }) => {
-    const { sliderValue, trackMarks, positionNum, swapCurrency, onChangeSliderValue,balance } = props;
+    const { sliderValue, trackMarks, positionNum, swapCurrency, onChangeSliderValue,balance,trade } = props;
     const [value, setValue] = React.useState(
         sliderValue ? sliderValue : DEFAULT_VALUE,
     );
@@ -123,7 +124,7 @@ const SliderContainer = (props: {
                 {
                     swapCurrency === 0 ?
                         <TradeFunctionNumberInputRightContainer>
-                            <TradeFunctionNumberInputRightText>BTC</TradeFunctionNumberInputRightText>
+                            <TradeFunctionNumberInputRightText>{trade}</TradeFunctionNumberInputRightText>
                         </TradeFunctionNumberInputRightContainer> :
                         <TradeFunctionNumberInputRightContainer>
                             <TradeFunctionNumberInputRightText>USDT</TradeFunctionNumberInputRightText>

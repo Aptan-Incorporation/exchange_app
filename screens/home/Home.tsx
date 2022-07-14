@@ -183,7 +183,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
               </View>
             </View>
           </View>
-          <ScrollView contentContainerStyle={{paddingBottom:500}}>
+          <ScrollView contentContainerStyle={{paddingBottom:1100}}>
                   {
                     index === 0 && context && context.map((x:any)=>{
                       return(

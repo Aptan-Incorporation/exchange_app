@@ -12,9 +12,11 @@ import Modal from "react-native-modal";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import styled from "styled-components";
 import { RootStackScreenProps } from "../../types";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import api from "../../common/api";
 import Spinner from "react-native-loading-spinner-overlay";
+import axios from "axios"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -53,7 +55,6 @@ const StopPositionLabelText = styled(Text)`
   font-size: 13px;
   line-height: 20px;
   color: ${props => props.theme.color.LightGray};
-  padding-left: 6px;
   padding-bottom: 4px;
 `;
 
@@ -205,10 +206,32 @@ const StopPositionScreen = ({
   const [predictLoss, setPredictLoss] = useState(0);
   const [predictEarningMsg, setPredictEarningMsg] = useState("");
   const [predictLostMsg, setPredictLostMsg] = useState("");
-
+  const [price, setPrice] = useState("");
+  const [positionArray,setPositionArray] = useState([{avgPrice:"0",forceClose:"0"}])
   const togglePositionSellVolumnModal = () => {
     setIsPositionSellVoiumnVisible(!isPositionSellVolumnVisible);
   };
+
+  const getPosition = () => {
+    api.get("/investor/position").then((x) => {
+        if(x.status != 400 && x.status != 401){
+        setPositionArray(x.data); 
+        axios
+        .get(`https://api1.binance.com/api/v3/ticker/price?symbol=${x.data[0].symbol.split("-")[0]}USDT`)
+        .then((x) => {
+          console.log(x)
+            setPrice(x.data.price.slice(0,-6));
+        }); 
+          }
+    })
+    
+  };
+  useEffect(async ()=>{
+    let token = await AsyncStorage.getItem("token")
+    if(token){
+      getPosition()
+    }
+  },[])
 
   return (
     <Container>
@@ -225,6 +248,18 @@ const StopPositionScreen = ({
         <StopPositionRowContainer style={{ paddingTop: 16 }}>
           <StopPositionInRowContainer>
             <StopPositionColumnContainer>
+            <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
+                <Text style={{color:"white"}}>入場價格</Text>
+                <Text style={{color:"white"}}>{positionArray[0].avgPrice}</Text>
+              </View>
+              <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
+                <Text style={{color:"white"}}>市價</Text>
+                <Text style={{color:"white"}}>{positionArray[0].price}</Text>
+              </View>
+              <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10,marginBottom:20 }}>
+                <Text style={{color:"white"}}>強平價格</Text>
+                <Text style={{color:"white"}}>{positionArray[0].forceClose}</Text>
+              </View>
               <StopPositionLabelText>止盈價</StopPositionLabelText>
               <StopPositionInputContainer>
                 <TextInput
@@ -269,6 +304,10 @@ const StopPositionScreen = ({
                   </StopPositionButtonRightText>
                 </StopPositionInputRightContainer>
               </StopPositionInputContainer>
+              <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
+                <Text style={{color:"white"}}>倉位金額</Text>
+                <Text style={{color:"white"}}>{positionArray[0].avgPrice}</Text>
+              </View>
               <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
                 <Text style={{color:"white"}}>預計盈虧</Text>
                 <Text style={{color:"white"}}>{predictEarning}</Text>
@@ -347,6 +386,10 @@ const StopPositionScreen = ({
                   </StopPositionButtonRightText>
                 </StopPositionInputRightContainer>
               </StopPositionInputContainer>
+              <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
+                <Text style={{color:"white"}}>倉位金額</Text>
+                <Text style={{color:"white"}}>{positionArray[0].avgPrice}</Text>
+              </View>
               <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
                 <Text style={{color:"white"}}>預計盈虧</Text>
                 <Text style={{color:"white"}}>{predictLoss}</Text>

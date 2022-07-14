@@ -15,9 +15,10 @@ import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
 import { useIsFocused } from '@react-navigation/native';
-import { ThreePriceContext } from "../../App" 
+import { ThreePriceContext,PriceContext } from "../../App" 
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Dropdown } from 'react-native-element-dropdown';
+
 import {
     Appbar,
     DarkTheme,
@@ -1203,7 +1204,7 @@ const TradeScreen = ({
     const [wareHousedPrice, setWareHousedPrice] = useState("");
     const [loading,setLoading] = useState(false);
     const {btcPrice} = useContext(ThreePriceContext)
-
+    const context = useContext(PriceContext)
     const toggleBuyTypeModal = () => {
         setIsBuyTypeModalVisible(!isBuyTypeModalVisible);
     }
@@ -1285,6 +1286,11 @@ const TradeScreen = ({
 
     // Commit Stop Button Modal 當前委託止盈/止損價
     const [isCommitStopVisible, setIsCommitStopVisible] = useState(false);
+    const [trade, setTrade] = useState([{
+        label:"",
+        value:""
+    }]);
+    const [nowTrade, setNowTrade] = useState("BTC-USTD");
 
     const toggleCommitStopModal = () => {
         setIsCommitStopVisible(!isCommitStopVisible)
@@ -1333,6 +1339,7 @@ const TradeScreen = ({
     };
     const getPosition = () => {
         api.get("/investor/position").then((x) => {
+            console.log(x)
             if(x.status != 400 && x.status != 401){
             setPositionArray(x.data);
             for (let i = 0; i < x.data.length; i++) {
@@ -1345,23 +1352,23 @@ const TradeScreen = ({
         })
     };
     
-    const getDepth = () => {
+    const getDepth = (trade:string) => {
         axios
-            .get("https://api1.binance.com/api/v3/depth?symbol=BTCUSDT&limit=6")
+            .get(`https://api1.binance.com/api/v3/depth?symbol=${trade.split("-")[0]}USDT&limit=6`)
             .then((x) => {
                 setAsksArray(x.data.asks.reverse());
                 setBidsArray(x.data.bids);
             });
             axios
-            .get("https://api1.binance.com/api/v3/ticker/price?symbol=BTCUSDT")
+            .get(`https://api1.binance.com/api/v3/ticker/price?symbol=${trade.split("-")[0]}USDT`)
             .then((x) => {
-                setPrice(x.data.price);
+                setPrice(x.data.price.slice(0,-6));
             });
     };
     
-    const getPrice = () => {
+    const getPrice = (trade:string) => {
         axios
-            .get("https://api1.binance.com/api/v3/ticker/price?symbol=BTCUSDT")
+            .get(`https://api1.binance.com/api/v3/ticker/price?symbol=${trade.split("-")[0]}USDT`)
             .then((x) => {
               setWareHousedPrice(x.data.price.slice(0, -6));
               setBuyPrice(x.data.price.slice(0, -6))
@@ -1376,10 +1383,26 @@ const TradeScreen = ({
             }
         });
     };
+
     const isFocused = useIsFocused();
+    useEffect(()=>{
+        if(context){
+            let a = []
+            for(let i = 0;i<context.length;i++){
+                let obj = {
+                    label:context[i].s.split("USDT")[0]+"-USDT",
+                    value:context[i].s.split("USDT")[0]+"-USDT"
+                }
+                a.push(obj)
+            }
+            setTrade(a)
+        }
+    },[context])
+
     useEffect(async () => {
         if(isFocused){
-            
+            let inter = await AsyncStorage.getItem("interval")
+            clearInterval(parseInt(inter!))
             let token = await AsyncStorage.getItem("token")
             if(!token){
                 setEntrustArray([])
@@ -1395,11 +1418,10 @@ const TradeScreen = ({
             if(leverage){
                 setLeverageViewNum(parseInt(leverage))
             }
-            getDepth();
-            
-            getPrice();
+            getDepth(nowTrade);
+            getPrice(nowTrade);
             const interval = setInterval(() => {
-                getDepth();
+                getDepth(nowTrade);
                 if (token) {
                     getEntrust();
                     getPosition();
@@ -1407,35 +1429,22 @@ const TradeScreen = ({
                 }
                 
             }, 2000);
-            
+            AsyncStorage.setItem("interval",interval.toString())
             return () => clearInterval(interval); 
         }
         
         
-    }, [isFocused]);
+    }, [isFocused,nowTrade]);
+
+
 
 
     const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    {label: 'Apple', value: 'apple'},
-    {label: 'Banana', value: 'banana'}
-  ]);
-  const [nightMode, setNightmode] = useState(false);
-  const [showDropDown, setShowDropDown] = useState(false);
-  const [gender, setGender] = useState("");
-  const [showMultiSelectDropDown, setShowMultiSelectDropDown] = useState(false);
-  const [colors, setColors] = ("");
-  const data = [
-    { label: 'Item 1', value: '1' },
-    { label: 'Item 2', value: '2' },
-    { label: 'Item 3', value: '3' },
-    { label: 'Item 4', value: '4' },
-    { label: 'Item 5', value: '5' },
-    { label: 'Item 6', value: '6' },
-    { label: 'Item 7', value: '7' },
-    { label: 'Item 8', value: '8' },
-  ];
+    const [value, setValue] = useState(null);
+    const [items, setItems] = useState([
+        {label: 'Apple', value: 'apple'},
+        {label: 'Banana', value: 'banana'}
+    ]);
     const [isFocus, setIsFocus] = useState(false);
     return (
         <Container insets={insets.top}>
@@ -1471,26 +1480,26 @@ const TradeScreen = ({
                                 placeholderStyle={styles.placeholderStyle}
                                 selectedTextStyle={styles.selectedTextStyle}
                                 iconStyle={styles.iconStyle}
-                                data={data}
+                                data={trade}
                                 maxHeight={300}
                                 labelField="label"
                                 valueField="value"
+                                containerStyle={styles.containerStyle}
                                 placeholder={!isFocus ? 'BTC-USDT' : '...'}
+                                activeColor	= "#18222D"
                                 value={value}
                                 onFocus={() => setIsFocus(true)}
                                 onBlur={() => setIsFocus(false)}
+                                renderItem={(item)=>(
+                                <View style={{padding:8}}>
+                                    <Text style={{color:"white"}}>{item.label}</Text>
+                                </View>
+                                )}
                                 onChange={item => {
                                     setValue(item.value);
+                                    setNowTrade(item.value)
                                     setIsFocus(false);
                                 }}
-                                // renderLeftIcon={() => (
-                                //     <AntDesign
-                                //     style={styles.icon}
-                                //     color={isFocus ? 'blue' : 'black'}
-                                //     name="Safety"
-                                //     size={20}
-                                //     />
-                                // )}
                                 />
                                 {/* <TradeHeaderTitleText>BTCUSDT</TradeHeaderTitleText> */}
                                 {/* {
@@ -1518,21 +1527,21 @@ const TradeScreen = ({
                                     </TradeTableTopTitleContainer>
                                     <TradeTableTopTitleContainer>
                                         <TradeTableTopTitleText>(USDT)</TradeTableTopTitleText>
-                                        <TradeTableTopTitleText>(BTC)</TradeTableTopTitleText>
+                                        <TradeTableTopTitleText>({nowTrade.split("-")[0]})</TradeTableTopTitleText>
                                     </TradeTableTopTitleContainer>
                                     <TradeTableSellContainer>
                                         {
                                             asksArray.map((x:string, i) => {
                                                 let percent = Number((1 - parseFloat(x[1])).toPrecision());
-                                                if(parseInt((parseFloat(x[0].slice(0, 2) + "," + x[0].slice(2, -9))*parseFloat(x[1].slice(0, -5))+20).toString().slice(-2))){
-                                                    percent = parseInt((parseFloat(x[0].slice(0, 2) + "," + x[0].slice(2, -9))*parseFloat(x[1].slice(0, -5))+20).toString().slice(-2))/100
+                                                if(parseInt((parseFloat(x[0].slice(0, 2) + x[0].slice(2, -9))*parseFloat(x[1].slice(0, -5))+20).toString().slice(-2))){
+                                                    percent = parseInt((parseFloat(x[0].slice(0, 2) + x[0].slice(2, -9))*parseFloat(x[1].slice(0, -5))+20).toString().slice(-2))/100
                                                 }
                                                 return (
 
                                                     <LinearGradient colors={['transparent', 'rgba(251, 76, 81, 0.2)']} start={{ x: 0, y: 0.0 }} end={{ x: percent, y: 0.0 }}>
                                                         <TradeTableRowContainer>
 
-                                                            <TradeTableSellPriceText>{x[0].slice(0, 2) + "," + x[0].slice(2, -6)}</TradeTableSellPriceText>
+                                                            <TradeTableSellPriceText>{x[0].slice(0, 2) + x[0].slice(2, -6)}</TradeTableSellPriceText>
                                                             <TradeTableNumberText>{x[1].slice(0, -5)}</TradeTableNumberText>
 
                                                         </TradeTableRowContainer>
@@ -1544,24 +1553,24 @@ const TradeScreen = ({
                                     <TradeTableBottomTitleContainer>
                                         {
                                             isPositive === true ?
-                                                <TradeTableBottomTitlePriceRiseText>{btcPrice}</TradeTableBottomTitlePriceRiseText> :
-                                                <TradeTableBottomTitlePriceFallText>{btcPrice}</TradeTableBottomTitlePriceFallText>
+                                                <TradeTableBottomTitlePriceRiseText>{price}</TradeTableBottomTitlePriceRiseText> :
+                                                <TradeTableBottomTitlePriceFallText>{price}</TradeTableBottomTitlePriceFallText>
                                         }
                                     </TradeTableBottomTitleContainer>
                                     <TradeTableBottomTitleContainer>
-                                    <TradeTableBottomTitleOwnValueText>{btcPrice}</TradeTableBottomTitleOwnValueText>
+                                    <TradeTableBottomTitleOwnValueText>{price}</TradeTableBottomTitleOwnValueText>
                                     </TradeTableBottomTitleContainer>
                                     <TradeTableBuyContainer>
                                         {
                                             bidsArray.map((x:string, i) => {
                                                 let percent = Number((1 - parseFloat(x[1])).toPrecision());
-                                                if(parseInt((parseFloat(x[0].slice(0, 2) + "," + x[0].slice(2, -9))*parseFloat(x[1].slice(0, -5))+20).toString().slice(-2))){
-                                                    percent = parseInt((parseFloat(x[0].slice(0, 2) + "," + x[0].slice(2, -9))*parseFloat(x[1].slice(0, -5))+20).toString().slice(-2))/100
+                                                if(parseInt((parseFloat(x[0].slice(0, 2) + x[0].slice(2, -9))*parseFloat(x[1].slice(0, -5))+20).toString().slice(-2))){
+                                                    percent = parseInt((parseFloat(x[0].slice(0, 2) + x[0].slice(2, -9))*parseFloat(x[1].slice(0, -5))+20).toString().slice(-2))/100
                                                 }
                                                 return (
                                                     <LinearGradient colors={['transparent', 'rgba(47, 178, 100, 0.2)']} start={{ x: 0, y: 0.0 }} end={{ x: percent, y: 0.0 }}>
                                                         <TradeTableRowContainer>
-                                                            <TradeTableBuyPriceText>{x[0].slice(0, 2) + "," + x[0].slice(2, -6)}</TradeTableBuyPriceText>
+                                                            <TradeTableBuyPriceText>{x[0].slice(0, 2) + x[0].slice(2, -6)}</TradeTableBuyPriceText>
                                                             <TradeTableNumberText>{x[1].slice(0, -5)}</TradeTableNumberText>
                                                         </TradeTableRowContainer>
                                                     </LinearGradient>
@@ -1635,7 +1644,7 @@ const TradeScreen = ({
                                             swapCurrency === 0 ?
                                                 <TradeFunctionCurrencyButtonContainer>
                                                     <TradeFunctionLeftCurrencyButtonClicked onPress={() => { setSwapCurrency(0) }}>
-                                                        <TradeFunctionCurrencyButtonClickedText>BTC</TradeFunctionCurrencyButtonClickedText>
+                                                        <TradeFunctionCurrencyButtonClickedText>{nowTrade.split("-")[0]}</TradeFunctionCurrencyButtonClickedText>
                                                     </TradeFunctionLeftCurrencyButtonClicked>
                                                     <TradeFunctionRightCurrencyButton onPress={() => { setSwapCurrency(1) }}>
                                                         <TradeFunctionCurrencyButtonText>USDT</TradeFunctionCurrencyButtonText>
@@ -1643,7 +1652,7 @@ const TradeScreen = ({
                                                 </TradeFunctionCurrencyButtonContainer> :
                                                 <TradeFunctionCurrencyButtonContainer>
                                                     <TradeFunctionLeftCurrencyButton onPress={() => { setSwapCurrency(0) }}>
-                                                        <TradeFunctionCurrencyButtonText>BTC</TradeFunctionCurrencyButtonText>
+                                                        <TradeFunctionCurrencyButtonText>{nowTrade.split("-")[0]}</TradeFunctionCurrencyButtonText>
                                                     </TradeFunctionLeftCurrencyButton>
                                                     <TradeFunctionRightCurrencyButtonClicked onPress={() => { setSwapCurrency(1) }}>
                                                         <TradeFunctionCurrencyButtonClickedText>USDT</TradeFunctionCurrencyButtonClickedText>
@@ -1678,6 +1687,7 @@ const TradeScreen = ({
                                             onChangeSliderValue={setSliderNum}
                                             swapCurrency={swapCurrency}
                                             balance={balance}
+                                            trade={nowTrade.split("-")[0]}
                                         >
                                             <Slider
                                                 renderAboveThumbComponent={RenderAboveThumbComponent}
@@ -1699,7 +1709,7 @@ const TradeScreen = ({
                                             <TradeFunctionPositionViewTitleText>可開</TradeFunctionPositionViewTitleText>
                                             <TradeFunctionPositionViewValueText>{balance === 0
                         ? 0
-                        : ((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().substring(0,((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().indexOf(".")+3)}{" "} BTC</TradeFunctionPositionViewValueText>
+                                            : ((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().substring(0,((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().indexOf(".")+3)}{" "} {nowTrade.split("-")[0]}</TradeFunctionPositionViewValueText>
                                         </TradeFunctionPositionViewContainer>
                                         <TradeFunctionPositionViewContainer>
                                             {swapBuyPosition === "Open" ?
@@ -1719,27 +1729,27 @@ const TradeScreen = ({
                                                           price: parseFloat(buyPrice),
                                                           origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "BUY",
-                                                          symbol: "BTC-USDT",
+                                                          symbol: nowTrade,
                                                           leverage: leverageViewNum,
                                                           type:"LIMIT"
                                                       } : buyType === "Market" ? {
                                                           origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "BUY",
-                                                          symbol: "BTC-USDT",
+                                                          symbol: nowTrade,
                                                           leverage: leverageViewNum,
                                                           type:"MARKET"
                                                         } : buyType === "Plan_Limit" ? {
                                                           price: parseFloat(buyPrice),
                                                           origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "BUY",
-                                                          symbol: "BTC-USDT",
+                                                          symbol: nowTrade,
                                                           leverage: leverageViewNum,
                                                           type:"STOP_LIMIT",
                                                           stopPrice:stopPrice
                                                         } : {
                                                           origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "BUY",
-                                                          symbol: "BTC-USDT",
+                                                          symbol: nowTrade,
                                                           leverage: leverageViewNum,
                                                           type:"STOP_MARKET",
                                                           stopPrice:stopPrice
@@ -1779,27 +1789,27 @@ const TradeScreen = ({
                                                           price: parseFloat(buyPrice),
                                                           origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "SELL",
-                                                          symbol: "BTC-USDT",
+                                                          symbol: nowTrade,
                                                           leverage: leverageViewNum,
                                                           type:"LIMIT"
                                                       } : buyType === "Market" ? {
                                                           origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "SELL",
-                                                          symbol: "BTC-USDT",
+                                                          symbol: nowTrade,
                                                           leverage: leverageViewNum,
                                                           type:"MARKET"
                                                         } : buyType === "Plan_Limit" ? {
                                                           price: parseFloat(buyPrice),
                                                           origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "SELL",
-                                                          symbol: "BTC-USDT",
+                                                          symbol: nowTrade,
                                                           leverage: leverageViewNum,
                                                           type:"STOP_LIMIT",
                                                           stopPrice:stopPrice
                                                         } : {
                                                           origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "SELL",
-                                                          symbol: "BTC-USDT",
+                                                          symbol: nowTrade,
                                                           leverage: leverageViewNum,
                                                           type:"STOP_MARKET",
                                                           stopPrice:stopPrice
@@ -1872,8 +1882,8 @@ const TradeScreen = ({
                                                         <TradePositionCardContainer>
                                                             <TradePositionCardTitleContainer>
                                                                 <TradePositionCardTitleRowContainer>
-                                                                    {x.side === "BUY" ?                                                                    <TradePositionCardTitleText>多 BTC/USDT</TradePositionCardTitleText>
- :                                                                    <TradePositionCardTitleText style={{color:"#FB4C51"}}>空 BTC/USDT</TradePositionCardTitleText>
+                                                                    {x.side === "BUY" ?                                                                    <TradePositionCardTitleText>多 {x.symbol}</TradePositionCardTitleText>
+ :                                                                    <TradePositionCardTitleText style={{color:"#FB4C51"}}>空 {x.symbol}</TradePositionCardTitleText>
 }
                                                                     <TradePositionCardSmallTitleText>未實現盈虧</TradePositionCardSmallTitleText>
                                                                 </TradePositionCardTitleRowContainer>
@@ -2009,7 +2019,13 @@ const TradeScreen = ({
                             }
                         </TradeContainer>
                     </MainSwapPageContainer> :
-                    <GraphPage />
+                    <GraphPage 
+                        trade={nowTrade}
+                        asksArray={asksArray}
+                        bidsArray={bidsArray}
+                        wareHousedPrice={wareHousedPrice}
+                        price={price}
+                    />
             }
 
             {/* Modal Page */}
@@ -2261,10 +2277,14 @@ const TradeScreen = ({
 const styles = StyleSheet.create({
     container: {
       backgroundColor: '#18222D',
-      padding: 16,
+      color:"white",
+    },
+    containerStyle: {
+        backgroundColor: '#18222D',
+        color:"white"
     },
     dropdown: {
-      width:120,
+      width:130,
       height: 30,
       color:"white",
       borderColor: 'gray',
@@ -2276,15 +2296,15 @@ const styles = StyleSheet.create({
     icon: {
       marginRight: 5,
     },
-    label: {
-      position: 'absolute',
-      backgroundColor: 'white',
-      left: 22,
-      top: 8,
-      zIndex: 999,
-      paddingHorizontal: 8,
-      fontSize: 14,
-    },
+    // label: {
+    //   position: 'absolute',
+    //   backgroundColor: 'white',
+    //   left: 22,
+    //   top: 8,
+    //   zIndex: 999,
+    //   paddingHorizontal: 8,
+    //   fontSize: 14,
+    // },
     placeholderStyle: {
       color:"white",
       fontSize: 16,
@@ -2295,7 +2315,6 @@ const styles = StyleSheet.create({
       color:"white",
       fontSize: 16,
       backgroundColor: '#18222D',
-
     },
     iconStyle: {
       width: 20,
