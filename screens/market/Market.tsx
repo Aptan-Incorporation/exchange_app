@@ -15,8 +15,9 @@ import * as React from "react";
 import { useContext, useState, useEffect, useRef } from "react";
 import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const Container = styled(SafeAreaView)`
+const Container = styled(View)`
   display: flex;
   flex-direction: column;
   background: #18222d;
@@ -42,6 +43,17 @@ const HeaderTitleText = styled(Text)`
   color: ${props => props.theme.color.Gray};
 `;
 
+const Header = styled(View) <{ insets: number }>`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: ${props => props.insets}px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 11px;
+`;
+
 const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
   const {
     btcPrice,
@@ -60,6 +72,8 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
   const [doge, setDoge] = useState(false);
   const [index, setIndex] = useState(0);
   const [favorite, setFavorite] = useState([""]);
+  const insets = useSafeAreaInsets();
+
   const [favorite2, setFavorite2] = useState([
     {
       E: "",
@@ -114,48 +128,25 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
 
   const getFavorite = () => {
     api.get("/investor/favorite").then(x => {
-      setFavorite(x.data);
-      let a = [];
-      for(let i = 0;i < x.data.length;i++){
-        for(let j = 0;j<context.length;j++){
-          if(x.data[i].split("-")[0]+x.data[i].split("-")[1] == context[j].s){
-            a.push(context[j])
+      if(x.status != 401 && x.status != 400){
+        setFavorite(x.data);
+        let a = [];
+        for(let i = 0;i < x.data.length;i++){
+          for(let j = 0;j<context.length;j++){
+            if(x.data[i].split("-")[0]+x.data[i].split("-")[1] == context[j].s){
+              a.push(context[j])
+            }
           }
         }
+        setFavorite2(a)
+        setFavorite3(a)
+      }else if(x.status == 401){
+        AsyncStorage.removeItem("token")
+      }else{
+        alert(x.data.msg)
       }
-      setFavorite2(a)
-      setFavorite3(a)
-      // if (x.data.length === 1) {
-      //   if (x.data[0] == "ETH/USDT") {
-      //     setFavorite([]);
-      //   } else {
-      //     setFavorite([]);
-      //   }
-      // }
-      // if (x.data.length === 2) {
-      //   setFavorite([]);
-      // }
-      // for(let i = 0;i<x.data.length;i++){
-      //   if(x.data[i]=="ETH/USDT"){
-      //     let obj = {
-      //       name: "ETHUSDT",
-      //       price: ethPrice,
-      //       amount: ethAmt,
-      //       rate: ethRate
-      //     }
-      //     a.push(obj)
-      //   }
-      //   if(x.data[i]=="BTC/USDT"){
-      //     let obj = {
-      //       name: "BTCUSDT",
-      //       price: btcPrice,
-      //       amount: btcAmt,
-      //       rate: btcRate
-      //     }
-      //     a.push(obj)
-      //   }
-      //   setFavorite(a)
-      // }
+      
+      
     });
   };
 
@@ -211,6 +202,8 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
 
   return (
     <Container>
+      <Header insets={insets.top}>
+      </Header>
       <View style={{ paddingHorizontal: 16 }}>
         <View
           style={{

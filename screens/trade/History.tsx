@@ -536,8 +536,8 @@ const HistoryScreen = ({
                                     <CardTitleRowContainer>
                                         {
                                             x.side === 'BUY' ?
-                                                <CardTitleSecondaryLightText>BTCUSDT ・ {x.leverage}X</CardTitleSecondaryLightText> :
-                                                <CardTitleSecondaryText>BTCUSDT・ {x.leverage}X</CardTitleSecondaryText>
+                                                <CardTitleSecondaryLightText>{x.symbol} ・ {x.leverage}X</CardTitleSecondaryLightText> :
+                                                <CardTitleSecondaryText>{x.symbol}・ {x.leverage}X</CardTitleSecondaryText>
                                         }
                                         {
                                             x.status === "CREATE"?
@@ -611,8 +611,8 @@ const HistoryScreen = ({
                                 <CardTitleContainer>
                                     {
                                         x.side === 'SELL' ?
-                                    <CardTitleSecondaryLightText>BTCUSDT {x.leverage}X</CardTitleSecondaryLightText> :
-                                            <CardTitleSecondaryText>BTCUSDT {x.leverage}X</CardTitleSecondaryText>
+                                    <CardTitleSecondaryLightText>{x.symbol} {x.leverage}X</CardTitleSecondaryLightText> :
+                                            <CardTitleSecondaryText>{x.symbol} {x.leverage}X</CardTitleSecondaryText>
                                     }
                                     <CardTitleTimeText>{new Date(x.createdDate).getFullYear()}-{new Date(x.createdDate).getMonth()+1 < 10 ? "0"+(new Date(x.createdDate).getMonth()+1) : new Date(x.createdDate).getMonth()+1}-{new Date(x.createdDate).getDate() < 10 ? "0"+(new Date(x.createdDate).getDate()) : new Date(x.createdDate).getDate()} {new Date(x.createdDate).getHours() < 10 ? "0"+(new Date(x.createdDate).getHours()) : new Date(x.createdDate).getHours()}:{new Date(x.createdDate).getMinutes() < 10 ? "0"+(new Date(x.createdDate).getMinutes()) : new Date(x.createdDate).getMinutes()}</CardTitleTimeText>
                                 </CardTitleContainer>
@@ -700,8 +700,8 @@ const HistoryScreen = ({
                                 <CardTitleContainer>
                                     {
                                         x.side === 'BUY' ?
-                                            <CardTitleSecondaryText>BTCUSDT・全倉{x.leverage}X</CardTitleSecondaryText> :
-                                            <CardTitleSecondaryLightText>BTCUSDT・全倉{x.leverage}X</CardTitleSecondaryLightText>
+                                            <CardTitleSecondaryText>{x.symbol}・全倉{x.leverage}X</CardTitleSecondaryText> :
+                                            <CardTitleSecondaryLightText>{x.symbol}・全倉{x.leverage}X</CardTitleSecondaryLightText>
                                     }
                                     {/* <CardTitleTimeText>{new Date(x.createdDate).getFullYear()}-{new Date(x.createdDate).getMonth()+1 < 10 ? "0"+(new Date(x.createdDate).getMonth()+1) : new Date(x.createdDate).getMonth()+1}-{new Date(x.createdDate).getDate() < 10 ? "0"+(new Date(x.createdDate).getDate()) : new Date(x.createdDate).getDate()} {new Date(x.createdDate).getHours() < 10 ? "0"+(new Date(x.createdDate).getHours()) : new Date(x.createdDate).getHours()}:{new Date(x.createdDate).getMinutes() < 10 ? "0"+(new Date(x.createdDate).getMinutes()) : new Date(x.createdDate).getMinutes()}</CardTitleTimeText> */}
                                 </CardTitleContainer>

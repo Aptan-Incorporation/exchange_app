@@ -111,7 +111,10 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
         <View></View>
       </Header>
       <View style={{ padding: 16 }}>
-        <TouchableOpacity style={{ width: "100%", borderRadius: 8, backgroundColor: "#242D37" }} onPress={()=>{navigation.navigate("Trade")}}>
+        <TouchableOpacity style={{ width: "100%", borderRadius: 8, backgroundColor: "#242D37" }}  onPress={()=>{
+                          AsyncStorage.setItem("trade","BTCUSDT")
+                          navigation.navigate("Trade")
+                          }}>
           <GrayHeader>
             <IconImg source={require("../../assets/images/home/btc.png")} />
             <GrayText>比特幣 BTCUSDT</GrayText>
@@ -124,7 +127,10 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
             {parseFloat(btcRate) > 0 ? <PercentText>{"+"+btcRate}%</PercentText> : <RedPercentText>{btcRate}%</RedPercentText>}
           </View>
         </TouchableOpacity>
-        <View style={{ width: "100%", borderRadius: 8, backgroundColor: "#242D37", marginTop: 16 }}>
+        <TouchableOpacity style={{ width: "100%", borderRadius: 8, backgroundColor: "#242D37", marginTop: 16 }}  onPress={()=>{
+                          AsyncStorage.setItem("trade","ETHUSDT")
+                          navigation.navigate("Trade")
+                          }}>
           <GrayHeader>
             <IconImg source={require("../../assets/images/home/eth.png")} />
             <GrayText>以太坊 ETHUSDT</GrayText>
@@ -136,8 +142,11 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
             </View>
             {parseFloat(ethRate) > 0 ? <PercentText>{"+"+ethRate}%</PercentText> : <RedPercentText>{ethRate}%</RedPercentText>}
           </View>
-        </View>
-        <View style={{ width: "100%", borderRadius: 8, backgroundColor: "#242D37", marginTop: 16 }}>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ width: "100%", borderRadius: 8, backgroundColor: "#242D37", marginTop: 16 }}  onPress={()=>{
+                          AsyncStorage.setItem("trade","BNBUSDT")
+                          navigation.navigate("Trade")
+                          }}>
           <GrayHeader>
             <IconImg source={require("../../assets/images/home/bnb.png")} />
             <GrayText>幣安幣 BNBUSDT</GrayText>
@@ -149,7 +158,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
             </View>
             {parseFloat(dogeRate) > 0 ? <PercentText>{"+"+dogeRate}%</PercentText> : <RedPercentText>{dogeRate}%</RedPercentText>}
           </View>
-        </View>
+        </TouchableOpacity>
         <View style={{ display: "flex", flexDirection: "row", width: "100%", height: 33, borderBottomWidth: 1, borderBottomColor: "#242D37", marginTop: 24 }}>
           {index === 0 ?
             <TouchableOpacity style={{ height: 33, borderBottomWidth: 2, borderBottomColor: "#608FBE" }} onPress={()=>{setIndex(0)}}>
@@ -189,7 +198,10 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                       return(
                         <>
                         {x.s === "BTCUSDT" && parseFloat(x.P) > 0 &&
-                        <TouchableOpacity style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 12, alignItems: "center" }} onPress={()=>{navigation.navigate("Trade")}}>
+                        <TouchableOpacity style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 12, alignItems: "center" }} onPress={()=>{
+                          AsyncStorage.setItem("trade",x.s)
+                          navigation.navigate("Trade")
+                          }}>
                         <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.s}</Text>
                     <View style={{ display: "flex", flexDirection: "row" }}>
                       <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
@@ -202,7 +214,10 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                     </View>
                       </TouchableOpacity> }
                       {x.s !== "BTCUSDT" && parseFloat(x.P) > 0 &&
-                        <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 12, alignItems: "center" }} onPress={()=>{navigation.navigate("Trade")}}>
+                        <TouchableOpacity style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 12, alignItems: "center" }}  onPress={()=>{
+                          AsyncStorage.setItem("trade",x.s)
+                          navigation.navigate("Trade")
+                        }}>
                         <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.s}</Text>
                       <View style={{ display: "flex", flexDirection: "row" }}>
                         <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
@@ -213,7 +228,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                           <Text style={{ color: "white" }}>+{x.P}%</Text>
                         </View>
                       </View>
-                    </View>
+                    </TouchableOpacity>
                     }
                 </>
               )
@@ -224,7 +239,10 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                       return(
                         <>
                         {x.s === "BTCUSDT" && parseFloat(x.P) < 0 &&
-                        <TouchableOpacity style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 12, alignItems: "center" }} onPress={()=>{navigation.navigate("Trade")}}>
+                        <TouchableOpacity style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 12, alignItems: "center" }}  onPress={()=>{
+                          AsyncStorage.setItem("trade",x.s)
+                          navigation.navigate("Trade")
+                          }}>
                         <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.s}</Text>
                         <View style={{ display: "flex", flexDirection: "row" }}>
                           <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
@@ -237,7 +255,10 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                         </View>
                        </TouchableOpacity> }
                       {x.s !== "BTCUSDT" && parseFloat(x.P) < 0 &&
-                        <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 24, alignItems: "center" }}>
+                        <TouchableOpacity style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 24, alignItems: "center" }}   onPress={()=>{
+                          AsyncStorage.setItem("trade",x.s)
+                          navigation.navigate("Trade")
+                          }}>
                         <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.s}</Text>
                         <View style={{ display: "flex", flexDirection: "row" }}>
                           <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
@@ -248,7 +269,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                             <Text style={{ color: "white" }}>{x.P}%</Text>
                           </View>
                         </View>
-                      </View>
+                      </TouchableOpacity>
                     }
                 </>
               )

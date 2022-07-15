@@ -353,12 +353,12 @@ const TextContener = styled(View)`
 `;
 
 // Trade Page Position Style
-const TradePositionContainer = styled(View)`
-display: flex;
+const TradePositionContainer = styled(ScrollView)`
+/* display: flex;
 flex-direction: column;
 justify-content: center;
 align-items: center;
-padding-bottom: 280px;
+padding-bottom: 280px; */
 `;
 
 const TradePositionBackgroundImage = styled(Image)`
@@ -722,15 +722,15 @@ const WalletScreen = ({
                             }}>
                         <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>資金劃轉</Text>
                     </TouchableOpacity>
-                    <TradePositionContainer>
+                    <TradePositionContainer contentContainerStyle={{paddingBottom:20}}>
                                             {
                                                 positionArray.map((x:any, i) => {
                                                     return (
                                                         <TradePositionCardContainer>
                                                             <TradePositionCardTitleContainer>
                                                                 <TradePositionCardTitleRowContainer>
-                                                                    {x.side === "BUY" ?                                                                    <TradePositionCardTitleText>多 BTC/USDT</TradePositionCardTitleText>
- :                                                                    <TradePositionCardTitleText style={{color:"#FB4C51"}}>空 BTC/USDT</TradePositionCardTitleText>
+                                                                    {x.side === "BUY" ?                                                                    <TradePositionCardTitleText>多 {x.symbol}</TradePositionCardTitleText>
+ :                                                                    <TradePositionCardTitleText style={{color:"#FB4C51"}}>空 {x.symbol}</TradePositionCardTitleText>
 }
                                                                     <TradePositionCardSmallTitleText>未實現盈虧</TradePositionCardSmallTitleText>
                                                                 </TradePositionCardTitleRowContainer>
@@ -760,7 +760,9 @@ const WalletScreen = ({
                                                                 </TradePositionCardDetailColumnContainer>
                                                             </TradePositionCardDetailRowContainer>
                                                             <TradePositionCardButtonContainer>
-                                                                <TradePositionCardButton onPress={() => { navigation.push("StopPositionScreen") }}>
+                                                                <TradePositionCardButton onPress={() => { 
+                                                                    AsyncStorage.setItem("position",JSON.stringify({position:x}))
+                                                                    navigation.push("StopPositionScreen") }}>
                                                                     <TradePositionCardButtonText>止盈/止損</TradePositionCardButtonText>
                                                                 </TradePositionCardButton>
                                                                 <TradePositionCardButton onPress={()=>{

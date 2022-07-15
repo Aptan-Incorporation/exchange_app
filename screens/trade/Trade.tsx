@@ -1291,6 +1291,7 @@ const TradeScreen = ({
         value:""
     }]);
     const [nowTrade, setNowTrade] = useState("BTC-USTD");
+    const [newTrade, setNewTrade] = useState("");
 
     const toggleCommitStopModal = () => {
         setIsCommitStopVisible(!isCommitStopVisible)
@@ -1339,7 +1340,6 @@ const TradeScreen = ({
     };
     const getPosition = () => {
         api.get("/investor/position").then((x) => {
-            console.log(x)
             if(x.status != 400 && x.status != 401){
             setPositionArray(x.data);
             for (let i = 0; i < x.data.length; i++) {
@@ -1404,6 +1404,8 @@ const TradeScreen = ({
             let inter = await AsyncStorage.getItem("interval")
             clearInterval(parseInt(inter!))
             let token = await AsyncStorage.getItem("token")
+            let trade = await AsyncStorage.getItem("trade")
+            setNewTrade(trade)
             if(!token){
                 setEntrustArray([])
                 setPositionArray([])
@@ -1418,10 +1420,13 @@ const TradeScreen = ({
             if(leverage){
                 setLeverageViewNum(parseInt(leverage))
             }
-            getDepth(nowTrade);
-            getPrice(nowTrade);
+            if(trade){
+                setValue(trade.split("USDT")[0]+"-USDT")
+            }
+            getDepth(trade ? trade.split("USDT")[0]+"-USDT":nowTrade);
+            getPrice(trade ? trade.split("USDT")[0]+"-USDT":nowTrade);
             const interval = setInterval(() => {
-                getDepth(nowTrade);
+                getDepth(trade ? trade.split("USDT")[0]+"-USDT":nowTrade);
                 if (token) {
                     getEntrust();
                     getPosition();
@@ -1432,7 +1437,11 @@ const TradeScreen = ({
             AsyncStorage.setItem("interval",interval.toString())
             return () => clearInterval(interval); 
         }
-        
+        else{
+            AsyncStorage.removeItem("trade")
+            setValue("BTC-USDT")
+            setNowTrade("BTC-USDT")
+        }
         
     }, [isFocused,nowTrade]);
 
@@ -1496,6 +1505,8 @@ const TradeScreen = ({
                                 </View>
                                 )}
                                 onChange={item => {
+                                    AsyncStorage.removeItem("trade")
+                                    setNewTrade("")
                                     setValue(item.value);
                                     setNowTrade(item.value)
                                     setIsFocus(false);
@@ -1527,7 +1538,7 @@ const TradeScreen = ({
                                     </TradeTableTopTitleContainer>
                                     <TradeTableTopTitleContainer>
                                         <TradeTableTopTitleText>(USDT)</TradeTableTopTitleText>
-                                        <TradeTableTopTitleText>({nowTrade.split("-")[0]})</TradeTableTopTitleText>
+                                        <TradeTableTopTitleText>({newTrade?newTrade.split("USDT")[0]:nowTrade.split("-")[0]})</TradeTableTopTitleText>
                                     </TradeTableTopTitleContainer>
                                     <TradeTableSellContainer>
                                         {
@@ -1644,7 +1655,7 @@ const TradeScreen = ({
                                             swapCurrency === 0 ?
                                                 <TradeFunctionCurrencyButtonContainer>
                                                     <TradeFunctionLeftCurrencyButtonClicked onPress={() => { setSwapCurrency(0) }}>
-                                                        <TradeFunctionCurrencyButtonClickedText>{nowTrade.split("-")[0]}</TradeFunctionCurrencyButtonClickedText>
+                                                        <TradeFunctionCurrencyButtonClickedText>{newTrade?newTrade.split("USDT")[0]:nowTrade.split("-")[0]}</TradeFunctionCurrencyButtonClickedText>
                                                     </TradeFunctionLeftCurrencyButtonClicked>
                                                     <TradeFunctionRightCurrencyButton onPress={() => { setSwapCurrency(1) }}>
                                                         <TradeFunctionCurrencyButtonText>USDT</TradeFunctionCurrencyButtonText>
@@ -1652,7 +1663,7 @@ const TradeScreen = ({
                                                 </TradeFunctionCurrencyButtonContainer> :
                                                 <TradeFunctionCurrencyButtonContainer>
                                                     <TradeFunctionLeftCurrencyButton onPress={() => { setSwapCurrency(0) }}>
-                                                        <TradeFunctionCurrencyButtonText>{nowTrade.split("-")[0]}</TradeFunctionCurrencyButtonText>
+                                                        <TradeFunctionCurrencyButtonText>{newTrade?newTrade.split("USDT")[0]:nowTrade.split("-")[0]}</TradeFunctionCurrencyButtonText>
                                                     </TradeFunctionLeftCurrencyButton>
                                                     <TradeFunctionRightCurrencyButtonClicked onPress={() => { setSwapCurrency(1) }}>
                                                         <TradeFunctionCurrencyButtonClickedText>USDT</TradeFunctionCurrencyButtonClickedText>
@@ -1687,7 +1698,7 @@ const TradeScreen = ({
                                             onChangeSliderValue={setSliderNum}
                                             swapCurrency={swapCurrency}
                                             balance={balance}
-                                            trade={nowTrade.split("-")[0]}
+                                            trade={newTrade?newTrade.split("USDT")[0]:nowTrade.split("-")[0]}
                                         >
                                             <Slider
                                                 renderAboveThumbComponent={RenderAboveThumbComponent}
@@ -1723,37 +1734,37 @@ const TradeScreen = ({
                                                     }else if (!sliderNum) {
                                                         Alert.alert("請輸入數量");
                                                     } else {
-                                                        console.log((sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2))
                                                       var obj = buyType === "Limit" ?
                                                       {
                                                           price: parseFloat(buyPrice),
                                                           origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "BUY",
-                                                          symbol: nowTrade,
+                                                          symbol: newTrade?newTrade.split("USDT")[0]+"-USDT":nowTrade,
                                                           leverage: leverageViewNum,
                                                           type:"LIMIT"
                                                       } : buyType === "Market" ? {
                                                           origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "BUY",
-                                                          symbol: nowTrade,
+                                                          symbol: newTrade?newTrade.split("USDT")[0]+"-USDT":nowTrade,
                                                           leverage: leverageViewNum,
                                                           type:"MARKET"
                                                         } : buyType === "Plan_Limit" ? {
                                                           price: parseFloat(buyPrice),
                                                           origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "BUY",
-                                                          symbol: nowTrade,
+                                                          symbol: newTrade?newTrade.split("USDT")[0]+"-USDT":nowTrade,
                                                           leverage: leverageViewNum,
                                                           type:"STOP_LIMIT",
                                                           stopPrice:stopPrice
                                                         } : {
                                                           origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "BUY",
-                                                          symbol: nowTrade,
+                                                          symbol: newTrade?newTrade.split("USDT")[0]+"-USDT":nowTrade,
                                                           leverage: leverageViewNum,
                                                           type:"STOP_MARKET",
                                                           stopPrice:stopPrice
                                                         }
+                                                        console.log(obj)
                                                         setLoading(true)
                                                       api
                                                         .post("/order/futures/open-order", obj)
@@ -1789,27 +1800,27 @@ const TradeScreen = ({
                                                           price: parseFloat(buyPrice),
                                                           origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "SELL",
-                                                          symbol: nowTrade,
+                                                          symbol: newTrade?newTrade.split("USDT")[0]+"-USDT":nowTrade,
                                                           leverage: leverageViewNum,
                                                           type:"LIMIT"
                                                       } : buyType === "Market" ? {
                                                           origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "SELL",
-                                                          symbol: nowTrade,
+                                                          symbol: newTrade?newTrade.split("USDT")[0]+"-USDT":nowTrade,
                                                           leverage: leverageViewNum,
                                                           type:"MARKET"
                                                         } : buyType === "Plan_Limit" ? {
                                                           price: parseFloat(buyPrice),
                                                           origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "SELL",
-                                                          symbol: nowTrade,
+                                                          symbol:newTrade?newTrade.split("USDT")[0]+"-USDT":nowTrade,
                                                           leverage: leverageViewNum,
                                                           type:"STOP_LIMIT",
                                                           stopPrice:stopPrice
                                                         } : {
                                                           origQty: swapCurrency === 0 ? sliderNum : (sliderNum*leverageViewNum/parseFloat(wareHousedPrice)).toFixed(2),
                                                           side: "SELL",
-                                                          symbol: nowTrade,
+                                                          symbol: newTrade?newTrade.split("USDT")[0]+"-USDT":nowTrade,
                                                           leverage: leverageViewNum,
                                                           type:"STOP_MARKET",
                                                           stopPrice:stopPrice
@@ -1913,7 +1924,10 @@ const TradeScreen = ({
                                                                 </TradePositionCardDetailColumnContainer>
                                                             </TradePositionCardDetailRowContainer>
                                                             <TradePositionCardButtonContainer>
-                                                                <TradePositionCardButton onPress={() => { navigation.push("StopPositionScreen") }}>
+                                                                <TradePositionCardButton onPress={() => { 
+                                                                    AsyncStorage.setItem("position",JSON.stringify({position:x}))
+                                                                    navigation.push("StopPositionScreen") 
+                                                                }}>
                                                                     <TradePositionCardButtonText>止盈/止損</TradePositionCardButtonText>
                                                                 </TradePositionCardButton>
                                                                 <TradePositionCardButton onPress={()=>{
@@ -1947,7 +1961,7 @@ const TradeScreen = ({
                                                     return (
                                                         <TradeCommitCardContainer>
                                                             <TradeCommitCardTitleContainer>
-                                                                <TradeCommitCardTitleText>BTCUSDT</TradeCommitCardTitleText>
+                                                    <TradeCommitCardTitleText>{x.symbol}</TradeCommitCardTitleText>
                                                                 <TradeCommitCardTitleTimeText>{x.time}</TradeCommitCardTitleTimeText>
                                                             </TradeCommitCardTitleContainer>
                                                             <TradeCommitCardDetailRowContainer>
@@ -2020,7 +2034,7 @@ const TradeScreen = ({
                         </TradeContainer>
                     </MainSwapPageContainer> :
                     <GraphPage 
-                        trade={nowTrade}
+                        trade={newTrade?newTrade.split("USDT")[0]+"-USDT":nowTrade}
                         asksArray={asksArray}
                         bidsArray={bidsArray}
                         wareHousedPrice={wareHousedPrice}

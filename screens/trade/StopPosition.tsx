@@ -207,19 +207,21 @@ const StopPositionScreen = ({
   const [predictEarningMsg, setPredictEarningMsg] = useState("");
   const [predictLostMsg, setPredictLostMsg] = useState("");
   const [price, setPrice] = useState("");
-  const [positionArray,setPositionArray] = useState([{avgPrice:"0",forceClose:"0"}])
+  const [positionArray,setPositionArray] = useState({avgPrice:"0",forceClose:"0"})
   const togglePositionSellVolumnModal = () => {
     setIsPositionSellVoiumnVisible(!isPositionSellVolumnVisible);
   };
 
-  const getPosition = () => {
+  const getPosition = async () => {
+    let position = await AsyncStorage.getItem('position')
+    let symbol = JSON.parse(position!).position.symbol
+    setPositionArray(JSON.parse(position!).position); 
+
     api.get("/investor/position").then((x) => {
         if(x.status != 400 && x.status != 401){
-        setPositionArray(x.data); 
         axios
-        .get(`https://api1.binance.com/api/v3/ticker/price?symbol=${x.data[0].symbol.split("-")[0]}USDT`)
+        .get(`https://api1.binance.com/api/v3/ticker/price?symbol=${symbol.split("-")[0]}USDT`)
         .then((x) => {
-          console.log(x)
             setPrice(x.data.price.slice(0,-6));
         }); 
           }
@@ -250,26 +252,27 @@ const StopPositionScreen = ({
             <StopPositionColumnContainer>
             <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
                 <Text style={{color:"white"}}>入場價格</Text>
-                <Text style={{color:"white"}}>{positionArray[0].avgPrice}</Text>
+                <Text style={{color:"white"}}>{positionArray.avgPrice}</Text>
               </View>
               <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
                 <Text style={{color:"white"}}>市價</Text>
-                <Text style={{color:"white"}}>{positionArray[0].price}</Text>
+                <Text style={{color:"white"}}>{price}</Text>
               </View>
               <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10,marginBottom:20 }}>
                 <Text style={{color:"white"}}>強平價格</Text>
-                <Text style={{color:"white"}}>{positionArray[0].forceClose}</Text>
+                <Text style={{color:"white"}}>{positionArray.forceClose}</Text>
               </View>
               <StopPositionLabelText>止盈價</StopPositionLabelText>
               <StopPositionInputContainer>
                 <TextInput
                   placeholder={"價格"}
                   value={positionStopEarnPrice}
-                  onChangeText={positionStopEarnPrice =>{
-                    
+                  onChangeText={async (positionStopEarnPrice) =>{
+                    let position = await AsyncStorage.getItem('position')
+                    let  symbol = JSON.parse(position!).position.symbol
                     setPositionStopEarnPrice(positionStopEarnPrice)
                     if(positionStopEarnPrice){
-                        api.getData("/order/position/stop-price?symbol=BTC-USDT&profitPrice="+positionStopEarnPrice).then(x=>{
+                        api.getData(`/order/position/stop-price?symbol=${symbol}&profitPrice=`+positionStopEarnPrice).then(x=>{
                             if(x.status === 400){
                                 setPredictEarning(0)
                                 setPredictEarningMsg(x.data.msg)
@@ -306,7 +309,7 @@ const StopPositionScreen = ({
               </StopPositionInputContainer>
               <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
                 <Text style={{color:"white"}}>倉位金額</Text>
-                <Text style={{color:"white"}}>{positionArray[0].avgPrice}</Text>
+                <Text style={{color:"white"}}>{positionArray.avgPrice}</Text>
               </View>
               <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
                 <Text style={{color:"white"}}>預計盈虧</Text>
@@ -349,10 +352,12 @@ const StopPositionScreen = ({
                 <TextInput
                   placeholder={"價格"}
                   value={positionStopLostPrice}
-                  onChangeText={positionStopLostPrice =>{
+                  onChangeText={async (positionStopLostPrice) =>{
                     setPositionStopLostPrice(positionStopLostPrice)
+                    let position = await AsyncStorage.getItem('position')
+                    let  symbol = JSON.parse(position!).position.symbol
                     if(positionStopLostPrice){
-                        api.getData("/order/position/stop-price?symbol=BTC-USDT&lossPrice="+positionStopLostPrice).then(x=>{
+                        api.getData(`/order/position/stop-price?symbol=${symbol}&lossPrice=`+positionStopLostPrice).then(x=>{
                             if(x.status === 400){
                                 setPredictLoss(0)
                                 setPredictLostMsg(x.data.msg)
@@ -388,7 +393,7 @@ const StopPositionScreen = ({
               </StopPositionInputContainer>
               <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
                 <Text style={{color:"white"}}>倉位金額</Text>
-                <Text style={{color:"white"}}>{positionArray[0].avgPrice}</Text>
+                <Text style={{color:"white"}}>{positionArray.avgPrice}</Text>
               </View>
               <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
                 <Text style={{color:"white"}}>預計盈虧</Text>

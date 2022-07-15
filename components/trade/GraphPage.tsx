@@ -405,7 +405,7 @@ const GraphPage = (props: {
             <GraphContainer contentContainerStyle={{paddingBottom:350}}>
                 <GraphContentContainer>
                 <WebView style={{width:"100%",height:470}}
-                 source={{ uri: `https://exchange-chart-staging.aptan.cloud?trade=${trade}USDT` }}
+                 source={{ uri: `https://exchange-chart-staging.aptan.cloud?trade=${trade.split("-")[0]}USDT` }}
                 />
                 </GraphContentContainer>
                 <GraphDetailTitleText>掛單簿</GraphDetailTitleText>
@@ -431,7 +431,7 @@ const GraphPage = (props: {
                             bidsArray.map((x:any) => {
                                 return (
                                     <GraphDetailBuyContainer>
-                                        <GraphDetailBuyPriceTitleText>{x[0].slice(0, 2) + "," + x[0].slice(2, -6)}</GraphDetailBuyPriceTitleText>
+                                        <GraphDetailBuyPriceTitleText>{x[0].slice(0, 2) + x[0].slice(2, -6)}</GraphDetailBuyPriceTitleText>
                                     </GraphDetailBuyContainer>
                                 )
                             })
@@ -477,7 +477,7 @@ const GraphPage = (props: {
                             asksArray.map((x:any) => {
                                 return (
                                     <GraphDetailSellContainer>
-                                        <GraphDetailSellPriceText>{x[0].slice(0, 2) + "," + x[0].slice(2, -6)}</GraphDetailSellPriceText>
+                                        <GraphDetailSellPriceText>{x[0].slice(0, 2) + x[0].slice(2, -6)}</GraphDetailSellPriceText>
                                     </GraphDetailSellContainer>
                                 )
                             })
