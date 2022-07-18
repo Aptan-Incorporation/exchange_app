@@ -48,13 +48,18 @@ const Header = styled(View) <{ insets: number }>`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding-top: ${props => props.insets}px;
   padding-left: 16px;
   padding-right: 16px;
   padding-bottom: 11px;
 `;
 
-const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
+const IconImg = styled(Image)`
+  width: 28px;
+  height:28px;
+`
+
+
+const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) => {
   const {
     btcPrice,
     btcRate,
@@ -70,7 +75,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
   const [btc, setBtc] = useState(false);
   const [eth, setEth] = useState(false);
   const [doge, setDoge] = useState(false);
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(1);
   const [favorite, setFavorite] = useState([""]);
   const insets = useSafeAreaInsets();
 
@@ -205,38 +210,11 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
       <Header insets={insets.top}>
       </Header>
       <View style={{ paddingHorizontal: 16 }}>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            marginBottom: 10
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              setIndex(0);
-            }}
-            style={{ marginRight: 10 }}
-          >
-            {index === 0 ? (
-              <HeaderTitleTextClicked>自選</HeaderTitleTextClicked>
-            ) : (
-              <HeaderTitleText>自選</HeaderTitleText>
-            )}
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setIndex(1);
-            }}
-          >
-            {index === 1 ? (
-              <HeaderTitleTextClicked>合約</HeaderTitleTextClicked>
-            ) : (
-              <HeaderTitleText>合約</HeaderTitleText>
-            )}
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity onPress={()=>{navigation.goBack()}} style={{marginBottom:10}}>
+          <IconImg source={require("../../assets/images/global/cancel.png")} />
+
+        </TouchableOpacity>
+
         <View style={{ display: "flex", flexDirection: "row", width: "100%" }}>
           <TextInput
             ref={TextEl}
@@ -280,7 +258,6 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
             )}
           </Pressable>
         </View>
-        {index === 0 ? (
           <>
             <View
               style={{
@@ -305,319 +282,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                 </View>
               </View>
             </View>
-            {(favorite[0] == "" || favorite.length === 0) && (
-              <Text
-                style={{
-                  color: "#FFFFFF",
-                  fontWeight: "600",
-                  fontSize: 18,
-                  marginTop: 20
-                }}
-              >
-                尚未加入自選
-              </Text>
-            )}
-            {favorite[0] != "" && favorite2.map((x: any) => {
-              return (
-                <>
-                  {x.s === "BTCUSDT" ? (
-                    <TouchableOpacity
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        marginTop: 24,
-                        alignItems: "center"
-                      }}
-                      onPress={() => {
-                        AsyncStorage.setItem("trade","BTCUSDT")
-                        navigation.navigate("Trade");
-                      }}
-                    >
-                      <View
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center"
-                        }}
-                      >
-                        <TouchableOpacity
-                          onPress={async () => {
-                            let token = await AsyncStorage.getItem("token")
-                            if(token){
-                              if (favorite.includes("BTC-USDT")) {
-                                api
-                                  .deleteData("/investor/favorite", {
-                                    symbol: "BTC-USDT"
-                                  })
-                                  .then(x => {
-                                    if (x.status != 400) {
-                                      getFavorite();
-                                    } else if (x.status != 401) {
-                                      alert("登入過期請重新登入")
-                                      AsyncStorage.removeItem("token")
-                                    } else {
-                                      alert(x.data.msg);
-                                    }
-                                  });
-                              } else {
-                                api
-                                  .postData("/investor/favorite", {
-                                    symbol: "BTC-USDT"
-                                  })
-                                  .then(x => {
-                                    if (x.status != 400) {
-                                      getFavorite();
-                                    } else if (x.status != 401) {
-                                      alert("登入過期請重新登入")
-                                      AsyncStorage.removeItem("token")
-                                    } else {
-                                      alert(x.data.msg);
-                                    }
-                                  });
-                              }
-                            }
-                            
-                          }}
-                        >
-                          <Image
-                            source={require("../../assets/images/market/star-y.png")}
-                            style={{ width: 24, height: 24, marginRight: 5 }}
-                          />
-                        </TouchableOpacity>
-                        <Text
-                          style={{
-                            color: "#F4F5F6",
-                            fontSize: 15,
-                            fontWeight: "400"
-                          }}
-                        >
-                          {x.s}
-                        </Text>
-                      </View>
-
-                      <View style={{ display: "flex", flexDirection: "row" }}>
-                        <View
-                          style={{
-                            marginRight: 40,
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-end"
-                          }}
-                        >
-                          <Text
-                            style={{
-                              color: "#F4F5F6",
-                              fontSize: 15,
-                              fontWeight: "400"
-                            }}
-                          >
-                            {x.c}
-                          </Text>
-                          <Text
-                            style={{
-                              color: "#8D97A2",
-                              fontSize: 12,
-                              fontWeight: "400"
-                            }}
-                          >
-                            {x.v}
-                          </Text>
-                        </View>
-                        {parseFloat(x.P) > 0 ? (
-                          <View
-                            style={{
-                              width: 88,
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "center",
-                              backgroundColor: "#2FB364",
-                              borderRadius: 4,
-                              alignItems: "center"
-                            }}
-                          >
-                            <Text style={{ color: "white" }}>+{x.P}%</Text>
-                          </View>
-                        ) : (
-                          <View
-                            style={{
-                              width: 88,
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "center",
-                              backgroundColor: "#FB4C51",
-                              borderRadius: 4,
-                              alignItems: "center"
-                            }}
-                          >
-                            <Text style={{ color: "white" }}>{x.P}%</Text>
-                          </View>
-                        )}
-                      </View>
-                    </TouchableOpacity>
-                  ) : (
-                    <TouchableOpacity
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        marginTop: 24,
-                        alignItems: "center"
-                      }}
-                      onPress={() => {
-                        AsyncStorage.setItem("trade",x.s)
-                        navigation.navigate("Trade");
-                      }}
-                    >
-                      <View
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center"
-                        }}
-                      >
-                        <TouchableOpacity
-                          onPress={() => {
-                            if (favorite.includes(x.s.split("USDT")[0]+"-USDT")) {
-                              api
-                                .deleteData("/investor/favorite", {
-                                  symbol: x.s.split("USDT")[0]+"-USDT"
-                                })
-                                .then(x => {
-                                  if (x.status != 400) {
-                                    getFavorite();
-                                  } else {
-                                    alert(x.data.msg);
-                                  }
-                                });
-                            } else {
-                              api
-                                .postData("/investor/favorite", {
-                                  symbol: x.s.split("USDT")[0]+"-USDT"
-                                })
-                                .then(x => {
-                                  if (x.status != 400) {
-                                    getFavorite();
-                                  } else {
-                                    alert(x.data.msg);
-                                  }
-                                });
-                            }
-                          }}
-                        >
-                          <Image
-                            source={require("../../assets/images/market/star-y.png")}
-                            style={{ width: 24, height: 24, marginRight: 5 }}
-                          />
-                          {/* {x.name === "DOGEUSDT" && doge && <Image
-                        source={require("../../assets/images/market/star-y.png")}
-                        style={{ width: 24, height: 24,marginRight:5 }}
-                      />}
-                    {x.name === "DOGEUSDT" && !doge && <Image
-                      source={require("../../assets/images/market/star.png")}
-                      style={{ width: 24, height: 24,marginRight:5 }}
-                    />} */}
-                        </TouchableOpacity>
-                        <Text
-                          style={{
-                            color: "#F4F5F6",
-                            fontSize: 15,
-                            fontWeight: "400"
-                          }}
-                        >
-                          {x.s}
-                        </Text>
-                      </View>
-                      <View style={{ display: "flex", flexDirection: "row" }}>
-                        <View
-                          style={{
-                            marginRight: 40,
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-end"
-                          }}
-                        >
-                          <Text
-                            style={{
-                              color: "#F4F5F6",
-                              fontSize: 15,
-                              fontWeight: "400"
-                            }}
-                          >
-                            {x.c}
-                          </Text>
-                          <Text
-                            style={{
-                              color: "#8D97A2",
-                              fontSize: 12,
-                              fontWeight: "400"
-                            }}
-                          >
-                            {x.v}
-                          </Text>
-                        </View>
-                        {parseFloat(x.P) > 0 ? (
-                          <View
-                            style={{
-                              width: 88,
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "center",
-                              backgroundColor: "#2FB364",
-                              borderRadius: 4,
-                              alignItems: "center"
-                            }}
-                          >
-                            <Text style={{ color: "white" }}>+{x.P}%</Text>
-                          </View>
-                        ) : (
-                          <View
-                            style={{
-                              width: 88,
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "center",
-                              backgroundColor: "#FB4C51",
-                              borderRadius: 4,
-                              alignItems: "center"
-                            }}
-                          >
-                            <Text style={{ color: "white" }}>{x.P}%</Text>
-                          </View>
-                        )}
-                      </View>
-                    </TouchableOpacity>
-                  )}
-                </>
-              );
-            })}
-          </>
-        ) : (
-          <>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between"
-              }}
-            >
-              <ColumnText>交易對</ColumnText>
-
-              <View style={{ display: "flex", flexDirection: "row" }}>
-                <ColumnText style={{ marginRight: 40 }}>價格/交易量</ColumnText>
-                <View
-                  style={{
-                    width: 88,
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "flex-end"
-                  }}
-                >
-                  <ColumnText>24H漲跌</ColumnText>
-                </View>
-              </View>
-            </View>
-            <ScrollView contentContainerStyle={{paddingBottom:180}}>
+            <ScrollView contentContainerStyle={{paddingBottom:150}}>
             {arr.map((x: any) => {
               return (
                 <>
@@ -632,7 +297,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                       }}
                       onPress={() => {
                         AsyncStorage.setItem("trade","BTCUSDT")
-                        navigation.navigate("Trade");
+                        navigation.goBack();
                       }}
                     >
                       <View
@@ -642,53 +307,6 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                           alignItems: "center"
                         }}
                       >
-                        <TouchableOpacity
-                          onPress={async () => {
-                            let token = await AsyncStorage.getItem("token")
-                            if(token){
-                              if (favorite.includes(x.s.split("USDT")[0]+"-USDT")) {
-                                api
-                                  .deleteData("/investor/favorite", {
-                                    symbol: "BTC-USDT"
-                                  })
-                                  .then(x => {
-                                    if (x.status != 400) {
-                                      getFavorite();
-                                    } else {
-                                      alert(x.data.msg);
-                                    }
-                                  });
-                              } else {
-                                api
-                                  .postData("/investor/favorite", {
-                                    symbol: "BTC-USDT"
-                                  })
-                                  .then(x => {
-                                    if (x.status != 400) {
-                                      getFavorite();
-                                    } else {
-                                      alert(x.data.msg);
-                                    }
-                                  });
-                              }
-                            }else{
-                              alert("請先登入")
-                            }
-                            
-                          }}
-                        >
-                          {favorite.includes(x.s.split("USDT")[0]+"-USDT") ? (
-                            <Image
-                              source={require("../../assets/images/market/star-y.png")}
-                              style={{ width: 24, height: 24, marginRight: 5 }}
-                            />
-                          ) : (
-                            <Image
-                              source={require("../../assets/images/market/star.png")}
-                              style={{ width: 24, height: 24, marginRight: 5 }}
-                            />
-                          )}
-                        </TouchableOpacity>
                         <Text
                           style={{
                             color: "#F4F5F6",
@@ -770,7 +388,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                       }}
                       onPress={()=>{
                         AsyncStorage.setItem("trade",x.s)
-                        navigation.navigate("Trade");
+                        navigation.goBack();
                       }}
                     >
                       <View
@@ -780,61 +398,6 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                           alignItems: "center"
                         }}
                       >
-                        <TouchableOpacity
-                          onPress={async () => {
-                            let token = await AsyncStorage.getItem("token")
-                            if(token){
-                            if (favorite.includes(x.s.split("USDT")[0]+"-USDT")) {
-                              api
-                                .deleteData("/investor/favorite", {
-                                  symbol: x.s.split("USDT")[0]+"-USDT"
-                                })
-                                .then(x => {
-                                  if (x.status != 400) {
-                                    getFavorite();
-                                  } else {
-                                    alert(x.data.msg);
-                                  }
-                                });
-                            } else {
-                              console.log(x.s.split("USDT")[0]+"-USDT")
-                              api
-                                .postData("/investor/favorite", {
-                                  symbol: x.s.split("USDT")[0]+"-USDT"
-                                })
-                                .then(x => {
-                                  if (x.status != 400) {
-                                    getFavorite();
-                                  } else {
-                                    alert(x.data.msg);
-                                  }
-                                });
-                            }
-                          }else{
-                            alert("請先登入")
-                          }
-                          }}
-                        >
-                          {favorite.includes(x.s.split("USDT")[0]+"-USDT") ? (
-                            <Image
-                              source={require("../../assets/images/market/star-y.png")}
-                              style={{ width: 24, height: 24, marginRight: 5 }}
-                            />
-                          ) : (
-                            <Image
-                              source={require("../../assets/images/market/star.png")}
-                              style={{ width: 24, height: 24, marginRight: 5 }}
-                            />
-                          )}
-                          {/* {x.name === "DOGEUSDT" && doge && <Image
-                        source={require("../../assets/images/market/star-y.png")}
-                        style={{ width: 24, height: 24,marginRight:5 }}
-                      />}
-                    {x.name === "DOGEUSDT" && !doge && <Image
-                      source={require("../../assets/images/market/star.png")}
-                      style={{ width: 24, height: 24,marginRight:5 }}
-                    />} */}
-                        </TouchableOpacity>
                         <Text
                           style={{
                             color: "#F4F5F6",
@@ -910,7 +473,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
             })}
             </ScrollView>
           </>
-        )}
+        
         
 
         {/* <TouchableOpacity
@@ -1097,4 +660,4 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
   );
 };
 
-export default MarketScreen;
+export default AllTradeScreen;

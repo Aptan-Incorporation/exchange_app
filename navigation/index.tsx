@@ -39,6 +39,7 @@ import Advertisement from '../screens/home/Advertisement';
 import AdvertisementEdit from '../screens/home/AdvertisementEdit';
 import C2cCreateScreen from '../screens/c2c/C2cCreate';
 import Web from "../screens/home/Web";
+import Consult from "../screens/home/Consult";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -79,6 +80,7 @@ function RootNavigator() {
       <Stack.Screen name="AdvertisementEdit" component={AdvertisementEdit} options={{ headerShown: false }} />
       <Stack.Screen name="C2cCreateScreen" component={C2cCreateScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Web" component={Web} options={{ headerShown: false }} />
+      <Stack.Screen name="Consult" component={Consult} options={{ headerShown: false }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
       </Stack.Group>

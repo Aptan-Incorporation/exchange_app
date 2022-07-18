@@ -86,7 +86,7 @@ export default function App() {
   useEffect(() => {
     if(lastJsonMessage){
       let gfg = lastJsonMessage.sort(function (a:any, b:any) {
-        return parseFloat(a.c) - parseFloat(b.c);
+        return parseFloat(a.P) - parseFloat(b.P);
       });
       setMarket(gfg.reverse())
       for(let i = 0;i < lastJsonMessage.length;i++){

@@ -73,7 +73,6 @@ const RedPercentText = styled(Text)`
 const HeaderText = styled(Text)`
   font-size: 16px;
   color: white;
-  margin-right:30px;
 `;
 
 const IconImg = styled(Image)`
@@ -108,7 +107,15 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
           <IconImg source={require("../../assets/images/home/avatar.png")} />
         </TouchableOpacity>
         <HeaderText>首頁</HeaderText>
-        <View></View>
+        <TouchableOpacity
+          onPress={async () => {
+            
+              navigation.navigate("Consult");
+            
+          }}
+        >
+          <IconImg source={require("../../assets/images/home/support.png")} />
+        </TouchableOpacity>
       </Header>
       <View style={{ padding: 16 }}>
         <TouchableOpacity style={{ width: "100%", borderRadius: 8, backgroundColor: "#242D37" }}  onPress={()=>{

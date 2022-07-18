@@ -6,7 +6,7 @@ import StopPositionScreen from "../screens/trade/StopPosition"
 import HistoryScreen from '../screens/trade/History'
 import { Image, TouchableOpacity, Text } from "react-native";
 import styled from "styled-components";
-
+import AllTradeScreen from "../screens/trade/AllTrade";
 const CancelButton = styled(Image)`
   width:28px;
   height:28px;
@@ -36,6 +36,9 @@ const TradeStack = () => {
         headerStyle: { backgroundColor: '#18222D' },
       })}>
         <Stack.Screen name="StopPositionScreen" component={StopPositionScreen} />
+      </Stack.Group>
+      <Stack.Group screenOptions={{ presentation: 'modal', headerShown: false }}>
+        <Stack.Screen name="AllTradeScreen" component={AllTradeScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );

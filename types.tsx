@@ -19,6 +19,7 @@ export type RootStackParamList = {
   NotFound: undefined;
   HomeScreen: undefined;
   MarketScreen: undefined;
+  AllTradeScreen:undefined;
   TradeScreen: undefined;
   StopPositionScreen: undefined;
   HistoryScreen: undefined;
@@ -79,6 +80,7 @@ export type RootStackParamList = {
   };
   AdvertisementEdit: undefined;
   Web: undefined;
+  Consult: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
