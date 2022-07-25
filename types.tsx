@@ -81,6 +81,12 @@ export type RootStackParamList = {
   AdvertisementEdit: undefined;
   Web: undefined;
   Consult: undefined;
+  C2c: undefined;
+  C2cMember: undefined;
+  C2cApply: undefined;
+  C2cNotification: undefined;
+  C2cHelp: undefined;
+  EditName: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

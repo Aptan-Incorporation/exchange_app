@@ -40,6 +40,10 @@ import AdvertisementEdit from '../screens/home/AdvertisementEdit';
 import C2cCreateScreen from '../screens/c2c/C2cCreate';
 import Web from "../screens/home/Web";
 import Consult from "../screens/home/Consult";
+import C2c from "../screens/home/C2c";
+import C2cMember from "../screens/home/C2cMember";
+import C2cApply from "../screens/home/C2cApply";
+import EditName from "../screens/home/EditName";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -63,6 +67,10 @@ function RootNavigator() {
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Screen name="Member" component={Member} options={{ headerShown: false }} />
+      <Stack.Screen name="C2c" component={C2c} options={{ headerShown: false }} />
+      <Stack.Screen name="C2cMember" component={C2cMember} options={{ headerShown: false }} />
+      <Stack.Screen name="C2cApply" component={C2cApply} options={{ headerShown: false }} />
+      <Stack.Screen name="EditName" component={EditName} options={{ headerShown: false }} />
       <Stack.Screen name="Setting" component={Setting} options={{ headerShown: false }} />
       <Stack.Screen name="PhoneVerify" component={PhoneVerify} options={{ headerShown: false }} />
       <Stack.Screen name="PhoneInput" component={PhoneInput} options={{ headerShown: false }} />
