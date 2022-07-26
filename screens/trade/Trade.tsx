@@ -1068,6 +1068,11 @@ const RenderAboveThumbText = styled(Text)`
     top: 2.5px;
 `;
 
+const IconImg = styled(Image)`
+  width: 24px;
+  height: 24px;
+`;
+
 
 // Trade Page Array
 const BuyTable = [
@@ -1514,6 +1519,12 @@ const TradeScreen = ({
                                         setIsFocus(false);
                                     }}
                                 /> */}
+                                <TouchableOpacity  onPress={() => { navigation.navigate("AllTradeScreen")}}>
+                                <IconImg
+                                    source={require("../../assets/images/trade/search.png")}
+                                />
+                                </TouchableOpacity>
+                                
                                 <TradeHeaderTitleText>{newTrade ? newTrade.split("USDT")[0]+"-USDT" : nowTrade}</TradeHeaderTitleText>
                                 {/* {
                                     isPositive === true ?
@@ -1523,9 +1534,9 @@ const TradeScreen = ({
                                 } */}
                             </TradeHeaderLeftContainer>
                             <TradeHeaderRightContainer>
-                                <TradeHeaderPositionButton onPress={() => { navigation.navigate("AllTradeScreen")}}>
+                                {/* <TradeHeaderPositionButton onPress={() => { navigation.navigate("AllTradeScreen")}}>
                                     <TradeHeaderButtonText>搜尋</TradeHeaderButtonText>
-                                </TradeHeaderPositionButton>
+                                </TradeHeaderPositionButton> */}
                                 <TradeHeaderPositionButton onPress={() => { togglePositionViewModal() }}>
                                     <TradeHeaderButtonText>{positionViewChange()}</TradeHeaderButtonText>
                                 </TradeHeaderPositionButton>
@@ -1732,7 +1743,7 @@ const TradeScreen = ({
                                             <TradeFunctionPositionViewTitleText>可開</TradeFunctionPositionViewTitleText>
                                             <TradeFunctionPositionViewValueText>{balance === 0
                                                 ? 0
-                                                : ((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().substring(0, ((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().indexOf(".") + 3)}{" "} {nowTrade.split("-")[0]}</TradeFunctionPositionViewValueText>
+                                                : ((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().substring(0, ((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().indexOf(".") + 3)}{" "} {newTrade ? newTrade.split("USDT")[0] : nowTrade.split("-")[0]}</TradeFunctionPositionViewValueText>
                                         </TradeFunctionPositionViewContainer>
                                         <TradeFunctionPositionViewContainer>
                                             {swapBuyPosition === "Open" ?

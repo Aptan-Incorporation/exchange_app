@@ -43,6 +43,8 @@ import Consult from "../screens/home/Consult";
 import C2c from "../screens/home/C2c";
 import C2cMember from "../screens/home/C2cMember";
 import C2cApply from "../screens/home/C2cApply";
+import C2cNotification from "../screens/home/C2cNotification";
+import C2cHelp from "../screens/home/C2cHelp";
 import EditName from "../screens/home/EditName";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
@@ -70,6 +72,8 @@ function RootNavigator() {
       <Stack.Screen name="C2c" component={C2c} options={{ headerShown: false }} />
       <Stack.Screen name="C2cMember" component={C2cMember} options={{ headerShown: false }} />
       <Stack.Screen name="C2cApply" component={C2cApply} options={{ headerShown: false }} />
+      <Stack.Screen name="C2cNotification" component={C2cNotification} options={{ headerShown: false }} />
+      <Stack.Screen name="C2cHelp" component={C2cHelp} options={{ headerShown: false }} />
       <Stack.Screen name="EditName" component={EditName} options={{ headerShown: false }} />
       <Stack.Screen name="Setting" component={Setting} options={{ headerShown: false }} />
       <Stack.Screen name="PhoneVerify" component={PhoneVerify} options={{ headerShown: false }} />

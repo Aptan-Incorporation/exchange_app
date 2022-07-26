@@ -71,11 +71,11 @@ const Member = ({ navigation }: RootStackScreenProps<"C2c">) => {
             <Text style={{ color: "white", fontSize: 15 }}>申請商家質押</Text>
             <IconImg source={require("../../assets/images/home/next.png")} />
           </TouchableOpacity>
-          <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37",justifyContent:"space-between" }}>
+          <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37",justifyContent:"space-between" }} onPress={() => { navigation.navigate("C2cNotification") }}>
             <Text style={{ color: "white", fontSize: 15}}>C2C 通知設置</Text>
             <IconImg source={require("../../assets/images/home/next.png")} />
           </TouchableOpacity>
-          <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37",justifyContent:"space-between" }}>
+          <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37",justifyContent:"space-between" }} onPress={() => { navigation.navigate("C2cHelp") }}>
             <Text style={{ color: "white", fontSize: 15}}>幫助中心</Text>
             <IconImg source={require("../../assets/images/home/next.png")} />
           </TouchableOpacity>
