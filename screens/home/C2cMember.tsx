@@ -160,7 +160,9 @@ const Member = ({ navigation }: RootStackScreenProps<"C2cMember">) => {
 
               </TouchableOpacity>
             </View>
-            <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "600", marginTop: 4 }}>已驗證用戶</Text>
+            {role === "user" ?            <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "600", marginTop: 4 }}>已驗證用戶</Text>
+:            <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "600", marginTop: 4 }}>已驗證商家</Text>
+}
           </View>
         </View>
         <View style={{ marginTop: 24 }}>
@@ -285,20 +287,20 @@ const Member = ({ navigation }: RootStackScreenProps<"C2cMember">) => {
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
               <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>質押等級</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{user.advertiserLevel}</Text>
+                <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{user.advertiserLevel ? user.advertiserLevel.name:"尚無等級"}</Text>
               </View>
             </View>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
               <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>單筆最高限額</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>0</Text>
+                <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{user.advertiserLevel ? user.advertiserLevel.maxAmountPerOrder:0}</Text>
                 <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>USDT</Text>
               </View>
             </View>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
               <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>單日最高限額</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>0</Text>
+                <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{user.advertiserLevel ? user.advertiserLevel.maxAmountPerDay:0}</Text>
                 <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>USDT</Text>
               </View>
             </View>
@@ -321,7 +323,6 @@ const Member = ({ navigation }: RootStackScreenProps<"C2cMember">) => {
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
               <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>商戶限制剩餘時間</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>3D12H58M</Text>
                 <TouchableOpacity onPress={() => {
                   setModalVisible(true)
                 }}>
