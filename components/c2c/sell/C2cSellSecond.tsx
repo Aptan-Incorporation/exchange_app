@@ -371,6 +371,7 @@ const C2cSellSecond = (props: {
     IsWaitFinish: number;
     onChangeSetSwapPage: React.Dispatch<React.SetStateAction<number>>;
     onChangeISWaitFinish: React.Dispatch<React.SetStateAction<number>>;
+    status:number
 }) => {
 
     const {
@@ -394,6 +395,7 @@ const C2cSellSecond = (props: {
         IsWaitFinish,
         onChangeSetSwapPage,
         onChangeISWaitFinish,
+        status
     } = props;
 
     const getRandom = (x: number) => {
@@ -546,6 +548,10 @@ const C2cSellSecond = (props: {
             getPaidStatus()
         }
     }, [])
+
+    useEffect(()=>{
+        console.log(status)
+    },[status])
 
 
 

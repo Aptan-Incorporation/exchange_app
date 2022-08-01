@@ -1637,6 +1637,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
             financePassword: password
         })
             .then((x) => {
+                console.log(x)
                 setLoading(false)
                 setIsPasswordModalVisible(false)
                 if (x.status != 400 && x.status != 401 && x.status != 493) {

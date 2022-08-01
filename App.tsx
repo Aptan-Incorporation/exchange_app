@@ -70,20 +70,23 @@ export default function App() {
     reconnectInterval: 1000,
   });
 
-  // const socketUrl2 =
-  // "wss://ex-api.usefordemo.com/ws";
-  // const { lastJsonMessage:lastJsonMessage2,sendMessage } = useWebSocket(socketUrl2, {
-  //   // onOpen: () => console.log("opened"),
-  //   //Will attempt to reconnect on all close events, such as server shutting down
-  //   shouldReconnect: closeEvent => true,
-  //   queryParams:{token:"Bearer " +token}
-  // });
-  // useEffect(async ()=>{
-  //   let token = await AsyncStorage.getItem("token");
-  //   setToken(token!)
-  // },[])
+  const socketUrl2 = "wss://ex-api.usefordemo.com/otc/ws";
+  const { lastJsonMessage:lastJsonMessage2,sendJsonMessage } = useWebSocket(socketUrl2, {
+    onOpen: () => sendJsonMessage({
+      "operation": "subscribe",
+      "channel": "otcOrder"
+    }),    
+    //Will attempt to reconnect on all close events, such as server shutting down
+    shouldReconnect: closeEvent => true,
+    queryParams:{token: token}
+  });
+  useEffect(async ()=>{
+    let token = await AsyncStorage.getItem("token");
+    setToken(token!)
+  },[])
 
   useEffect(() => {
+
     if(lastJsonMessage){
       let gfg = lastJsonMessage.sort(function (a:any, b:any) {
         return parseFloat(a.P) - parseFloat(b.P);
@@ -115,6 +118,13 @@ export default function App() {
     //   }
     // }
   },[lastJsonMessage]);
+  useEffect(() => {
+    // console.log(lastJsonMessage2)
+    if(lastJsonMessage2){
+      // console.log(lastJsonMessage2)
+    }
+
+  },[lastJsonMessage2]);
 
   useEffect(()=>{
     if(AppState.currentState == "active"){

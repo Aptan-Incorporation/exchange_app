@@ -16,11 +16,11 @@ const windowWidth = Dimensions.get('window').width;
 
 const Container = styled(View) <{ insets: number }>`
     display: flex ;
+    flex:1;
     flex-direction: column;
     padding-top: ${props => props.insets}px;
     background-color: #18222D;
     justify-content: space-between;
-    padding-bottom: 500px;
 `;
 
 const HeaderContainer = styled(View)`
@@ -259,12 +259,13 @@ color: ${props => props.theme.color.LightMidGray};
 `;
 
 const CardBottomButton = styled(TouchableOpacity)`
-width: 64px;
 height: 30px;
 justify-content: center;
 align-items: center;
 background-color: ${props => props.theme.color.DarkGray};
 border-radius: 4px;
+padding-left:10px;
+padding-right:10px;
 `;
 
 const CardBottomButtonText = styled(Text)`
@@ -530,7 +531,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
 
     const getWaitingList = () => {
         setLoading(true)
-        api.get(`/otc/api/otcOrder/?all=false&status=0,1`)
+        api.get(`/otc/api/otcOrder/?all=false&status=-1,0,1,3,4,5`)
             .then((x) => {
                 setLoading(false)
                 if (x.status != 400 && x.status != 401) {
@@ -738,7 +739,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                 </CardMiddleRightRowContainer> :
                                                 <CardMiddleRightRowContainer>
                                                     <CardMiddleRightSellPriceText>{x.amount}</CardMiddleRightSellPriceText>
-                                                    <CardMiddleRightSellCurrencyText>{x.fiatCurrency}</CardMiddleRightSellCurrencyText>
+                                        <CardMiddleRightSellCurrencyText>{x.fiatCurrency}{x.status}</CardMiddleRightSellCurrencyText>
                                                 </CardMiddleRightRowContainer>
                                         }
                                     </CardMiddleContainer>
@@ -747,32 +748,19 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                         (x.status === 0 &&
                                             <CardBottomContainer>
                                                 <CardBottomInRowContainer>
-                                                    <CardBottomStatusText>請付款</CardBottomStatusText>
-                                                    <TopContainerTimerContainer>
+                                                    <CardBottomStatusText></CardBottomStatusText>
+                                                    {/* <TopContainerTimerContainer>
                                                         <CountdownTimer targetDate={x.paymentTimeLimit} />
-                                                    </TopContainerTimerContainer>
+                                                    </TopContainerTimerContainer> */}
                                                 </CardBottomInRowContainer>
                                                 <CardBottomButton onPress={() => {
-                                                    handleUpdateModal(
-                                                        "查看",
-                                                        x.id,
-                                                        x.buyUser,
-                                                        x.sellUser,
-                                                        x.cryptoAsset,
-                                                        x.fiatCurrency,
-                                                        x.price,
-                                                        x.quantity,
-                                                        x.amount,
-                                                        x.payments,
-                                                        {
-                                                            id: x.payment.id,
-                                                            type: x.payment.type
-                                                        },
-                                                        x.createdDate,
-                                                        x.status
-                                                    )
+                                                    api.postData(`/otc/api/otcOrder/${x.id}/paid`,{payment:x.payments[0]}).then(x=>{
+                                                        console.log(x)
+                                                        getWaitingList()
+                                                        getCompleteList()
+                                                    })
                                                 }}>
-                                                    <CardBottomButtonText>查看</CardBottomButtonText>
+                                                    <CardBottomButtonText>通知付款</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>)
                                     }
@@ -780,28 +768,66 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                         x.buyUser === account &&
                                         (x.status === 1 &&
                                             <CardBottomContainer>
-                                                <CardBottomStatusText>等待放行...</CardBottomStatusText>
-                                                <CardBottomButton onPress={() => {
-                                                    handleUpdateModal(
-                                                        "查看",
-                                                        x.id,
-                                                        x.buyUser,
-                                                        x.sellUser,
-                                                        x.cryptoAsset,
-                                                        x.fiatCurrency,
-                                                        x.price,
-                                                        x.quantity,
-                                                        x.amount,
-                                                        x.payments,
-                                                        {
-                                                            id: x.payment.id,
-                                                            type: x.payment.type
-                                                        },
-                                                        x.createdDate,
-                                                        x.status
-                                                    )
+                                                <CardBottomStatusText></CardBottomStatusText>
+                                                <CardBottomButton disabled onPress={() => {
+                                                    // handleUpdateModal(
+                                                    //     "查看",
+                                                    //     x.id,
+                                                    //     x.buyUser,
+                                                    //     x.sellUser,
+                                                    //     x.cryptoAsset,
+                                                    //     x.fiatCurrency,
+                                                    //     x.price,
+                                                    //     x.quantity,
+                                                    //     x.amount,
+                                                    //     x.payments,
+                                                    //     {
+                                                    //         id: x.payment.id,
+                                                    //         type: x.payment.type
+                                                    //     },
+                                                    //     x.createdDate,
+                                                    //     x.status
+                                                    // )
                                                 }}>
-                                                    <CardBottomButtonText>查看</CardBottomButtonText>
+                                                    <CardBottomButtonText>等待放行</CardBottomButtonText>
+                                                </CardBottomButton>
+                                            </CardBottomContainer>)
+                                    }
+                                    {
+                                        x.sellUser === account &&
+                                        (x.status === 3 &&
+                                            <CardBottomContainer>
+                                                <CardBottomStatusText></CardBottomStatusText>
+                                                <CardBottomButton disabled>
+                                                    <CardBottomButtonText>等待買方確認</CardBottomButtonText>
+                                                </CardBottomButton>
+                                            </CardBottomContainer>)
+                                    }
+                                    {
+                                        x.buyUser === account &&
+                                        (x.status === 3 &&
+                                            <CardBottomContainer>
+                                                <CardBottomStatusText></CardBottomStatusText>
+                                                <CardBottomButton onPress={
+                                                    ()=>{
+                                                        api.postData(`/otc/api/otcOrder/${x.id}/check`).then(x=>{
+                                                            console.log(x)
+                                                            getWaitingList()
+                                                            getCompleteList()
+                                                        })
+                                                    }
+                                                }>
+                                                    <CardBottomButtonText>確認交易</CardBottomButtonText>
+                                                </CardBottomButton>
+                                            </CardBottomContainer>)
+                                    }
+                                    {
+                                        
+                                        (x.status === -1 &&
+                                            <CardBottomContainer>
+                                                <CardBottomStatusText>訂單取消</CardBottomStatusText>
+                                                <CardBottomButton disabled>
+                                                    <CardBottomButtonText>已取消</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>)
                                     }
@@ -809,30 +835,9 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                         x.sellUser === account &&
                                         (x.status === 0 &&
                                             <CardBottomContainer>
-                                                <CardBottomInRowContainer>
-                                                    <CardBottomStatusText>等待付款...</CardBottomStatusText>
-                                                </CardBottomInRowContainer>
-                                                <CardBottomButton onPress={() => {
-                                                    handleUpdateModal(
-                                                        "查看",
-                                                        x.id,
-                                                        x.buyUser,
-                                                        x.sellUser,
-                                                        x.cryptoAsset,
-                                                        x.fiatCurrency,
-                                                        x.price,
-                                                        x.quantity,
-                                                        x.amount,
-                                                        x.payments,
-                                                        {
-                                                            id: x.payment.id,
-                                                            type: x.payment.type
-                                                        },
-                                                        x.createdDate,
-                                                        x.status
-                                                    )
-                                                }}>
-                                                    <CardBottomButtonText>查看</CardBottomButtonText>
+                                                <CardBottomStatusText></CardBottomStatusText>
+                                                <CardBottomButton disabled>
+                                                    <CardBottomButtonText>等待買方付款</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>)
                                     }
@@ -841,32 +846,19 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                         (x.status === 1 &&
                                             <CardBottomContainer>
                                                 <CardBottomInRowContainer>
-                                                    <CardBottomStatusText>請放行</CardBottomStatusText>
-                                                    <TopContainerTimerContainer>
+                                                    <CardBottomStatusText></CardBottomStatusText>
+                                                    {/* <TopContainerTimerContainer>
                                                         <CountdownTimer targetDate={FIFTEENMINUTES} />
-                                                    </TopContainerTimerContainer>
+                                                    </TopContainerTimerContainer> */}
                                                 </CardBottomInRowContainer>
                                                 <CardBottomButton onPress={() => {
-                                                    handleUpdateModal(
-                                                        "查看",
-                                                        x.id,
-                                                        x.buyUser,
-                                                        x.sellUser,
-                                                        x.cryptoAsset,
-                                                        x.fiatCurrency,
-                                                        x.price,
-                                                        x.quantity,
-                                                        x.amount,
-                                                        x.payments,
-                                                        {
-                                                            id: x.payment.id,
-                                                            type: x.payment.type
-                                                        },
-                                                        x.createdDate,
-                                                        x.status
-                                                    )
+                                                    api.postData(`/otc/api/otcOrder/${x.id}/confirm`).then(x=>{
+                                                        console.log(x)
+                                                        getWaitingList()
+                                                        getCompleteList()
+                                                    })
                                                 }}>
-                                                    <CardBottomButtonText>查看</CardBottomButtonText>
+                                                    <CardBottomButtonText>放行</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>)
                                     }

@@ -359,6 +359,7 @@ const C2cSellFirst = (props: {
     onValueChangeSetBuyTime: React.Dispatch<React.SetStateAction<number>>;
     onValueChangeIsWaitFinish: React.Dispatch<React.SetStateAction<number>>;
     onValueChangePayTimeLimit: React.Dispatch<React.SetStateAction<number>>;
+    setOrderId: React.Dispatch<React.SetStateAction<string>>;
 }) => {
 
     const {
@@ -382,7 +383,8 @@ const C2cSellFirst = (props: {
         onValueChangeSetBuyId,
         onValueChangeSetBuyTime,
         onValueChangeIsWaitFinish,
-        onValueChangePayTimeLimit
+        onValueChangePayTimeLimit,
+        setOrderId
     } = props;
 
     // Input Price
@@ -471,6 +473,7 @@ const C2cSellFirst = (props: {
                 console.log(x)
                 if (x.status != 400 && x.status != 401 && x.status != 500) {
                     onValueChangeSetBuyId(x.id)
+                    setOrderId(x.id)
                     onValueChangeSetBuyTime(x.createdDate)
                     onValueChangeIsWaitFinish(x.status)
                     onValueChangePayTimeLimit(x.paymentTimeLimit)
@@ -582,7 +585,7 @@ const C2cSellFirst = (props: {
                     </TopInputRightContainer>
                 </TopInputContainer>
                 <TopBuyButton onPress={() => { handleBuyButton() }}>
-                    <TopBuyButtonText>購買</TopBuyButtonText>
+                    <TopBuyButtonText>出售</TopBuyButtonText>
                 </TopBuyButton>
             </TopContainer>
             <BottomDetailContainer>
