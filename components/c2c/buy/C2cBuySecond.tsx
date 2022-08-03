@@ -376,6 +376,8 @@ const C2cBuySecond = (props: {
     onChangeSetSwapPage: React.Dispatch<React.SetStateAction<number>>;
     onChangeSetChoosePayType: React.Dispatch<React.SetStateAction<string>>;
     onValueChangeIsWaitFinish: React.Dispatch<React.SetStateAction<number>>;
+    status: number;
+
 }) => {
 
     const {
@@ -399,7 +401,8 @@ const C2cBuySecond = (props: {
         IsWaitFinish,
         onChangeSetSwapPage,
         onChangeSetChoosePayType,
-        onValueChangeIsWaitFinish
+        onValueChangeIsWaitFinish,
+        status
     } = props;
 
     //選擇付款方式
@@ -490,8 +493,6 @@ const C2cBuySecond = (props: {
                     setSubmitText('放行中...')
                     onChangeSetChoosePayType(choosePayType);
                     onValueChangeIsWaitFinish(1)
-
-                    getBuyStatus()
                 } else {
                     Alert.alert(x.data.msg)
                 }
@@ -520,7 +521,7 @@ const C2cBuySecond = (props: {
 
 
     const handleSubmitButtonTextStyle = () => {
-        if (submitText === '放行中...') {
+        if (submitText === '等待賣家確認交易') {
             return 'rgba(255, 255, 255, 0.3)';
         } else {
             return '#FFFFFF';
@@ -604,7 +605,27 @@ const C2cBuySecond = (props: {
         return () => clearInterval(interval);
     }); */
 
-
+    useEffect(() => {
+        if (status === 4) {
+          setSubmitText("等待賣家確認交易");
+        } else if (status === 0){
+          setSubmitText("已付款，下一步");
+        }
+        if(status === 2 ){
+            getBuyStatus()
+        }
+        if(status === -1){
+            alert("訂單取消")
+            navigation.goBack()
+        }
+        if(status === -2){
+            alert("訂單申訴中")
+            navigation.goBack()
+        }
+        
+        
+        console.log(status);
+      }, [status]);
 
     return (
         <Container>
@@ -786,7 +807,7 @@ const C2cBuySecond = (props: {
                 }
             </SecondCardContainer>
             <BottomButtonContainer>
-                <CancelButton onPress={() => { cancelAlert() }} disabled={handleButtonDisabled()} style={{ borderColor: handleCancelButtonStyle() }}>
+                <CancelButton onPress={() => { cancelAlert() }} style={{ borderColor: handleCancelButtonStyle() }}>
                     <CancelButtonText style={{ color: handleCancelButtonTextStyle() }}>取消訂單</CancelButtonText>
                 </CancelButton>
                 <SubmitButton onPress={() => { handleSubmitAlert() }} disabled={handleButtonDisabled()} style={{ backgroundColor: handleSubmitButtonStyle() }}>

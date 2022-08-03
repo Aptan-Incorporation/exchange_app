@@ -464,8 +464,10 @@ const WalletScreen = ({
     const [position,setPosition] = useState(0)
     const [positionArray,setPositionArray] = useState([])
     const [loading,setLoading] = useState(false);
+    const [balance,setBalance] = useState(0)
+    const [total,setTotal] = useState(0)
 
-    const getBalance = () => {
+    const getBalance = async () => {
         api.get("/investor/property").then(x=>{
             if(x.status != 400 && x.status != 401){
                 setFuturesBalance(x.data.futures.balance)
@@ -474,6 +476,15 @@ const WalletScreen = ({
                     if(x.data.spot.coins[i].symbol === "USDT"){
                         setSpotBalance(x.data.spot.coins[i].balance)
                     } 
+                }
+            }
+        })
+        let user = await AsyncStorage.getItem("user");
+        api.get("/otc/api/user/"+JSON.parse(user!).account).then(x=>{
+            console.log(x.wallet.coins)
+            for(let i =0 ; i < x.wallet.coins.length;i++){
+                if(x.wallet.coins[i].symbol === "USDT"){
+                    setBalance(x.wallet.coins[i].balance)
                 }
             }
         })
@@ -793,13 +804,13 @@ const WalletScreen = ({
                         <BG1>
                             <BG001>
                                 <Title1>總資產</Title1>
-                                <TouchableOpacity>
+                                <TouchableOpacity  onPress={()=>{navigation.navigate("C2cHistoryScreen")}}>
                                     <Img1 source={require("../../assets/images/wallet/history.png")} />
                                 </TouchableOpacity>
                             </BG001>
                             <TopArea>
                                 <USDTcontent>
-                                    <Number001>0 </Number001>
+                                    <Number001>{balance} </Number001>
                                     <USDT1>USDT</USDT1>
                                 </USDTcontent>
                             </TopArea>
@@ -828,7 +839,7 @@ const WalletScreen = ({
                                     <Text01>TetherUS</Text01>
                                 </TextContener>
                             </ImgArea>
-                            <Num>0</Num>
+                            <Num>{balance}</Num>
                         </Below1>
                         {/* <Below>
                             <ImgArea>

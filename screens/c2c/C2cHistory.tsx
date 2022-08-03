@@ -10,7 +10,8 @@ import axios from "axios"
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
-
+import {useContext} from "react"
+import { OrderContext } from "../../App" 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 
@@ -63,7 +64,7 @@ padding-bottom: 7px;
 `;
 
 const SwapLeftButtonClicked = styled(TouchableOpacity)`
-width: 50%
+width: 33%
 height: 30px;
 justify-content: center;
 align-items: center;
@@ -73,7 +74,7 @@ border-bottom-left-radius: 4px;
 `;
 
 const SwapLeftButton = styled(TouchableOpacity)`
-width: 50%
+width: 33%
 height: 30px;
 justify-content: center;
 align-items: center;
@@ -82,8 +83,26 @@ border-top-left-radius: 4px;
 border-bottom-left-radius: 4px;
 `;
 
+const SwapMiddleButtonClicked = styled(TouchableOpacity)`
+width: 33%
+height: 30px;
+justify-content: center;
+align-items: center;
+background-color: ${props => props.theme.color.DarkGray};
+
+`;
+
+const SwapMiddleButton = styled(TouchableOpacity)`
+width: 33%
+height: 30px;
+justify-content: center;
+align-items: center;
+border: 1px solid #333C47;
+
+`;
+
 const SwapRightButtonClicked = styled(TouchableOpacity)`
-width: 50%
+width: 33%
 height: 30px;
 justify-content: center;
 align-items: center;
@@ -93,7 +112,7 @@ border-bottom-right-radius: 4px;
 `;
 
 const SwapRightButton = styled(TouchableOpacity)`
-width: 50%
+width: 33%
 height: 30px;
 justify-content: center;
 align-items: center;
@@ -528,10 +547,20 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
 
     // 獲取進行中訂單
     const [waitingList, setWaitingList] = useState([]);
+    const [cancelList, setCancelList] = useState([]);
+    const context = useContext(OrderContext)
 
+    useEffect(()=>{    
+        if(context.data){
+            getWaitingList()
+            getCompleteList()
+            getCancelList()
+        }
+       
+      },[context])
     const getWaitingList = () => {
         setLoading(true)
-        api.get(`/otc/api/otcOrder/?all=false&status=-1,0,1,3,4,5`)
+        api.get(`/otc/api/otcOrder/?all=false&status=0,1,3,4,5,-2`)
             .then((x) => {
                 setLoading(false)
                 if (x.status != 400 && x.status != 401) {
@@ -542,7 +571,54 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
             })
             .catch(() => {
                 console.log(Error)
+        })
+        // const interval = setInterval(() => {
+        //     api.get(`/otc/api/otcOrder/?all=false&status=-1,0,1,3,4,5`)
+        //     .then((x) => {
+        //         setLoading(false)
+        //         if (x.status != 400 && x.status != 401) {
+        //             setWaitingList(x);
+        //         } else {
+        //             Alert.alert(x.data.msg);
+        //         }
+        //     })
+        //     .catch(() => {
+        //         console.log(Error)
+        // })
+
+        // }, 2000);
+        // return () => clearInterval(interval);
+    };
+    const getCancelList = () => {
+        setLoading(true)
+        api.get(`/otc/api/otcOrder/?all=false&status=-1`)
+            .then((x) => {
+                setLoading(false)
+                if (x.status != 400 && x.status != 401) {
+                    setCancelList(x);
+                } else {
+                    Alert.alert(x.data.msg);
+                }
             })
+            .catch(() => {
+                console.log(Error)
+        })
+        // const interval = setInterval(() => {
+        //     api.get(`/otc/api/otcOrder/?all=false&status=-1,0,1,3,4,5`)
+        //     .then((x) => {
+        //         setLoading(false)
+        //         if (x.status != 400 && x.status != 401) {
+        //             setWaitingList(x);
+        //         } else {
+        //             Alert.alert(x.data.msg);
+        //         }
+        //     })
+        //     .catch(() => {
+        //         console.log(Error)
+        // })
+
+        // }, 2000);
+        // return () => clearInterval(interval);
     };
 
 
@@ -563,6 +639,21 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
             .catch(() => {
                 console.log(Error)
             })
+        // const interval = setInterval(() => {
+        //     api.get(`/otc/api/otcOrder/?all=false&status=2`)
+        //     .then((x) => {
+        //         setLoading(false)
+        //         if (x.status != 400 && x.status != 401) {
+        //             setCompleteList(x);
+        //         } else {
+        //             Alert.alert(x.data.msg);
+        //         }
+        //     })
+        //     .catch(() => {
+        //         console.log(Error)
+        //     }) 
+        // }, 2000);
+        // return () => clearInterval(interval);
     };
 
     // 詳情Modal
@@ -648,8 +739,8 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
         if (token) {
             getWaitingList()
             getCompleteList()
+            getCancelList()
 
-            console.log(completeList)
         } else {
             Alert.alert("請先登入")
         }
@@ -669,7 +760,44 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                 <HeaderTitleText>訂單</HeaderTitleText>
                 <HeaderEmptyContainer></HeaderEmptyContainer>
             </HeaderContainer>
-
+            {swapPage === 0 && 
+            <SwapContainer>
+            <SwapLeftButtonClicked onPress={() => { setSwapPage(0), getWaitingList() }}>
+                <SwapButtonClickedText>進行中</SwapButtonClickedText>
+            </SwapLeftButtonClicked>
+            <SwapMiddleButton onPress={() => { setSwapPage(1), getCompleteList() }}>
+                <SwapButtonText>已完成</SwapButtonText>
+            </SwapMiddleButton>
+            <SwapRightButton onPress={() => { setSwapPage(2), getCompleteList() }}>
+                <SwapButtonText>已取消</SwapButtonText>
+            </SwapRightButton>
+        </SwapContainer>}
+        {swapPage === 1 && 
+            <SwapContainer>
+            <SwapLeftButton onPress={() => { setSwapPage(0), getWaitingList() }}>
+                <SwapButtonClickedText>進行中</SwapButtonClickedText>
+            </SwapLeftButton>
+            <SwapMiddleButtonClicked onPress={() => { setSwapPage(1), getCompleteList() }}>
+                <SwapButtonText>已完成</SwapButtonText>
+            </SwapMiddleButtonClicked>
+            <SwapRightButton onPress={() => { setSwapPage(2), getCompleteList() }}>
+                <SwapButtonText>已取消</SwapButtonText>
+            </SwapRightButton>
+        </SwapContainer>}
+        {swapPage === 2 && 
+            <SwapContainer>
+            <SwapLeftButton onPress={() => { setSwapPage(0), getWaitingList() }}>
+                <SwapButtonClickedText>進行中</SwapButtonClickedText>
+            </SwapLeftButton>
+            <SwapMiddleButton onPress={() => { setSwapPage(1), getCompleteList() }}>
+                <SwapButtonText>已完成</SwapButtonText>
+            </SwapMiddleButton>
+            <SwapRightButtonClicked onPress={() => { setSwapPage(2), getCompleteList() }}>
+                <SwapButtonText>已取消</SwapButtonText>
+            </SwapRightButtonClicked>
+        </SwapContainer>}
+                    
+{/* 
             {
                 swapPage === 0 ?
                     <SwapContainer>
@@ -688,7 +816,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                             <SwapButtonClickedText>已完成</SwapButtonClickedText>
                         </SwapRightButtonClicked>
                     </SwapContainer>
-            }
+            } */}
             <DetailContainer>
                 {
                     swapPage === 0 &&
@@ -739,7 +867,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                 </CardMiddleRightRowContainer> :
                                                 <CardMiddleRightRowContainer>
                                                     <CardMiddleRightSellPriceText>{x.amount}</CardMiddleRightSellPriceText>
-                                        <CardMiddleRightSellCurrencyText>{x.fiatCurrency}{x.status}</CardMiddleRightSellCurrencyText>
+                                        <CardMiddleRightSellCurrencyText>{x.fiatCurrency}</CardMiddleRightSellCurrencyText>
                                                 </CardMiddleRightRowContainer>
                                         }
                                     </CardMiddleContainer>
@@ -748,17 +876,50 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                         (x.status === 0 &&
                                             <CardBottomContainer>
                                                 <CardBottomInRowContainer>
-                                                    <CardBottomStatusText></CardBottomStatusText>
+                                                    <TouchableOpacity onPress={() => {
+                                                    handleUpdateModal(
+                                                        "查看",
+                                                        x.id,
+                                                        x.buyUser,
+                                                        x.sellUser,
+                                                        x.cryptoAsset,
+                                                        x.fiatCurrency,
+                                                        x.price,
+                                                        x.quantity,
+                                                        x.amount,
+                                                        x.payments,
+                                                        {
+                                                            id: x.payment.id,
+                                                            type: x.payment.type
+                                                        },
+                                                        x.createdDate,
+                                                        x.status
+                                                    )
+                                                }}><Text>查看</Text></TouchableOpacity>
                                                     {/* <TopContainerTimerContainer>
                                                         <CountdownTimer targetDate={x.paymentTimeLimit} />
                                                     </TopContainerTimerContainer> */}
                                                 </CardBottomInRowContainer>
                                                 <CardBottomButton onPress={() => {
-                                                    api.postData(`/otc/api/otcOrder/${x.id}/paid`,{payment:x.payments[0]}).then(x=>{
-                                                        console.log(x)
-                                                        getWaitingList()
-                                                        getCompleteList()
-                                                    })
+                                                    Alert.alert(
+                                                        "已完成付款？",
+                                                        "請確定您已向賣方完成付款，惡意點擊系統將直接凍結您的賬戶。",
+                                                        [
+                                                            {
+                                                                text: "取消",
+                                                                onPress: () => console.log("Cancel Pressed"),
+                                                                style: "cancel"
+                                                            },
+                                                            { text: "確定", onPress: () => { 
+                                                                api.postData(`/otc/api/otcOrder/${x.id}/paid`,{payment:x.payments[0]}).then(x=>{
+                                                                    console.log(x)
+                                                                    getWaitingList()
+                                                                    getCompleteList()
+                                                                })
+                                                            } }
+                                                        ]
+                                                    );
+                                                    
                                                 }}>
                                                     <CardBottomButtonText>通知付款</CardBottomButtonText>
                                                 </CardBottomButton>
@@ -805,6 +966,34 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                     }
                                     {
                                         x.buyUser === account &&
+                                        (x.status === 4 &&
+                                            <CardBottomContainer>
+                                                <CardBottomStatusText></CardBottomStatusText>
+                                                <CardBottomButton disabled>
+                                                    <CardBottomButtonText>等賣方確認</CardBottomButtonText>
+                                                </CardBottomButton>
+                                            </CardBottomContainer>)
+                                    }
+                                    {
+                                        x.sellUser === account &&
+                                        (x.status === 4 &&
+                                            <CardBottomContainer>
+                                                <CardBottomStatusText></CardBottomStatusText>
+                                                <CardBottomButton onPress={
+                                                    ()=>{
+                                                        api.postData(`/otc/api/otcOrder/${x.id}/check`).then(x=>{
+                                                            console.log(x)
+                                                            getWaitingList()
+                                                            getCompleteList()
+                                                        })
+                                                    }
+                                                }>
+                                                    <CardBottomButtonText>確認交易</CardBottomButtonText>
+                                                </CardBottomButton>
+                                            </CardBottomContainer>)
+                                    }
+                                    {
+                                        x.buyUser === account &&
                                         (x.status === 3 &&
                                             <CardBottomContainer>
                                                 <CardBottomStatusText></CardBottomStatusText>
@@ -832,12 +1021,291 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                             </CardBottomContainer>)
                                     }
                                     {
+                                        
+                                        (x.status === -2 &&
+                                            <CardBottomContainer>
+                                                <CardBottomStatusText></CardBottomStatusText>
+                                                <CardBottomButton disabled>
+                                                    <CardBottomButtonText>申訴中</CardBottomButtonText>
+                                                </CardBottomButton>
+                                            </CardBottomContainer>)
+                                    }
+                                    {
                                         x.sellUser === account &&
                                         (x.status === 0 &&
                                             <CardBottomContainer>
                                                 <CardBottomStatusText></CardBottomStatusText>
+                                                <CardBottomButton  onPress={() => {
+                                                    api.postData(`/otc/api/otcOrder/${x.id}/confirm`).then(x=>{
+                                                        getWaitingList()
+                                                        getCompleteList()
+                                                    })
+                                                }}>
+                                                    <CardBottomButtonText>放行</CardBottomButtonText>
+                                                </CardBottomButton>
+                                            </CardBottomContainer>)
+                                    }
+                                    {
+                                        x.sellUser === account &&
+                                        (x.status === 1 &&
+                                            <CardBottomContainer>
+                                                <CardBottomInRowContainer>
+                                                    <CardBottomStatusText></CardBottomStatusText>
+                                                    {/* <TopContainerTimerContainer>
+                                                        <CountdownTimer targetDate={FIFTEENMINUTES} />
+                                                    </TopContainerTimerContainer> */}
+                                                </CardBottomInRowContainer>
+                                                <CardBottomButton onPress={() => {
+                                                    api.postData(`/otc/api/otcOrder/${x.id}/confirm`).then(x=>{
+                                                        console.log(x)
+                                                        getWaitingList()
+                                                        getCompleteList()
+                                                    })
+                                                }}>
+                                                    <CardBottomButtonText>放行</CardBottomButtonText>
+                                                </CardBottomButton>
+                                            </CardBottomContainer>)
+                                    }
+                                    {
+                                        i !== waitingList.length - 1 &&
+                                        <CardLine></CardLine>
+                                    }
+                                </CardContainer>
+                            );
+                        }) :
+                        <EmptyCardContainer>
+                            <OrderImage source={require("../../assets/images/c2c/illustration.png")} />
+                            <EmptyCardTitleText>尚無訂單</EmptyCardTitleText>
+                            <EmptyCardDetailText>請於 C2C 購買/出售加密貨幣</EmptyCardDetailText>
+                            <EmptyCardButton onPress={() => { navigation.goBack() }}>
+                                <EmptyCardButtonText>C2C 總覽</EmptyCardButtonText>
+                            </EmptyCardButton>
+                        </EmptyCardContainer>)
+                }
+                {
+                    swapPage === 2 &&
+                    (cancelList.length > 0 ?
+                        cancelList.map((x: any, i) => {
+                            return (
+
+                                <CardContainer>
+                                    {
+                                        x.buyUser === account ?
+                                            <CardTitleContainer>
+                                                <CardBuyTitleText>買</CardBuyTitleText>
+                                                <CardBuyTitleCurrencyText>{x.cryptoAsset}/{x.fiatCurrency}</CardBuyTitleCurrencyText>
+                                            </CardTitleContainer>
+                                            :
+                                            <CardTitleContainer>
+                                                <CardSellTitleText>賣</CardSellTitleText>
+                                                <CardSellTitleCurrencyText>{x.cryptoAsset}/{x.fiatCurrency}</CardSellTitleCurrencyText>
+                                            </CardTitleContainer>
+                                    }
+                                    <CardMiddleContainer>
+                                        <CardMiddleColumnContainer>
+                                            {
+                                                x.buyUser === account ?
+                                                    <CardMiddleRowContainer>
+                                                        <CardMiddleLeftTitleText>交易方</CardMiddleLeftTitleText>
+                                                        <CardMiddleLeftValueText>{x.sellUser}</CardMiddleLeftValueText>
+                                                    </CardMiddleRowContainer> :
+                                                    <CardMiddleRowContainer>
+                                                        <CardMiddleLeftTitleText>交易方</CardMiddleLeftTitleText>
+                                                        <CardMiddleLeftValueText>{x.buyUser}</CardMiddleLeftValueText>
+                                                    </CardMiddleRowContainer>
+                                            }
+                                            <CardMiddleRowContainer>
+                                                <CardMiddleLeftTitleText>數量</CardMiddleLeftTitleText>
+                                                <CardMiddleLeftValueText>{x.quantity} {x.cryptoAsset}</CardMiddleLeftValueText>
+                                            </CardMiddleRowContainer>
+                                            <CardMiddleRowContainer>
+                                                <CardMiddleLeftTitleText>單價</CardMiddleLeftTitleText>
+                                                <CardMiddleLeftValueText>{x.price} {x.fiatCurrency}</CardMiddleLeftValueText>
+                                            </CardMiddleRowContainer>
+                                        </CardMiddleColumnContainer>
+                                        {
+                                            x.buyUser === account ?
+                                                <CardMiddleRightRowContainer>
+                                                    <CardMiddleRightBuyPriceText>{x.amount}</CardMiddleRightBuyPriceText>
+                                                    <CardMiddleRightBuyCurrencyText>{x.fiatCurrency}</CardMiddleRightBuyCurrencyText>
+                                                </CardMiddleRightRowContainer> :
+                                                <CardMiddleRightRowContainer>
+                                                    <CardMiddleRightSellPriceText>{x.amount}</CardMiddleRightSellPriceText>
+                                        <CardMiddleRightSellCurrencyText>{x.fiatCurrency}</CardMiddleRightSellCurrencyText>
+                                                </CardMiddleRightRowContainer>
+                                        }
+                                    </CardMiddleContainer>
+                                    {
+                                        x.buyUser === account &&
+                                        (x.status === 0 &&
+                                            <CardBottomContainer>
+                                                <CardBottomInRowContainer>
+                                                    <TouchableOpacity onPress={() => {
+                                                    handleUpdateModal(
+                                                        "查看",
+                                                        x.id,
+                                                        x.buyUser,
+                                                        x.sellUser,
+                                                        x.cryptoAsset,
+                                                        x.fiatCurrency,
+                                                        x.price,
+                                                        x.quantity,
+                                                        x.amount,
+                                                        x.payments,
+                                                        {
+                                                            id: x.payment.id,
+                                                            type: x.payment.type
+                                                        },
+                                                        x.createdDate,
+                                                        x.status
+                                                    )
+                                                }}><Text>查看</Text></TouchableOpacity>
+                                                    {/* <TopContainerTimerContainer>
+                                                        <CountdownTimer targetDate={x.paymentTimeLimit} />
+                                                    </TopContainerTimerContainer> */}
+                                                </CardBottomInRowContainer>
+                                                <CardBottomButton onPress={() => {
+                                                    Alert.alert(
+                                                        "已完成付款？",
+                                                        "請確定您已向賣方完成付款，惡意點擊系統將直接凍結您的賬戶。",
+                                                        [
+                                                            {
+                                                                text: "取消",
+                                                                onPress: () => console.log("Cancel Pressed"),
+                                                                style: "cancel"
+                                                            },
+                                                            { text: "確定", onPress: () => { 
+                                                                api.postData(`/otc/api/otcOrder/${x.id}/paid`,{payment:x.payments[0]}).then(x=>{
+                                                                    console.log(x)
+                                                                    getWaitingList()
+                                                                    getCompleteList()
+                                                                })
+                                                            } }
+                                                        ]
+                                                    );
+                                                    
+                                                }}>
+                                                    <CardBottomButtonText>通知付款</CardBottomButtonText>
+                                                </CardBottomButton>
+                                            </CardBottomContainer>)
+                                    }
+                                    {
+                                        x.buyUser === account &&
+                                        (x.status === 1 &&
+                                            <CardBottomContainer>
+                                                <CardBottomStatusText></CardBottomStatusText>
+                                                <CardBottomButton disabled onPress={() => {
+                                                    // handleUpdateModal(
+                                                    //     "查看",
+                                                    //     x.id,
+                                                    //     x.buyUser,
+                                                    //     x.sellUser,
+                                                    //     x.cryptoAsset,
+                                                    //     x.fiatCurrency,
+                                                    //     x.price,
+                                                    //     x.quantity,
+                                                    //     x.amount,
+                                                    //     x.payments,
+                                                    //     {
+                                                    //         id: x.payment.id,
+                                                    //         type: x.payment.type
+                                                    //     },
+                                                    //     x.createdDate,
+                                                    //     x.status
+                                                    // )
+                                                }}>
+                                                    <CardBottomButtonText>等待放行</CardBottomButtonText>
+                                                </CardBottomButton>
+                                            </CardBottomContainer>)
+                                    }
+                                    {
+                                        x.sellUser === account &&
+                                        (x.status === 3 &&
+                                            <CardBottomContainer>
+                                                <CardBottomStatusText></CardBottomStatusText>
                                                 <CardBottomButton disabled>
-                                                    <CardBottomButtonText>等待買方付款</CardBottomButtonText>
+                                                    <CardBottomButtonText>等待買方確認</CardBottomButtonText>
+                                                </CardBottomButton>
+                                            </CardBottomContainer>)
+                                    }
+                                    {
+                                        x.buyUser === account &&
+                                        (x.status === 4 &&
+                                            <CardBottomContainer>
+                                                <CardBottomStatusText></CardBottomStatusText>
+                                                <CardBottomButton disabled>
+                                                    <CardBottomButtonText>等賣方確認</CardBottomButtonText>
+                                                </CardBottomButton>
+                                            </CardBottomContainer>)
+                                    }
+                                    {
+                                        x.sellUser === account &&
+                                        (x.status === 4 &&
+                                            <CardBottomContainer>
+                                                <CardBottomStatusText></CardBottomStatusText>
+                                                <CardBottomButton onPress={
+                                                    ()=>{
+                                                        api.postData(`/otc/api/otcOrder/${x.id}/check`).then(x=>{
+                                                            console.log(x)
+                                                            getWaitingList()
+                                                            getCompleteList()
+                                                        })
+                                                    }
+                                                }>
+                                                    <CardBottomButtonText>確認交易</CardBottomButtonText>
+                                                </CardBottomButton>
+                                            </CardBottomContainer>)
+                                    }
+                                    {
+                                        x.buyUser === account &&
+                                        (x.status === 3 &&
+                                            <CardBottomContainer>
+                                                <CardBottomStatusText></CardBottomStatusText>
+                                                <CardBottomButton onPress={
+                                                    ()=>{
+                                                        api.postData(`/otc/api/otcOrder/${x.id}/check`).then(x=>{
+                                                            console.log(x)
+                                                            getWaitingList()
+                                                            getCompleteList()
+                                                        })
+                                                    }
+                                                }>
+                                                    <CardBottomButtonText>確認交易</CardBottomButtonText>
+                                                </CardBottomButton>
+                                            </CardBottomContainer>)
+                                    }
+                                    {
+                                        
+                                        (x.status === -1 &&
+                                            <CardBottomContainer>
+                                                <CardBottomStatusText>訂單取消</CardBottomStatusText>
+                                                <CardBottomButton disabled>
+                                                    <CardBottomButtonText>已取消</CardBottomButtonText>
+                                                </CardBottomButton>
+                                            </CardBottomContainer>)
+                                    }
+                                    {
+                                        
+                                        (x.status === -2 &&
+                                            <CardBottomContainer>
+                                                <CardBottomStatusText></CardBottomStatusText>
+                                                <CardBottomButton disabled>
+                                                    <CardBottomButtonText>申訴中</CardBottomButtonText>
+                                                </CardBottomButton>
+                                            </CardBottomContainer>)
+                                    }
+                                    {
+                                        x.sellUser === account &&
+                                        (x.status === 0 &&
+                                            <CardBottomContainer>
+                                                <CardBottomStatusText></CardBottomStatusText>
+                                                <CardBottomButton  onPress={() => {
+                                                    api.postData(`/otc/api/otcOrder/${x.id}/confirm`).then(x=>{
+                                                        getWaitingList()
+                                                        getCompleteList()
+                                                    })
+                                                }}>
+                                                    <CardBottomButtonText>放行</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>)
                                     }
@@ -1054,7 +1522,18 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                             <ModalDetailSecondText>{detailModalInfo.price} {detailModalInfo.fiatCurrency}</ModalDetailSecondText>
                         </ModalRowContainer>
                         <ModalLine />
-                        <ModalRowContainer>
+                        {detailModalInfo.buyUser === account ?<ModalRowContainer>
+                            <ModalDetailTitle>付款方式</ModalDetailTitle>
+                            <ModalInRowContainer>
+                                {
+                                    detailModalInfo.status != 0 ?
+                                        detailModalInfo.payment.type == 'BANK' &&
+                                        <ModalDetailPaymentText>銀行轉帳</ModalDetailPaymentText>
+                                        :
+                                        <ModalDetailThirdText>尚未付款</ModalDetailThirdText>
+                                }
+                            </ModalInRowContainer>
+                        </ModalRowContainer> :<ModalRowContainer>
                             <ModalDetailTitle>收款方式</ModalDetailTitle>
                             <ModalInRowContainer>
                                 {
@@ -1073,20 +1552,10 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                         <ModalDetailPaymentText>Ppay</ModalDetailPaymentText>)
                                 }
                             </ModalInRowContainer>
-                        </ModalRowContainer>
+                        </ModalRowContainer>}
+                        
 
-                        <ModalRowContainer>
-                            <ModalDetailTitle>付款方式</ModalDetailTitle>
-                            <ModalInRowContainer>
-                                {
-                                    detailModalInfo.status != 0 ?
-                                        detailModalInfo.payment.type == 'BANK' &&
-                                        <ModalDetailPaymentText>銀行轉帳</ModalDetailPaymentText>
-                                        :
-                                        <ModalDetailThirdText>尚未付款</ModalDetailThirdText>
-                                }
-                            </ModalInRowContainer>
-                        </ModalRowContainer>
+                        
 
                         <ModalRowContainer>
                             <ModalDetailTitle>訂單編號</ModalDetailTitle>

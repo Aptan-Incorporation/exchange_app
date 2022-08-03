@@ -594,7 +594,7 @@ const C2cSellFirst = (props: {
                         <PhotoButtonText>{Account.charAt(0).toUpperCase()}</PhotoButtonText>
                     </PhotoButton>
                     <EmailText>{Account}</EmailText>
-                    <SuccessRateText>({SuccessRate})%</SuccessRateText>
+                    {/* <SuccessRateText>({SuccessRate})%</SuccessRateText> */}
                 </BottomDetailTopContainer>
                 {/* <BottomDetailSmallTitleText>收款方式</BottomDetailSmallTitleText>
                 <BottomDetailPayTypeContainer>

@@ -9,6 +9,7 @@ import HistoryScreen from "../screens/wallet/History"
 import StopPositionScreen from "../screens/trade/StopPosition"
 import styled from "styled-components";
 import { Image, TouchableOpacity, Text } from "react-native";
+import C2cHistoryScreen from "../screens/c2c/C2cHistory";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const CancelButton = styled(Image)`
@@ -26,6 +27,9 @@ const WalletStack = () => {
         <Stack.Screen name="Funds" component={FundsScreen} />
         <Stack.Screen name="History" component={HistoryScreen} />
       </Stack.Group>    
+      <Stack.Group screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="C2cHistoryScreen" component={C2cHistoryScreen} />
+      </Stack.Group>
       <Stack.Group screenOptions={({ navigation }) => ({
         headerLeft: () => (
           <TouchableOpacity onPress={() => { navigation.goBack() }}>

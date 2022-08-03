@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { AppState } from 'react-native';
+import { AppState,Alert } from 'react-native';
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
@@ -18,6 +18,7 @@ import {
   Provider,
   Surface,
 } from "react-native-paper";
+// import { useNavigation } from '@react-navigation/native';
 
 export const PriceContext = createContext(
     [{
@@ -46,6 +47,12 @@ export const ThreePriceContext = createContext(
   }
 );
 
+export const OrderContext = createContext(
+  {
+    data:{}
+  }
+);
+
 
 export default function App() {
 
@@ -64,6 +71,8 @@ export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
   const [market,setMarket] = useState([])
+  const [order, setOrder] = useState({data:{}});
+  // const navigation = useNavigation();
 
   const { lastJsonMessage } = useWebSocket(socketUrl,{
     shouldReconnect: (closeEvent) => true,
@@ -121,6 +130,8 @@ export default function App() {
   useEffect(() => {
     // console.log(lastJsonMessage2)
     if(lastJsonMessage2){
+      setOrder(lastJsonMessage2)
+      
       // console.log(lastJsonMessage2)
     }
 
@@ -140,6 +151,7 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
+        <OrderContext.Provider value={order}>
         <PriceContext.Provider value={market}>
         <ThreePriceContext.Provider value={  {
             btcPrice:btcPrice,
@@ -158,6 +170,7 @@ export default function App() {
           </ThemeProvider>
           </ThreePriceContext.Provider>
           </PriceContext.Provider>
+          </OrderContext.Provider>
       </SafeAreaProvider>
     );
   }

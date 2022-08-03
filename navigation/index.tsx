@@ -7,8 +7,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ColorSchemeName, Image } from 'react-native';
-
+import { ColorSchemeName, Image,Alert } from 'react-native';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../screens/ModalScreen';
@@ -46,6 +45,9 @@ import C2cApply from "../screens/home/C2cApply";
 import C2cNotification from "../screens/home/C2cNotification";
 import C2cHelp from "../screens/home/C2cHelp";
 import EditName from "../screens/home/EditName";
+import {useEffect,useContext} from "react"
+import { OrderContext } from "../App" 
+import { useNavigation } from '@react-navigation/native';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -64,6 +66,30 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const context = useContext(OrderContext)
+  const navigation = useNavigation();
+  useEffect(()=>{
+    console.log(context)
+
+    if(context.data){
+      // Alert.alert(
+      //   "訂單更新",
+      //   "您有一筆訂單狀態更新，是否前往查看？",
+      //   [
+      //       {
+      //           text: "取消",
+      //           onPress: () => console.log("Cancel Pressed"),
+      //           style: "cancel"
+      //       },
+      //       { text: "確定", onPress: () => { 
+      //           navigation.navigate("C2cHistoryScreen")
+      //       }}
+      //   ]
+      // );
+    }
+   
+  },[context])
+
   return (
     <Stack.Navigator>
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />

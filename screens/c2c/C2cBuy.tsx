@@ -155,6 +155,7 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
 
     const [loading, setLoading] = useState(false);
 
+    const [status, setStatus] = useState(0);
 
 
     const getUserInfo = async () => {
@@ -193,6 +194,26 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
         }
     }, [])
 
+    useEffect(() => {
+        api
+          .get(`/otc/api/otcOrder/${buyId}`)
+          .then((x: any) => {
+            console.log(x.data);
+            setStatus(x.status)
+          })
+          .catch(Error => console.log(Error));
+        const interval = setInterval(() => {
+          api
+            .get(`/otc/api/otcOrder/${buyId}`)
+            .then((x: any) => {
+              console.log(x);
+              setStatus(x.status)
+    
+            })
+            .catch(Error => console.log(Error));
+        }, 2000);
+        return () => clearInterval(interval);
+      }, [buyId]);
 
     /* useEffect(() => {
         if (Payments.some((x: any) => { return x.type == 'BANK' })) {
@@ -335,6 +356,7 @@ const C2cBuyScreen = ({ navigation, route }: RootStackScreenProps<"C2cBuyScreen"
                         BuyTime={buyTime}
                         BuyId={buyId}
                         IsWaitFinish={isWaitFinish}
+                        status={status}
                     />
                 }
                 {

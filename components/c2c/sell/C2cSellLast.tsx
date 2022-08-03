@@ -238,7 +238,7 @@ const C2cSellLast = (props: {
                 </SecondCardRowContainer>
             </SecondCardContainer> */}
             <ReturnButton onPress={() => { navigation.goBack() }}>
-                <ReturnButtonText>查看現貨帳戶</ReturnButtonText>
+                <ReturnButtonText>回到訂單總覽</ReturnButtonText>
             </ReturnButton>
         </Container>
     )

@@ -752,7 +752,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                         <PhotoButtonText>{(x.owner).charAt(0).toUpperCase()}</PhotoButtonText>
                                     </PhotoButton>
                                     <EmailText>{x.owner}</EmailText>
-                                    <SuccessRateText>(???%)</SuccessRateText>
+                                    {/* <SuccessRateText>(???%)</SuccessRateText> */}
                                 </DeatilCardTopContainer>
                                 <DetailCardMiddleContainer>
                                     <DetailCardMiddleLeftColumnContainer>
@@ -853,7 +853,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                         <PhotoButtonText>{(x.owner).charAt(0).toUpperCase()}</PhotoButtonText>
                                     </PhotoButton>
                                     <EmailText>{x.owner}</EmailText>
-                                    <SuccessRateText>(???%)</SuccessRateText>
+                                    {/* <SuccessRateText>(???%)</SuccessRateText> */}
                                 </DeatilCardTopContainer>
                                 <DetailCardMiddleContainer>
                                     <DetailCardMiddleLeftColumnContainer>
@@ -954,7 +954,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                         <PhotoButtonText>{(x.owner).charAt(0).toUpperCase()}</PhotoButtonText>
                                     </PhotoButton>
                                     <EmailText>{x.owner}</EmailText>
-                                    <SuccessRateText>(???%)</SuccessRateText>
+                                    {/* <SuccessRateText>(???%)</SuccessRateText> */}
                                 </DeatilCardTopContainer>
                                 <DetailCardMiddleContainer>
                                     <DetailCardMiddleLeftColumnContainer>
@@ -1057,7 +1057,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                         <PhotoButtonText>{(x.owner).charAt(0).toUpperCase()}</PhotoButtonText>
                                     </PhotoButton>
                                     <EmailText>{x.owner}</EmailText>
-                                    <SuccessRateText>(???%)</SuccessRateText>
+                                    {/* <SuccessRateText>(???%)</SuccessRateText> */}
                                 </DeatilCardTopContainer>
                                 <DetailCardMiddleContainer>
                                     <DetailCardMiddleLeftColumnContainer>
@@ -1158,7 +1158,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                         <PhotoButtonText>{(x.owner).charAt(0).toUpperCase()}</PhotoButtonText>
                                     </PhotoButton>
                                     <EmailText>{x.owner}</EmailText>
-                                    <SuccessRateText>(???%)</SuccessRateText>
+                                    {/* <SuccessRateText>(???%)</SuccessRateText> */}
                                 </DeatilCardTopContainer>
                                 <DetailCardMiddleContainer>
                                     <DetailCardMiddleLeftColumnContainer>
@@ -1259,7 +1259,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                         <PhotoButtonText>{(x.owner).charAt(0).toUpperCase()}</PhotoButtonText>
                                     </PhotoButton>
                                     <EmailText>{x.owner}</EmailText>
-                                    <SuccessRateText>(???%)</SuccessRateText>
+                                    {/* <SuccessRateText>(???%)</SuccessRateText> */}
                                 </DeatilCardTopContainer>
                                 <DetailCardMiddleContainer>
                                     <DetailCardMiddleLeftColumnContainer>

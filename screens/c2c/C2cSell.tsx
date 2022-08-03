@@ -232,7 +232,7 @@ const C2cSellScreen = ({
       .get(`/otc/api/otcOrder/${orderId}`)
       .then((x: any) => {
         console.log(x.data);
-        setStatus(x.data.status)
+        setStatus(x.status)
       })
       .catch(Error => console.log(Error));
     const interval = setInterval(() => {
@@ -240,7 +240,7 @@ const C2cSellScreen = ({
         .get(`/otc/api/otcOrder/${orderId}`)
         .then((x: any) => {
           console.log(x);
-          setStatus(x.data.status)
+          setStatus(x.status)
 
         })
         .catch(Error => console.log(Error));
@@ -356,7 +356,7 @@ const C2cSellScreen = ({
               </ProgressBarContainer>
               <TopInColumnContainer>
                 <TopContainerTitleText>
-                  買方已付款，請放行
+                {status === 3 ? "等待買方確認交易": status === 0 ? "等待買家付款":"買方已付款，請放行"}
                 </TopContainerTitleText>
                 <TopContainerTimerContainer>
                   <CountdownTimer targetDate={payTimeLimit} />
