@@ -334,7 +334,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
         setLoading(true)
         api.put(`/otc/api/advertisement/${id}/offline`)
             .then((x) => {
-                console.log(id)
+                // console.log(id)
                 if (x.status != 400 && x.status != 401) {
                     Alert.alert(
                         "廣告已下架",

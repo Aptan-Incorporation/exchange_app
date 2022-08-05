@@ -69,7 +69,7 @@ function RootNavigator() {
   const context = useContext(OrderContext)
   const navigation = useNavigation();
   useEffect(()=>{
-    console.log(context)
+    // console.log(context)
 
     if(context.data){
       // Alert.alert(

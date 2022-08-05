@@ -405,6 +405,7 @@ const C2cSellSecond = (props: {
 
   //選擇付款方式
   const [choosePayType, setChoosePaytype] = useState(ChosenPayType);
+  const [status2, setStatus2] = useState(0);
 
   // QRCode Modal
   const [isQRCodeModalVisible, setIsQRCodeModalVisible] = useState(false);
@@ -420,23 +421,37 @@ const C2cSellSecond = (props: {
   const [submitText, setSubmitText] = useState("付款中...");
 
   const SubmitAlert = () => {
-    Alert.alert(
-      "確定放行？",
-      "請核對收到的款項無誤，點擊確定後系統將放行您的資金給買方。",
-      [
-        {
-          text: "取消",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
-        },
-        {
-          text: "確定",
-          onPress: () => {
-            handleConfirm();
-          }
+
+    if(status === 4){
+      api.postData(`/otc/api/otcOrder/${BuyId}/check`)
+      .then((x) => {
+        console.log(x)
+        if(x.status === 400){
+          alert(x.data.msg)
+        }else{
+          getStatus()
         }
-      ]
-    );
+      })
+    }else{
+      Alert.alert(
+        "確定放行？",
+        "請核對收到的款項無誤，點擊確定後系統將放行您的資金給買方。",
+        [
+          {
+            text: "取消",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+          },
+          {
+            text: "確定",
+            onPress: () => {
+              handleConfirm();
+            }
+          }
+        ]
+      );
+    }
+    
   };
 
   // 驗證是否已放行 （暫時不驗證）
@@ -456,7 +471,7 @@ const C2cSellSecond = (props: {
 
   // Button Style
   const handleButtonDisabled = () => {
-    if (submitText === "確認收款並放行") {
+    if (submitText === "確認收款並放行" || submitText === "確認交易") {
       return false;
     } else {
       return true;
@@ -464,7 +479,7 @@ const C2cSellSecond = (props: {
   };
 
   const handleSubmitButtonStyle = () => {
-    if (submitText === "確認收款並放行") {
+    if (submitText === "確認收款並放行" || submitText === "確認交易") {
       return "#3D6A97";
     } else {
       return "rgba(102, 153, 204, 0.3)";
@@ -472,7 +487,7 @@ const C2cSellSecond = (props: {
   };
 
   const handleSubmitButtonTextStyle = () => {
-    if (submitText === "確認收款並放行") {
+    if (submitText === "確認收款並放行" || submitText === "確認交易") {
       return "#FFFFFF";
     } else {
       return "rgba(255, 255, 255, 0.3)";
@@ -542,6 +557,18 @@ const C2cSellSecond = (props: {
     });
 
  */
+ const getStatus = ()=>{
+  api
+  .get(`/otc/api/otcOrder/${BuyId}`)
+  .then((x: any) => {
+    if(x.status){
+      console.log(x)
+      setStatus2(x.status)
+    }
+  })
+  .catch(Error => console.log(Error));
+  
+ }
 
   useEffect(() => {
     if (submitText === "付款中...") {
@@ -550,17 +577,30 @@ const C2cSellSecond = (props: {
   }, []);
 
   useEffect(() => {
-    if (status === 3) {
+    getStatus()
+    const interval = setInterval(() => {
+      api
+        .get(`/otc/api/otcOrder/${BuyId}`)
+        .then((x: any) => {
+          // console.log(x.status);
+          setStatus2(x.status)
+
+        })
+        .catch(Error => console.log(Error));
+    }, 2000);
+    console.log(status2)
+    if (status2 === 3) {
       setSubmitText("等待買家確認交易");
-    } else {
+    }else if(status2 === 4) {
+      setSubmitText("確認交易");
+    } else if(status2 ===0){
       setSubmitText("確認收款並放行");
     }
     if(status === -1){
         alert("訂單取消")
         navigation.goBack()
     }
-    console.log(status);
-  }, [status]);
+  }, [status,status2]);
 
   return (
     <Container>
@@ -713,6 +753,7 @@ const C2cSellSecond = (props: {
                     },
                     { text: "確定", onPress: () => { 
                         api.postData(`/otc/api/otcOrder/${BuyId}/cancel`, {}).then(x => {
+                          console.log(x)
                       if (x.status != 400) {
                         alert("訂單取消");
                         navigation.goBack()
@@ -733,6 +774,7 @@ const C2cSellSecond = (props: {
             alignItems: "center",
             width:"25%"
           }}
+          disabled={(status === 1 || status === 0) ? true : false}
         >
           <SubmitButtonText style={{ color: "#6699CC" }}>
             取消訂單

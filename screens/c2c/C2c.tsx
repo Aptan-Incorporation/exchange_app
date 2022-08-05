@@ -485,6 +485,8 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
         setLoading(true)
         api.get(`/otc/api/advertisement/?all=false&my=false&type=buy&cryptoAsset=${cryptoAsset}`)
             .then((x) => {
+                console.log(x[0])
+
                 setLoading(false)
                 if (x.status != 400 && x.status != 401) {
                     setSellList(x);
@@ -1001,7 +1003,8 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                             LimitTo: x.orderLimitMax,
                                             Price: x.price,
                                             Payments: x.payments,
-                                            PaymentTimeLimit: x.paymentTimeLimit
+                                            PaymentTimeLimit: x.paymentTimeLimit,
+                                            Terms:x.terms
                                         } as any)
                                     }}
                                     /* disabled={isNavigate()} */
@@ -1103,7 +1106,8 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                             LimitFrom: x.orderLimitMin,
                                             LimitTo: x.orderLimitMax,
                                             Price: x.price,
-                                            PaymentTimeLimit: x.paymentTimeLimit
+                                            PaymentTimeLimit: x.paymentTimeLimit,
+                                            Terms:x.terms
                                             //Payments: x.payments
                                         } as any)
                                     }}
@@ -1204,7 +1208,8 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                             LimitFrom: x.orderLimitMin,
                                             LimitTo: x.orderLimitMax,
                                             Price: x.price,
-                                            PaymentTimeLimit: x.paymentTimeLimit
+                                            PaymentTimeLimit: x.paymentTimeLimit,
+                                            Terms:x.terms
                                             //Payments: x.payments
                                         } as any)
                                     }}
@@ -1305,7 +1310,8 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                             LimitFrom: x.orderLimitMin,
                                             LimitTo: x.orderLimitMax,
                                             Price: x.price,
-                                            PaymentTimeLimit: x.paymentTimeLimit
+                                            PaymentTimeLimit: x.paymentTimeLimit,
+                                            Terms:x.terms
                                             //Payments: x.payments
                                         } as any)
                                     }}

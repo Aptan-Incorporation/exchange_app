@@ -360,6 +360,7 @@ const C2cSellFirst = (props: {
     onValueChangeIsWaitFinish: React.Dispatch<React.SetStateAction<number>>;
     onValueChangePayTimeLimit: React.Dispatch<React.SetStateAction<number>>;
     setOrderId: React.Dispatch<React.SetStateAction<string>>;
+    Terms: string;
 }) => {
 
     const {
@@ -384,7 +385,8 @@ const C2cSellFirst = (props: {
         onValueChangeSetBuyTime,
         onValueChangeIsWaitFinish,
         onValueChangePayTimeLimit,
-        setOrderId
+        setOrderId,
+        Terms
     } = props;
 
     // Input Price
@@ -470,7 +472,7 @@ const C2cSellFirst = (props: {
         })
             .then((x) => {
                 setLoading(false)
-                console.log(x)
+                // console.log(x)
                 if (x.status != 400 && x.status != 401 && x.status != 500) {
                     onValueChangeSetBuyId(x.id)
                     setOrderId(x.id)
@@ -622,7 +624,7 @@ const C2cSellFirst = (props: {
                 <BottomDetailSmallValueText>{PaymentTimeLimit / 60000}分鐘</BottomDetailSmallValueText>
                 <BottomDetailLine></BottomDetailLine>
                 <BottomDetailSmallTitleText>備註</BottomDetailSmallTitleText>
-                <BottomDetailSmallValueText>請於時限內放行，不要卡單。</BottomDetailSmallValueText>
+             <BottomDetailSmallValueText>{Terms}</BottomDetailSmallValueText>
             </BottomDetailContainer>
 
             {/* // Modal */}

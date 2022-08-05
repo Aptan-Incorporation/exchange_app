@@ -417,6 +417,7 @@ const C2cBuySecond = (props: {
 
     // QRCode Modal
     const [isQRCodeModalVisible, setIsQRCodeModalVisible] = useState(false);
+    const [status2, setStatus2] = useState(0);
 
     const toggleQRCodeModal = () => {
         setIsQRCodeModalVisible(!isQRCodeModalVisible);
@@ -454,14 +455,25 @@ const C2cBuySecond = (props: {
 
     // 送出訂單，下一步
 
-    const [submitText, setSubmitText] = useState('已付款，下一步');
+    const [submitText, setSubmitText] = useState('確認交易');
 
     const handleSubmitAlert = () => {
-        if (choosePayType != "") {
-            SubmitAlert()
-        } else {
-            Alert.alert("請選擇付款方式")
+        if(status2 === 3){
+            api.postData(`/otc/api/otcOrder/${BuyId}/check`)
+            .then((x) => {
+              console.log(x)
+              if(x.status === 400){
+                alert(x.data.msg)
+              }
+            })
+        }else{
+            if (choosePayType != "") {
+                SubmitAlert()
+            } else {
+                Alert.alert("請選擇付款方式")
+            }
         }
+        
     };
 
 
@@ -503,7 +515,7 @@ const C2cBuySecond = (props: {
 
     // 更改Button Style
     const handleButtonDisabled = () => {
-        if (submitText === '已付款，下一步') {
+        if (submitText === '已付款，下一步' || submitText === '確認交易') {
             return false;
         } else {
             return true;
@@ -604,28 +616,55 @@ const C2cBuySecond = (props: {
 
         return () => clearInterval(interval);
     }); */
+    const getStatus = ()=>{
+        api
+        .get(`/otc/api/otcOrder/${BuyId}`)
+        .then((x: any) => {
+          if(x.status){
+            console.log(x)
+            setStatus2(x.status)
+          }
+        })
+        .catch(Error => console.log(Error));
+        
+       }
 
     useEffect(() => {
-        if (status === 4) {
+        console.log(status)
+        getStatus()
+        const interval = setInterval(() => {
+            api
+              .get(`/otc/api/otcOrder/${BuyId}`)
+              .then((x: any) => {
+                // console.log(x.status);
+                setStatus2(x.status)
+      
+              })
+              .catch(Error => console.log(Error));
+          }, 2000);
+        if (status2 === 4) {
           setSubmitText("等待賣家確認交易");
-        } else if (status === 0){
+        } else if (status2 === 0){
           setSubmitText("已付款，下一步");
+        }else if (status2 === 3){
+            setSubmitText("確認交易");
         }
-        if(status === 2 ){
+        else if (status2 === 1){
+            setSubmitText("放行中...");
+          }
+        if(status2 === 2 ){
             getBuyStatus()
         }
-        if(status === -1){
+        if(status2 === -1){
             alert("訂單取消")
             navigation.goBack()
         }
-        if(status === -2){
+        if(status2 === -2){
             alert("訂單申訴中")
             navigation.goBack()
         }
-        
-        
-        console.log(status);
-      }, [status]);
+
+      }, [status,status2]);
 
     return (
         <Container>

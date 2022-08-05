@@ -12,6 +12,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
 import {useContext} from "react"
 import { OrderContext } from "../../App" 
+import _ from "lodash"
+
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 
@@ -145,7 +147,7 @@ padding-left: 16px;
 padding-right: 16px;
 `;
 
-const CardContainer = styled(View)`
+const CardContainer = styled(TouchableOpacity)`
 display: flex;
 flex-direction: column;
 `;
@@ -824,7 +826,56 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                         waitingList.map((x: any, i) => {
                             return (
 
-                                <CardContainer>
+                                <CardContainer onPress={()=>{
+                                    if(x.status === -2){
+                                        alert("訂單申訴中")
+                                    }else{
+                                        api.get(`/otc/api/advertisement/?my=true`).then(y=>{
+                                            let obj = _.find(y, function(o) { return o.id = x.advertisement; })
+                                            if(x.buyUser === account){
+                                                navigation.navigate('C2cBuyScreen', {
+                                                    Id: obj.id,
+                                                    CryptoAsset: x.cryptoAsset,
+                                                    FiatCurrency: x.fiatCurrency,
+                                                    Owner: obj.owner,
+                                                    SuccessRate: "???",
+                                                    AvailableNum: obj.totalTradingAmount,
+                                                    LimitFrom: obj.orderLimitMin,
+                                                    LimitTo: obj.orderLimitMax,
+                                                    Price: x.price,
+                                                    PaymentTimeLimit: obj.paymentTimeLimit,
+                                                    From:"order",
+                                                    OrderId:x.id,
+                                                    Amount:x.amount,
+                                                    Quantity:x.quantity,
+                                                    Time:x.paymentTimeLimit
+                                                    //Payments: x.payments
+                                                } as any)
+                                            }else{
+                                                navigation.navigate('C2cSellScreen', {
+                                                    Id: obj.id,
+                                                    CryptoAsset: x.cryptoAsset,
+                                                    FiatCurrency: x.fiatCurrency,
+                                                    Owner: obj.owner,
+                                                    SuccessRate: "???",
+                                                    AvailableNum: obj.totalTradingAmount,
+                                                    LimitFrom: obj.orderLimitMin,
+                                                    LimitTo: obj.orderLimitMax,
+                                                    Price: x.price,
+                                                    PaymentTimeLimit: obj.paymentTimeLimit,
+                                                    From:"order",
+                                                    OrderId:x.id,
+                                                    Amount:x.amount,
+                                                    Quantity:x.quantity,
+                                                    Time:x.paymentTimeLimit
+                                                    //Payments: x.payments
+                                                } as any)
+                                            }
+                                            
+                                        })
+                                    }
+                                    
+                                }}>
                                     {
                                         x.buyUser === account ?
                                             <CardTitleContainer>
@@ -895,33 +946,13 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                         x.createdDate,
                                                         x.status
                                                     )
-                                                }}><Text>查看</Text></TouchableOpacity>
+                                                }}><Text></Text></TouchableOpacity>
                                                     {/* <TopContainerTimerContainer>
                                                         <CountdownTimer targetDate={x.paymentTimeLimit} />
                                                     </TopContainerTimerContainer> */}
                                                 </CardBottomInRowContainer>
-                                                <CardBottomButton onPress={() => {
-                                                    Alert.alert(
-                                                        "已完成付款？",
-                                                        "請確定您已向賣方完成付款，惡意點擊系統將直接凍結您的賬戶。",
-                                                        [
-                                                            {
-                                                                text: "取消",
-                                                                onPress: () => console.log("Cancel Pressed"),
-                                                                style: "cancel"
-                                                            },
-                                                            { text: "確定", onPress: () => { 
-                                                                api.postData(`/otc/api/otcOrder/${x.id}/paid`,{payment:x.payments[0]}).then(x=>{
-                                                                    console.log(x)
-                                                                    getWaitingList()
-                                                                    getCompleteList()
-                                                                })
-                                                            } }
-                                                        ]
-                                                    );
-                                                    
-                                                }}>
-                                                    <CardBottomButtonText>通知付款</CardBottomButtonText>
+                                                <CardBottomButton>
+                                                    <CardBottomButtonText>請付款</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>)
                                     }
@@ -979,16 +1010,8 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                         (x.status === 4 &&
                                             <CardBottomContainer>
                                                 <CardBottomStatusText></CardBottomStatusText>
-                                                <CardBottomButton onPress={
-                                                    ()=>{
-                                                        api.postData(`/otc/api/otcOrder/${x.id}/check`).then(x=>{
-                                                            console.log(x)
-                                                            getWaitingList()
-                                                            getCompleteList()
-                                                        })
-                                                    }
-                                                }>
-                                                    <CardBottomButtonText>確認交易</CardBottomButtonText>
+                                                <CardBottomButton>
+                                                    <CardBottomButtonText>請確認交易</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>)
                                     }
@@ -997,16 +1020,8 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                         (x.status === 3 &&
                                             <CardBottomContainer>
                                                 <CardBottomStatusText></CardBottomStatusText>
-                                                <CardBottomButton onPress={
-                                                    ()=>{
-                                                        api.postData(`/otc/api/otcOrder/${x.id}/check`).then(x=>{
-                                                            console.log(x)
-                                                            getWaitingList()
-                                                            getCompleteList()
-                                                        })
-                                                    }
-                                                }>
-                                                    <CardBottomButtonText>確認交易</CardBottomButtonText>
+                                                <CardBottomButton>
+                                                    <CardBottomButtonText>請確認交易</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>)
                                     }
@@ -1035,13 +1050,8 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                         (x.status === 0 &&
                                             <CardBottomContainer>
                                                 <CardBottomStatusText></CardBottomStatusText>
-                                                <CardBottomButton  onPress={() => {
-                                                    api.postData(`/otc/api/otcOrder/${x.id}/confirm`).then(x=>{
-                                                        getWaitingList()
-                                                        getCompleteList()
-                                                    })
-                                                }}>
-                                                    <CardBottomButtonText>放行</CardBottomButtonText>
+                                                <CardBottomButton>
+                                                    <CardBottomButtonText>請放行</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>)
                                     }
@@ -1055,14 +1065,8 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                         <CountdownTimer targetDate={FIFTEENMINUTES} />
                                                     </TopContainerTimerContainer> */}
                                                 </CardBottomInRowContainer>
-                                                <CardBottomButton onPress={() => {
-                                                    api.postData(`/otc/api/otcOrder/${x.id}/confirm`).then(x=>{
-                                                        console.log(x)
-                                                        getWaitingList()
-                                                        getCompleteList()
-                                                    })
-                                                }}>
-                                                    <CardBottomButtonText>放行</CardBottomButtonText>
+                                                <CardBottomButton>
+                                                    <CardBottomButtonText>請放行</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>)
                                     }
@@ -1159,7 +1163,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                         x.createdDate,
                                                         x.status
                                                     )
-                                                }}><Text>查看</Text></TouchableOpacity>
+                                                }}><Text></Text></TouchableOpacity>
                                                     {/* <TopContainerTimerContainer>
                                                         <CountdownTimer targetDate={x.paymentTimeLimit} />
                                                     </TopContainerTimerContainer> */}
@@ -1245,11 +1249,13 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                 <CardBottomStatusText></CardBottomStatusText>
                                                 <CardBottomButton onPress={
                                                     ()=>{
-                                                        api.postData(`/otc/api/otcOrder/${x.id}/check`).then(x=>{
-                                                            console.log(x)
-                                                            getWaitingList()
-                                                            getCompleteList()
-                                                        })
+                                                        console.log(x)
+                                                        
+                                                        // api.postData(`/otc/api/otcOrder/${x.id}/check`).then(x=>{
+                                                        //     console.log(x)
+                                                        //     getWaitingList()
+                                                        //     getCompleteList()
+                                                        // })
                                                     }
                                                 }>
                                                     <CardBottomButtonText>確認交易</CardBottomButtonText>
@@ -1263,11 +1269,13 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                 <CardBottomStatusText></CardBottomStatusText>
                                                 <CardBottomButton onPress={
                                                     ()=>{
-                                                        api.postData(`/otc/api/otcOrder/${x.id}/check`).then(x=>{
-                                                            console.log(x)
-                                                            getWaitingList()
-                                                            getCompleteList()
-                                                        })
+                                                        console.log(x)
+
+                                                        // api.postData(`/otc/api/otcOrder/${x.id}/check`).then(x=>{
+                                                        //     console.log(x)
+                                                        //     getWaitingList()
+                                                        //     getCompleteList()
+                                                        // })
                                                     }
                                                 }>
                                                     <CardBottomButtonText>確認交易</CardBottomButtonText>
@@ -1300,10 +1308,11 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                             <CardBottomContainer>
                                                 <CardBottomStatusText></CardBottomStatusText>
                                                 <CardBottomButton  onPress={() => {
-                                                    api.postData(`/otc/api/otcOrder/${x.id}/confirm`).then(x=>{
-                                                        getWaitingList()
-                                                        getCompleteList()
-                                                    })
+                                                    console.log(x)
+                                                    // api.postData(`/otc/api/otcOrder/${x.id}/confirm`).then(x=>{
+                                                    //     getWaitingList()
+                                                    //     getCompleteList()
+                                                    // })
                                                 }}>
                                                     <CardBottomButtonText>放行</CardBottomButtonText>
                                                 </CardBottomButton>
@@ -1320,11 +1329,12 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                     </TopContainerTimerContainer> */}
                                                 </CardBottomInRowContainer>
                                                 <CardBottomButton onPress={() => {
-                                                    api.postData(`/otc/api/otcOrder/${x.id}/confirm`).then(x=>{
-                                                        console.log(x)
-                                                        getWaitingList()
-                                                        getCompleteList()
-                                                    })
+                                                     console.log(x)
+                                                    // api.postData(`/otc/api/otcOrder/${x.id}/confirm`).then(x=>{
+                                                    //     console.log(x)
+                                                    //     getWaitingList()
+                                                    //     getCompleteList()
+                                                    // })
                                                 }}>
                                                     <CardBottomButtonText>放行</CardBottomButtonText>
                                                 </CardBottomButton>

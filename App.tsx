@@ -49,7 +49,9 @@ export const ThreePriceContext = createContext(
 
 export const OrderContext = createContext(
   {
-    data:{}
+    data:{
+      status:3
+    }
   }
 );
 
@@ -71,7 +73,7 @@ export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
   const [market,setMarket] = useState([])
-  const [order, setOrder] = useState({data:{}});
+  const [order, setOrder] = useState({data:{status:3}});
   // const navigation = useNavigation();
 
   const { lastJsonMessage } = useWebSocket(socketUrl,{

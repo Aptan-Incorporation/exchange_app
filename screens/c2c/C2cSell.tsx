@@ -137,6 +137,12 @@ const C2cSellScreen = ({
   const { LimitTo } = route.params; // 限額
   const { Price } = route.params; // 單價
   const { PaymentTimeLimit } = route.params;
+  const { From } = route.params;
+  const { OrderId } = route.params;
+  const { Amount } = route.params;
+  const { Quantity } = route.params;
+  const { Time } = route.params;
+  const { Terms } = route.params;
   //const { Payments } = route.params; // 付款方式Array
 
   // 先用假資料等之後再將Payments Array內容轉成以下
@@ -226,27 +232,38 @@ const C2cSellScreen = ({
       getOrderPayments();
     }
   }, []);
+  useEffect(()=>{
+    if(From === "order"){
+      setOrderId(OrderId)
+      setBuyId(OrderId)
+      setSwapPage(2)
+      setInputAmount(Amount)
+      setInputNumber(Quantity)
+      setPayTimeLimit(Time)
+    }
+  },[])
 
   useEffect(() => {
     api
-      .get(`/otc/api/otcOrder/${orderId}`)
+      .get(`/otc/api/otcOrder/${buyId}`)
       .then((x: any) => {
-        console.log(x.data);
-        setStatus(x.status)
+        if(x.status){
+          setStatus(x.status)
+        }
       })
       .catch(Error => console.log(Error));
     const interval = setInterval(() => {
       api
-        .get(`/otc/api/otcOrder/${orderId}`)
+        .get(`/otc/api/otcOrder/${buyId}`)
         .then((x: any) => {
-          console.log(x);
+          // console.log(x.status);
           setStatus(x.status)
 
         })
         .catch(Error => console.log(Error));
     }, 2000);
     return () => clearInterval(interval);
-  }, [orderId]);
+  }, [buyId]);
   /* useEffect(() => {
         if (Payments.some((x: any) => { return x.type == 'BANK' })) {
             setPayTypeAccount(true);
@@ -314,6 +331,7 @@ const C2cSellScreen = ({
             onValueChangeIsWaitFinish={setIsWaitFinish}
             onValueChangePayTimeLimit={setPayTimeLimit}
             setOrderId={setOrderId}
+            Terms={Terms}
           />
         )}
         {swapPage === 2 &&
@@ -356,9 +374,13 @@ const C2cSellScreen = ({
               </ProgressBarContainer>
               <TopInColumnContainer>
                 <TopContainerTitleText>
-                {status === 3 ? "等待買方確認交易": status === 0 ? "等待買家付款":"買方已付款，請放行"}
+                {status === 3 && "等待買方確認交易"}
+                {status === 0 && "等待買家付款"}
+                {status === 1 && "買方已付款，請放行"}
+                {status === 4 && "請確認交易"}
                 </TopContainerTitleText>
                 <TopContainerTimerContainer>
+                  
                   <CountdownTimer targetDate={payTimeLimit} />
                 </TopContainerTimerContainer>
               </TopInColumnContainer>

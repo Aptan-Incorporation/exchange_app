@@ -276,6 +276,7 @@ const C2cBuyFirst = (props: {
     onValueChangeSetBuyTime: React.Dispatch<React.SetStateAction<number>>;
     onValueChangeIsWaitFinish: React.Dispatch<React.SetStateAction<number>>;
     onValueChangePayTimeLimit: React.Dispatch<React.SetStateAction<number>>;
+    Terms: string;
 }) => {
 
     const {
@@ -299,7 +300,8 @@ const C2cBuyFirst = (props: {
         onValueChangeSetBuyId,
         onValueChangeSetBuyTime,
         onValueChangeIsWaitFinish,
-        onValueChangePayTimeLimit
+        onValueChangePayTimeLimit,
+        Terms
     } = props;
 
     // Input Price
@@ -351,11 +353,11 @@ const C2cBuyFirst = (props: {
         })
             .then((x) => {
                 setLoading(false)
-                console.log(x)
+                // console.log(x)
                 if (x.status != 400 && x.status != 401 && x.status != 500) {
                     onValueChangeSetBuyId(x.id)
                     onValueChangeSetBuyTime(x.createdDate)
-                    onValueChangeIsWaitFinish(x.status)
+                    onValueChangeIsWaitFinish(0)
                     onValueChangePayTimeLimit(x.paymentTimeLimit)
                     onValueChangeInputAmount((x.amount).toFixed(2))
                     onValueChangeInputNumber((x.quantity).toFixed(2))
@@ -494,7 +496,7 @@ const C2cBuyFirst = (props: {
                 <BottomDetailSmallValueText>{PaymentTimeLimit / 60000}分鐘</BottomDetailSmallValueText>
                 <BottomDetailLine></BottomDetailLine>
                 <BottomDetailSmallTitleText>備註</BottomDetailSmallTitleText>
-                <BottomDetailSmallValueText>請於時限內付款，不要卡單，轉帳時請不要備註任何相關字眼，備註一率不放幣。</BottomDetailSmallValueText>
+                <BottomDetailSmallValueText>{Terms}</BottomDetailSmallValueText>
             </BottomDetailContainer>
         </View>
     )
