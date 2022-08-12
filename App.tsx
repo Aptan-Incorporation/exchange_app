@@ -20,6 +20,7 @@ import {
 } from "react-native-paper";
 // import { useNavigation } from '@react-navigation/native';
 
+
 export const PriceContext = createContext(
     [{
       E:"",
@@ -31,6 +32,25 @@ export const PriceContext = createContext(
       v:"",
       w:"",
     }],
+);
+
+export const PositionContext = createContext(
+  [{
+    "avgPrice": 0,
+    "forceClose": 0,
+    "leverage": 0,
+    "lossPrice": 0,
+    "margin": 0,
+    "owner": "",
+    "positionId": "",
+    "profitAndLoss": 0,
+    "profitPrice": 0,
+    "quantity": 0,
+    "side": "",
+    "status": "",
+    "symbol": "",
+    "type": "",
+  }],
 );
 
 export const ThreePriceContext = createContext(
@@ -73,6 +93,7 @@ export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
   const [market,setMarket] = useState([])
+  const [position,setPosition] = useState([])
   const [order, setOrder] = useState({data:{status:3}});
   // const navigation = useNavigation();
 
@@ -91,13 +112,28 @@ export default function App() {
     shouldReconnect: closeEvent => true,
     queryParams:{token: token}
   });
+
+  const socketUrl3 = "wss://ex-api.usefordemo.com/ws";
+  const { lastJsonMessage:lastJsonMessage3,sendJsonMessage:sendJsonMessage2 } = useWebSocket(socketUrl3, {
+    onOpen: () => sendJsonMessage2({
+      "operation": "subscribe",
+      "channel": "position"
+    }),    
+    //Will attempt to reconnect on all close events, such as server shutting down
+    shouldReconnect: closeEvent => true,
+    queryParams:{token: token}
+  });
   useEffect(async ()=>{
     let token = await AsyncStorage.getItem("token");
     setToken(token!)
   },[])
 
-  useEffect(() => {
-
+  useEffect(async() => {
+    let token = await AsyncStorage.getItem("token");
+    setToken(token!)
+    if(!token){
+      setPosition([])
+    }
     if(lastJsonMessage){
       let gfg = lastJsonMessage.sort(function (a:any, b:any) {
         return parseFloat(a.P) - parseFloat(b.P);
@@ -121,23 +157,19 @@ export default function App() {
         }
       }
     }
-    // for(let i = 0;i < lastJsonMessage.length;i++){
-    //   if(lastJsonMessage[i].x === "BTCUSET"){
-    //       setBtcPrice(lastJsonMessage.data.c.slice(0, -6));
-    //       setBtcRate(lastJsonMessage.data.P);
-    //       setBtcAmt(lastJsonMessage.data.v.split(".")[0]);
-    //   }
-    // }
   },[lastJsonMessage]);
   useEffect(() => {
-    // console.log(lastJsonMessage2)
     if(lastJsonMessage2){
-      setOrder(lastJsonMessage2)
-      
-      // console.log(lastJsonMessage2)
+      setOrder(lastJsonMessage2)     
     }
 
   },[lastJsonMessage2]);
+  useEffect(() => {
+    if(lastJsonMessage3){
+      setPosition(lastJsonMessage3.data)
+    }
+
+  },[lastJsonMessage3]);
 
   useEffect(()=>{
     if(AppState.currentState == "active"){
@@ -153,6 +185,7 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
+        <PositionContext.Provider value={position}>
         <OrderContext.Provider value={order}>
         <PriceContext.Provider value={market}>
         <ThreePriceContext.Provider value={  {
@@ -173,6 +206,7 @@ export default function App() {
           </ThreePriceContext.Provider>
           </PriceContext.Provider>
           </OrderContext.Provider>
+          </PositionContext.Provider>
       </SafeAreaProvider>
     );
   }

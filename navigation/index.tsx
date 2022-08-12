@@ -45,6 +45,7 @@ import C2cApply from "../screens/home/C2cApply";
 import C2cNotification from "../screens/home/C2cNotification";
 import C2cHelp from "../screens/home/C2cHelp";
 import EditName from "../screens/home/EditName";
+import Rebate from "../screens/home/Rebate";
 import {useEffect,useContext} from "react"
 import { OrderContext } from "../App" 
 import { useNavigation } from '@react-navigation/native';
@@ -95,6 +96,7 @@ function RootNavigator() {
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Screen name="Member" component={Member} options={{ headerShown: false }} />
+      <Stack.Screen name="Rebate" component={Rebate} options={{ headerShown: false }} />
       <Stack.Screen name="C2c" component={C2c} options={{ headerShown: false }} />
       <Stack.Screen name="C2cMember" component={C2cMember} options={{ headerShown: false }} />
       <Stack.Screen name="C2cApply" component={C2cApply} options={{ headerShown: false }} />

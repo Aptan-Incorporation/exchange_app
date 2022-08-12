@@ -2,12 +2,13 @@ import * as React from "react";
 import { Text, TextInput, TouchableOpacity, View, Image, ScrollView, SafeAreaView, Button, Alert } from "react-native"
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
-import { useState,useEffect } from "react";
+import { useState,useEffect,useContext } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay'
+import { PositionContext } from "../../App"
 
 const Container = styled(View) <{ insets: number }>`
     display: flex ;
@@ -462,10 +463,11 @@ const WalletScreen = ({
     const [spotBalance,setSpotBalance] = useState(0)
     const [totalBalance,setTotalBalance] = useState(0)
     const [position,setPosition] = useState(0)
-    const [positionArray,setPositionArray] = useState([])
+    // const [positionArray,setPositionArray] = useState([])
     const [loading,setLoading] = useState(false);
     const [balance,setBalance] = useState(0)
     const [total,setTotal] = useState(0)
+    const positionArray = useContext(PositionContext)
 
     const getBalance = async () => {
         api.get("/investor/property").then(x=>{
@@ -493,7 +495,7 @@ const WalletScreen = ({
 
     const getPosition = () => {
         api.get("/investor/position").then((x) => {
-            setPositionArray(x.data)
+            // setPositionArray(x.data)
             if(x.status != 400 && x.status != 401){
                 if(x.data.length != 0){
                     setPosition(x.data[0].profitAndLoss)                
@@ -511,7 +513,7 @@ const WalletScreen = ({
                 setTotalBalance(0)
                 setSpotBalance(0)
                 setPosition(0)
-                setPositionArray([])
+                // setPositionArray([])
             }
             if(token){
                 getBalance()

@@ -87,6 +87,7 @@ export type RootStackParamList = {
   C2cNotification: undefined;
   C2cHelp: undefined;
   EditName: undefined;
+  Rebate: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

@@ -15,7 +15,7 @@ import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
 import { useIsFocused } from '@react-navigation/native';
-import { ThreePriceContext, PriceContext } from "../../App"
+import { ThreePriceContext, PriceContext,PositionContext } from "../../App"
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Dropdown } from 'react-native-element-dropdown';
 
@@ -1074,82 +1074,6 @@ const IconImg = styled(Image)`
 `;
 
 
-// Trade Page Array
-const BuyTable = [
-    { id: 0, price: 41254.50, number: 0.104, timeStamp: "" },
-    { id: 1, price: 41254.00, number: 0.079, timeStamp: "" },
-    { id: 2, price: 41253.50, number: 0.868, timeStamp: "" },
-    { id: 3, price: 41253.00, number: 0.260, timeStamp: "" },
-    { id: 4, price: 41252.50, number: 0.260, timeStamp: "" },
-    { id: 5, price: 41252.00, number: 0.013, timeStamp: "" },
-    { id: 6, price: 41251.50, number: 0.295, timeStamp: "" },
-    { id: 7, price: 41251.00, number: 0.019, timeStamp: "" }
-];
-
-const SellTable = [
-    { id: 0, price: 41254.50, number: 0.295, timeStamp: "" },
-    { id: 1, price: 41254.25, number: 0.019, timeStamp: "" },
-    { id: 2, price: 41254.00, number: 0.323, timeStamp: "" },
-    { id: 3, price: 41253.75, number: 0.019, timeStamp: "" },
-    { id: 4, price: 41253.50, number: 0.760, timeStamp: "" },
-    { id: 5, price: 41253.25, number: 0.656, timeStamp: "" },
-    { id: 6, price: 41253.00, number: 0.781, timeStamp: "" },
-    { id: 7, price: 41252.75, number: 0.781, timeStamp: "" }
-];
-
-const MyPosition = {
-    BTC: '0.179',
-    USDT: '57649.86'
-};
-
-// My Position Array
-
-const PositionArray = [
-    {
-        title: 'BTCUSDT',
-        positionType: 'Full',
-        value: '0',
-        positionNum: '0.1',
-        inPrice: '17,000.00',
-        labelPrice: '17,000.00',
-        stopPrice: '17,000.00',
-        leverage: 20
-    },
-    {
-        title: 'BTCUSDT',
-        positionType: 'Full',
-        value: '0',
-        positionNum: '0.1',
-        inPrice: '17,000.00',
-        labelPrice: '17,000.00',
-        stopPrice: '17,000.00',
-        leverage: 20
-    }
-];
-
-const CommitArray = [
-    {
-        title: 'BTCUSDT',
-        time: '2021-10-19 13:24:30',
-        butType: 'Limit',
-        buyDirection: 'Long',
-        CommitNumber: '0.1',
-        DealRate: 0,
-        DealNumber: 0,
-        CommitPrice: '17,000.0'
-    },
-    {
-        title: 'BTCUSDT',
-        time: '2021-10-19 15:45:30',
-        butType: 'Limit',
-        buyDirection: 'Short',
-        CommitNumber: '0.8',
-        DealRate: 0,
-        DealNumber: 0,
-        CommitPrice: '18,000.0'
-    },
-];
-
 const CommitStopPositionArray = [
     {
         type: 'StopEarn',
@@ -1199,7 +1123,7 @@ const TradeScreen = ({
     const [swapCurrency, setSwapCurrency] = useState(0);
     const [sliderNum, setSliderNum] = useState(0);
     const [entrustArray, setEntrustArray] = useState([]);
-    const [positionArray, setPositionArray] = useState([]);
+    // const [positionArray, setPositionArray] = useState([]);
     const [bidsArray, setBidsArray] = useState([]);
     const [asksArray, setAsksArray] = useState([]);
     const [price, setPrice] = useState("");
@@ -1210,6 +1134,7 @@ const TradeScreen = ({
     const [loading, setLoading] = useState(false);
     const { btcPrice } = useContext(ThreePriceContext)
     const context = useContext(PriceContext)
+    const positionArray = useContext(PositionContext)
     const toggleBuyTypeModal = () => {
         setIsBuyTypeModalVisible(!isBuyTypeModalVisible);
     }
@@ -1348,7 +1273,7 @@ const TradeScreen = ({
     const getPosition = () => {
         api.get("/investor/position").then((x) => {
             if (x.status != 400 && x.status != 401) {
-                setPositionArray(x.data);
+                // setPositionArray(x.data);
                 for (let i = 0; i < x.data.length; i++) {
                     if (x.data[i].status !== "CLOSE") {
                         setPosition(true);
@@ -1415,7 +1340,7 @@ const TradeScreen = ({
             setNewTrade(trade)
             if (!token) {
                 setEntrustArray([])
-                setPositionArray([])
+                // setPositionArray([])
                 setBalance(0)
             }
             if (token) {
