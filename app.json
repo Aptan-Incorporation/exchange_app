@@ -2,7 +2,7 @@
   "expo": {
     "name": "Mung Bean",
     "slug": "exchange_app",
-    "version": "1.1.6",
+    "version": "1.1.7",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -21,11 +21,11 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.aptan.exchange",
-      "buildNumber": "1.1.6"
+      "buildNumber": "1.1.7"
     },
     "android": {
       "package": "com.aptan.exchange",
-      "versionCode": 14,
+      "versionCode": 15,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"

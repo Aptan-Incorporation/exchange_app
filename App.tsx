@@ -89,7 +89,7 @@ export default function App() {
   const [dogeRate, setDogeRate] = useState("");
   const [dogeAmt, setDogeAmt] = useState("");
   const [token, setToken] = useState("");
-  const [socketUrl, setSocketUrl] = useState("wss://market.usefordemo.com/latest");
+  const [socketUrl, setSocketUrl] = useState("wss://ex-api.usefordemo.com/market/ws/latest");
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
   const [market,setMarket] = useState([])
@@ -173,7 +173,7 @@ export default function App() {
 
   useEffect(()=>{
     if(AppState.currentState == "active"){
-      setSocketUrl("wss://market.usefordemo.com/latest")
+      setSocketUrl("wss://ex-api.usefordemo.com/market/ws/latest")
     }else{
       setSocketUrl("wss://")
     }
