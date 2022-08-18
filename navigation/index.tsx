@@ -30,6 +30,7 @@ import GoogleVerifyStep1 from "../screens/home/GoogleVerifyStep1";
 import GoogleVerifyStep2 from "../screens/home/GoogleVerifyStep2";
 import GoogleVerifyStep3 from "../screens/home/GoogleVerifyStep3";
 import FundPassword from "../screens/home/FundPassword";
+import ResetFundPassword from "../screens/home/ResetFundPassword";
 import IdentityVerifyStep1 from "../screens/home/IdentityVerifyStep1";
 import IdentityVerifyStep2 from "../screens/home/IdentityVerifyStep2";
 import Payments from '../screens/home/Payments';
@@ -49,6 +50,11 @@ import Rebate from "../screens/home/Rebate";
 import {useEffect,useContext} from "react"
 import { OrderContext } from "../App" 
 import { useNavigation } from '@react-navigation/native';
+import ForgotPassword from "../screens/home/ForgotPassword";
+import ResetPassword from "../screens/home/ResetPassword";
+import ResetGoogle from "../screens/home/ResetGoogle";
+import Announcement from "../screens/home/Announcement";
+import AnnouncementDetail from "../screens/home/AnnouncementDetail";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -110,7 +116,13 @@ function RootNavigator() {
       <Stack.Screen name="GoogleVerifyStep2" component={GoogleVerifyStep2} options={{ headerShown: false }} />
       <Stack.Screen name="GoogleVerifyStep3" component={GoogleVerifyStep3} options={{ headerShown: false }} />
       <Stack.Screen name="FundPassword" component={FundPassword} options={{ headerShown: false }} />
+      <Stack.Screen name="ResetFundPassword" component={ResetFundPassword} options={{ headerShown: false }} />
+      <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ headerShown: false }} />
+      <Stack.Screen name="Announcement" component={Announcement} options={{ headerShown: false }} />
+      <Stack.Screen name="AnnouncementDetail" component={AnnouncementDetail} options={{ headerShown: false }} />
+      <Stack.Screen name="ResetGoogle" component={ResetGoogle} options={{ headerShown: false }} />
       <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPassword} options={{ headerShown: false }} />
       <Stack.Screen name="EmailVerify" component={EmailVerify} options={{ headerShown: false }} />
       <Stack.Screen name="IdentityVerifyStep1" component={IdentityVerifyStep1} options={{ headerShown: false }} />
       <Stack.Screen name="IdentityVerifyStep2" component={IdentityVerifyStep2} options={{ headerShown: false }} />

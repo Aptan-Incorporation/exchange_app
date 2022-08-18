@@ -90,6 +90,8 @@ export default function App() {
   const [dogeAmt, setDogeAmt] = useState("");
   const [token, setToken] = useState("");
   const [socketUrl, setSocketUrl] = useState("wss://ex-api.usefordemo.com/market/ws/latest");
+  const [socketUrl2, setSocketUrl2] = useState("wss://ex-api.usefordemo.com/otc/ws");
+  const [socketUrl3, setSocketUrl3] = useState("wss://ex-api.usefordemo.com/ws");
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
   const [market,setMarket] = useState([])
@@ -102,7 +104,6 @@ export default function App() {
     reconnectInterval: 1000,
   });
 
-  const socketUrl2 = "wss://ex-api.usefordemo.com/otc/ws";
   const { lastJsonMessage:lastJsonMessage2,sendJsonMessage } = useWebSocket(socketUrl2, {
     onOpen: () => sendJsonMessage({
       "operation": "subscribe",
@@ -113,7 +114,6 @@ export default function App() {
     queryParams:{token: token}
   });
 
-  const socketUrl3 = "wss://ex-api.usefordemo.com/ws";
   const { lastJsonMessage:lastJsonMessage3,sendJsonMessage:sendJsonMessage2 } = useWebSocket(socketUrl3, {
     onOpen: () => sendJsonMessage2({
       "operation": "subscribe",
@@ -174,8 +174,12 @@ export default function App() {
   useEffect(()=>{
     if(AppState.currentState == "active"){
       setSocketUrl("wss://ex-api.usefordemo.com/market/ws/latest")
+      setSocketUrl2("wss://ex-api.usefordemo.com/otc/ws")
+      setSocketUrl3("wss://ex-api.usefordemo.com/ws")
     }else{
       setSocketUrl("wss://")
+      setSocketUrl2("wss://")
+      setSocketUrl3("wss://")
     }
     // resetGlobalState(socketUrl)
   },[AppState.currentState])

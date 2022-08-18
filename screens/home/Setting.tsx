@@ -56,6 +56,16 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
       // console.log(x)
       setKyc(x.data);
     });
+    const interval = setInterval(() => {
+      api.getData("/user/security").then(x => {
+        // console.log(x)
+        setKyc(x.data);
+      });
+
+    }, 1000);
+
+  return () => clearInterval(interval);
+    
   },[]);
   return (
     <Container>
@@ -125,7 +135,13 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
               justifyContent: "space-between"
             }}
             onPress={() => {
-              navigation.navigate("GoogleVerifyStep1");
+              console.log(kyc.googleAuth)
+              if(kyc.googleAuth){
+                navigation.navigate("ResetGoogle");
+              }else{
+                navigation.navigate("GoogleVerifyStep1");
+
+              }
             }}
           >
             <Text style={{ color: "white", fontSize: 15 }}>Google 驗證</Text>
@@ -194,7 +210,11 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
               justifyContent: "space-between"
             }}
             onPress={() => {
-              navigation.navigate("FundPassword");
+              if(kyc.financePwd ){
+                navigation.navigate("ResetFundPassword");
+              }else{
+                navigation.navigate("FundPassword");
+              }
             }}
           >
             <Text style={{ color: "white", fontSize: 15 }}>資金密碼</Text>
@@ -221,6 +241,23 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
               />
             </>}
             </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              height: 56,
+              alignItems: "center",
+              borderBottomWidth: 1,
+              borderBottomColor: "#242D37",
+              justifyContent: "space-between"
+            }}
+            onPress={() => {
+              navigation.navigate("ResetPassword");
+            }}
+          >
+            <Text style={{ color: "white", fontSize: 15 }}>重設密碼</Text>
+            
           </TouchableOpacity>
         </View>
       </View>

@@ -41,6 +41,20 @@ const Api = {
         return error.response
       })
   },
+  async patchData(api, data) {
+    let token = await AsyncStorage.getItem("token")
+    let config = {
+      headers: {
+        Authorization: "Bearer " + token
+      }
+    };
+    return axios.patch(url + api, data, config).then((res) => {
+      return res.data
+    })
+      .catch((error) => {
+        return error.response
+      })
+  },
   async postFormData(api, data) {
     let token = await AsyncStorage.getItem("token")
     let config = {
