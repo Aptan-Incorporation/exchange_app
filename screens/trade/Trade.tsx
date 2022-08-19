@@ -18,6 +18,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { ThreePriceContext, PriceContext,PositionContext } from "../../App"
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Dropdown } from 'react-native-element-dropdown';
+import _ from "lodash"
 
 import {
     Appbar,
@@ -1131,6 +1132,7 @@ const TradeScreen = ({
     const [future, setFuture] = useState(false);
     const [balance, setBalance] = useState(0);
     const [canOpen, setCanOpen] = useState(0);
+    const [remarkPrice, setRemarkPrice] = useState("");
     const [wareHousedPrice, setWareHousedPrice] = useState("");
     const [loading, setLoading] = useState(false);
     const { btcPrice } = useContext(ThreePriceContext)
@@ -1322,7 +1324,7 @@ const TradeScreen = ({
     };
 
     const isFocused = useIsFocused();
-    useEffect(() => {
+    useEffect(async () => {
         if (context) {
             let a = []
             for (let i = 0; i < context.length; i++) {
@@ -1333,6 +1335,11 @@ const TradeScreen = ({
                 a.push(obj)
             }
             setTrade(a)
+
+            let trade = await AsyncStorage.getItem("trade")
+            const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade
+            const remark = _.find(context, function(o) { return o.s == t })
+            setRemarkPrice(remark!.m)
         }
     }, [context])
 
@@ -1360,6 +1367,7 @@ const TradeScreen = ({
             if (trade) {
                 setValue(trade.split("USDT")[0] + "-USDT")
             }
+            
             getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
             getPrice(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
             const interval = setInterval(() => {
@@ -1987,6 +1995,7 @@ const TradeScreen = ({
                         bidsArray={bidsArray}
                         wareHousedPrice={wareHousedPrice}
                         price={price}
+                        remarkPrice={remarkPrice}
                     />
             }
 

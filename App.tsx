@@ -31,6 +31,7 @@ export const PriceContext = createContext(
       s:"",
       v:"",
       w:"",
+      m:""
     }],
 );
 

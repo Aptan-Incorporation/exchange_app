@@ -332,8 +332,9 @@ const GraphPage = (props: {
     bidsArray:any
     wareHousedPrice:any
     price:any
+    remarkPrice:any
 }) => {
-    const {trade,asksArray,bidsArray,wareHousedPrice,price} = props
+    const {trade,asksArray,bidsArray,wareHousedPrice,price,remarkPrice} = props
     // Value is Positive
     const [isPositive, setIsPositive] = useState(true);
     // const [bidsArray, setBidsArray] = useState([]);
@@ -388,7 +389,7 @@ const GraphPage = (props: {
                     <GraphHeaderBottomRowColumnContainer>
                         <GraphHeaderBottomInlineRowContainer>
                             <GraphHeaderSmallTitleText>標記價格</GraphHeaderSmallTitleText>
-                            <GraphHeaderSmallValueText>{price}</GraphHeaderSmallValueText>
+                            <GraphHeaderSmallValueText>{remarkPrice.slice(0,-4)}</GraphHeaderSmallValueText>
                         </GraphHeaderBottomInlineRowContainer>
                         <GraphHeaderBottomInlineRowContainer>
                             <GraphHeaderSmallTitleText>指數價格</GraphHeaderSmallTitleText>
