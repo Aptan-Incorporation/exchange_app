@@ -387,7 +387,7 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
                         alignItems: "center"
                       }}
                       onPress={()=>{
-                        AsyncStorage.setItem("trade",x.s)
+                        AsyncStorage.setItem("trade",x.s.split("-")[0]+"USDT")
                         navigation.goBack();
                       }}
                     >

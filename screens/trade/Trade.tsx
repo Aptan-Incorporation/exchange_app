@@ -1130,6 +1130,7 @@ const TradeScreen = ({
     const [position, setPosition] = useState(false);
     const [future, setFuture] = useState(false);
     const [balance, setBalance] = useState(0);
+    const [canOpen, setCanOpen] = useState(0);
     const [wareHousedPrice, setWareHousedPrice] = useState("");
     const [loading, setLoading] = useState(false);
     const { btcPrice } = useContext(ThreePriceContext)
@@ -1220,7 +1221,7 @@ const TradeScreen = ({
         label: "",
         value: ""
     }]);
-    const [nowTrade, setNowTrade] = useState("BTC-USTD");
+    const [nowTrade, setNowTrade] = useState("BTC-USDT");
     const [newTrade, setNewTrade] = useState("");
 
     const toggleCommitStopModal = () => {
@@ -1244,7 +1245,6 @@ const TradeScreen = ({
                             setLoading(false)
                             if (x.status !== 400) {
                                 getPosition()
-                                getBalance()
                                 getEntrust()
                             } else {
                                 Alert.alert(x.data.msg)
@@ -1307,11 +1307,16 @@ const TradeScreen = ({
             });
     };
 
-    const getBalance = () => {
+    const getBalance = (symbol:string,side:string) => {
 
-        api.get("/investor/margin-balance").then((x) => {
+        api.get(`/investor/margin-balance?symbol=${symbol}&side=${side}`).then((x) => {
             if (x.status != 400 && x.status != 401) {
                 setBalance(x.data);
+            }
+        });
+        api.get(`/investor/available-quantity?symbol=${symbol}&side=${side}`).then((x) => {
+            if (x.status != 400 && x.status != 401) {
+                setCanOpen(x.data);
             }
         });
     };
@@ -1346,7 +1351,7 @@ const TradeScreen = ({
             if (token) {
                 getEntrust();
                 getPosition();
-                getBalance();
+                getBalance(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,swapBuyPosition === "Open" ? "BUY":"SELL")
             }
             let leverage = await AsyncStorage.getItem("leverage")
             if (leverage) {
@@ -1362,7 +1367,7 @@ const TradeScreen = ({
                 if (token) {
                     getEntrust();
                     getPosition();
-                    getBalance();
+                    getBalance(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,swapBuyPosition === "Open" ? "BUY":"SELL")
                 }
 
             }, 2000);
@@ -1375,7 +1380,7 @@ const TradeScreen = ({
             setNowTrade("BTC-USDT")
         }
 
-    }, [isFocused, nowTrade]);
+    }, [isFocused, nowTrade,swapBuyPosition]);
 
 
 
@@ -1662,13 +1667,11 @@ const TradeScreen = ({
                                         </SmallSliderContainer>
                                         <TradeFunctionPositionViewContainer>
                                             <TradeFunctionPositionViewTitleText>可用</TradeFunctionPositionViewTitleText>
-                                            <TradeFunctionPositionViewValueText>{balance.toFixed(3)} USDT</TradeFunctionPositionViewValueText>
+                                            <TradeFunctionPositionViewValueText>{balance} USDT</TradeFunctionPositionViewValueText>
                                         </TradeFunctionPositionViewContainer>
                                         <TradeFunctionPositionViewContainer>
                                             <TradeFunctionPositionViewTitleText>可開</TradeFunctionPositionViewTitleText>
-                                            <TradeFunctionPositionViewValueText>{balance === 0
-                                                ? 0
-                                                : ((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().substring(0, ((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().indexOf(".") + 3)}{" "} {newTrade ? newTrade.split("USDT")[0] : nowTrade.split("-")[0]}</TradeFunctionPositionViewValueText>
+                                            <TradeFunctionPositionViewValueText>{canOpen}</TradeFunctionPositionViewValueText>
                                         </TradeFunctionPositionViewContainer>
                                         <TradeFunctionPositionViewContainer>
                                             {swapBuyPosition === "Open" ?
@@ -1723,7 +1726,6 @@ const TradeScreen = ({
                                                                     setSliderNum(0)
                                                                     getEntrust();
                                                                     getPosition();
-                                                                    getBalance()
                                                                 });
                                                         }
                                                     } else {
@@ -1783,7 +1785,6 @@ const TradeScreen = ({
                                                                     setSliderNum(0)
                                                                     getEntrust();
                                                                     getPosition();
-                                                                    getBalance()
                                                                 });
                                                         }
                                                     } else {
@@ -1884,7 +1885,6 @@ const TradeScreen = ({
                                                                         setLoading(false)
                                                                         if (x.status !== 400) {
                                                                             getPosition()
-                                                                            getBalance()
                                                                         } else {
                                                                             Alert.alert(x.data.msg)
                                                                         }

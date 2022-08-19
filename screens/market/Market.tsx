@@ -465,7 +465,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                         alignItems: "center"
                       }}
                       onPress={() => {
-                        AsyncStorage.setItem("trade",x.s)
+                        AsyncStorage.setItem("trade",x.s.split("-")[0]+"USDT")
                         navigation.navigate("Trade");
                       }}
                     >
@@ -478,10 +478,10 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                       >
                         <TouchableOpacity
                           onPress={() => {
-                            if (favorite.includes(x.s.split("USDT")[0]+"-USDT")) {
+                            if (favorite.includes(x.s.split("-")[0]+"USDT")) {
                               api
                                 .deleteData("/investor/favorite", {
-                                  symbol: x.s.split("USDT")[0]+"-USDT"
+                                  symbol: x.s.split("-")[0]+"USDT"
                                 })
                                 .then(x => {
                                   if (x.status != 400) {
@@ -493,7 +493,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                             } else {
                               api
                                 .postData("/investor/favorite", {
-                                  symbol: x.s.split("USDT")[0]+"-USDT"
+                                  symbol: x.s.split("-")[0]+"USDT"
                                 })
                                 .then(x => {
                                   if (x.status != 400) {
@@ -646,7 +646,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                           onPress={async () => {
                             let token = await AsyncStorage.getItem("token")
                             if(token){
-                              if (favorite.includes(x.s.split("USDT")[0]+"-USDT")) {
+                              if (favorite.includes(x.s.split("-")[0]+"USDT")) {
                                 api
                                   .deleteData("/investor/favorite", {
                                     symbol: "BTC-USDT"
@@ -677,7 +677,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                             
                           }}
                         >
-                          {favorite.includes(x.s.split("USDT")[0]+"-USDT") ? (
+                          {favorite.includes(x.s.split("-")[0]+"USDT") ? (
                             <Image
                               source={require("../../assets/images/market/star-y.png")}
                               style={{ width: 24, height: 24, marginRight: 5 }}
@@ -784,10 +784,10 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                           onPress={async () => {
                             let token = await AsyncStorage.getItem("token")
                             if(token){
-                            if (favorite.includes(x.s.split("USDT")[0]+"-USDT")) {
+                            if (favorite.includes(x.s.split("-")[0]+"USDT")) {
                               api
                                 .deleteData("/investor/favorite", {
-                                  symbol: x.s.split("USDT")[0]+"-USDT"
+                                  symbol: x.s.split("-")[0]+"USDT"
                                 })
                                 .then(x => {
                                   if (x.status != 400) {
@@ -797,10 +797,9 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                                   }
                                 });
                             } else {
-                              console.log(x.s.split("USDT")[0]+"-USDT")
                               api
                                 .postData("/investor/favorite", {
-                                  symbol: x.s.split("USDT")[0]+"-USDT"
+                                  symbol: x.s.split("-")[0]+"USDT"
                                 })
                                 .then(x => {
                                   if (x.status != 400) {
@@ -815,7 +814,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                           }
                           }}
                         >
-                          {favorite.includes(x.s.split("USDT")[0]+"-USDT") ? (
+                          {favorite.includes(x.s.split("-")[0]+"USDT") ? (
                             <Image
                               source={require("../../assets/images/market/star-y.png")}
                               style={{ width: 24, height: 24, marginRight: 5 }}

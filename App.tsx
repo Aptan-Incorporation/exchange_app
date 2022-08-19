@@ -140,17 +140,17 @@ export default function App() {
       });
       setMarket(gfg.reverse())
       for(let i = 0;i < lastJsonMessage.length;i++){
-        if(lastJsonMessage[i].s === "BNBUSDT"){
+        if(lastJsonMessage[i].s === "BNB-USDT"){
           setDogePrice(lastJsonMessage[i].c.slice(0, -4));
           setDogeRate(lastJsonMessage[i].P);
           setDogeAmt(lastJsonMessage[i].v.split(".")[0]);
         }
-        if(lastJsonMessage[i].s === "ETHUSDT"){
+        if(lastJsonMessage[i].s === "ETH-USDT"){
           setEthPrice(lastJsonMessage[i].c.slice(0, -4));
           setEthRate(lastJsonMessage[i].P);
           setEthAmt(lastJsonMessage[i].v.split(".")[0]);
         }
-        if(lastJsonMessage[i].s === "BTCUSDT"){
+        if(lastJsonMessage[i].s === "BTC-USDT"){
           setBtcPrice(lastJsonMessage[i].c.slice(0, -4));
           setBtcRate(lastJsonMessage[i].P);
           setBtcAmt(lastJsonMessage[i].v.split(".")[0]);

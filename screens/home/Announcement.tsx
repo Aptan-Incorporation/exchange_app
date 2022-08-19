@@ -67,16 +67,30 @@ const HeaderText = styled(Text)`
 
 const Announcement = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
 
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(-1);
   const [announce, setAnnounce] = useState([]);
   const insets = useSafeAreaInsets();
   const TextEl = useRef<TextInput | null>(null);
 
   useEffect(() => {
-    api.get("/info/announcement").then(x=>{
-      setAnnounce(x.data)
-    })
-  }, []);
+    let category = "ACTIVITY"
+    if(index === -1){
+      api.get("/info/announcement").then(x=>{
+        setAnnounce(x.data)
+      })
+    }else{
+      if(index === 1){
+        category = "OTC"
+      }else if(index === 2){
+        category = "CONTRACT"
+      }else if(index === 3){
+        category = "NEWS"
+      }
+      api.get("/info/announcement?topic="+category).then(x=>{
+        setAnnounce(x.data)
+      })
+    }
+  }, [index]);
 
   return (
     <Container>
@@ -100,6 +114,18 @@ const Announcement = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
             marginBottom: 10
           }}
         >
+          <TouchableOpacity
+            onPress={() => {
+              setIndex(-1);
+            }}
+            style={{ marginRight: 10 }}
+          >
+            {index === -1 ? (
+              <HeaderTitleTextClicked>所有公告</HeaderTitleTextClicked>
+            ) : (
+              <HeaderTitleText>所有公告</HeaderTitleText>
+            )}
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
               setIndex(0);
