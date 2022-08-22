@@ -95,7 +95,11 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
               justifyContent: "space-between"
             }}
             onPress={() => {
-              navigation.navigate("PhoneInput");
+              if(kyc.phone){
+                alert("手機已驗證")
+              }else{
+                navigation.navigate("PhoneInput");
+              }
             }}
           >
             <Text style={{ color: "white", fontSize: 15 }}>手機驗證</Text>
@@ -180,7 +184,11 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
               justifyContent: "space-between"
             }}
             onPress={() => {
-              navigation.navigate("IdentityVerifyStep1");
+              if(kyc.kyc == "CREATE"){
+                alert("身份已驗證")
+              }else{
+                navigation.navigate("IdentityVerifyStep1");
+              }
             }}
           >
             <Text style={{ color: "white", fontSize: 15 }}>身份驗證</Text>
@@ -256,7 +264,7 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
               navigation.navigate("ResetPassword");
             }}
           >
-            <Text style={{ color: "white", fontSize: 15 }}>重設密碼</Text>
+            <Text style={{ color: "white", fontSize: 15 }}>登入密碼重置</Text>
             
           </TouchableOpacity>
         </View>

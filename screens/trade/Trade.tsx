@@ -1527,7 +1527,7 @@ const TradeScreen = ({
                                         }
                                     </TradeTableBottomTitleContainer>
                                     <TradeTableBottomTitleContainer>
-                                        <TradeTableBottomTitleOwnValueText>{price}</TradeTableBottomTitleOwnValueText>
+                                        <TradeTableBottomTitleOwnValueText>{remarkPrice.slice(0,-4)}</TradeTableBottomTitleOwnValueText>
                                     </TradeTableBottomTitleContainer>
                                     <TradeTableBuyContainer>
                                         {

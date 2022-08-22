@@ -121,8 +121,11 @@ color: #0A84FF;
 
 const ResetGoogle = ({ navigation }: RootStackScreenProps<"ResetGoogle">) => {
   const insets = useSafeAreaInsets();
-  const [count,setCount] = useState(180)
+  const [count,setCount] = useState(0)
+  const [count2,setCount2] = useState(0)
   const [email, setEmail] = React.useState("");
+  const [emailSend, setEmailSend] = React.useState(false);
+  const [phoneSend, setPhoneSend] = React.useState(false);
   const [phone, setPhone] = React.useState("");
   const [emailCode, setEmailcode] = React.useState("");
   const [phoneCode, setPhonecode] = React.useState("");
@@ -135,16 +138,37 @@ const ResetGoogle = ({ navigation }: RootStackScreenProps<"ResetGoogle">) => {
     phone: false
   });
   useEffect(async ()=>{
+    let user = await AsyncStorage.getItem("user")
+    setPhone(JSON.parse(user!).phone)
+    setEmail(JSON.parse(user!).account)
     api.getData("/user/security").then(x => {
       // console.log(x)
       setKyc(x.data);
     });
-    setTimeout(()=>{
-      if(count > 0){
-        setCount(c => c - 1)
-      }
-    },1000)
+    if(emailSend){
+      setTimeout(()=>{
+        if(count > 0){
+          setCount(c => c - 1)    
+        }
+      },1000)
+    }
+    if(count == 0){
+      setEmailSend(false)
+    }
   },[count])
+
+  useEffect(()=>{
+    if(phoneSend){
+      setTimeout(()=>{
+        if(count2 > 0){
+          setCount2(c => c - 1)
+        }
+      },1000)
+    }
+    if(count2 == 0){
+      setEmailSend(false)
+    }
+  },[count2])
   return (
     <Container>
       {loading &&  <Spinner visible={loading} textContent={''} />}
@@ -168,9 +192,24 @@ const ResetGoogle = ({ navigation }: RootStackScreenProps<"ResetGoogle">) => {
         <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>信箱驗證碼</Text>
 
         <TouchableOpacity onPress={()=>{
-          setIsPasswordModalVisible(true)
+          // setIsPasswordModalVisible(true)
+          
+          setLoading(true)
+          api.postData("/auth/email/verify-code",{email:email}).then(x=>{
+            setLoading(false)
+            if(x.status != 400){
+              alert("發送成功")
+              setEmailSend(true)
+              setCount(60)
+              setIsPasswordModalVisible(false)
+            }else{
+              alert(x.data.msg)
+            }
+          })
         }}>
-          <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>發送信箱驗證碼</Text>
+          {emailSend ?  <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>{count}s</Text>
+ : <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>發送信箱驗證碼</Text>
+}
         </TouchableOpacity>
         </View>
         <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="請輸入信箱驗證碼" onChangeText={setEmailcode}/>
@@ -180,9 +219,24 @@ const ResetGoogle = ({ navigation }: RootStackScreenProps<"ResetGoogle">) => {
            <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>手機驗證碼</Text>
 
            <TouchableOpacity onPress={()=>{
-          setIsPasswordModalVisible2(true)
+          // setIsPasswordModalVisible2(true)
+          
+          setLoading(true)
+          api.postData("/user/phone/verify-code",{phone:phone}).then(x=>{
+           setLoading(false)
+           if(x.status != 400){
+             alert("發送成功")
+             setPhoneSend(true)
+             setCount2(60)
+             setIsPasswordModalVisible2(false)
+           }else{
+             alert(x.data.msg)
+           }
+         })
         }}>
-          <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,borderBottomWidth:1,borderBottomColor:"white"}}>發送手機驗證碼</Text>
+          {phoneSend ?          <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,borderBottomWidth:1,borderBottomColor:"white"}}>{count2}s</Text>
+:           <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,borderBottomWidth:1,borderBottomColor:"white"}}>發送手機驗證碼</Text>
+}
         </TouchableOpacity>
            </View>
         <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="請輸入手機驗證碼" onChangeText={setPhonecode}/>
