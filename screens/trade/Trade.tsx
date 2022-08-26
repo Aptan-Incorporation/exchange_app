@@ -1197,10 +1197,9 @@ const TradeScreen = ({
         );
     });
 
-    const RenderAboveThumbComponent = (() => {
-
+    const RenderAboveThumbComponent = ((x:any) => {
+        
         let PercentageNum = balance === 0 ? Math.round(sliderNum / parseFloat(((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().substring(0, ((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().indexOf(".") + 3)) * 100) : 0;
-
         return (
             <View>
                 {(PercentageNum != 0) && (!isNaN(PercentageNum)) &&
@@ -1324,6 +1323,12 @@ const TradeScreen = ({
     };
 
     const isFocused = useIsFocused();
+
+    const getRemark = (s:string)=>{
+        const remark = _.find(context, function(o) { return o.s == s })
+        return remark!.m
+    }
+
     useEffect(async () => {
         if (context) {
             let a = []
@@ -1655,14 +1660,20 @@ const TradeScreen = ({
                                             sliderValue={[0]}
                                             positionNum={balance === 0
                                                 ? "0"
-                                                : swapCurrency === 1 ? balance.toString() : (((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().substring(0, ((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().indexOf(".") + 3)).toString()}
+                                                : swapCurrency === 1 ? balance.toString() : canOpen.toString()}
                                             onChangeSliderValue={setSliderNum}
                                             swapCurrency={swapCurrency}
                                             balance={balance}
                                             trade={newTrade ? newTrade.split("USDT")[0] : nowTrade.split("-")[0]}
                                         >
                                             <Slider
-                                                renderAboveThumbComponent={RenderAboveThumbComponent}
+                                                // renderAboveThumbComponent={RenderAboveThumbComponent}
+                                                onValueChange={value=>{
+                                                    console.log("123"+value)
+                                                }}
+                                                onSlidingComplete={(x)=>{
+                                                    console.log("234"+x)
+                                                }}
                                                 renderThumbComponent={CustomThumb}
                                                 minimumTrackTintColor={'#F4F5F6'}
                                                 maximumTrackTintColor={'#333C47'}
@@ -1671,6 +1682,8 @@ const TradeScreen = ({
                                                 maximumValue={100}
                                                 minimumValue={0}
                                                 step={1}
+                                                trackClickable={true}
+                                                trackMarks={[0, 25, 50, 75, 100]}
                                             />
                                         </SmallSliderContainer>
                                         <TradeFunctionPositionViewContainer>
@@ -1679,7 +1692,7 @@ const TradeScreen = ({
                                         </TradeFunctionPositionViewContainer>
                                         <TradeFunctionPositionViewContainer>
                                             <TradeFunctionPositionViewTitleText>可開</TradeFunctionPositionViewTitleText>
-                                            <TradeFunctionPositionViewValueText>{canOpen}</TradeFunctionPositionViewValueText>
+                                            <TradeFunctionPositionViewValueText>{canOpen} {newTrade ? newTrade.split("USDT")[0] : nowTrade.split("-")[0]}</TradeFunctionPositionViewValueText>
                                         </TradeFunctionPositionViewContainer>
                                         <TradeFunctionPositionViewContainer>
                                             {swapBuyPosition === "Open" ?
@@ -1873,7 +1886,7 @@ const TradeScreen = ({
                                                             <TradePositionCardDetailRowContainer>
                                                                 <TradePositionCardDetailColumnContainer>
                                                                     <TradePositionCardSmallTitleText>標記價</TradePositionCardSmallTitleText>
-                                                                    <TradePositionCardSmallValueText>{x.avgPrice}</TradePositionCardSmallValueText>
+                                                                    <TradePositionCardSmallValueText>{getRemark(x.symbol)}</TradePositionCardSmallValueText>
                                                                 </TradePositionCardDetailColumnContainer>
                                                                 <TradePositionCardDetailColumnContainer>
                                                                     <TradePositionCardSmallTitleText>強平價</TradePositionCardSmallTitleText>

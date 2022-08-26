@@ -5,6 +5,7 @@ import WalletScreen from "../screens/wallet/Wallet";
 import RechargeScreen from "../screens/wallet/Recharge"
 import WithdrawScreen from "../screens/wallet/Withdraw"
 import FundsScreen from "../screens/wallet/Funds"
+import OtcFundsScreen from "../screens/wallet/OtcFunds"
 import HistoryScreen from "../screens/wallet/History"
 import StopPositionScreen from "../screens/trade/StopPosition"
 import styled from "styled-components";
@@ -25,6 +26,7 @@ const WalletStack = () => {
         <Stack.Screen name="Recharge" component={RechargeScreen} />
         <Stack.Screen name="Withdraw" component={WithdrawScreen} />
         <Stack.Screen name="Funds" component={FundsScreen} />
+        <Stack.Screen name="OtcFunds" component={OtcFundsScreen} />
         <Stack.Screen name="History" component={HistoryScreen} />
       </Stack.Group>    
       <Stack.Group screenOptions={{ headerShown: false }}>

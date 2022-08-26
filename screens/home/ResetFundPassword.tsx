@@ -166,7 +166,7 @@ const ResetFundPassword = ({ navigation }: RootStackScreenProps<"ResetFundPasswo
       },1000)
     }
     if(count2 == 0){
-      setEmailSend(false)
+      setPhoneSend(false)
     }
   },[count2])
   return (

@@ -6,7 +6,10 @@ import {
   TextInput,
   Image,
   Pressable,
-  ScrollView
+  ScrollView,
+  Dimensions,
+  ActivityIndicator,
+  StyleSheet
 } from "react-native";
 import styled from "styled-components";
 import { RootStackScreenProps } from "../../types";
@@ -16,6 +19,7 @@ import { useContext, useState, useEffect, useRef } from "react";
 import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { WebView } from 'react-native-webview';
 
 const Container = styled(View)`
   display: flex;
@@ -67,7 +71,6 @@ const HeaderText = styled(Text)`
 
 const AnnouncementDetail = ({ navigation,route }: RootStackScreenProps<"AnnouncementDetail">) => {
   const { id } = route.params;
-  console.log(id)
   const [index, setIndex] = useState(0);
   const [announce, setAnnounce] = useState({
     subject:"",
@@ -82,6 +85,27 @@ const AnnouncementDetail = ({ navigation,route }: RootStackScreenProps<"Announce
       setAnnounce(x.data)
     })
   }, []);
+  
+  const [webviewHeight, setWebviewHeight] = useState("0")
+  const [loading, setLoading] = useState(true)
+
+  const onProductDetailsWebViewMessage = (event:any) => {
+    setWebviewHeight(event.nativeEvent.data)
+  }
+  const webViewScript = `
+    setTimeout(function() { 
+      window.ReactNativeWebView.postMessage(document.documentElement.scrollHeight); 
+    }, 500);
+    true; // note: this is required, or you'll sometimes get silent failures
+  `;
+
+  const ActivityIndicatorElement = () => {
+    return (
+      <View style={styles.activityIndicatorStyle}>
+        <ActivityIndicator color="#009688" size="large" />
+      </View>
+    );
+  };
 
   return (
     <Container>
@@ -104,11 +128,49 @@ const AnnouncementDetail = ({ navigation,route }: RootStackScreenProps<"Announce
               <Text style={{ color: "#F4F5F6", fontSize: 25, fontWeight: "700" }}>{announce.subject}</Text>
             <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "600", marginTop: 4 }}>{`${new Date(announce.createdDate).toISOString().split("T")[0]}`}</Text>
               </TouchableOpacity>
-              <Text style={{ color: "white", fontSize: 13, fontWeight: "600", marginTop: 4 }}>{announce.content}</Text>            
+              <View style={{flex:1,backgroundColor:"#18222d"}}>
+              <WebView 
+              style={{height:parseInt(webviewHeight),backgroundColor:"#18222d",marginTop:10}}
+              originWhitelist={['*']}
+              onMessage={onProductDetailsWebViewMessage}
+              javaScriptEnabled={true}
+              injectedJavaScript ={webViewScript}
+              useWebKit={true}
+              onLoadEnd={x=>setLoading(false)}
+              source={{ html: `
+              <body style="
+                background-color: #18222d; color:white; height: 100%;">
+                  ${announce.content}
+               </body>` }}
+              />
+              {loading ? <ActivityIndicatorElement /> : null}
+              </View>
+              
+              {/* <Text style={{ color: "white", fontSize: 13, fontWeight: "600", marginTop: 4 }}>{announce.content}</Text>             */}
         </ScrollView>
       </View>
     </Container>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#F5FCFF',
+    flex: 1,
+  },
+  activityIndicatorStyle: {
+    flex: 1,
+    position: 'absolute',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginTop: 'auto',
+    marginBottom: 'auto',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+  },
+});
 
 export default AnnouncementDetail;

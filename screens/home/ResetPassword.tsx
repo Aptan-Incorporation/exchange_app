@@ -75,7 +75,7 @@ const ResetPassword = ({ navigation }: RootStackScreenProps<"ResetPassword">) =>
       <TouchableOpacity style={{display:"flex",flexDirection:"row",backgroundColor:"#3D6A97",borderRadius:4,justifyContent:"center",alignItems:"center",height:44,marginTop:42}} onPress={()=>{
         if(!password){
           Alert.alert("請輸入舊密碼")
-        }else if(password.length < 8){
+        }else if(password2.length < 8){
           Alert.alert("密碼不得小於8碼")
         }else if(!password2){
           Alert.alert("請輸入新密碼")

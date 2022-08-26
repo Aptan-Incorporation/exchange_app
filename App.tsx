@@ -166,7 +166,7 @@ export default function App() {
 
   },[lastJsonMessage2]);
   useEffect(() => {
-    console.log(lastJsonMessage3)
+    // console.log(lastJsonMessage3)
     if(lastJsonMessage3){
       setPosition(lastJsonMessage3.data)
     }

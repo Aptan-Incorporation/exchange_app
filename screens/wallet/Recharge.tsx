@@ -56,7 +56,6 @@ const RechargeScreen = ({ navigation }: RootStackScreenProps<"Recharge">) => {
 
   const getAddress = () => {
     api.get("/investor/wallet").then(x => {
-      console.log(x.data)
       setAddress(x.data)
     });
   };
@@ -94,6 +93,13 @@ const RechargeScreen = ({ navigation }: RootStackScreenProps<"Recharge">) => {
 
           </View>
           <Text style={{color:"#8D97A2",fontSize:13,fontWeight:"500",marginTop:20}}>此地址只可接收USDT</Text>
+          <View style={{width:"90%"}}>
+          <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>網路</Text>
+          <View style={{backgroundColor:"#242D37",borderRadius:4,padding:12,marginTop:5}}>
+          <Text style={{color:"white"}}>TRON(TRC20)</Text>
+          </View>
+          
+         </View>
           <View style={{display:"flex",flexDirection:"row",alignItems:"center"}}>
                 <Text style={{color:"#F4F5F6",fontSize:15,fontWeight:"700",marginTop:20}} >{address}</Text>
                 <TouchableOpacity onPress={copyToClipboard}>

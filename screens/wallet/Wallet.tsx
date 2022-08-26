@@ -483,7 +483,6 @@ const WalletScreen = ({
         })
         let user = await AsyncStorage.getItem("user");
         api.get("/otc/api/user/"+JSON.parse(user!).account).then(x=>{
-            console.log(x.wallet.coins)
             for(let i =0 ; i < x.wallet.coins.length;i++){
                 if(x.wallet.coins[i].symbol === "USDT"){
                     setBalance(x.wallet.coins[i].balance)
@@ -598,7 +597,7 @@ const WalletScreen = ({
                     <Background01>
                         <BG1>
                             <BG001>
-                                <Title1>總估價</Title1>
+                                <Title1>總資產</Title1>
                                 <TouchableOpacity onPress={()=>{navigation.navigate("History")}}>
                                     <Img1 source={require("../../assets/images/wallet/history.png")} />
                                 </TouchableOpacity>
@@ -820,14 +819,15 @@ const WalletScreen = ({
 
                         <ButtonArea>
 
-                            <Withdraw style={{width:"45%"}}>
-                                <WithdrawText>充值</WithdrawText>
-                            </Withdraw>
+                        <TouchableOpacity style={{ backgroundColor: "#3D6A97",borderRadius:4,justifyContent:"center",display:"flex",flexDirection:"row",padding:12,marginTop:30,width:"100%"}}  onPress={()=>{
+                                navigation.navigate("OtcFunds")
+                            }}>
+                        <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>資金劃轉</Text>
+                    </TouchableOpacity>
 
-
-                            <Recharge style={{width:"45%"}}>
+                            {/* <Recharge style={{width:"45%"}}>
                                 <RechargeText>提現</RechargeText>
-                            </Recharge>
+                            </Recharge> */}
 
                         </ButtonArea>
                     </Background01>

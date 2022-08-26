@@ -50,7 +50,6 @@ const SliderContainer = (props: {
     swapCurrency: number;
     balance: number;
     trade:string
-
 }) => {
     const { sliderValue, trackMarks, positionNum, swapCurrency, onChangeSliderValue,balance,trade } = props;
     const [value, setValue] = React.useState(
@@ -81,7 +80,10 @@ const SliderContainer = (props: {
                     return React.cloneElement(child, {
                         onValueChange: setValue,
                         renderTrackMarkComponent,
-                        onSlidingComplete: () => { setNewInputNum(positionString) },
+                        onSlidingComplete: () => { 
+                            console.log(positionString)
+                            setNewInputNum(positionString) 
+                        },
                         trackMarks,
                         value,
                     });
@@ -93,21 +95,23 @@ const SliderContainer = (props: {
     };
 
     let num = parseInt(value.toString());
-
     let positionString =  (parseFloat(((parseFloat(positionNum) / 100) * num).toFixed(3))).toString();
     const [newInputNum, setNewInputNum] = React.useState("0");
-
 
     const returnValue = (() => {
         onChangeSliderValue(parseFloat(newInputNum))
     });
 
     useEffect(() => {
+        // console.log(positionNum)
+        // console.log(newInputNum)
+        setNewInputNum(positionString)
+
         if (parseFloat(newInputNum) > parseFloat(positionNum)) {
             setValue(100)
             setNewInputNum(positionNum)
         }
-    },[newInputNum,positionNum])
+    },[newInputNum,positionNum,positionString])
 
     return (
         <Container>
@@ -115,7 +119,9 @@ const SliderContainer = (props: {
                 <TextInput
                     placeholder={"數量"}
                     value={newInputNum}
-                    onChangeText={(newInputNum) => { setNewInputNum(newInputNum), setValue(Math.round(parseFloat(newInputNum) / parseFloat(positionNum) * 100)) }}
+                    onChangeText={(newInputNum) => { 
+                        console.log(newInputNum)
+                        setNewInputNum(newInputNum), setValue(Math.round(parseFloat(newInputNum) / parseFloat(positionNum) * 100)) }}
                     /* onChangeText={(value) => { (value != null&&undefined) && setValue(parseFloat(value))}} */
                     placeholderTextColor={'#8D97A2'}
                     keyboardType={"decimal-pad"}

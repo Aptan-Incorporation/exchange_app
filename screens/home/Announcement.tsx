@@ -177,7 +177,7 @@ const Announcement = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
         <ScrollView style={{display:"flex",flexDirection:"column"}} contentContainerStyle={{paddingBottom:150}}>
           {announce.map((x:any)=>{
             return(
-              <TouchableOpacity style={{display: "flex", flexDirection: "column", height: 56, borderBottomWidth: 1, borderBottomColor: "#242D37",justifyContent:"center"}} onPress={()=>{
+              <TouchableOpacity style={{display: "flex", flexDirection: "column",paddingBottom:10,paddingTop:10, borderBottomWidth: 1, borderBottomColor: "#242D37",justifyContent:"center"}} onPress={()=>{
                 navigation.navigate("AnnouncementDetail",{
                   id: x.id,
                 })
@@ -187,6 +187,7 @@ const Announcement = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
               </TouchableOpacity>
             )
           })}
+          
             
         </ScrollView>
       </View>

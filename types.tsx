@@ -94,6 +94,7 @@ export type RootStackParamList = {
   ResetGoogle:undefined;
   Announcement:undefined;
   AnnouncementDetail:undefined;
+  OtcFunds:undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
