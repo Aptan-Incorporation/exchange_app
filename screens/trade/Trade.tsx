@@ -1326,7 +1326,7 @@ const TradeScreen = ({
 
     const getRemark = (s:string)=>{
         const remark = _.find(context, function(o) { return o.s == s })
-        return remark!.m
+        return remark ? remark.m : ""
     }
 
     useEffect(async () => {

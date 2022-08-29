@@ -11,13 +11,7 @@ import { useState, createContext, useEffect } from "react";
 import useWebSocket,{resetGlobalState} from "react-use-websocket";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import _ from "lodash"
-import {
-  Appbar,
-  DarkTheme,
-  DefaultTheme,
-  Provider,
-  Surface,
-} from "react-native-paper";
+import { Platform } from 'react-native';
 // import { useNavigation } from '@react-navigation/native';
 
 
@@ -109,7 +103,8 @@ export default function App() {
     onOpen: () => sendJsonMessage({
       "operation": "subscribe",
       "channel": "otcOrder"
-    }),    
+    }),  
+    onClose: () => console.log('close'),
     //Will attempt to reconnect on all close events, such as server shutting down
     shouldReconnect: closeEvent => true,
     queryParams:{token: token}
@@ -140,23 +135,35 @@ export default function App() {
         return parseFloat(a.P) - parseFloat(b.P);
       });
       setMarket(gfg.reverse())
-      for(let i = 0;i < lastJsonMessage.length;i++){
-        if(lastJsonMessage[i].s === "BNB-USDT"){
-          setDogePrice(lastJsonMessage[i].c.slice(0, -4));
-          setDogeRate(lastJsonMessage[i].P);
-          setDogeAmt(lastJsonMessage[i].v.split(".")[0]);
-        }
-        if(lastJsonMessage[i].s === "ETH-USDT"){
-          setEthPrice(lastJsonMessage[i].c.slice(0, -4));
-          setEthRate(lastJsonMessage[i].P);
-          setEthAmt(lastJsonMessage[i].v.split(".")[0]);
-        }
-        if(lastJsonMessage[i].s === "BTC-USDT"){
-          setBtcPrice(lastJsonMessage[i].c.slice(0, -4));
-          setBtcRate(lastJsonMessage[i].P);
-          setBtcAmt(lastJsonMessage[i].v.split(".")[0]);
-        }
-      }
+      const bnb = _.find(lastJsonMessage, function(o) { return o.s == "BNB-USDT" })
+      const eth = _.find(lastJsonMessage, function(o) { return o.s == "ETH-USDT" })
+      const btc = _.find(lastJsonMessage, function(o) { return o.s == "BTC-USDT" })
+      setDogePrice(bnb.c.slice(0, -4));
+      setDogeRate(bnb.P);
+      setDogeAmt(bnb.v.split(".")[0]);
+      setEthPrice(eth.c.slice(0, -4));
+      setEthRate(eth.P);
+      setEthAmt(eth.v.split(".")[0]);
+      setBtcPrice(btc.c.slice(0, -4));
+      setBtcRate(btc.P);
+      setBtcAmt(btc.v.split(".")[0]);
+      // for(let i = 0;i < lastJsonMessage.length;i++){
+      //   if(lastJsonMessage[i].s === "BNB-USDT"){
+      //     setDogePrice(lastJsonMessage[i].c.slice(0, -4));
+      //     setDogeRate(lastJsonMessage[i].P);
+      //     setDogeAmt(lastJsonMessage[i].v.split(".")[0]);
+      //   }
+      //   if(lastJsonMessage[i].s === "ETH-USDT"){
+      //     setEthPrice(lastJsonMessage[i].c.slice(0, -4));
+      //     setEthRate(lastJsonMessage[i].P);
+      //     setEthAmt(lastJsonMessage[i].v.split(".")[0]);
+      //   }
+      //   if(lastJsonMessage[i].s === "BTC-USDT"){
+      //     setBtcPrice(lastJsonMessage[i].c.slice(0, -4));
+      //     setBtcRate(lastJsonMessage[i].P);
+      //     setBtcAmt(lastJsonMessage[i].v.split(".")[0]);
+      //   }
+      // }
     }
   },[lastJsonMessage]);
   useEffect(() => {
@@ -174,16 +181,17 @@ export default function App() {
   },[lastJsonMessage3]);
 
   useEffect(()=>{
-    if(AppState.currentState == "active"){
-      setSocketUrl("wss://ex-api.usefordemo.com/market/ws/latest")
-      setSocketUrl2("wss://ex-api.usefordemo.com/otc/ws")
-      setSocketUrl3("wss://ex-api.usefordemo.com/ws")
-    }else{
-      setSocketUrl("wss://")
-      setSocketUrl2("wss://")
-      setSocketUrl3("wss://")
+    if(Platform.OS !== "android"){
+      if(AppState.currentState == "active"){
+        setSocketUrl("wss://ex-api.usefordemo.com/market/ws/latest")
+        setSocketUrl2("wss://ex-api.usefordemo.com/otc/ws")
+        setSocketUrl3("wss://ex-api.usefordemo.com/ws")
+      }else{
+        setSocketUrl("wss://")
+        setSocketUrl2("wss://")
+        setSocketUrl3("wss://")
+      }
     }
-    // resetGlobalState(socketUrl)
   },[AppState.currentState])
 
   if (!isLoadingComplete) {
