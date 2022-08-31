@@ -105,16 +105,22 @@ const SliderContainer = (props: {
     });
 
     useEffect(() => {
-        console.log(positionNum)
         // console.log(positionString)
-        if(positionString != "0" && flag){
-            setNewInputNum(positionString)
-        }
+        // if(positionString != "0" && flag){
+        //     setNewInputNum(positionString)
+        // }
         if (parseFloat(newInputNum) > parseFloat(positionNum)) {
             setValue(100)
             setNewInputNum(positionNum)
         }
-    },[newInputNum,positionNum,positionString])
+    },[newInputNum,positionNum])
+
+    useEffect(() => {
+        if(positionString != "0" && flag){
+            setNewInputNum(positionString)
+        }
+    
+    },[positionString])
 
     return (
         <Container>
