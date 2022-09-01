@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from "react-native-loading-spinner-overlay";
 import api from "../../common/api";
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -48,6 +49,7 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
     kyc: null,
     phone: false
   });
+  const { t } = useTranslation();
   useEffect(async () => {
     let user = await AsyncStorage.getItem("user");
     setEmail(JSON.parse(user!).account);

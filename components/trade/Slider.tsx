@@ -5,6 +5,7 @@ import styled from "styled-components"
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from "react"
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
 display: flex;
@@ -141,7 +142,8 @@ const SliderContainer = (props: {
         isModalVisable(false)
         onValueChangeSliderNum(num)
     }
-
+    const { t } = useTranslation();
+    
     useEffect(async()=>{
         let trade = await AsyncStorage.getItem("trade")
         setTrade(trade ? trade.split("USDT")[0]+"-USDT" :"BTC-USDT")
@@ -184,7 +186,7 @@ const SliderContainer = (props: {
             </View>
             <LeverageViewModalDetailRowContainer style={{ paddingTop: 26 }}>
                 <LeverageViewModalNotificationImage source={require("../../assets/images/trade/notification.png")} />
-                <LeverageViewModalNotificationText style={{ paddingLeft: 8 }}>槓桿比例愈高，發生強制平倉的風險愈高。</LeverageViewModalNotificationText>
+                <LeverageViewModalNotificationText style={{ paddingLeft: 8 }}>{t("leverageMsg")}</LeverageViewModalNotificationText>
             </LeverageViewModalDetailRowContainer>
             <LeverageViewModalDetailRowContainer style={{ paddingTop: 10 }}>
                 <LeverageViewModalDetailText>調整槓桿後，您的 {trade.split("-")[0]} 永續合約資金將變化為：</LeverageViewModalDetailText>
@@ -201,6 +203,7 @@ const SliderContainer = (props: {
                     symbol:trade
                 }
                 api.postData("/order/position/adjust-leverage",obj).then(x=>{
+                    console.log(x)
                     if(x.status !== 400){
                         AsyncStorage.setItem("leverage",value.length ? value[0].toString():parseInt(value).toString())
                         sendDataLeverageModal() 

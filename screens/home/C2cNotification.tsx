@@ -16,6 +16,7 @@ import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Modal from "react-native-modal";
 import api from "../../common/api";
+import { useTranslation } from "react-i18next";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -84,7 +85,7 @@ const C2cNotification = ({ navigation }: RootStackScreenProps<"C2cNotification">
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const toggleSwitch2 = () => setIsEnabled2(previousState => !previousState);
   const toggleSwitch3 = () => setIsEnabled3(previousState => !previousState);
-
+  const { t } = useTranslation();
   async function getData(){
     let user = await AsyncStorage.getItem("user");
     

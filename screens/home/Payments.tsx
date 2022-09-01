@@ -9,6 +9,7 @@ import axios from "axios"
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { useTranslation } from "react-i18next";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -185,7 +186,7 @@ const Payments = ({ navigation, route }: RootStackScreenProps<"Payments">) => {
 
     // 帳戶資料
     const [payments, setPayments] = useState<any[]>([])
-
+    const { t } = useTranslation();
     const getUserInfoPayments = () => {
         setLoading(true)
         api.get("/user/payment")

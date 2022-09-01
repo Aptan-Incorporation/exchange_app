@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import axios from "axios"
 import api from "../../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useTranslation } from "react-i18next";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -426,7 +427,7 @@ const C2cBuySecond = (props: {
     // 取消訂單
 
     const navigation = useNavigation();
-
+    const { t } = useTranslation();
     const cancelAlert = () =>
         Alert.alert(
             "確定取消訂單？",
@@ -670,22 +671,22 @@ const C2cBuySecond = (props: {
         <Container>
             <FirstCardContainer>
                 <FirstCardFirstRowContainer>
-                    <FirstCardTitleText>總價</FirstCardTitleText>
+                    <FirstCardTitleText>{t("fiatTotal")}</FirstCardTitleText>
                     <FirstCardFirstInRowContainer>
                         <FirstCardPriceText>{BuyAmount}</FirstCardPriceText>
                         <FirstCardPriceCurrencyText>{FiatCurrency}</FirstCardPriceCurrencyText>
                     </FirstCardFirstInRowContainer>
                 </FirstCardFirstRowContainer>
                 <FirstCardRowContainer>
-                    <FirstCardTitleText>數量</FirstCardTitleText>
+                    <FirstCardTitleText>{t("amount")}</FirstCardTitleText>
                     <FirstCardValueText>{BuyNumber} {CurrencyType}</FirstCardValueText>
                 </FirstCardRowContainer>
                 <FirstCardRowContainer>
-                    <FirstCardTitleText>單價</FirstCardTitleText>
+                    <FirstCardTitleText>{t("unitPrice")}</FirstCardTitleText>
                     <FirstCardValueText>{Price} {FiatCurrency}</FirstCardValueText>
                 </FirstCardRowContainer>
                 <FirstCardRowContainer>
-                    <FirstCardTitleText>單號</FirstCardTitleText>
+                    <FirstCardTitleText>{t("fiatOrderNumber")}</FirstCardTitleText>
                     <View style={{alignItems: 'flex-end'}}>
                         <FirstCardValueText>{BuyId.slice(0, 28)}</FirstCardValueText>
                         <FirstCardValueText>{BuyId.slice(28)}</FirstCardValueText>
@@ -693,21 +694,21 @@ const C2cBuySecond = (props: {
                 </FirstCardRowContainer>
             </FirstCardContainer>
             <SecondCardContainer>
-                <SecondCardTitleText>付款方式</SecondCardTitleText>
-                <SecondCardDetailText>以下為賣方的收款資訊，請您務必使用本人名下的支付方式自行轉帳，戶名需對應至您驗證帳號身份的姓名，平台並不會自動為您轉帳。</SecondCardDetailText>
+                <SecondCardTitleText>{t("payments")}</SecondCardTitleText>
+                <SecondCardDetailText>{t("fiatPayMsg")}</SecondCardDetailText>
                 <SecondCardPayTypeRowContainer horizontal={true}>
                     {
                         (accountDetail.map((x: any) => {
                             if (choosePayType == 'BANK' && choosePayTypeID == x.id) {
                                 return (
                                     <BankAccountButtonClicked onPress={() => { setChoosePaytype('BANK'), setChoosePayTypeID("") }} disabled={handleButtonDisabled()}>
-                                        <PayTypeButtonClickedText>銀行卡</PayTypeButtonClickedText>
+                                        <PayTypeButtonClickedText>{t("bankCard")}</PayTypeButtonClickedText>
                                     </BankAccountButtonClicked>
                                 )
                             } else {
                                 return (
                                     <BankAccountButton onPress={() => { setChoosePaytype('BANK'), setChoosePayTypeID(x.id) }} disabled={handleButtonDisabled()}>
-                                        <PayTypeButtonText>銀行卡</PayTypeButtonText>
+                                        <PayTypeButtonText>{t("bankCard")}</PayTypeButtonText>
                                     </BankAccountButton>
                                 )
                             }
@@ -757,21 +758,21 @@ const C2cBuySecond = (props: {
                             return (
                                 <PayBottomContainer>
                                     <SecondCardPayDetailContainer>
-                                        <SecondCardPayDetailTitleText>帳戶姓名</SecondCardPayDetailTitleText>
+                                        <SecondCardPayDetailTitleText>{t("accountName")}</SecondCardPayDetailTitleText>
                                         <SecondCardPayDetailInRowContainer>
                                             <SecondCardPayDetailValueText>{x.name}</SecondCardPayDetailValueText>
                                             <DuplicateIcon source={require("../../../assets/images/c2c/copy.png")} />
                                         </SecondCardPayDetailInRowContainer>
                                     </SecondCardPayDetailContainer>
                                     <SecondCardPayDetailContainer>
-                                        <SecondCardPayDetailTitleText>銀行名稱</SecondCardPayDetailTitleText>
+                                        <SecondCardPayDetailTitleText>{t("bankName")}</SecondCardPayDetailTitleText>
                                         <SecondCardPayDetailInRowContainer>
                                             <SecondCardPayDetailValueText>{x.code}</SecondCardPayDetailValueText>
                                             <DuplicateIcon source={require("../../../assets/images/c2c/copy.png")} />
                                         </SecondCardPayDetailInRowContainer>
                                     </SecondCardPayDetailContainer>
                                     <SecondCardPayDetailContainer>
-                                        <SecondCardPayDetailTitleText>銀行帳號</SecondCardPayDetailTitleText>
+                                        <SecondCardPayDetailTitleText>{t("accountNum")}</SecondCardPayDetailTitleText>
                                         <SecondCardPayDetailInRowContainer>
                                             <SecondCardPayDetailValueText>{x.account}</SecondCardPayDetailValueText>
                                             <DuplicateIcon source={require("../../../assets/images/c2c/copy.png")} />
@@ -847,7 +848,7 @@ const C2cBuySecond = (props: {
             </SecondCardContainer>
             <BottomButtonContainer>
                 <CancelButton onPress={() => { cancelAlert() }} style={{ borderColor: handleCancelButtonStyle() }}>
-                    <CancelButtonText style={{ color: handleCancelButtonTextStyle() }}>取消訂單</CancelButtonText>
+                    <CancelButtonText style={{ color: handleCancelButtonTextStyle() }}>{t("fiatCancelOrder")}</CancelButtonText>
                 </CancelButton>
                 <SubmitButton onPress={() => { handleSubmitAlert() }} disabled={handleButtonDisabled()} style={{ backgroundColor: handleSubmitButtonStyle() }}>
                     <SubmitButtonText style={{ color: handleSubmitButtonTextStyle() }}>{submitText}</SubmitButtonText>

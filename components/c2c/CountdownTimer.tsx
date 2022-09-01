@@ -2,6 +2,7 @@ import * as React from "react"
 import { Text, View } from "react-native"
 import styled from "styled-components"
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 
 const TopContainerTimerText = styled(Text)`
@@ -23,7 +24,8 @@ const useCountdown = (targetDate: number) => {
     const [countDown, setCountDown] = useState(
         targetDate
     );
-
+    const { t } = useTranslation();
+    
     useEffect(() => {
         
             const interval = setInterval(() => {

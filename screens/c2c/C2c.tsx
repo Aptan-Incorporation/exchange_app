@@ -8,6 +8,7 @@ import axios from "axios"
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View) <{ insets: number }>`
     display: flex ;
@@ -464,7 +465,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
     const [buyList, setBuyList] = useState([]);
     const [sellList, setSellList] = useState([]);
     const [loading, setLoading] = useState(false);
-
+    const { t } = useTranslation();
     const getBuyList = (cryptoAsset: string) => {
         setLoading(true)
         api.get(`/otc/api/advertisement/?all=false&my=false&type=sell&cryptoAsset=${cryptoAsset}`)
@@ -547,18 +548,18 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                         swapBuySell === 0 ?
                             <HeaderTitleInlineRowContainer>
                                 <TouchableOpacity onPress={() => { setSwapBuySell(0), setSwapBuyCurrencyType('USDT'), swapPageRefreshBuy('USDT') }}>
-                                    <HeaderTitleTextClicked>購買</HeaderTitleTextClicked>
+                                    <HeaderTitleTextClicked>{t("fiatBuy")}</HeaderTitleTextClicked>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => { setSwapBuySell(1), setSwapBuyCurrencyType('USDT'), swapPageRefreshSell('USDT') }}>
-                                    <HeaderTitleText>出售</HeaderTitleText>
+                                    <HeaderTitleText>{t("fiatSell")}</HeaderTitleText>
                                 </TouchableOpacity>
                             </HeaderTitleInlineRowContainer> :
                             <HeaderTitleInlineRowContainer>
                                 <TouchableOpacity onPress={() => { setSwapBuySell(0), setSwapBuyCurrencyType('USDT'), swapPageRefreshBuy('USDT') }}>
-                                    <HeaderTitleText>購買</HeaderTitleText>
+                                    <HeaderTitleText>{t("fiatBuy")}</HeaderTitleText>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => { setSwapBuySell(1), setSwapBuyCurrencyType('USDT'), swapPageRefreshSell('USDT') }}>
-                                    <HeaderTitleTextClicked>出售</HeaderTitleTextClicked>
+                                    <HeaderTitleTextClicked>{t("fiatSell")}</HeaderTitleTextClicked>
                                 </TouchableOpacity>
                             </HeaderTitleInlineRowContainer>
                     }
@@ -759,11 +760,11 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                 <DetailCardMiddleContainer>
                                     <DetailCardMiddleLeftColumnContainer>
                                         <DetailCardMiddleLeftRowContainer>
-                                            <SmallTitleText>數量</SmallTitleText>
+                                            <SmallTitleText>{t("amount")}</SmallTitleText>
                                             <SmallValueText>{x.totalTradingAmount} {x.cryptoAsset}</SmallValueText>
                                         </DetailCardMiddleLeftRowContainer>
                                         <DetailCardMiddleLeftRowContainer>
-                                            <SmallTitleText>限額</SmallTitleText>
+                                            <SmallTitleText>{t("limitedAmount")}</SmallTitleText>
                                             <SmallValueText>{x.orderLimitMin} - {x.orderLimitMax} {x.fiatCurrency}</SmallValueText>
                                         </DetailCardMiddleLeftRowContainer>
                                     </DetailCardMiddleLeftColumnContainer>
@@ -806,7 +807,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                     }}
                                     /* disabled={isNavigate()} */
                                     >
-                                        <BuyButtonText>購買</BuyButtonText>
+                                        <BuyButtonText>{t("fiatBuy")}</BuyButtonText>
                                     </BuyButton>
                                 </DetailCardBottomContainer>
                                 {/* 找出 BuyArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
@@ -860,11 +861,11 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                 <DetailCardMiddleContainer>
                                     <DetailCardMiddleLeftColumnContainer>
                                         <DetailCardMiddleLeftRowContainer>
-                                            <SmallTitleText>數量</SmallTitleText>
+                                            <SmallTitleText>{t("amount")}</SmallTitleText>
                                             <SmallValueText>{x.totalTradingAmount} {x.cryptoAsset}</SmallValueText>
                                         </DetailCardMiddleLeftRowContainer>
                                         <DetailCardMiddleLeftRowContainer>
-                                            <SmallTitleText>限額</SmallTitleText>
+                                            <SmallTitleText>{t("limitedAmount")}</SmallTitleText>
                                             <SmallValueText>{x.orderLimitMin} - {x.orderLimitMax} {x.fiatCurrency}</SmallValueText>
                                         </DetailCardMiddleLeftRowContainer>
                                     </DetailCardMiddleLeftColumnContainer>
@@ -907,7 +908,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                     }}
                                     /* disabled={isNavigate()} */
                                     >
-                                        <BuyButtonText>購買</BuyButtonText>
+                                        <BuyButtonText>{t("fiatBuy")}</BuyButtonText>
                                     </BuyButton>
                                 </DetailCardBottomContainer>
                                 {/* 找出 BuyArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
@@ -961,11 +962,11 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                 <DetailCardMiddleContainer>
                                     <DetailCardMiddleLeftColumnContainer>
                                         <DetailCardMiddleLeftRowContainer>
-                                            <SmallTitleText>數量</SmallTitleText>
+                                            <SmallTitleText>{t("amount")}</SmallTitleText>
                                             <SmallValueText>{x.totalTradingAmount} {x.cryptoAsset}</SmallValueText>
                                         </DetailCardMiddleLeftRowContainer>
                                         <DetailCardMiddleLeftRowContainer>
-                                            <SmallTitleText>限額</SmallTitleText>
+                                            <SmallTitleText>{t("limitedAmount")}</SmallTitleText>
                                             <SmallValueText>{x.orderLimitMin} - {x.orderLimitMax} {x.fiatCurrency}</SmallValueText>
                                         </DetailCardMiddleLeftRowContainer>
                                     </DetailCardMiddleLeftColumnContainer>
@@ -1009,7 +1010,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                     }}
                                     /* disabled={isNavigate()} */
                                     >
-                                        <BuyButtonText>購買</BuyButtonText>
+                                        <BuyButtonText>{t("fiatBuy")}</BuyButtonText>
                                     </BuyButton>
                                 </DetailCardBottomContainer>
                                 {/* 找出 BuyArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
@@ -1065,11 +1066,11 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                 <DetailCardMiddleContainer>
                                     <DetailCardMiddleLeftColumnContainer>
                                         <DetailCardMiddleLeftRowContainer>
-                                            <SmallTitleText>數量</SmallTitleText>
+                                            <SmallTitleText>{t("amount")}</SmallTitleText>
                                             <SmallValueText>{x.totalTradingAmount} {x.cryptoAsset}</SmallValueText>
                                         </DetailCardMiddleLeftRowContainer>
                                         <DetailCardMiddleLeftRowContainer>
-                                            <SmallTitleText>限額</SmallTitleText>
+                                            <SmallTitleText>{t("limitedAmount")}</SmallTitleText>
                                             <SmallValueText>{x.orderLimitMin} - {x.orderLimitMax} {x.fiatCurrency}</SmallValueText>
                                         </DetailCardMiddleLeftRowContainer>
                                     </DetailCardMiddleLeftColumnContainer>
@@ -1112,7 +1113,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                         } as any)
                                     }}
                                         /* disabled={isNavigate()} */>
-                                        <SellButtonText>出售</SellButtonText>
+                                        <SellButtonText>{t("fiatSell")}</SellButtonText>
                                     </SellButton>
                                 </DetailCardBottomContainer>
                                 {/* 找出 SellArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
@@ -1167,11 +1168,11 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                 <DetailCardMiddleContainer>
                                     <DetailCardMiddleLeftColumnContainer>
                                         <DetailCardMiddleLeftRowContainer>
-                                            <SmallTitleText>數量</SmallTitleText>
+                                            <SmallTitleText>{t("amount")}</SmallTitleText>
                                             <SmallValueText>{x.totalTradingAmount} {x.cryptoAsset}</SmallValueText>
                                         </DetailCardMiddleLeftRowContainer>
                                         <DetailCardMiddleLeftRowContainer>
-                                            <SmallTitleText>限額</SmallTitleText>
+                                            <SmallTitleText>{t("limitedAmount")}</SmallTitleText>
                                             <SmallValueText>{x.orderLimitMin} - {x.orderLimitMax} {x.fiatCurrency}</SmallValueText>
                                         </DetailCardMiddleLeftRowContainer>
                                     </DetailCardMiddleLeftColumnContainer>
@@ -1214,7 +1215,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                         } as any)
                                     }}
                                         /* disabled={isNavigate()} */>
-                                        <SellButtonText>出售</SellButtonText>
+                                        <SellButtonText>{t("fiatSell")}</SellButtonText>
                                     </SellButton>
                                 </DetailCardBottomContainer>
                                 {/* 找出 SellArray 中符合的 Object 並讓最後一個不顯示分段 Line */}
@@ -1269,11 +1270,11 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                 <DetailCardMiddleContainer>
                                     <DetailCardMiddleLeftColumnContainer>
                                         <DetailCardMiddleLeftRowContainer>
-                                            <SmallTitleText>數量</SmallTitleText>
+                                            <SmallTitleText>{t("amount")}</SmallTitleText>
                                             <SmallValueText>{x.totalTradingAmount} {x.cryptoAsset}</SmallValueText>
                                         </DetailCardMiddleLeftRowContainer>
                                         <DetailCardMiddleLeftRowContainer>
-                                            <SmallTitleText>限額</SmallTitleText>
+                                            <SmallTitleText>{t("limitedAmount")}</SmallTitleText>
                                             <SmallValueText>{x.orderLimitMin} - {x.orderLimitMax} {x.fiatCurrency}</SmallValueText>
                                         </DetailCardMiddleLeftRowContainer>
                                     </DetailCardMiddleLeftColumnContainer>
@@ -1316,7 +1317,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                                         } as any)
                                     }}
                                         /* disabled={isNavigate()} */>
-                                        <SellButtonText>出售</SellButtonText>
+                                        <SellButtonText>{t("fiatSell")}</SellButtonText>
                                     </SellButton>
                                 </DetailCardBottomContainer>
                                 {/* 找出 SellArray 中符合的 Object 並讓最後一個不顯示分段 Line */}

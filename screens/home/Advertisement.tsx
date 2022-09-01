@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { isLoading } from "expo-font";
 import { useLinkTo } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -262,7 +263,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
     const [swapPage, setSwapPage] = useState(0);
 
     const linkTo = useLinkTo();
-
+    const { t } = useTranslation();
 
     // 取得廣告單
     const [advertisementList, setAdvertisementList] = useState<any[]>([]);

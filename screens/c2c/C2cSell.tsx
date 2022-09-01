@@ -21,6 +21,7 @@ import axios from "axios";
 import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from "react-native-loading-spinner-overlay/lib";
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)<{ insets: number }>`
   display: flex;
@@ -182,7 +183,7 @@ const C2cSellScreen = ({
   const [userId, setUserId] = useState("");
   const [buyFeeRate, setBuyFeeRate] = useState();
   const [sellFeeRate, setSellFeeRate] = useState();
-
+  const { t } = useTranslation();
   // Payment
   const [paymentList, setpaymentList] = useState<any[]>([]);
 

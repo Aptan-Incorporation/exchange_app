@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from "react-native-modal";
 import api from "../../common/api";
+import { useTranslation } from "react-i18next";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -99,7 +100,7 @@ const Member = ({ navigation }: RootStackScreenProps<"C2cMember">) => {
     "kyc": null,
     "phone": true,
   });
-
+  const { t } = useTranslation();
   useEffect(async () => {
     let user = await AsyncStorage.getItem("user")
     api.get(`/otc/api/user/${JSON.parse(user!).account}/otcOrders/statistics?type=advertiser`).then(x=>{

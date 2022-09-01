@@ -74,6 +74,7 @@ const RedPercentText = styled(Text)`
 const HeaderText = styled(Text)`
   font-size: 16px;
   color: white;
+  margin-left:20px;
 `;
 
 const IconImg = styled(Image)`
@@ -109,6 +110,17 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
           <IconImg source={require("../../assets/images/home/avatar.png")} />
         </TouchableOpacity>
         <HeaderText>首頁</HeaderText>
+        <View style={{display:"flex",flexDirection:"row"}}>
+        <TouchableOpacity
+          style={{marginRight:10}}
+          onPress={async () => {
+            
+              navigation.navigate("AllLanguage");
+            
+          }}
+        >
+          <IconImg source={require("../../assets/images/home/language.png")} />
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={async () => {
             
@@ -118,6 +130,8 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
         >
           <IconImg source={require("../../assets/images/home/support.png")} />
         </TouchableOpacity>
+        </View>
+        
       </Header>
       <View style={{ padding: 16 }}>
         <TouchableOpacity style={{ width: "100%", borderRadius: 8, backgroundColor: "#242D37" }}  onPress={()=>{

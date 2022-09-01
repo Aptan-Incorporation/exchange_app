@@ -6,6 +6,7 @@ import axios from "axios"
 import api from "../../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Spinner from 'react-native-loading-spinner-overlay'
+import { useTranslation } from "react-i18next";
 
 // Top Container
 const TopContainer = styled(View)`
@@ -311,7 +312,7 @@ const C2cBuyFirst = (props: {
     const [inputNumber, setInputNumber] = useState("");
 
     const [loading, setLoading] = useState(false);
-
+    const { t } = useTranslation();
     // 以限額為依據判斷 （數量>限額）
     const handleOnChangeAllAmount = () => {
         setInputAmount((parseFloat(LimitTo)).toFixed(2));
@@ -398,16 +399,16 @@ const C2cBuyFirst = (props: {
             <TopContainer>
                 <TopDetailContainer>
                     <TopDetailPriceRowContainer>
-                        <TopDetailTitleText>單價</TopDetailTitleText>
+                        <TopDetailTitleText>{t("unitPrice")}</TopDetailTitleText>
                         <TopDetailPriceText>{Price}</TopDetailPriceText>
                         <TopDetailCurrencyText>{FiatCurrency}</TopDetailCurrencyText>
                     </TopDetailPriceRowContainer>
                     <TopDetailRowContainer>
-                        <TopDetailTitleText>數量</TopDetailTitleText>
+                        <TopDetailTitleText>{t("amount")}</TopDetailTitleText>
                         <TopDetailValueText>{AvailableNum} {CurrencyType}</TopDetailValueText>
                     </TopDetailRowContainer>
                     <TopDetailRowContainer>
-                        <TopDetailTitleText>限額</TopDetailTitleText>
+                        <TopDetailTitleText>{t("limitedAmount")}</TopDetailTitleText>
                         <TopDetailValueText>{LimitFrom} - {LimitTo} {FiatCurrency}</TopDetailValueText>
                     </TopDetailRowContainer>
                 </TopDetailContainer>
@@ -415,7 +416,7 @@ const C2cBuyFirst = (props: {
                     <TopInputLeftContainer>
                         <TopInputLeftRowContainer>
                             <TextInput
-                                placeholder={"請輸入金額"}
+                                placeholder={t("enterAmount")}
                                 value={inputAmount}
                                 onChangeText={inputAmount => setInputAmount(inputAmount)}
                                 placeholderTextColor={'#8D97A2'}
@@ -434,7 +435,7 @@ const C2cBuyFirst = (props: {
                         </TopInputLeftRowContainer>
                         <TopInputLeftRowContainer>
                             <TextInput
-                                placeholder={"請輸入數量"}
+                                placeholder={t("enterQty")}
                                 value={inputNumber}
                                 onChangeText={inputNumber => setInputNumber(inputNumber)}
                                 placeholderTextColor={'#8D97A2'}
@@ -459,7 +460,7 @@ const C2cBuyFirst = (props: {
                     </TopInputRightContainer>
                 </TopInputContainer>
                 <TopBuyButton onPress={() => { handleSubmitForm() }}>
-                    <TopBuyButtonText>購買</TopBuyButtonText>
+                    <TopBuyButtonText>{t("fiatBuy")}</TopBuyButtonText>
                 </TopBuyButton>
             </TopContainer>
             <BottomDetailContainer>
@@ -470,12 +471,12 @@ const C2cBuyFirst = (props: {
                     <EmailText>{Owner}</EmailText>
                     {/* <SuccessRateText>({SuccessRate})%</SuccessRateText> */}
                 </BottomDetailTopContainer>
-                <BottomDetailSmallTitleText>付款方式</BottomDetailSmallTitleText>
+                <BottomDetailSmallTitleText>{t("payments")}</BottomDetailSmallTitleText>
                 <BottomDetailPayTypeContainer>
                     {
                         PayTypeAccount == true &&
                         <PayTypeView>
-                            <PayTypeViewText>銀行卡</PayTypeViewText>
+                            <PayTypeViewText>{t("bankCard")}</PayTypeViewText>
                         </PayTypeView>
                     }
                     {
@@ -493,9 +494,9 @@ const C2cBuyFirst = (props: {
                 </BottomDetailPayTypeContainer>
                 <BottomDetailLine></BottomDetailLine>
                 <BottomDetailSmallTitleText>付款時限</BottomDetailSmallTitleText>
-                <BottomDetailSmallValueText>{PaymentTimeLimit / 60000}分鐘</BottomDetailSmallValueText>
+                <BottomDetailSmallValueText>{PaymentTimeLimit / 60000}{t("minutes")}</BottomDetailSmallValueText>
                 <BottomDetailLine></BottomDetailLine>
-                <BottomDetailSmallTitleText>備註</BottomDetailSmallTitleText>
+                <BottomDetailSmallTitleText>{t("fiatMemo")}</BottomDetailSmallTitleText>
                 <BottomDetailSmallValueText>{Terms}</BottomDetailSmallValueText>
             </BottomDetailContainer>
         </View>

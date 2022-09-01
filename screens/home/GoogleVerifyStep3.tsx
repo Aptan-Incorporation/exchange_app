@@ -17,6 +17,7 @@ import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Clipboard from 'expo-clipboard';
 import Spinner from 'react-native-loading-spinner-overlay'
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -55,7 +56,7 @@ const GoogleVerifyStep3 = ({ navigation }: RootStackScreenProps<"GoogleVerifySte
   const insets = useSafeAreaInsets();
   const [code, setCode] = useState("");
   const [loading,setLoading] = React.useState(false);
-
+  const { t } = useTranslation();
   const getPosition = () => {
     api.get("/investor/position").then(x => {
       setPositionArray(x.data);

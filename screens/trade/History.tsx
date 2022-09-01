@@ -7,6 +7,7 @@ import { useState,useEffect,useContext } from "react";
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FutureContext } from "../../App"
+import { useTranslation } from "react-i18next";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -438,11 +439,12 @@ const HistoryScreen = ({
     const insets = useSafeAreaInsets();
 
     const [swapView, setSwapView] = useState('HistoryCommit');
-    // const [entrustArray, setEntrustArray] = useState([]);
+    const [entrustArray, setEntrustArray] = useState([]);
     const [dealEntrustArray, setDealEntrustArray] = useState([]);
     const [positionArray, setPositionArray] = useState([]);
     const [recordArray, setRecord] = useState([]);
-    const entrustArray = useContext(FutureContext)
+    // const entrustArray = useContext(FutureContext)
+    const { t } = useTranslation();
     const getPosition = () => {
         // api.get("/investor/position").then((x) => {
         //     if(x.status != 400 && x.status != 401){
@@ -466,11 +468,12 @@ const HistoryScreen = ({
     }
 
     const getHistoryEntrust = () => {
-        // api.get("/investor/future").then((x) => {
-        //     if(x.status != 400 && x.status != 401){
-        //     setEntrustArray(x.data);
-        //     }
-        // })
+        api.get("/investor/future").then((x) => {
+            console.log(x)
+            if(x.status != 400 && x.status != 401){
+            setEntrustArray(x.data);
+            }
+        })
 
     };
 
@@ -544,7 +547,7 @@ const HistoryScreen = ({
                                 <CardTitleContainer>
                                     <CardTitleRowContainer>
                                         {
-                                            x.side === 'BUY' ?
+                                            x.side === 'SELL' ?
                                                 <CardTitleSecondaryLightText>{x.symbol}</CardTitleSecondaryLightText> :
                                                 <CardTitleSecondaryText>{x.symbol}</CardTitleSecondaryText>
                                         }
@@ -565,12 +568,12 @@ const HistoryScreen = ({
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>委託量</CardDetailTitleText>
-                                        <CardDetailValueText>{x.excecutedQty}</CardDetailValueText>
+                                        <CardDetailValueText>{x.origQty}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
-                                        <CardDetailInColumnContainer>
+                                        {/* <CardDetailInColumnContainer>
                                             <CardDetailTitleText>手續費</CardDetailTitleText>
                                             <CardDetailValueText>{x.handlingFee && x.handlingFee.toFixed(2) + " USDT"}</CardDetailValueText>
-                                        </CardDetailInColumnContainer>
+                                        </CardDetailInColumnContainer> */}
                                     </CardDetailColumnContainer>
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
@@ -582,13 +585,13 @@ const HistoryScreen = ({
                                             }
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>成交均價</CardDetailTitleText>
-                                            <CardDetailValueText>{x.price}</CardDetailValueText>
+                                            <CardDetailTitleText>委託價</CardDetailTitleText>
+                                            <CardDetailValueText>{x.type == "STOP_MARKET" ? "市價":x.price}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
-                                        <CardDetailInColumnContainer>
+                                        {/* <CardDetailInColumnContainer>
                                             <CardDetailTitleText>實現盈虧</CardDetailTitleText>
                                             <CardDetailValueText>{x.profitAndLoss && x.profitAndLoss.toFixed(2) + " USDT"}</CardDetailValueText>
-                                        </CardDetailInColumnContainer>
+                                        </CardDetailInColumnContainer> */}
                                         {/* <CardDetailInColumnContainer>
                                             <CardDetailTitleText>止盈/止損</CardDetailTitleText>
                                             <TouchableOpacity onPress={() => { }}>
@@ -599,7 +602,7 @@ const HistoryScreen = ({
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>狀態</CardDetailTitleText>
-                                            <CardDetailValueText>0</CardDetailValueText>
+                                    <CardDetailValueText>{x.status}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>觸發價</CardDetailTitleText>

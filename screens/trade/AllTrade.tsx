@@ -16,6 +16,7 @@ import { useContext, useState, useEffect, useRef } from "react";
 import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -78,7 +79,7 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
   const [index, setIndex] = useState(1);
   const [favorite, setFavorite] = useState([""]);
   const insets = useSafeAreaInsets();
-
+  const { t } = useTranslation();
   const [favorite2, setFavorite2] = useState([
     {
       E: "",

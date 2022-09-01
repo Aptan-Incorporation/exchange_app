@@ -15,6 +15,7 @@ import { useState, useEffect } from "react";
 import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Clipboard from 'expo-clipboard';
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -52,7 +53,7 @@ const GoogleVerifyStep2 = ({ navigation }: RootStackScreenProps<"GoogleVerifySte
   const [positionArray, setPositionArray] = useState([]);
   const [code, setCode] = useState("");
   const insets = useSafeAreaInsets();
-
+  const { t } = useTranslation();
   const getPosition = () => {
     api.get("/user/google-auth").then(x => {
       setCode(x.data);

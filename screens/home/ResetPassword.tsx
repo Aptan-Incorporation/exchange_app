@@ -7,6 +7,7 @@ import { useState,useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
 import api from "../../common/api"
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -46,6 +47,7 @@ const ResetPassword = ({ navigation }: RootStackScreenProps<"ResetPassword">) =>
   const [password3, setPassword3] = React.useState("");
   const [promoCode, setPromocode] = React.useState("");
   const [loading,setLoading] = useState(false);
+  const { t } = useTranslation();
   return (
     <Container>
     <Header insets={insets.top}>

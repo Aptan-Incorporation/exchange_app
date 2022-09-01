@@ -8,6 +8,7 @@ import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
 import Modal from "react-native-modal";
+import { useTranslation } from "react-i18next";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -137,6 +138,7 @@ const ResetGoogle = ({ navigation }: RootStackScreenProps<"ResetGoogle">) => {
   const [kyc, setKyc] = React.useState({
     phone: false
   });
+  const { t } = useTranslation();
   useEffect(async ()=>{
     let user = await AsyncStorage.getItem("user")
     setPhone(JSON.parse(user!).phone)

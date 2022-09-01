@@ -20,6 +20,7 @@ import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { WebView } from 'react-native-webview';
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -88,7 +89,7 @@ const AnnouncementDetail = ({ navigation,route }: RootStackScreenProps<"Announce
   
   const [webviewHeight, setWebviewHeight] = useState("0")
   const [loading, setLoading] = useState(true)
-
+  const { t } = useTranslation();
   const onProductDetailsWebViewMessage = (event:any) => {
     setWebviewHeight(event.nativeEvent.data)
   }

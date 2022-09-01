@@ -7,6 +7,7 @@ import { useState,useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
 import api from "../../common/api"
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -45,6 +46,8 @@ const Register = ({ navigation }: RootStackScreenProps<"Register">) => {
   const [password2, setPassword2] = React.useState("");
   const [promoCode, setPromocode] = React.useState("");
   const [loading,setLoading] = useState(false);
+  const { t } = useTranslation()
+
   return (
     <Container>
     <Header insets={insets.top}>
@@ -63,14 +66,14 @@ const Register = ({ navigation }: RootStackScreenProps<"Register">) => {
         <Spinner visible={true} textContent={''} />
       }
       <View>
-        <Text style={{color:"white",fontSize:32,fontWeight:"600"}}>註冊</Text>
-        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>電子信箱</Text>
+        <Text style={{color:"white",fontSize:32,fontWeight:"600"}}>{t("signUp")}</Text>
+        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>{t("email")}</Text>
         <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="輸入電子信箱" onChangeText={setEmail}/>
-        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>密碼</Text>
+        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>{t("password")}</Text>
         <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="密碼長度至少為8個字元" secureTextEntry onChangeText={setPassword}/>
-        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>密碼確認</Text>
+        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>{t("passConfirm")}</Text>
         <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="再次輸入密碼" secureTextEntry onChangeText={setPassword2}/>
-        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>推薦碼</Text>
+        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>{t("referralCode")}</Text>
         <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="選填"  onChangeText={setPromocode}/>
       </View>
       <TouchableOpacity style={{display:"flex",flexDirection:"row",backgroundColor:"#3D6A97",borderRadius:4,justifyContent:"center",alignItems:"center",height:44,marginTop:42}} onPress={()=>{
@@ -107,7 +110,7 @@ const Register = ({ navigation }: RootStackScreenProps<"Register">) => {
           })
         }
         }}>
-        <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>繼續</Text>
+        <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>{t("nextStep")}</Text>
       </TouchableOpacity>
     </View>
   </Container>

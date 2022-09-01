@@ -16,6 +16,7 @@ import api from "../../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from "react-native-loading-spinner-overlay";
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from "react-i18next";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -406,7 +407,7 @@ const C2cSellSecond = (props: {
   //選擇付款方式
   const [choosePayType, setChoosePaytype] = useState(ChosenPayType);
   const [status2, setStatus2] = useState(0);
-
+  const { t } = useTranslation();
   // QRCode Modal
   const [isQRCodeModalVisible, setIsQRCodeModalVisible] = useState(false);
 
@@ -606,7 +607,7 @@ const C2cSellSecond = (props: {
     <Container>
       <FirstCardContainer>
         <FirstCardFirstRowContainer>
-          <FirstCardTitleText>總價</FirstCardTitleText>
+          <FirstCardTitleText>{t("fiatTotal")}</FirstCardTitleText>
           <FirstCardFirstInRowContainer>
             <FirstCardPriceText>{BuyAmount}</FirstCardPriceText>
             <FirstCardPriceCurrencyText>
@@ -615,19 +616,19 @@ const C2cSellSecond = (props: {
           </FirstCardFirstInRowContainer>
         </FirstCardFirstRowContainer>
         <FirstCardRowContainer>
-          <FirstCardTitleText>數量</FirstCardTitleText>
+          <FirstCardTitleText>{t("amount")}</FirstCardTitleText>
           <FirstCardValueText>
             {BuyNumber} {CurrencyType}
           </FirstCardValueText>
         </FirstCardRowContainer>
         <FirstCardRowContainer>
-          <FirstCardTitleText>單價</FirstCardTitleText>
+          <FirstCardTitleText>{t("unitPrice")}</FirstCardTitleText>
           <FirstCardValueText>
             {Price} {FiatCurrency}
           </FirstCardValueText>
         </FirstCardRowContainer>
         <FirstCardRowContainer>
-          <FirstCardTitleText>單號</FirstCardTitleText>
+          <FirstCardTitleText>{t("fiatOrderNumber")}</FirstCardTitleText>
           <View style={{ alignItems: "flex-end" }}>
             <FirstCardValueText>{BuyId.slice(0, 28)}</FirstCardValueText>
             <FirstCardValueText>{BuyId.slice(28)}</FirstCardValueText>
@@ -784,15 +785,15 @@ const C2cSellSecond = (props: {
         <TouchableOpacity
         onPress={() => {
           Alert.alert(
-              "確定申訴？",
-              "訂單申訴後將會凍結資產，請立即與客服聯繫做後續處理。",
+            t("sureApeal"),
+            t("appealMsg"),
               [
                   {
-                      text: "取消",
+                      text: t("cancel"),
                       onPress: () => console.log("Cancel Pressed"),
                       style: "cancel"
                   },
-                  { text: "確定", onPress: () => { 
+                  { text: t("OK"), onPress: () => { 
                       api.postData(`/otc/api/otcOrder/${BuyId}/appeal`, {}).then(x => {
                       console.log(x.data)
                   //   if (x.status != 400) {
@@ -816,7 +817,7 @@ const C2cSellSecond = (props: {
 
         }}
       >
-        <SubmitButtonText style={{ color: "#FB4C51" }}>申訴</SubmitButtonText>
+<SubmitButtonText style={{ color: "#FB4C51" }}>{t("apeal")}</SubmitButtonText>
       </TouchableOpacity>}
         
         <SubmitButton

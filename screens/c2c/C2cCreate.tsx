@@ -13,6 +13,7 @@ import { SearchBar } from "@rneui/themed";
 import { Picker } from '@react-native-picker/picker';
 import { Feather } from '@expo/vector-icons';
 import { useTogglePasswordVisibility } from '../../hooks/useTogglePasswordVisibility';
+import { useTranslation } from "react-i18next";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -1557,7 +1558,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
     const [buyFeeRate, setBuyFeeRate] = useState(1);
     const [sellFeeRate, setSellFeeRate] = useState(1);
     const [currentWalletBalance, setCurrentWalletBalance] = useState(0);
-
+    const { t } = useTranslation();
 
     // 獲取用戶資訊（費率）
     const getUserInfo = async () => {

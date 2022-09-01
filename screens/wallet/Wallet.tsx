@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay'
 import { PositionContext } from "../../App"
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View) <{ insets: number }>`
     display: flex ;
@@ -468,7 +469,7 @@ const WalletScreen = ({
     const [balance,setBalance] = useState(0)
     const [total,setTotal] = useState(0)
     const positionArray = useContext(PositionContext)
-
+    const { t } = useTranslation();
     const getBalance = async () => {
         api.get("/investor/property").then(x=>{
             if(x.status != 400 && x.status != 401){
@@ -689,7 +690,7 @@ const WalletScreen = ({
                         <BG1>
                             <BG001>
                                 <Title1>總資產</Title1>
-                                <TouchableOpacity  onPress={()=>{navigation.navigate("History")}}>
+                                <TouchableOpacity  onPress={()=>{navigation.navigate("ContractHistory")}}>
                                     <Img1 source={require("../../assets/images/wallet/history.png")} />
                                 </TouchableOpacity>
                             </BG001>

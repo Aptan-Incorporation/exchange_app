@@ -16,6 +16,7 @@ import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Clipboard from 'expo-clipboard';
 import { WebView } from 'react-native-webview';
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -54,7 +55,7 @@ const Consult = ({ navigation }: RootStackScreenProps<"Consult">) => {
   const [positionArray, setPositionArray] = useState([]);
   const [web, setWeb] = useState("");
   const insets = useSafeAreaInsets();
-
+  const { t } = useTranslation();
   const getPosition = () => {
     api.get("/investor/position").then(x => {
       setPositionArray(x.data);

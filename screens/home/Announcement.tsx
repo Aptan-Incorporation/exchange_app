@@ -16,6 +16,7 @@ import { useContext, useState, useEffect, useRef } from "react";
 import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -71,7 +72,7 @@ const Announcement = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
   const [announce, setAnnounce] = useState([]);
   const insets = useSafeAreaInsets();
   const TextEl = useRef<TextInput | null>(null);
-
+  const { t } = useTranslation();
   useEffect(() => {
     let category = "ACTIVITY"
     if(index === -1){

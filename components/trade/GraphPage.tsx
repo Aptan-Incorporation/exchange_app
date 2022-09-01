@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios"
 import { WebView } from 'react-native-webview';
 import { PriceContext } from "../../App" 
+import { useTranslation } from "react-i18next";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -339,6 +340,7 @@ const GraphPage = (props: {
     const {trade,asksArray,bidsArray,wareHousedPrice,price,remarkPrice} = props
     // Value is Positive
     const [isPositive, setIsPositive] = useState(true);
+    const { t } = useTranslation();
     // const [bidsArray, setBidsArray] = useState([]);
     // const [asksArray, setAsksArray] = useState([]);
     // const [wareHousedPrice, setWareHousedPrice] = useState("");
@@ -390,11 +392,11 @@ const GraphPage = (props: {
                     }
                     <GraphHeaderBottomRowColumnContainer>
                         <GraphHeaderBottomInlineRowContainer>
-                            <GraphHeaderSmallTitleText>標記價格</GraphHeaderSmallTitleText>
+                            <GraphHeaderSmallTitleText>{t("marketPrice")}</GraphHeaderSmallTitleText>
                             <GraphHeaderSmallValueText>{remarkPrice.slice(0,-4)}</GraphHeaderSmallValueText>
                         </GraphHeaderBottomInlineRowContainer>
                         <GraphHeaderBottomInlineRowContainer>
-                            <GraphHeaderSmallTitleText>指數價格</GraphHeaderSmallTitleText>
+                            <GraphHeaderSmallTitleText>{t("indexPrice")}</GraphHeaderSmallTitleText>
                             <GraphHeaderSmallValueText>{price}</GraphHeaderSmallValueText>
                         </GraphHeaderBottomInlineRowContainer>
                         {/* <GraphHeaderBottomInlineRowContainer>
@@ -411,10 +413,10 @@ const GraphPage = (props: {
                  source={{ uri: `https://exchange-chart-staging.aptan.cloud?trade=${trade.split("-")[0]}USDT` }}
                 />
                 </GraphContentContainer>
-                <GraphDetailTitleText>掛單簿</GraphDetailTitleText>
+                <GraphDetailTitleText>{t("orderBook")}</GraphDetailTitleText>
                 <GraphDetailRowContainer>
                     <GraphDetailColumnContainer>
-                        <GraphDetailBuyLeftTitleText>價格</GraphDetailBuyLeftTitleText>
+                        <GraphDetailBuyLeftTitleText>{t("price")}</GraphDetailBuyLeftTitleText>
                         <GraphDetailBuyLeftTitleText>(USDT)</GraphDetailBuyLeftTitleText>
                     </GraphDetailColumnContainer>
                     {/* <GraphDetailColumnContainer>
@@ -422,7 +424,7 @@ const GraphPage = (props: {
                         <GraphDetailBuyMiddleTitleText>(BTC)</GraphDetailBuyMiddleTitleText>
                     </GraphDetailColumnContainer> */}
                     <GraphDetailColumnContainer>
-                        <GraphDetailBuyRightTitleText>數量</GraphDetailBuyRightTitleText>
+                        <GraphDetailBuyRightTitleText>{t("amount")}</GraphDetailBuyRightTitleText>
                         <GraphDetailBuyRightTitleText>({trade.split("-")[0]})</GraphDetailBuyRightTitleText>
                     </GraphDetailColumnContainer>
                 </GraphDetailRowContainer>
@@ -466,7 +468,7 @@ const GraphPage = (props: {
                 </GraphDetailContainer>
                 <GraphDetailPriceRowContainer>
                     <GraphDetailPriceColumnContainer>
-                        <GraphDetailPriceLeftTitleText>最新價</GraphDetailPriceLeftTitleText>
+                        <GraphDetailPriceLeftTitleText>{t("lastPrice")}</GraphDetailPriceLeftTitleText>
                         <GraphDetailLatestPriceText>{price}</GraphDetailLatestPriceText>
                     </GraphDetailPriceColumnContainer>
                     <GraphDetailPriceColumnContainer>

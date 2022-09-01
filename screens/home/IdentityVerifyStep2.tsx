@@ -8,6 +8,7 @@ import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
 import * as ImagePicker from 'expo-image-picker';
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -54,7 +55,7 @@ const IdentityVerifyStep2 = ({ navigation }: RootStackScreenProps<"IdentityVerif
   const [password2, setPassword2] = React.useState("");
   const [image, setImage] = useState("");
   const [image2, setImage2] = useState("");
-
+  const { t } = useTranslation();
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({

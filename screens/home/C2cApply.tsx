@@ -15,6 +15,7 @@ import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Modal from "react-native-modal";
 import api from "../../common/api";
+import { useTranslation } from "react-i18next";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -114,7 +115,7 @@ const C2cApply = ({ navigation }: RootStackScreenProps<"C2cApply">) => {
   });
   const [advertiserLevel, setAdvertiserLevel] = React.useState("");
   const [index, setIndex] = React.useState(0);
-
+  const { t } = useTranslation();
   async function getData(){
     let user = await AsyncStorage.getItem("user");
     setUserAccount(JSON.parse(user!).account)

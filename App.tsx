@@ -205,7 +205,6 @@ export default function App() {
       if(lastJsonMessage3.channel === "position"){
         setPosition(lastJsonMessage3.data)
       }else{
-        // console.log(lastJsonMessage3)
         setFuture(lastJsonMessage3.data)
       }
     }

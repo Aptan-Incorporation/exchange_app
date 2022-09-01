@@ -9,6 +9,7 @@ import axios from "axios"
 import api from "../../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Spinner from 'react-native-loading-spinner-overlay'
+import { useTranslation } from "react-i18next";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -396,7 +397,7 @@ const C2cSellFirst = (props: {
     const [inputNumber, setInputNumber] = useState("");
 
     const [loading, setLoading] = useState(false);
-
+    const { t } = useTranslation();
     const handleOnChangeAllAmount = () => {
         setInputAmount((parseFloat(LimitTo)).toFixed(2));
         setInputNumber("");
@@ -526,16 +527,16 @@ const C2cSellFirst = (props: {
             <TopContainer>
                 <TopDetailContainer>
                     <TopDetailPriceRowContainer>
-                        <TopDetailTitleText>單價</TopDetailTitleText>
+                        <TopDetailTitleText>{t("unitPrice")}</TopDetailTitleText>
                         <TopDetailPriceText>{Price}</TopDetailPriceText>
                         <TopDetailCurrencyText>{FiatCurrency}</TopDetailCurrencyText>
                     </TopDetailPriceRowContainer>
                     <TopDetailRowContainer>
-                        <TopDetailTitleText>數量</TopDetailTitleText>
+                        <TopDetailTitleText>{t("amount")}</TopDetailTitleText>
                         <TopDetailValueText>{AvailableNum} {CurrencyType}</TopDetailValueText>
                     </TopDetailRowContainer>
                     <TopDetailRowContainer>
-                        <TopDetailTitleText>限額</TopDetailTitleText>
+                        <TopDetailTitleText>{t("limitedAmount")}</TopDetailTitleText>
                         <TopDetailValueText>{LimitFrom} - {LimitTo} {FiatCurrency}</TopDetailValueText>
                     </TopDetailRowContainer>
                 </TopDetailContainer>
@@ -623,7 +624,7 @@ const C2cSellFirst = (props: {
                 <BottomDetailSmallTitleText>放行時限</BottomDetailSmallTitleText>
                 <BottomDetailSmallValueText>{PaymentTimeLimit / 60000}分鐘</BottomDetailSmallValueText>
                 <BottomDetailLine></BottomDetailLine>
-                <BottomDetailSmallTitleText>備註</BottomDetailSmallTitleText>
+                <BottomDetailSmallTitleText>{t("fiatMemo")}</BottomDetailSmallTitleText>
              <BottomDetailSmallValueText>{Terms}</BottomDetailSmallValueText>
             </BottomDetailContainer>
 

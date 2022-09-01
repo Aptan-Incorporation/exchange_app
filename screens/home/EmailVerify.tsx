@@ -7,6 +7,7 @@ import { useState,useEffect } from "react";
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -38,6 +39,7 @@ const EmailVerify = ({ navigation }: RootStackScreenProps<"EmailVerify">) => {
   const [password, setPassword] = React.useState("");
   const [promoCode, setPromocode] = React.useState("");
   const [loading,setLoading] = React.useState(false);
+  const { t } = useTranslation()
 
   useEffect(async ()=>{
     let register = await AsyncStorage.getItem("register")
@@ -67,10 +69,10 @@ const EmailVerify = ({ navigation }: RootStackScreenProps<"EmailVerify">) => {
       </Header>
       <View style={{ padding: 16 }}>
         <View>
-          <Text style={{ color: "white", fontSize: 32, fontWeight: "600" }}>信箱驗證</Text>
-          <Text style={{ color: "#DDE0E3", fontSize: 15, fontWeight: "400", marginTop: 24, marginBottom: 4 }}>6位數驗證碼已寄送至</Text>
+          <Text style={{ color: "white", fontSize: 32, fontWeight: "600" }}>{t("emailVerify")}</Text>
+          <Text style={{ color: "#DDE0E3", fontSize: 15, fontWeight: "400", marginTop: 24, marginBottom: 4 }}>{t("6codesVerifyTo")}</Text>
           <Text style={{ color: "#FABD43", fontSize: 20, fontWeight: "700", marginTop: 8, marginBottom: 4 }}>{email}</Text>
-          <Text style={{ color: "#DDE0E3", fontSize: 12, fontWeight: "500", marginTop: 8, marginBottom: 4 }}>剩餘時間{Math.floor(count/60)}:{(count - Math.floor(count/60)*60) < 10 ? "0"+(count - Math.floor(count/60)*60) :(count - Math.floor(count/60)*60)} </Text>
+          <Text style={{ color: "#DDE0E3", fontSize: 12, fontWeight: "500", marginTop: 8, marginBottom: 4 }}>{t("remainingTime")}{Math.floor(count/60)}:{(count - Math.floor(count/60)*60) < 10 ? "0"+(count - Math.floor(count/60)*60) :(count - Math.floor(count/60)*60)} </Text>
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between",marginTop:40}}>
             <TextInput style={{ width: "100%", height: 48, backgroundColor: "#242D37", borderRadius: 4,color:"white",fontSize:15,paddingLeft:10 }} maxLength={6} onChangeText={text =>{
              if(text.length === 6){

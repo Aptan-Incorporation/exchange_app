@@ -17,6 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Clipboard from 'expo-clipboard';
 // import QRCode  from 'qrcode.react';
 import SvgQRCode from 'react-native-qrcode-svg';
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -53,7 +54,7 @@ const IconImg = styled(Image)`
 const RechargeScreen = ({ navigation }: RootStackScreenProps<"Recharge">) => {
   const [address, setAddress] = useState([]);
   const insets = useSafeAreaInsets();
-
+  const { t } = useTranslation();
   const getAddress = () => {
     api.get("/investor/wallet").then(x => {
       setAddress(x.data)

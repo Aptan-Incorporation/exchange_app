@@ -16,6 +16,7 @@ import { useState, useEffect } from "react";
 import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from 'react-native-loading-spinner-overlay'
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -53,7 +54,7 @@ const WithdrawScreen = ({ navigation }: RootStackScreenProps<"Withdraw">) => {
   const [loading,setLoading] = useState(false)
   const [address,setAddress] = useState("")
   const [number,setNumber] = useState("")
-
+  const { t } = useTranslation();
   return (
     <Container>
       {loading && 

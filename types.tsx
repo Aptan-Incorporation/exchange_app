@@ -95,6 +95,8 @@ export type RootStackParamList = {
   Announcement:undefined;
   AnnouncementDetail:undefined;
   OtcFunds:undefined;
+  AllLanguage:undefined;
+  ContractHistory:undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

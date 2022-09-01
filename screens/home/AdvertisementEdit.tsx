@@ -13,6 +13,7 @@ import { SearchBar } from "@rneui/themed";
 import { Picker } from '@react-native-picker/picker';
 import { Feather } from '@expo/vector-icons';
 import { useTogglePasswordVisibility } from '../../hooks/useTogglePasswordVisibility';
+import { useTranslation } from "react-i18next";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -1318,7 +1319,7 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
     const [isPaymentModalVisible, setIsPaymentModalVisible] = useState(false);
 
     const [loading, setLoading] = useState(false);
-
+    const { t } = useTranslation();
     // 選擇幣種
     const [cryptoAssetType, setCryptoAssetType] = useState(cryptoAsset);
 

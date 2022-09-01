@@ -10,6 +10,7 @@ import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Picker } from '@react-native-picker/picker';
+import { useTranslation } from "react-i18next";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -216,7 +217,7 @@ const PaymentsCreate = ({ navigation, route }: RootStackScreenProps<"PaymentsCre
     const [inputBankAccountOwnerName, setInputBankAccountOwnerName] = useState("");
     const [inputBankCode, setInputBankCode] = useState("");
     const [inputBankAccount, setInputBankAccount] = useState("");
-
+    const { t } = useTranslation();
     const handlePaymentType = (payment: string) => {
         if (payment === 'BANK') {
             return '銀行轉帳'

@@ -7,6 +7,7 @@ import WithdrawScreen from "../screens/wallet/Withdraw"
 import FundsScreen from "../screens/wallet/Funds"
 import OtcFundsScreen from "../screens/wallet/OtcFunds"
 import HistoryScreen from "../screens/wallet/History"
+import ContractHistory from "../screens/wallet/ContractHistory"
 import StopPositionScreen from "../screens/trade/StopPosition"
 import styled from "styled-components";
 import { Image, TouchableOpacity, Text } from "react-native";
@@ -28,6 +29,7 @@ const WalletStack = () => {
         <Stack.Screen name="Funds" component={FundsScreen} />
         <Stack.Screen name="OtcFunds" component={OtcFundsScreen} />
         <Stack.Screen name="History" component={HistoryScreen} />
+        <Stack.Screen name="ContractHistory" component={ContractHistory} />
       </Stack.Group>    
       <Stack.Group screenOptions={{ headerShown: false }}>
         <Stack.Screen name="C2cHistoryScreen" component={C2cHistoryScreen} />

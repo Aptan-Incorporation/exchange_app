@@ -8,6 +8,7 @@ import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
 import DropDownPicker from 'react-native-dropdown-picker'
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -40,7 +41,7 @@ const PhoneInput = ({ navigation }: RootStackScreenProps<"PhoneInput">) => {
   const [promoCode, setPromocode] = React.useState("");
   const [loading,setLoading] = React.useState(false);
   const [phone, setPhone] = React.useState("");
-
+  const { t } = useTranslation();
   useEffect(async ()=>{
     let register = await AsyncStorage.getItem("register")
     let user = JSON.parse(register!)

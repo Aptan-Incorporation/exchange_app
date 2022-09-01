@@ -15,6 +15,7 @@ import { useState, useEffect } from "react";
 import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Clipboard from 'expo-clipboard';
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -51,7 +52,7 @@ const IconImg = styled(Image)`
 const GoogleVerifyStep1 = ({ navigation }: RootStackScreenProps<"GoogleVerifyStep1">) => {
   const [positionArray, setPositionArray] = useState([]);
   const insets = useSafeAreaInsets();
-
+  const { t } = useTranslation();
   const getPosition = () => {
     api.get("/investor/position").then(x => {
       setPositionArray(x.data);

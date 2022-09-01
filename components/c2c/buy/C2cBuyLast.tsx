@@ -2,6 +2,7 @@ import * as React from "react"
 import { Text, View, ScrollView, TouchableOpacity } from "react-native"
 import styled from "styled-components"
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from "react-i18next";
 
 const Container = styled(ScrollView)`
 display: flex;
@@ -174,7 +175,7 @@ const C2cBuyLast = (props: {
     } = props;
 
     const navigation = useNavigation();
-
+    const { t } = useTranslation();
     // 付款方式
     const handleChange = () => {
         if (ChosenPayType == 'BANK') {
@@ -202,24 +203,24 @@ const C2cBuyLast = (props: {
     return (
         <Container>
             <FirstCardContainer>
-                <FirstCardTitleText>訂單資訊</FirstCardTitleText>
+                <FirstCardTitleText>{t("fiatOrderInfo")}</FirstCardTitleText>
                 <FirstCardFirstRowContainer>
-                    <FirstCardSmallTitleText>總價</FirstCardSmallTitleText>
+                    <FirstCardSmallTitleText>{t("fiatTotal")}</FirstCardSmallTitleText>
                     <FirstCardFirstInRowContainer>
                         <FirstCardPriceText>{BuyAmount}</FirstCardPriceText>
                         <FirstCardPriceCurrencyText>{FiatCurrency}</FirstCardPriceCurrencyText>
                     </FirstCardFirstInRowContainer>
                 </FirstCardFirstRowContainer>
                 <FirstCardRowContainer>
-                    <FirstCardSmallTitleText>數量</FirstCardSmallTitleText>
+                    <FirstCardSmallTitleText>{t("amount")}</FirstCardSmallTitleText>
                     <FirstCardSmallValueText>{BuyNumber} {CurrencyType}</FirstCardSmallValueText>
                 </FirstCardRowContainer>
                 <FirstCardRowContainer>
-                    <FirstCardSmallTitleText>單價</FirstCardSmallTitleText>
+                    <FirstCardSmallTitleText>{t("unitPrice")}</FirstCardSmallTitleText>
                     <FirstCardSmallValueText>{Price} {FiatCurrency}</FirstCardSmallValueText>
                 </FirstCardRowContainer>
                 <FirstCardRowContainer>
-                    <FirstCardSmallTitleText>單號</FirstCardSmallTitleText>
+                    <FirstCardSmallTitleText>{t("fiatOrderNumber")}</FirstCardSmallTitleText>
                     <View style={{alignItems: 'flex-end'}}>
                         <FirstCardSmallValueText>{BuyID.slice(0, 28)}</FirstCardSmallValueText>
                         <FirstCardSmallValueText>{BuyID.slice(28)}</FirstCardSmallValueText>
@@ -229,16 +230,16 @@ const C2cBuyLast = (props: {
             <SecondCardContainer>
                 <SecondCardTitleText>付款資訊</SecondCardTitleText>
                 <SecondCardFirstRowContainer>
-                    <SecondCardSmallTitleText>付款方式</SecondCardSmallTitleText>
+                    <SecondCardSmallTitleText>{t("payments")}</SecondCardSmallTitleText>
                     <SecondCardSmallValueText>{handleChange()}</SecondCardSmallValueText>
                 </SecondCardFirstRowContainer>
                 <SecondCardRowContainer>
-                    <SecondCardSmallTitleText>訂單時間</SecondCardSmallTitleText>
+                    <SecondCardSmallTitleText>{t("fiatOrderTime")}</SecondCardSmallTitleText>
                     <SecondCardSmallValueText>{handleCreateTime(BuyTime)}</SecondCardSmallValueText>
                 </SecondCardRowContainer>
             </SecondCardContainer>
             <ReturnButton onPress={() => { navigation.goBack() }}>
-                <ReturnButtonText>回到訂單總覽</ReturnButtonText>
+                <ReturnButtonText>{t("backOverview")}</ReturnButtonText>
             </ReturnButton>
         </Container>
     )

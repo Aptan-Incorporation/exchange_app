@@ -13,6 +13,7 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import {useContext} from "react"
 import { OrderContext } from "../../App" 
 import _ from "lodash"
+import { useTranslation } from "react-i18next";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -551,7 +552,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
     const [waitingList, setWaitingList] = useState([]);
     const [cancelList, setCancelList] = useState([]);
     const context = useContext(OrderContext)
-
+    const { t } = useTranslation();
     useEffect(()=>{    
         if(context.data){
             getWaitingList()

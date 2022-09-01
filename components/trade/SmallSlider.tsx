@@ -3,6 +3,7 @@ import { View, TextInput, Text } from "react-native"
 import { Slider } from '@miblanchard/react-native-slider';
 import styled from "styled-components"
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
 display: flex;
@@ -103,7 +104,8 @@ const SliderContainer = (props: {
     const returnValue = (() => {
         onChangeSliderValue(parseFloat(newInputNum))
     });
-
+    const { t } = useTranslation();
+    
     useEffect(() => {
         // console.log(positionString)
         // if(positionString != "0" && flag){

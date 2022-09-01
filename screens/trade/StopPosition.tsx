@@ -17,6 +17,7 @@ import api from "../../common/api";
 import Spinner from "react-native-loading-spinner-overlay";
 import axios from "axios"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTranslation } from "react-i18next";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -208,6 +209,7 @@ const StopPositionScreen = ({
   const [predictLostMsg, setPredictLostMsg] = useState("");
   const [price, setPrice] = useState("");
   const [positionArray,setPositionArray] = useState({avgPrice:"0",forceClose:"0"})
+  const { t } = useTranslation();
   const togglePositionSellVolumnModal = () => {
     setIsPositionSellVoiumnVisible(!isPositionSellVolumnVisible);
   };

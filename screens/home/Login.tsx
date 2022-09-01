@@ -7,6 +7,7 @@ import { useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
 import api from "../../common/api"
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -43,7 +44,7 @@ const Login = ({ navigation }: RootStackScreenProps<"Login">) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [loading,setLoading] = useState(false);
-
+  const { t } = useTranslation()
   return (
     <Container>
       {loading && 
@@ -60,21 +61,21 @@ const Login = ({ navigation }: RootStackScreenProps<"Login">) => {
           <TouchableOpacity onPress={() => {
               navigation.navigate("Register");
             }}>
-             <HeaderText>註冊</HeaderText>
+        <HeaderText>{t("signUp")}</HeaderText>
           </TouchableOpacity>
         </Header>
         <View style={{ padding: 16 }}>
           <View>
-            <Text style={{color:"white",fontSize:32,fontWeight:"600"}}>登入</Text>
-            <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>電子信箱</Text>
+            <Text style={{color:"white",fontSize:32,fontWeight:"600"}}>{t("login")}</Text>
+            <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>{t("email")}</Text>
             <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="輸入電子信箱" onChangeText={setEmail}/>
-            <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>密碼</Text>
+            <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>{t("password")}</Text>
             <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="輸入密碼" secureTextEntry  onChangeText={setPassword}/>
           </View>
           <TouchableOpacity style={{display:"flex",flexDirection:"row",justifyContent:"flex-end"}} onPress={()=>{
              navigation.navigate("ForgotPassword")
           }}>
-            <Text style={{color:"#A8C2DC",fontSize:14,fontWeight:"500",marginTop:16}}>忘記密碼</Text>
+            <Text style={{color:"#A8C2DC",fontSize:14,fontWeight:"500",marginTop:16}}>{t("forgetPass")}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{display:"flex",flexDirection:"row",backgroundColor:"#3D6A97",borderRadius:4,justifyContent:"center",alignItems:"center",height:44,marginTop:42}} onPress={()=>{
             setLoading(true)
@@ -91,7 +92,7 @@ const Login = ({ navigation }: RootStackScreenProps<"Login">) => {
               }            
             })
           }}>
-            <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>登入</Text>
+            <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>{t("login")}</Text>
           </TouchableOpacity>
         </View>
       </Container>

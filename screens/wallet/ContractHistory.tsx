@@ -190,12 +190,12 @@ const AssetsRecordArray = [
   },
 ];
 
-const HistoryScreen = ({ navigation }: RootStackScreenProps<"History">) => {
+const ContractHistory = ({ navigation }: RootStackScreenProps<"ContractHistory">) => {
   const [positionArray, setPositionArray] = useState([]);
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const getPosition = () => {
-    api.get("/investor/finance?type=10").then(x => {
+    api.get("/investor/finance?type=20").then(x => {
       setPositionArray(x.data);
     });
   };
@@ -255,4 +255,4 @@ const HistoryScreen = ({ navigation }: RootStackScreenProps<"History">) => {
   );
 };
 
-export default HistoryScreen;
+export default ContractHistory;

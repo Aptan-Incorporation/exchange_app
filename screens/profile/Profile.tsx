@@ -4,6 +4,7 @@ import { RootStackScreenProps } from "../../types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as React from "react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -39,7 +40,7 @@ const ProfileScreen = ({
     navigation
   }: RootStackScreenProps<"ProfileScreen">) => {
     const insets = useSafeAreaInsets();
-
+    const { t } = useTranslation();
     return (
         <Container>
         <Header insets={insets.top}>

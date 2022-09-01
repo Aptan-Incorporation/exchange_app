@@ -8,6 +8,7 @@ import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -49,7 +50,7 @@ const IdentityVerifyStep1 = ({ navigation }: RootStackScreenProps<"IdentityVerif
   const [birth, setBirth] = React.useState("請選擇出生年月日");
   const [birthTime, setBirthTime] = React.useState(0);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
+  const { t } = useTranslation();
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };

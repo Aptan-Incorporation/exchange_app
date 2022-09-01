@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as React from "react";
 import { useState, useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -42,6 +43,7 @@ const Member = ({ navigation }: RootStackScreenProps<"Member">) => {
   const [active, setActive] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [userId, setUserId] = React.useState("");
+  const { t } = useTranslation();
   useEffect(async () => {
     let user = await AsyncStorage.getItem("user")
     setEmail(JSON.parse(user!).account)

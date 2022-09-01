@@ -19,6 +19,7 @@ import { ThreePriceContext, PriceContext,PositionContext,FutureContext } from ".
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Dropdown } from 'react-native-element-dropdown';
 import _ from "lodash"
+import { useTranslation } from "react-i18next";
 
 import {
     Appbar,
@@ -1094,11 +1095,6 @@ const CommitStopPositionArray = [
     }
 ]
 
-
-
-
-
-
 const TradeScreen = ({
     navigation
 }: RootStackScreenProps<"TradeScreen">) => {
@@ -1110,7 +1106,7 @@ const TradeScreen = ({
 
     // Value is Positive
     const [isPositive, setIsPositive] = useState(true);
-
+    const { t } = useTranslation();
     // Function Button
     const [positionView, setPositionView] = useState('Full');
     const [leverageViewNum, setLeverageViewNum] = useState(1);
@@ -1326,7 +1322,7 @@ const TradeScreen = ({
 
     const getleverage = (symbol:string) => {
         console.log(symbol)
-        api.get(`/investor/leverage/symbol=${symbol}`).then((x) => {
+        api.get(`/investor/leverage/${symbol}`).then((x) => {
             if (x.status != 400 && x.status != 401) {
                 console.log(x.data)
                 setLeverageViewNum(x.data)
@@ -1419,6 +1415,7 @@ const TradeScreen = ({
         { label: 'Banana', value: 'banana' }
     ]);
     const [isFocus, setIsFocus] = useState(false);
+
     return (
         <Container insets={insets.top}>
             {loading &&
@@ -1914,12 +1911,14 @@ const TradeScreen = ({
                                                                 }}>
                                                                     <TradePositionCardButtonText>止盈/止損</TradePositionCardButtonText>
                                                                 </TradePositionCardButton>
-                                                                <TradePositionCardButton onPress={() => {
+                                                                <TradePositionCardButton disabled={isFocus} onPress={() => {
                                                                     setLoading(true)
-                                                                    api.postData("/order/position/close-position", { positionId: x.positionId }).then(x => {
-                                                                        setLoading(false)
+                                                                    setIsFocus(true)
+                                                                    api.postData("/order/position/close-position", { positionId: x.positionId }).then(x => { 
                                                                         if (x.status !== 400) {
                                                                             getPosition()
+                                                                            setLoading(false)
+                                                                            setIsFocus(false)
                                                                         } else {
                                                                             Alert.alert(x.data.msg)
                                                                         }
@@ -1986,18 +1985,18 @@ const TradeScreen = ({
                                                             <TradeCommitCardDetailRowContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
                                                                     <TradeCommitCardSmallTitleText>委託量</TradeCommitCardSmallTitleText>
-                                                                <TradeCommitCardSmallValueText>{x.excecutedQty}</TradeCommitCardSmallValueText>
+                                                                <TradeCommitCardSmallValueText>{x.origQty}</TradeCommitCardSmallValueText>
                                                                 </TradeCommitCardDetailColumnContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
-                                                                    <TradeCommitCardSmallTitleText>成交均價</TradeCommitCardSmallTitleText>
-                                                                    <TradeCommitCardSmallValueText>{x.price}</TradeCommitCardSmallValueText>
+                                                                    <TradeCommitCardSmallTitleText>委託價</TradeCommitCardSmallTitleText>
+                                                                    <TradeCommitCardSmallValueText>{x.type == "STOP_MARKET" ? "市價":x.price}</TradeCommitCardSmallValueText>
                                                                 </TradeCommitCardDetailColumnContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
                                                                     <TradeCommitCardSmallTitleText>觸發價</TradeCommitCardSmallTitleText>
                                                                     <TradeCommitCardSmallValueText>{x.stopPrice}</TradeCommitCardSmallValueText>
                                                                 </TradeCommitCardDetailColumnContainer>
                                                             </TradeCommitCardDetailRowContainer>
-                                                            <TradeCommitCardDetailRowContainer>
+                                                            {/* <TradeCommitCardDetailRowContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
                                                                     <TradeCommitCardSmallTitleText>手續費</TradeCommitCardSmallTitleText>
                                                                 <TradeCommitCardSmallValueText>{x.handlingFee && x.handlingFee.toFixed(2) + " USDT"} </TradeCommitCardSmallValueText>
@@ -2007,10 +2006,9 @@ const TradeScreen = ({
                                                                     <TradeCommitCardSmallValueText>{x.profitAndLoss && x.profitAndLoss.toFixed(2) + " USDT"} </TradeCommitCardSmallValueText>
                                                                 </TradeCommitCardDetailColumnContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
-                                                                    {/* <TradeCommitCardSmallTitleText>觸發價</TradeCommitCardSmallTitleText>
-                                                                    <TradeCommitCardSmallValueText>{x.stopPrice}</TradeCommitCardSmallValueText> */}
+                                                                    
                                                                 </TradeCommitCardDetailColumnContainer>
-                                                            </TradeCommitCardDetailRowContainer>
+                                                            </TradeCommitCardDetailRowContainer> */}
                                                             <TradeCommitCardButtonContainer>
                                                                 <TradeCommitCardButton onPress={() => { toggleCommitStopModal() }}>
                                                                     <TradeCommitCardButtonText>止盈/止損</TradeCommitCardButtonText>

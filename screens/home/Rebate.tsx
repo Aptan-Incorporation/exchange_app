@@ -8,6 +8,7 @@ import { PriceContext, ThreePriceContext } from "../../App";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Clipboard from 'expo-clipboard';
 import api from "../../common/api"
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -90,7 +91,8 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
   const [records, setRecord] = useState([]);
   const [tradeMembers, setTradeMembers] = useState([]);
   const [sum, setSum] = useState(0);
-
+  const [code, setCode] = useState("");
+  const { t } = useTranslation();
   const copyToClipboard = async () => {
     await Clipboard.setString("ABC963412");
     Alert.alert("複製成功")
@@ -107,6 +109,9 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
         sum = sum + x.data.records[i].amount
       }
       setSum(sum)
+    })
+    api.get("/investor/invite-code").then(x=>{
+      setCode(x.data)
     })
   },[])
   return (
@@ -143,7 +148,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
             ></View>
             <View style={{display:"flex",flexDirection:"row",justifyContent:"space-between",alignItems:"center",marginTop:10}}>
             <Text style={{ color: "#608FBE", fontSize: 20,fontWeight:"700" }}>
-              ABC963412
+              {code}
             </Text>
             <TouchableOpacity onPress={copyToClipboard}>
             <IconImg
@@ -353,7 +358,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
                       >
                         ID {x}
                       </Text>
-                      <Text
+                      {/* <Text
                         style={{
                           color: "#8D97A2",
                           fontSize: 12,
@@ -361,7 +366,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
                         }}
                       >
                         2021-10-26 16:12:08
-                      </Text>
+                      </Text> */}
                       </View>
                       
                       <View

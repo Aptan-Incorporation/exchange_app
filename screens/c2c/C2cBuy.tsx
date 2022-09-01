@@ -23,6 +23,7 @@ import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from "react-native-loading-spinner-overlay/lib";
 import { OrderContext } from "../../App" 
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)<{ insets: number }>`
   display: flex;
@@ -171,7 +172,7 @@ const C2cBuyScreen = ({
 
   const [status, setStatus] = useState(0);
   const context = useContext(OrderContext)
-
+  const { t } = useTranslation();
   const getUserInfo = async () => {
     let user = await AsyncStorage.getItem("user");
     api.get(`/otc/api/user/${JSON.parse(user!).account}`).then(x => {
