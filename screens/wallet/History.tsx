@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
 import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Container = styled(View)`
+const Container = styled(ScrollView)`
   display: flex;
   flex-direction: column;
   background-color: #18222d;
@@ -194,7 +194,7 @@ const HistoryScreen = ({ navigation }: RootStackScreenProps<"History">) => {
   const insets = useSafeAreaInsets();
 
   const getPosition = () => {
-    api.get("/investor/position").then(x => {
+    api.get("/investor/finance?type=10").then(x => {
       setPositionArray(x.data);
     });
   };
@@ -222,25 +222,25 @@ const HistoryScreen = ({ navigation }: RootStackScreenProps<"History">) => {
         <View></View>
       </Header>
       {
-        AssetsRecordArray.map((x, i) => {
+        positionArray.map((x:any, i) => {
           return (
               <CardContainer>
                   <AssetsRecordTitleContainer>
-                      <AssetsRecordTitleText>{x.title}</AssetsRecordTitleText>
+                      <AssetsRecordTitleText>{x.remark}</AssetsRecordTitleText>
                       {
-                          x.amount !== '' ?
-                              <AssetsRecordAmountText>{x.amount} {x.amountCurrency}</AssetsRecordAmountText> :
+                          x.payment !== '' ?
+                              <AssetsRecordAmountText>{x.payment} {x.coin}</AssetsRecordAmountText> :
                               <AssetsRecordAmountText>--</AssetsRecordAmountText>
 
                       }
                   </AssetsRecordTitleContainer>
                   <AssetsRecordDetailContainer>
-                      <AssetsRecordTimeText>{x.time}</AssetsRecordTimeText>
-                      {
+                    <AssetsRecordTimeText>{x.createdDate.split("T")[0]}  {x.createdDate.split("T")[1].split(".")[0]}</AssetsRecordTimeText>
+                      {/* {
                           x.type === 'buy' ?
                               <AssetsRecordTypeLeverageTextSecondary>{x.typeName}・{x.leverage}X</AssetsRecordTypeLeverageTextSecondary> :
                               <AssetsRecordTypeLeverageTextSecondaryLight>{x.typeName}・{x.leverage}X</AssetsRecordTypeLeverageTextSecondaryLight>
-                      }
+                      } */}
                   </AssetsRecordDetailContainer>
                   {
                       i !== AssetsRecordArray.length - 1 &&

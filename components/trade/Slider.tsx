@@ -4,6 +4,7 @@ import { Slider } from '@miblanchard/react-native-slider';
 import styled from "styled-components"
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect } from "react"
 
 const Container = styled(View)`
 display: flex;
@@ -101,7 +102,7 @@ const SliderContainer = (props: {
         sliderValue ? sliderValue : DEFAULT_VALUE,
     );
     let renderTrackMarkComponent: React.ReactNode;
-
+    const [trade, setTrade] = React.useState("");
     if (trackMarks?.length && (!Array.isArray(value) || value?.length === 1)) {
         renderTrackMarkComponent = (index: number) => {
             const currentMarkValue = trackMarks[index];
@@ -141,6 +142,10 @@ const SliderContainer = (props: {
         onValueChangeSliderNum(num)
     }
 
+    useEffect(async()=>{
+        let trade = await AsyncStorage.getItem("trade")
+        setTrade(trade ? trade.split("USDT")[0]+"-USDT" :"BTC-USDT")
+    },[])
 
     return (
         <Container>
@@ -182,7 +187,7 @@ const SliderContainer = (props: {
                 <LeverageViewModalNotificationText style={{ paddingLeft: 8 }}>槓桿比例愈高，發生強制平倉的風險愈高。</LeverageViewModalNotificationText>
             </LeverageViewModalDetailRowContainer>
             <LeverageViewModalDetailRowContainer style={{ paddingTop: 10 }}>
-                <LeverageViewModalDetailText>調整槓桿後，您的 BTC 永續合約資金將變化為：</LeverageViewModalDetailText>
+                <LeverageViewModalDetailText>調整槓桿後，您的 {trade.split("-")[0]} 永續合約資金將變化為：</LeverageViewModalDetailText>
             </LeverageViewModalDetailRowContainer>
             <LeverageViewModalDetailRowContainer>
                 <LeverageViewModalDetailText>{balance} USDT 持倉擔保金額</LeverageViewModalDetailText>
@@ -193,7 +198,7 @@ const SliderContainer = (props: {
             <ModalConfirmButton onPress={() => { 
                 var obj = {
                     leverage:value.length ? value[0]:parseInt(value),
-                    symbol:"BTC-USDT"
+                    symbol:trade
                 }
                 api.postData("/order/position/adjust-leverage",obj).then(x=>{
                     if(x.status !== 400){

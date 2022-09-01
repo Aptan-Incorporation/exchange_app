@@ -13,7 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import _ from "lodash"
 import { Platform } from 'react-native';
 // import { useNavigation } from '@react-navigation/native';
-
+import "./local/i18n"
 
 export const PriceContext = createContext(
     [{
@@ -45,6 +45,26 @@ export const PositionContext = createContext(
     "status": "",
     "symbol": "",
     "type": "",
+  }],
+);
+
+export const FutureContext = createContext(
+  [{
+    "orderId": "",
+    "investor": "",
+    "symbol": "",
+    "origQty": 0,
+    "avgPrice": 0,
+    "cumQty": 0,
+    "executedQty": 0,
+    "price": 0,
+    "stopPrice": 0,
+    "side": "",
+    "status": "",
+    "type": "",
+    "positionSide": "",
+    "leverage": 0,
+    "createdDate": 0
   }],
 );
 
@@ -91,6 +111,7 @@ export default function App() {
   const colorScheme = useColorScheme();
   const [market,setMarket] = useState([])
   const [position,setPosition] = useState([])
+  const [future,setFuture] = useState([])
   const [order, setOrder] = useState({data:{status:3}});
   // const navigation = useNavigation();
 
@@ -111,10 +132,16 @@ export default function App() {
   });
 
   const { lastJsonMessage:lastJsonMessage3,sendJsonMessage:sendJsonMessage2 } = useWebSocket(socketUrl3, {
-    onOpen: () => sendJsonMessage2({
-      "operation": "subscribe",
-      "channel": "position"
-    }),    
+    onOpen: () => {
+      sendJsonMessage2({
+        "operation": "subscribe",
+        "channel": "position"
+      })
+      sendJsonMessage2({
+        "operation": "subscribe",
+        "channel": "future"
+      })
+    },    
     //Will attempt to reconnect on all close events, such as server shutting down
     shouldReconnect: closeEvent => true,
     queryParams:{token: token}
@@ -129,6 +156,7 @@ export default function App() {
     setToken(token!)
     if(!token){
       setPosition([])
+      setFuture([])
     }
     if(lastJsonMessage){
       let gfg = lastJsonMessage.sort(function (a:any, b:any) {
@@ -173,9 +201,13 @@ export default function App() {
 
   },[lastJsonMessage2]);
   useEffect(() => {
-    // console.log(lastJsonMessage3)
     if(lastJsonMessage3){
-      setPosition(lastJsonMessage3.data)
+      if(lastJsonMessage3.channel === "position"){
+        setPosition(lastJsonMessage3.data)
+      }else{
+        // console.log(lastJsonMessage3)
+        setFuture(lastJsonMessage3.data)
+      }
     }
 
   },[lastJsonMessage3]);
@@ -200,6 +232,7 @@ export default function App() {
     return (
       <SafeAreaProvider>
         <PositionContext.Provider value={position}>
+        <FutureContext.Provider value={future}>
         <OrderContext.Provider value={order}>
         <PriceContext.Provider value={market}>
         <ThreePriceContext.Provider value={  {
@@ -220,6 +253,7 @@ export default function App() {
           </ThreePriceContext.Provider>
           </PriceContext.Provider>
           </OrderContext.Provider>
+          </FutureContext.Provider>
           </PositionContext.Provider>
       </SafeAreaProvider>
     );

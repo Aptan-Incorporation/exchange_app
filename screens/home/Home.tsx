@@ -6,6 +6,7 @@ import * as React from "react";
 import { useState,useEffect,useContext } from "react";
 import { PriceContext,ThreePriceContext } from "../../App" 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -91,6 +92,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
   const [index, setIndex] = useState(0);
   const context = useContext(PriceContext)
   const {btcPrice,btcRate,btcAmt,ethPrice,ethRate,ethAmt,dogePrice,dogeRate,dogeAmt} = useContext(ThreePriceContext)
+  const { t } = useTranslation();
   return (
     <Container>
       <Header insets={insets.top}>

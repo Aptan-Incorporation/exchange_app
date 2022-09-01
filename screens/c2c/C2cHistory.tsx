@@ -827,10 +827,12 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                             return (
 
                                 <CardContainer onPress={()=>{
+                                    
                                     if(x.status === -2){
                                         alert("訂單申訴中")
                                     }else{
-                                        api.get(`/otc/api/advertisement/?my=true`).then(y=>{
+                                        api.get(`/otc/api/advertisement/`).then(y=>{
+                                            console.log(y)
                                             let obj = _.find(y, function(o) { return o.id = x.advertisement; })
                                             if(x.buyUser === account){
                                                 navigation.navigate('C2cBuyScreen', {

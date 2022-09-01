@@ -7,6 +7,7 @@ import { useState, useEffect, useContext } from "react";
 import { PriceContext, ThreePriceContext } from "../../App";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Clipboard from 'expo-clipboard';
+import api from "../../common/api"
 
 const Container = styled(View)`
   display: flex;
@@ -85,22 +86,29 @@ const ColumnText = styled(Text)`
 const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
   const insets = useSafeAreaInsets();
   const [index, setIndex] = useState(0);
-  const context = useContext(PriceContext);
-  const {
-    btcPrice,
-    btcRate,
-    btcAmt,
-    ethPrice,
-    ethRate,
-    ethAmt,
-    dogePrice,
-    dogeRate,
-    dogeAmt
-  } = useContext(ThreePriceContext);
+  const [memberNumber, setMemberNumber] = useState(0);
+  const [records, setRecord] = useState([]);
+  const [tradeMembers, setTradeMembers] = useState([]);
+  const [sum, setSum] = useState(0);
+
   const copyToClipboard = async () => {
     await Clipboard.setString("ABC963412");
     Alert.alert("複製成功")
-};
+  };
+
+  useEffect(()=>{
+    api.get("/investor/commission").then(x=>{
+      // console.log(x.data)
+      let sum = 0
+      setMemberNumber(x.data.memberNumber)
+      setRecord(x.data.records)
+      setTradeMembers(x.data.tradeMembers)
+      for(let i = 0;i < x.data.records.length ; i++){
+        sum = sum + x.data.records[i].amount
+      }
+      setSum(sum)
+    })
+  },[])
   return (
     <Container>
       <Header insets={insets.top}>
@@ -159,7 +167,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
             <View>
               <USDText>返傭收入</USDText>
             </View>
-            <RedPercentText>0.00008163 BTC</RedPercentText>
+            <RedPercentText>{sum.toFixed(6)} USDT</RedPercentText>
           </View>
           <View
             style={{
@@ -174,7 +182,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
             <View>
               <USDText>已交易用戶</USDText>
             </View>
-            <RedPercentText>17 人</RedPercentText>
+            <RedPercentText>{tradeMembers.length} 人</RedPercentText>
           </View>
           <View
             style={{
@@ -188,7 +196,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
             <View>
               <USDText>推薦用戶</USDText>
             </View>
-            <RedPercentText>24 人</RedPercentText>
+            <RedPercentText>{memberNumber} 人</RedPercentText>
           </View>
         </View>
         <View
@@ -265,8 +273,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
         <View>
           <ScrollView contentContainerStyle={{ paddingBottom: 600 }}>
             {index === 0 &&
-              context &&
-              context.map((x: any) => {
+              records.map((x: any) => {
                 return (
                   <>
                     <View
@@ -286,7 +293,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
                           fontWeight: "400"
                         }}
                       >
-                        ID 84021635
+                        ID {x.childAccount}
                       </Text>
                       <Text
                         style={{
@@ -295,7 +302,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
                           fontWeight: "400"
                         }}
                       >
-                        2021-10-26 16:12:08
+                        {new Date(x.createdDate).toISOString().split("T")[0]}
                       </Text>
                       </View>
                       
@@ -315,7 +322,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
                           }}
                         >
                           <Text style={{ color: "white", fontWeight: "600" }}>
-                            0.0000300 BTC
+                            {x.amount} USDT
                           </Text>
                         </View>
                       </View>
@@ -324,8 +331,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
                 );
               })}
               {index === 1 &&
-              context &&
-              context.map((x: any) => {
+              tradeMembers.map((x: any) => {
                 return (
                   <>
                     <View
@@ -345,7 +351,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
                           fontWeight: "400"
                         }}
                       >
-                        ID 84021635
+                        ID {x}
                       </Text>
                       <Text
                         style={{

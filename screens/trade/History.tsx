@@ -3,9 +3,10 @@ import { Text, TouchableOpacity, View, ScrollView, Dimensions, Image, } from "re
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
-import { useState,useEffect } from "react";
+import { useState,useEffect,useContext } from "react";
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FutureContext } from "../../App"
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -437,16 +438,17 @@ const HistoryScreen = ({
     const insets = useSafeAreaInsets();
 
     const [swapView, setSwapView] = useState('HistoryCommit');
-    const [entrustArray, setEntrustArray] = useState([]);
+    // const [entrustArray, setEntrustArray] = useState([]);
     const [dealEntrustArray, setDealEntrustArray] = useState([]);
     const [positionArray, setPositionArray] = useState([]);
-
+    const [recordArray, setRecord] = useState([]);
+    const entrustArray = useContext(FutureContext)
     const getPosition = () => {
-        api.get("/investor/position").then((x) => {
-            if(x.status != 400 && x.status != 401){
-                setPositionArray(x.data);
-            }
-        })
+        // api.get("/investor/position").then((x) => {
+        //     if(x.status != 400 && x.status != 401){
+        //         setPositionArray(x.data);
+        //     }
+        // })
     };
 
     const getDealEntrust = () => {
@@ -457,12 +459,18 @@ const HistoryScreen = ({
         })
     };
 
+    const getRecord = () =>{
+        api.get("/investor/finance?type=20").then(x => {
+            setRecord(x.data);
+        });
+    }
+
     const getHistoryEntrust = () => {
-        api.get("/investor/future").then((x) => {
-            if(x.status != 400 && x.status != 401){
-            setEntrustArray(x.data);
-            }
-        })
+        // api.get("/investor/future").then((x) => {
+        //     if(x.status != 400 && x.status != 401){
+        //     setEntrustArray(x.data);
+        //     }
+        // })
 
     };
 
@@ -472,6 +480,7 @@ const HistoryScreen = ({
             getHistoryEntrust();
             getDealEntrust()
             getPosition();
+            getRecord()
         }
 
     }, []);
@@ -495,7 +504,7 @@ const HistoryScreen = ({
                             <SwapButtonText>歷史委託</SwapButtonText>
                         </TouchableOpacity>
                 }
-                {
+                {/* {
                     swapView === 'SubmitRecord' ?
                         <TouchableOpacity onPress={() => { setSwapView('SubmitRecord') }} style={{ borderBottomWidth: 2, borderBottomColor: '#6699CC', marginRight: 24, paddingRight: 1, paddingLeft: 1 }}>
                             <SwapButtonClickedText>成交紀錄</SwapButtonClickedText>
@@ -503,7 +512,7 @@ const HistoryScreen = ({
                         <TouchableOpacity onPress={() => { setSwapView('SubmitRecord') }} style={{ marginRight: 24 }}>
                             <SwapButtonText>成交紀錄</SwapButtonText>
                         </TouchableOpacity>
-                }
+                } */}
                 {
                     swapView === 'AssetsRecord' ?
                         <TouchableOpacity onPress={() => { setSwapView('AssetsRecord') }} style={{ borderBottomWidth: 2, borderBottomColor: '#6699CC', marginRight: 24, paddingRight: 1, paddingLeft: 1 }}>
@@ -513,7 +522,7 @@ const HistoryScreen = ({
                             <SwapButtonText>資產紀錄</SwapButtonText>
                         </TouchableOpacity>
                 }
-                {
+                {/* {
                     swapView === 'Position' ?
                         <TouchableOpacity onPress={() => { setSwapView('Position') }} style={{ borderBottomWidth: 2, borderBottomColor: '#6699CC', marginRight: 24, paddingRight: 1, paddingLeft: 1 }}>
                             <SwapButtonClickedText>所有持倉</SwapButtonClickedText>
@@ -521,7 +530,7 @@ const HistoryScreen = ({
                         <TouchableOpacity onPress={() => { setSwapView('Position') }} style={{ marginRight: 24 }}>
                             <SwapButtonText>所有持倉</SwapButtonText>
                         </TouchableOpacity>
-                }
+                } */}
 
             </HeaderContainer>
             <SwapContainerLine></SwapContainerLine>
@@ -536,8 +545,8 @@ const HistoryScreen = ({
                                     <CardTitleRowContainer>
                                         {
                                             x.side === 'BUY' ?
-                                                <CardTitleSecondaryLightText>{x.symbol} ・ {x.leverage}X</CardTitleSecondaryLightText> :
-                                                <CardTitleSecondaryText>{x.symbol}・ {x.leverage}X</CardTitleSecondaryText>
+                                                <CardTitleSecondaryLightText>{x.symbol}</CardTitleSecondaryLightText> :
+                                                <CardTitleSecondaryText>{x.symbol}</CardTitleSecondaryText>
                                         }
                                         {
                                             x.status === "CREATE"?
@@ -556,12 +565,12 @@ const HistoryScreen = ({
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>委託量</CardDetailTitleText>
-                                        <CardDetailValueText>{x.origQty}</CardDetailValueText>
+                                        <CardDetailValueText>{x.excecutedQty}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
-                                        {/* <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>成交均價</CardDetailTitleText>
-                                            <CardDetailValueText>{x.successAverage}</CardDetailValueText>
-                                        </CardDetailInColumnContainer> */}
+                                        <CardDetailInColumnContainer>
+                                            <CardDetailTitleText>手續費</CardDetailTitleText>
+                                            <CardDetailValueText>{x.handlingFee && x.handlingFee.toFixed(2) + " USDT"}</CardDetailValueText>
+                                        </CardDetailInColumnContainer>
                                     </CardDetailColumnContainer>
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
@@ -573,8 +582,12 @@ const HistoryScreen = ({
                                             }
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>委託價</CardDetailTitleText>
+                                            <CardDetailTitleText>成交均價</CardDetailTitleText>
                                             <CardDetailValueText>{x.price}</CardDetailValueText>
+                                        </CardDetailInColumnContainer>
+                                        <CardDetailInColumnContainer>
+                                            <CardDetailTitleText>實現盈虧</CardDetailTitleText>
+                                            <CardDetailValueText>{x.profitAndLoss && x.profitAndLoss.toFixed(2) + " USDT"}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         {/* <CardDetailInColumnContainer>
                                             <CardDetailTitleText>止盈/止損</CardDetailTitleText>
@@ -585,13 +598,17 @@ const HistoryScreen = ({
                                     </CardDetailColumnContainer>
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>成交率</CardDetailTitleText>
+                                            <CardDetailTitleText>狀態</CardDetailTitleText>
                                             <CardDetailValueText>0</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>觸發價</CardDetailTitleText>
                                             <CardDetailValueText>{x.stopPrice}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
+                                        {/* <CardDetailInColumnContainer>
+                                            <CardDetailTitleText>觸發價</CardDetailTitleText>
+                                            <CardDetailValueText>{x.stopPrice}</CardDetailValueText>
+                                        </CardDetailInColumnContainer> */}
                                     </CardDetailColumnContainer>
                                 </CardDetailContainer>
                                 {
@@ -663,25 +680,25 @@ const HistoryScreen = ({
                 {
                     swapView === 'AssetsRecord' &&
 
-                    AssetsRecordArray.map((x, i) => {
+                    recordArray.map((x:any, i) => {
                         return (
                             <CardContainer>
                                 <AssetsRecordTitleContainer>
-                                    <AssetsRecordTitleText>{x.title}</AssetsRecordTitleText>
+                                    <AssetsRecordTitleText>{x.remark}</AssetsRecordTitleText>
                                     {
-                                        x.amount !== '' ?
-                                            <AssetsRecordAmountText>{x.amount} {x.amountCurrency}</AssetsRecordAmountText> :
+                                        x.payment !== '' ?
+                                            <AssetsRecordAmountText>{x.payment} {x.coin}</AssetsRecordAmountText> :
                                             <AssetsRecordAmountText>--</AssetsRecordAmountText>
 
                                     }
                                 </AssetsRecordTitleContainer>
                                 <AssetsRecordDetailContainer>
-                                    <AssetsRecordTimeText>{x.time}</AssetsRecordTimeText>
-                                    {
+                                    <AssetsRecordTimeText>{x.createdDate.split("T")[0]}  {x.createdDate.split("T")[1].split(".")[0]}</AssetsRecordTimeText>
+                                    {/* {
                                         x.type === 'buy' ?
                                             <AssetsRecordTypeLeverageTextSecondary>{x.typeName}・{x.leverage}X</AssetsRecordTypeLeverageTextSecondary> :
                                             <AssetsRecordTypeLeverageTextSecondaryLight>{x.typeName}・{x.leverage}X</AssetsRecordTypeLeverageTextSecondaryLight>
-                                    }
+                                    } */}
                                 </AssetsRecordDetailContainer>
                                 {
                                     i !== AssetsRecordArray.length - 1 &&

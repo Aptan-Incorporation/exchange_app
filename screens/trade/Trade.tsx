@@ -15,7 +15,7 @@ import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
 import { useIsFocused } from '@react-navigation/native';
-import { ThreePriceContext, PriceContext,PositionContext } from "../../App"
+import { ThreePriceContext, PriceContext,PositionContext,FutureContext } from "../../App"
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Dropdown } from 'react-native-element-dropdown';
 import _ from "lodash"
@@ -1123,7 +1123,7 @@ const TradeScreen = ({
     const [stopPrice, setStopPrice] = useState('');
     const [swapCurrency, setSwapCurrency] = useState(0);
     const [sliderNum, setSliderNum] = useState(0);
-    const [entrustArray, setEntrustArray] = useState([]);
+    // const [entrustArray, setEntrustArray] = useState([]);
     // const [positionArray, setPositionArray] = useState([]);
     const [bidsArray, setBidsArray] = useState([]);
     const [asksArray, setAsksArray] = useState([]);
@@ -1138,6 +1138,7 @@ const TradeScreen = ({
     const { btcPrice } = useContext(ThreePriceContext)
     const context = useContext(PriceContext)
     const positionArray = useContext(PositionContext)
+    const entrustArray = useContext(FutureContext)
     const toggleBuyTypeModal = () => {
         setIsBuyTypeModalVisible(!isBuyTypeModalVisible);
     }
@@ -1224,6 +1225,7 @@ const TradeScreen = ({
     }]);
     const [nowTrade, setNowTrade] = useState("BTC-USDT");
     const [newTrade, setNewTrade] = useState("");
+    const [lev, setLev] = useState([]);
 
     const toggleCommitStopModal = () => {
         setIsCommitStopVisible(!isCommitStopVisible)
@@ -1258,31 +1260,31 @@ const TradeScreen = ({
 
 
     const getEntrust = () => {
-        api.get("/investor/future?status=CREATE").then((x) => {
-            if (x.status != 400 && x.status != 401) {
-                setEntrustArray(x.data);
-                for (let i = 0; i < x.data.length; i++) {
-                    if (x.data[i].status !== "CANCEL") {
-                        setFuture(true);
-                        return;
-                    }
-                }
-            }
+        // api.get("/investor/future?status=CREATE").then((x) => {
+        //     if (x.status != 400 && x.status != 401) {
+        //         setEntrustArray(x.data);
+        //         for (let i = 0; i < x.data.length; i++) {
+        //             if (x.data[i].status !== "CANCEL") {
+        //                 setFuture(true);
+        //                 return;
+        //             }
+        //         }
+        //     }
 
-        })
+        // })
     };
     const getPosition = () => {
-        api.get("/investor/position").then((x) => {
-            if (x.status != 400 && x.status != 401) {
-                // setPositionArray(x.data);
-                for (let i = 0; i < x.data.length; i++) {
-                    if (x.data[i].status !== "CLOSE") {
-                        setPosition(true);
-                        return;
-                    }
-                }
-            }
-        })
+        // api.get("/investor/position").then((x) => {
+        //     if (x.status != 400 && x.status != 401) {
+        //         // setPositionArray(x.data);
+        //         for (let i = 0; i < x.data.length; i++) {
+        //             if (x.data[i].status !== "CLOSE") {
+        //                 setPosition(true);
+        //                 return;
+        //             }
+        //         }
+        //     }
+        // })
     };
 
     const getDepth = (trade: string) => {
@@ -1322,6 +1324,18 @@ const TradeScreen = ({
         });
     };
 
+    const getleverage = (symbol:string) => {
+        console.log(symbol)
+        api.get(`/investor/leverage/symbol=${symbol}`).then((x) => {
+            if (x.status != 400 && x.status != 401) {
+                console.log(x.data)
+                setLeverageViewNum(x.data)
+            }
+        });   
+    };
+
+    
+
     const isFocused = useIsFocused();
 
     const getRemark = (s:string)=>{
@@ -1356,7 +1370,7 @@ const TradeScreen = ({
             let trade = await AsyncStorage.getItem("trade")
             setNewTrade(trade)
             if (!token) {
-                setEntrustArray([])
+                // setEntrustArray([])
                 // setPositionArray([])
                 setBalance(0)
             }
@@ -1364,11 +1378,12 @@ const TradeScreen = ({
                 getEntrust();
                 getPosition();
                 getBalance(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,swapBuyPosition === "Open" ? "BUY":"SELL")
+                getleverage(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade)
             }
-            let leverage = await AsyncStorage.getItem("leverage")
-            if (leverage) {
-                setLeverageViewNum(parseInt(leverage))
-            }
+            // let leverage = await AsyncStorage.getItem("leverage")
+            // if (leverage) {
+            //     setLeverageViewNum(parseInt(leverage))
+            // }
             if (trade) {
                 setValue(trade.split("USDT")[0] + "-USDT")
             }
@@ -1382,7 +1397,6 @@ const TradeScreen = ({
                     getPosition();
                     getBalance(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,swapBuyPosition === "Open" ? "BUY":"SELL")
                 }
-
             }, 2000);
             AsyncStorage.setItem("interval", interval.toString())
             return () => clearInterval(interval);
@@ -1931,7 +1945,7 @@ const TradeScreen = ({
                                                         <TradeCommitCardContainer>
                                                             <TradeCommitCardTitleContainer>
                                                                 <TradeCommitCardTitleText>{x.symbol}</TradeCommitCardTitleText>
-                                                                <TradeCommitCardTitleTimeText>{x.time}</TradeCommitCardTitleTimeText>
+                                                                {/* <TradeCommitCardTitleTimeText>{x.time}</TradeCommitCardTitleTimeText> */}
                                                             </TradeCommitCardTitleContainer>
                                                             <TradeCommitCardDetailRowContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
@@ -1965,22 +1979,36 @@ const TradeScreen = ({
                                                                     }
                                                                 </TradeCommitCardDetailColumnContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
-                                                                    <TradeCommitCardSmallTitleText>委託單</TradeCommitCardSmallTitleText>
-                                                                    <TradeCommitCardSmallValueText>{x.origQty}</TradeCommitCardSmallValueText>
+                                                                    <TradeCommitCardSmallTitleText>狀態</TradeCommitCardSmallTitleText>
+                                                                    <TradeCommitCardSmallValueText>{x.status}</TradeCommitCardSmallValueText>
                                                                 </TradeCommitCardDetailColumnContainer>
                                                             </TradeCommitCardDetailRowContainer>
                                                             <TradeCommitCardDetailRowContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
-                                                                    <TradeCommitCardSmallTitleText>成交率</TradeCommitCardSmallTitleText>
-                                                                    <TradeCommitCardSmallValueText>0</TradeCommitCardSmallValueText>
+                                                                    <TradeCommitCardSmallTitleText>委託量</TradeCommitCardSmallTitleText>
+                                                                <TradeCommitCardSmallValueText>{x.excecutedQty}</TradeCommitCardSmallValueText>
+                                                                </TradeCommitCardDetailColumnContainer>
+                                                                <TradeCommitCardDetailColumnContainer>
+                                                                    <TradeCommitCardSmallTitleText>成交均價</TradeCommitCardSmallTitleText>
+                                                                    <TradeCommitCardSmallValueText>{x.price}</TradeCommitCardSmallValueText>
                                                                 </TradeCommitCardDetailColumnContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
                                                                     <TradeCommitCardSmallTitleText>觸發價</TradeCommitCardSmallTitleText>
                                                                     <TradeCommitCardSmallValueText>{x.stopPrice}</TradeCommitCardSmallValueText>
                                                                 </TradeCommitCardDetailColumnContainer>
+                                                            </TradeCommitCardDetailRowContainer>
+                                                            <TradeCommitCardDetailRowContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
-                                                                    <TradeCommitCardSmallTitleText>委託價</TradeCommitCardSmallTitleText>
-                                                                    <TradeCommitCardSmallValueText>{x.price}</TradeCommitCardSmallValueText>
+                                                                    <TradeCommitCardSmallTitleText>手續費</TradeCommitCardSmallTitleText>
+                                                                <TradeCommitCardSmallValueText>{x.handlingFee && x.handlingFee.toFixed(2) + " USDT"} </TradeCommitCardSmallValueText>
+                                                                </TradeCommitCardDetailColumnContainer>
+                                                                <TradeCommitCardDetailColumnContainer>
+                                                                    <TradeCommitCardSmallTitleText>實現盈虧</TradeCommitCardSmallTitleText>
+                                                                    <TradeCommitCardSmallValueText>{x.profitAndLoss && x.profitAndLoss.toFixed(2) + " USDT"} </TradeCommitCardSmallValueText>
+                                                                </TradeCommitCardDetailColumnContainer>
+                                                                <TradeCommitCardDetailColumnContainer>
+                                                                    {/* <TradeCommitCardSmallTitleText>觸發價</TradeCommitCardSmallTitleText>
+                                                                    <TradeCommitCardSmallValueText>{x.stopPrice}</TradeCommitCardSmallValueText> */}
                                                                 </TradeCommitCardDetailColumnContainer>
                                                             </TradeCommitCardDetailRowContainer>
                                                             <TradeCommitCardButtonContainer>
@@ -2108,7 +2136,7 @@ const TradeScreen = ({
                             sliderValue={[leverageViewNum]}
                             onValueChangeSliderNum={setLeverageViewNum}
                             isModalVisable={setIsLeverageViewVisible}
-                            positionNum={balance === 0 ? "0" : (((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().substring(0, ((balance * leverageViewNum) / parseFloat(wareHousedPrice)).toString().indexOf(".") + 3)).toString()}
+                            positionNum={balance === 0 ? "0" : canOpen.toString()}
                             balance={balance}
                         >
                             <Slider

@@ -143,6 +143,7 @@ const GraphDetailBuyContainer = styled(View)`
 display: flex;
 flex-direction: column;
 justify-content: space-between;
+align-items:flex-end;
 `;
 
 const GraphDetailRowContainer = styled(View)`
@@ -248,6 +249,7 @@ const GraphDetailSellContainer = styled(View)`
 display: flex;
 flex-direction: column;
 justify-content: space-between;
+align-items:flex-end;
 `;
 
 const GraphDetailSellPriceText = styled(Text)`
@@ -415,13 +417,13 @@ const GraphPage = (props: {
                         <GraphDetailBuyLeftTitleText>價格</GraphDetailBuyLeftTitleText>
                         <GraphDetailBuyLeftTitleText>(USDT)</GraphDetailBuyLeftTitleText>
                     </GraphDetailColumnContainer>
-                    <GraphDetailColumnContainer>
+                    {/* <GraphDetailColumnContainer>
                         <GraphDetailBuyMiddleTitleText>數量</GraphDetailBuyMiddleTitleText>
                         <GraphDetailBuyMiddleTitleText>(BTC)</GraphDetailBuyMiddleTitleText>
-                    </GraphDetailColumnContainer>
+                    </GraphDetailColumnContainer> */}
                     <GraphDetailColumnContainer>
-                        <GraphDetailBuyRightTitleText>合計</GraphDetailBuyRightTitleText>
-                        <GraphDetailBuyRightTitleText>(BTC)</GraphDetailBuyRightTitleText>
+                        <GraphDetailBuyRightTitleText>數量</GraphDetailBuyRightTitleText>
+                        <GraphDetailBuyRightTitleText>({trade.split("-")[0]})</GraphDetailBuyRightTitleText>
                     </GraphDetailColumnContainer>
                 </GraphDetailRowContainer>
 
@@ -438,7 +440,7 @@ const GraphPage = (props: {
                             })
                         }
                     </GraphDetailBuyContainer>
-                    <GraphDetailBuyContainer>
+                    {/* <GraphDetailBuyContainer>
                         {
                             bidsArray.map((x:any) => {
                                 return (
@@ -448,7 +450,7 @@ const GraphPage = (props: {
                                 )
                             })
                         }
-                    </GraphDetailBuyContainer>
+                    </GraphDetailBuyContainer> */}
                     <GraphDetailBuyContainer>
                         {
                             bidsArray.map((x:any) => {
@@ -484,7 +486,7 @@ const GraphPage = (props: {
                             })
                         }
                     </GraphDetailSellContainer>
-                    <GraphDetailSellContainer>
+                    {/* <GraphDetailSellContainer>
                         {
                             asksArray.map((x:any) => {
                                 return (
@@ -494,7 +496,7 @@ const GraphPage = (props: {
                                 )
                             })
                         }
-                    </GraphDetailSellContainer>
+                    </GraphDetailSellContainer> */}
                     <GraphDetailSellContainer>
                         {
                             asksArray.map((x:any) => {
