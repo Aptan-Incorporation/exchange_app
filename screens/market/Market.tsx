@@ -154,17 +154,27 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
   useEffect(async () => {
     let token = await AsyncStorage.getItem("token");  
     if (token) {
-      getFavorite();
+      if(!search){
+        getFavorite();
+      }
     }
-    if(context){
-      setArray(context);
-    }
+    // if(context){
+    //   // setArray(context);
+    //   let gfg = context.sort(function (a:any, b:any) {
+    //     return a.s > b.s;
+    //   });
+    //   setArray(gfg);
+    // }
+
   }, [context]);
 
   useEffect(async () => {
     if(search == ""){
       if(context){
-        setArray(context);
+        let gfg = context.sort(function (a:any, b:any) {
+          return a.s > b.s;
+        });
+        setArray(gfg);
         let a = [];
         for(let i = 0;i < favorite.length;i++){
           for(let j = 0;j<context.length;j++){
@@ -190,8 +200,11 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
     }
     setFavorite2(a)
     if (index === 1) {
-      setArray(context);
-      var filteredData = filterByName(context);
+      let gfg = context.sort(function (a:any, b:any) {
+        return a.s > b.s;
+      });
+      setArray(gfg);
+      var filteredData = filterByName(gfg);
       setArray(filteredData);
     } else {
       var filteredData = filterByName(favorite3);
@@ -221,9 +234,9 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
             style={{ marginRight: 10 }}
           >
             {index === 0 ? (
-              <HeaderTitleTextClicked>自選</HeaderTitleTextClicked>
+              <HeaderTitleTextClicked>{t("favoritesList")}</HeaderTitleTextClicked>
             ) : (
-              <HeaderTitleText>自選</HeaderTitleText>
+              <HeaderTitleText>{t("favoritesList")}</HeaderTitleText>
             )}
           </TouchableOpacity>
           <TouchableOpacity
@@ -232,9 +245,9 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
             }}
           >
             {index === 1 ? (
-              <HeaderTitleTextClicked>合約</HeaderTitleTextClicked>
+              <HeaderTitleTextClicked>{t("futuresList")}</HeaderTitleTextClicked>
             ) : (
-              <HeaderTitleText>合約</HeaderTitleText>
+              <HeaderTitleText>{t("futuresList")}</HeaderTitleText>
             )}
           </TouchableOpacity>
         </View>
@@ -290,10 +303,10 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                 justifyContent: "space-between"
               }}
             >
-              <ColumnText>交易對</ColumnText>
+              <ColumnText>{t("marketPair")}</ColumnText>
 
               <View style={{ display: "flex", flexDirection: "row" }}>
-                <ColumnText style={{ marginRight: 40 }}>價格/交易量</ColumnText>
+                <ColumnText style={{ marginRight: 40 }}>{t("price")}/交易量</ColumnText>
                 <View
                   style={{
                     width: 88,
@@ -302,7 +315,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                     justifyContent: "flex-end"
                   }}
                 >
-                  <ColumnText>24H漲跌</ColumnText>
+                  <ColumnText>{t("24Hchg")}</ColumnText>
                 </View>
               </View>
             </View>
@@ -315,7 +328,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                   marginTop: 20
                 }}
               >
-                尚未加入自選
+                {t("noneFavorite")}
               </Text>
             )}
             {favorite[0] != "" && favorite2.map((x: any) => {
@@ -602,10 +615,10 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                 justifyContent: "space-between"
               }}
             >
-              <ColumnText>交易對</ColumnText>
+              <ColumnText>{t("marketPair")}</ColumnText>
 
               <View style={{ display: "flex", flexDirection: "row" }}>
-                <ColumnText style={{ marginRight: 40 }}>價格/交易量</ColumnText>
+                <ColumnText style={{ marginRight: 40 }}>{t("price")}/交易量</ColumnText>
                 <View
                   style={{
                     width: 88,
@@ -614,7 +627,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                     justifyContent: "flex-end"
                   }}
                 >
-                  <ColumnText>24H漲跌</ColumnText>
+                  <ColumnText>{t("24Hchg")}</ColumnText>
                 </View>
               </View>
             </View>

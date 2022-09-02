@@ -14,6 +14,7 @@ import * as React from "react";
 import { useContext, useState, useEffect, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
@@ -77,6 +78,8 @@ const AllLanguage = ({ navigation }: RootStackScreenProps<"AllLanguage">) => {
     );
     return filteredCars;
   };
+  const { t, i18n } = useTranslation();
+
 
   const arr = [
     {
@@ -85,7 +88,11 @@ const AllLanguage = ({ navigation }: RootStackScreenProps<"AllLanguage">) => {
     },
     {
       key:"繁體中文",
-      value:"cn"
+      value:"tw"
+    },
+    {
+      key:"英文",
+      value:"en"
     },
   ]
 
@@ -113,7 +120,7 @@ const AllLanguage = ({ navigation }: RootStackScreenProps<"AllLanguage">) => {
                         alignItems: "center"
                       }}
                       onPress={()=>{
-                        AsyncStorage.setItem("lan","")
+                        i18n.changeLanguage(x.value);
                         navigation.goBack();
                       }}
                     >

@@ -760,43 +760,43 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                 <TouchableOpacity onPress={() => { navigation.goBack() }}>
                     <PreviousIcon source={require("../../assets/images/global/previous.png")} />
                 </TouchableOpacity>
-                <HeaderTitleText>訂單</HeaderTitleText>
+                <HeaderTitleText>{t("order")}</HeaderTitleText>
                 <HeaderEmptyContainer></HeaderEmptyContainer>
             </HeaderContainer>
             {swapPage === 0 && 
             <SwapContainer>
             <SwapLeftButtonClicked onPress={() => { setSwapPage(0), getWaitingList() }}>
-                <SwapButtonClickedText>進行中</SwapButtonClickedText>
+                <SwapButtonClickedText>{t("fiatOngoOrderState")}</SwapButtonClickedText>
             </SwapLeftButtonClicked>
             <SwapMiddleButton onPress={() => { setSwapPage(1), getCompleteList() }}>
-                <SwapButtonText>已完成</SwapButtonText>
+                <SwapButtonText>{t("fiatFinishOrderState")}</SwapButtonText>
             </SwapMiddleButton>
             <SwapRightButton onPress={() => { setSwapPage(2), getCompleteList() }}>
-                <SwapButtonText>已取消</SwapButtonText>
+                <SwapButtonText>{t("fiatCancelOrderState")}</SwapButtonText>
             </SwapRightButton>
         </SwapContainer>}
         {swapPage === 1 && 
             <SwapContainer>
             <SwapLeftButton onPress={() => { setSwapPage(0), getWaitingList() }}>
-                <SwapButtonClickedText>進行中</SwapButtonClickedText>
+                <SwapButtonClickedText>{t("fiatOngoOrderState")}</SwapButtonClickedText>
             </SwapLeftButton>
             <SwapMiddleButtonClicked onPress={() => { setSwapPage(1), getCompleteList() }}>
-                <SwapButtonText>已完成</SwapButtonText>
+                <SwapButtonText>{t("fiatFinishOrderState")}</SwapButtonText>
             </SwapMiddleButtonClicked>
             <SwapRightButton onPress={() => { setSwapPage(2), getCompleteList() }}>
-                <SwapButtonText>已取消</SwapButtonText>
+                <SwapButtonText>{t("fiatCancelOrderState")}</SwapButtonText>
             </SwapRightButton>
         </SwapContainer>}
         {swapPage === 2 && 
             <SwapContainer>
             <SwapLeftButton onPress={() => { setSwapPage(0), getWaitingList() }}>
-                <SwapButtonClickedText>進行中</SwapButtonClickedText>
+                <SwapButtonClickedText>{t("fiatOngoOrderState")}</SwapButtonClickedText>
             </SwapLeftButton>
             <SwapMiddleButton onPress={() => { setSwapPage(1), getCompleteList() }}>
-                <SwapButtonText>已完成</SwapButtonText>
+                <SwapButtonText>{t("fiatFinishOrderState")}</SwapButtonText>
             </SwapMiddleButton>
             <SwapRightButtonClicked onPress={() => { setSwapPage(2), getCompleteList() }}>
-                <SwapButtonText>已取消</SwapButtonText>
+                <SwapButtonText>{t("fiatCancelOrderState")}</SwapButtonText>
             </SwapRightButtonClicked>
         </SwapContainer>}
                     
@@ -882,12 +882,12 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                     {
                                         x.buyUser === account ?
                                             <CardTitleContainer>
-                                                <CardBuyTitleText>買</CardBuyTitleText>
+                                                <CardBuyTitleText>{t("fiatOrderBuy")}</CardBuyTitleText>
                                                 <CardBuyTitleCurrencyText>{x.cryptoAsset}/{x.fiatCurrency}</CardBuyTitleCurrencyText>
                                             </CardTitleContainer>
                                             :
                                             <CardTitleContainer>
-                                                <CardSellTitleText>賣</CardSellTitleText>
+                                                <CardSellTitleText>{t("fiatOrderSell")}</CardSellTitleText>
                                                 <CardSellTitleCurrencyText>{x.cryptoAsset}/{x.fiatCurrency}</CardSellTitleCurrencyText>
                                             </CardTitleContainer>
                                     }
@@ -905,11 +905,11 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                     </CardMiddleRowContainer>
                                             }
                                             <CardMiddleRowContainer>
-                                                <CardMiddleLeftTitleText>數量</CardMiddleLeftTitleText>
+                                                <CardMiddleLeftTitleText>{t("amount")}</CardMiddleLeftTitleText>
                                                 <CardMiddleLeftValueText>{x.quantity} {x.cryptoAsset}</CardMiddleLeftValueText>
                                             </CardMiddleRowContainer>
                                             <CardMiddleRowContainer>
-                                                <CardMiddleLeftTitleText>單價</CardMiddleLeftTitleText>
+                                                <CardMiddleLeftTitleText>{t("unitPrice")}</CardMiddleLeftTitleText>
                                                 <CardMiddleLeftValueText>{x.price} {x.fiatCurrency}</CardMiddleLeftValueText>
                                             </CardMiddleRowContainer>
                                         </CardMiddleColumnContainer>
@@ -984,7 +984,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                     //     x.status
                                                     // )
                                                 }}>
-                                                    <CardBottomButtonText>等待放行</CardBottomButtonText>
+                                                    <CardBottomButtonText>{t("waitSellerTransfer")}</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>)
                                     }
@@ -1004,7 +1004,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                             <CardBottomContainer>
                                                 <CardBottomStatusText></CardBottomStatusText>
                                                 <CardBottomButton disabled>
-                                                    <CardBottomButtonText>等賣方確認</CardBottomButtonText>
+                                                    <CardBottomButtonText>{t("waitSellerConfirm")}</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>)
                                     }
@@ -1034,7 +1034,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                             <CardBottomContainer>
                                                 <CardBottomStatusText>訂單取消</CardBottomStatusText>
                                                 <CardBottomButton disabled>
-                                                    <CardBottomButtonText>已取消</CardBottomButtonText>
+                                                    <CardBottomButtonText>{t("fiatCancelOrderState")}</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>)
                                     }
@@ -1099,12 +1099,12 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                     {
                                         x.buyUser === account ?
                                             <CardTitleContainer>
-                                                <CardBuyTitleText>買</CardBuyTitleText>
+                                                <CardBuyTitleText>{t("fiatOrderBuy")}</CardBuyTitleText>
                                                 <CardBuyTitleCurrencyText>{x.cryptoAsset}/{x.fiatCurrency}</CardBuyTitleCurrencyText>
                                             </CardTitleContainer>
                                             :
                                             <CardTitleContainer>
-                                                <CardSellTitleText>賣</CardSellTitleText>
+                                                <CardSellTitleText>{t("fiatOrderSell")}</CardSellTitleText>
                                                 <CardSellTitleCurrencyText>{x.cryptoAsset}/{x.fiatCurrency}</CardSellTitleCurrencyText>
                                             </CardTitleContainer>
                                     }
@@ -1122,11 +1122,11 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                     </CardMiddleRowContainer>
                                             }
                                             <CardMiddleRowContainer>
-                                                <CardMiddleLeftTitleText>數量</CardMiddleLeftTitleText>
+                                                <CardMiddleLeftTitleText>{t("amount")}</CardMiddleLeftTitleText>
                                                 <CardMiddleLeftValueText>{x.quantity} {x.cryptoAsset}</CardMiddleLeftValueText>
                                             </CardMiddleRowContainer>
                                             <CardMiddleRowContainer>
-                                                <CardMiddleLeftTitleText>單價</CardMiddleLeftTitleText>
+                                                <CardMiddleLeftTitleText>{t("unitPrice")}</CardMiddleLeftTitleText>
                                                 <CardMiddleLeftValueText>{x.price} {x.fiatCurrency}</CardMiddleLeftValueText>
                                             </CardMiddleRowContainer>
                                         </CardMiddleColumnContainer>
@@ -1241,7 +1241,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                             <CardBottomContainer>
                                                 <CardBottomStatusText></CardBottomStatusText>
                                                 <CardBottomButton disabled>
-                                                    <CardBottomButtonText>等賣方確認</CardBottomButtonText>
+                                                    <CardBottomButtonText>{t("waitSellerConfirm")}</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>)
                                     }
@@ -1291,7 +1291,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                             <CardBottomContainer>
                                                 <CardBottomStatusText>訂單取消</CardBottomStatusText>
                                                 <CardBottomButton disabled>
-                                                    <CardBottomButtonText>已取消</CardBottomButtonText>
+                                                    <CardBottomButtonText>{t("fiatCancelOrderState")}</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>)
                                     }
@@ -1371,12 +1371,12 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                     {
                                         x.buyUser === account ?
                                             <CardTitleContainer>
-                                                <CardBuyTitleText>買</CardBuyTitleText>
+                                                <CardBuyTitleText>{t("fiatOrderBuy")}</CardBuyTitleText>
                                                 <CardBuyTitleCurrencyText>{x.cryptoAsset}/{x.fiatCurrency}</CardBuyTitleCurrencyText>
                                             </CardTitleContainer>
                                             :
                                             <CardTitleContainer>
-                                                <CardSellTitleText>賣</CardSellTitleText>
+                                                <CardSellTitleText>{t("fiatOrderSell")}</CardSellTitleText>
                                                 <CardSellTitleCurrencyText>{x.cryptoAsset}/{x.fiatCurrency}</CardSellTitleCurrencyText>
                                             </CardTitleContainer>
                                     }
@@ -1394,11 +1394,11 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                     </CardMiddleRowContainer>
                                             }
                                             <CardMiddleRowContainer>
-                                                <CardMiddleLeftTitleText>數量</CardMiddleLeftTitleText>
+                                                <CardMiddleLeftTitleText>{t("amount")}</CardMiddleLeftTitleText>
                                                 <CardMiddleLeftValueText>{x.quantity} {x.cryptoAsset}</CardMiddleLeftValueText>
                                             </CardMiddleRowContainer>
                                             <CardMiddleRowContainer>
-                                                <CardMiddleLeftTitleText>單價</CardMiddleLeftTitleText>
+                                                <CardMiddleLeftTitleText>{t("unitPrice")}</CardMiddleLeftTitleText>
                                                 <CardMiddleLeftValueText>{x.price} {x.fiatCurrency}</CardMiddleLeftValueText>
                                             </CardMiddleRowContainer>
                                         </CardMiddleColumnContainer>
@@ -1464,7 +1464,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                         x.status
                                                     )
                                                 }}>
-                                                    <CardBottomButtonText>查看</CardBottomButtonText>
+                                                    <CardBottomButtonText>{t("checkOrder")}</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>
                                     }
@@ -1513,7 +1513,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                     </ModalTitleBarHeaderContainer>
                     <View style={{ paddingTop: 24, paddingLeft: 16, paddingRight: 16 }}>
                         <ModalRowContainer>
-                            <ModalDetailTitle>總價</ModalDetailTitle>
+                            <ModalDetailTitle>{t("fiatTotal")}</ModalDetailTitle>
                             {
                                 detailModalInfo.buyUser === account ?
                                     <ModalInlineContainer>
@@ -1527,21 +1527,21 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                             }
                         </ModalRowContainer>
                         <ModalRowContainer>
-                            <ModalDetailTitle>數量</ModalDetailTitle>
+                            <ModalDetailTitle>{t("amount")}</ModalDetailTitle>
                             <ModalDetailSecondText>{detailModalInfo.quantity} {detailModalInfo.cryptoAsset}</ModalDetailSecondText>
                         </ModalRowContainer>
                         <ModalRowContainer>
-                            <ModalDetailTitle>單價</ModalDetailTitle>
+                            <ModalDetailTitle>{t("unitPrice")}</ModalDetailTitle>
                             <ModalDetailSecondText>{detailModalInfo.price} {detailModalInfo.fiatCurrency}</ModalDetailSecondText>
                         </ModalRowContainer>
                         <ModalLine />
                         {detailModalInfo.buyUser === account ?<ModalRowContainer>
-                            <ModalDetailTitle>付款方式</ModalDetailTitle>
+                            <ModalDetailTitle>{t("payments")}</ModalDetailTitle>
                             <ModalInRowContainer>
                                 {
                                     detailModalInfo.status != 0 ?
                                         detailModalInfo.payment.type == 'BANK' &&
-                                        <ModalDetailPaymentText>銀行轉帳</ModalDetailPaymentText>
+                                        <ModalDetailPaymentText>{t("bankTransfer")}</ModalDetailPaymentText>
                                         :
                                         <ModalDetailThirdText>尚未付款</ModalDetailThirdText>
                                 }
@@ -1571,14 +1571,14 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                         
 
                         <ModalRowContainer>
-                            <ModalDetailTitle>訂單編號</ModalDetailTitle>
+                            <ModalDetailTitle>{t("fiatOrderNum")}</ModalDetailTitle>
                             <View style={{ alignItems: 'flex-end' }}>
                                 <ModalDetailThirdText>{((detailModalInfo.BuyId)).slice(0, 28)}</ModalDetailThirdText>
                                 <ModalDetailThirdText>{((detailModalInfo.BuyId)).slice(28)}</ModalDetailThirdText>
                             </View>
                         </ModalRowContainer>
                         <ModalRowContainer style={{ paddingBottom: 30 }}>
-                            <ModalDetailTitle>訂單時間</ModalDetailTitle>
+                            <ModalDetailTitle>{t("fiatOrderTime")}</ModalDetailTitle>
                             <ModalDetailThirdText>{handleCreateTime(detailModalInfo.createdDate)}</ModalDetailThirdText>
                         </ModalRowContainer>
                     </View>

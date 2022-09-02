@@ -304,7 +304,7 @@ const C2cSellScreen = ({
               source={require("../../assets/images/global/previous.png")}
             />
           </TouchableOpacity>
-          <HeaderTitleText>出售 {CryptoAsset}</HeaderTitleText>
+          <HeaderTitleText>{t("fiatSell")} {CryptoAsset}</HeaderTitleText>
           <HeaderEmptyContainer></HeaderEmptyContainer>
         </HeaderContainer>
         {swapPage === 1 && (
@@ -351,7 +351,7 @@ const C2cSellScreen = ({
                 ></ProgressBarElseLine>
               </ProgressBarContainer>
               <TopInColumnContainer>
-                <TopContainerTitleText>等待付款</TopContainerTitleText>
+                <TopContainerTitleText>{t("waitBuyerPay")}</TopContainerTitleText>
                 <TopContainerTimerContainer>
                   <CountdownTimer targetDate={payTimeLimit} />
                 </TopContainerTimerContainer>
@@ -403,9 +403,9 @@ const C2cSellScreen = ({
                 ></ProgressBarElseLine>
               </ProgressBarContainer>
               <TopInColumnContainer>
-                <TopContainerTitleText>訂單已完成</TopContainerTitleText>
+                <TopContainerTitleText>{t("orderFinish")}</TopContainerTitleText>
                 <TopContainerDetailText>
-                  出售的加密貨幣已從您的現貨資產扣除
+                {t("finishMsg")}
                 </TopContainerDetailText>
               </TopInColumnContainer>
             </TopContainer>

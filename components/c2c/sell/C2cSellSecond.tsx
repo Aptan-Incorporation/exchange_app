@@ -596,6 +596,8 @@ const C2cSellSecond = (props: {
       setSubmitText("確認交易");
     } else if(status2 ===0){
       setSubmitText("確認收款並放行");
+    }else if(status2 ===1){
+      setSubmitText("確認收款並放行");
     }
     if(status === -1){
         alert("訂單取消")

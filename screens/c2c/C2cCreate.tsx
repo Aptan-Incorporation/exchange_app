@@ -1699,19 +1699,19 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                     <TouchableOpacity onPress={() => { navigation.goBack() }} style={{ paddingRight: 21 }}>
                         <HeaderTitlePreviousIcon source={require("../../assets/images/global/previous.png")} />
                     </TouchableOpacity>
-                    <HeaderTitleText>發佈廣告</HeaderTitleText>
+                    <HeaderTitleText>{t("placeAds")}</HeaderTitleText>
                     {
                         (swapProgress !== 2 && swapProgress !== 3) &&
                         (handleNextStep() === true &&
                             <TouchableOpacity onPress={() => { handleSwapProgress(swapProgress) }}>
-                                <HeaderTitleNextStepWhiteText>下一步</HeaderTitleNextStepWhiteText>
+                                <HeaderTitleNextStepWhiteText>{t("next")}</HeaderTitleNextStepWhiteText>
                             </TouchableOpacity>)
                     }
                     {
                         (swapProgress !== 2 && swapProgress !== 3) &&
                         (handleNextStep() !== true &&
                             <TouchableOpacity disabled={true}>
-                                <HeaderTitleNextStepGrayText>下一步</HeaderTitleNextStepGrayText>
+                                <HeaderTitleNextStepGrayText>{t("next")}</HeaderTitleNextStepGrayText>
                             </TouchableOpacity>)
                     }
                     {
@@ -1761,25 +1761,25 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                             {
                                 swapProgress === 0 &&
                                 <HeaderProgressBottomContainer>
-                                    <HeaderProgressWhiteText>價格數量</HeaderProgressWhiteText>
-                                    <HeaderProgressGrayText>交易方式</HeaderProgressGrayText>
-                                    <HeaderProgressGrayText>廣告確認</HeaderProgressGrayText>
+                                    <HeaderProgressWhiteText>{t("priceNQty")}</HeaderProgressWhiteText>
+                                    <HeaderProgressGrayText>{t("fiatTradeType")}</HeaderProgressGrayText>
+                                    <HeaderProgressGrayText>{t("adsConfirm")}</HeaderProgressGrayText>
                                 </HeaderProgressBottomContainer>
                             }
                             {
                                 swapProgress === 1 &&
                                 <HeaderProgressBottomContainer>
-                                    <HeaderProgressLightGrayText>價格數量</HeaderProgressLightGrayText>
-                                    <HeaderProgressWhiteText>交易方式</HeaderProgressWhiteText>
-                                    <HeaderProgressGrayText>廣告確認</HeaderProgressGrayText>
+                                    <HeaderProgressLightGrayText>{t("priceNQty")}</HeaderProgressLightGrayText>
+                                    <HeaderProgressWhiteText>{t("fiatTradeType")}</HeaderProgressWhiteText>
+                                    <HeaderProgressGrayText>{t("adsConfirm")}</HeaderProgressGrayText>
                                 </HeaderProgressBottomContainer>
                             }
                             {
                                 swapProgress === 2 &&
                                 <HeaderProgressBottomContainer>
-                                    <HeaderProgressLightGrayText>價格數量</HeaderProgressLightGrayText>
-                                    <HeaderProgressLightGrayText>交易方式</HeaderProgressLightGrayText>
-                                    <HeaderProgressWhiteText>廣告確認</HeaderProgressWhiteText>
+                                    <HeaderProgressLightGrayText>{t("priceNQty")}</HeaderProgressLightGrayText>
+                                    <HeaderProgressLightGrayText>{t("fiatTradeType")}</HeaderProgressLightGrayText>
+                                    <HeaderProgressWhiteText>{t("adsConfirm")}</HeaderProgressWhiteText>
                                 </HeaderProgressBottomContainer>
                             }
                         </HeaderProgressContainer> :
@@ -1798,18 +1798,18 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                             swapPage === 0 ?
                                 <SwapContainer>
                                     <SwapButtonClicked onPress={() => { setSwapPage(0) }}>
-                                        <SwapButtonClickedText>我想購買</SwapButtonClickedText>
+                                        <SwapButtonClickedText>{t("wantBuy")}</SwapButtonClickedText>
                                     </SwapButtonClicked>
                                     <SwapButton onPress={() => { setSwapPage(1) }}>
-                                        <SwapButtonText>我想出售</SwapButtonText>
+                                        <SwapButtonText>{t("wantSell")}</SwapButtonText>
                                     </SwapButton>
                                 </SwapContainer> :
                                 <SwapContainer>
                                     <SwapButton onPress={() => { setSwapPage(0) }}>
-                                        <SwapButtonText>我想購買</SwapButtonText>
+                                        <SwapButtonText>{t("wantBuy")}</SwapButtonText>
                                     </SwapButton>
                                     <SwapButtonClicked onPress={() => { setSwapPage(1) }}>
-                                        <SwapButtonClickedText>我想出售</SwapButtonClickedText>
+                                        <SwapButtonClickedText>{t("wantSell")}</SwapButtonClickedText>
                                     </SwapButtonClicked>
                                 </SwapContainer>
                         }
@@ -1817,14 +1817,14 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                         <CurrencyTypeContainer>
                             <CurrencyTypeRowContainer>
                                 <CurrencyTypeLeftColumnContainer>
-                                    <CurrencyTypeTitleText>幣種</CurrencyTypeTitleText>
+                                    <CurrencyTypeTitleText>{t("token")}</CurrencyTypeTitleText>
                                     <CurrencyTypeButton onPress={() => { setIsCryptoAssetModalVisible(true) }}>
                                         <CurrencyTypeButtonText>{cryptoAssetType}</CurrencyTypeButtonText>
                                         <CurrencyTypeForwardImage source={require("../../assets/images/c2c/next.png")} />
                                     </CurrencyTypeButton>
                                 </CurrencyTypeLeftColumnContainer>
                                 <CurrencyTypeRightColumnContainer>
-                                    <CurrencyTypeTitleText>法幣</CurrencyTypeTitleText>
+                                    <CurrencyTypeTitleText>{t("fundFiat")}</CurrencyTypeTitleText>
                                     <CurrencyTypeButton onPress={() => { setIsFiatCurrencyModalVisible(true) }}>
                                         <CurrencyTypeButtonText>{fiatCurrencyType}</CurrencyTypeButtonText>
                                         <CurrencyTypeForwardImage source={require("../../assets/images/c2c/next.png")} />
@@ -1834,9 +1834,9 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                         </CurrencyTypeContainer>
 
                         <PriceContainer>
-                            <PriceTitleText>價格</PriceTitleText>
+                            <PriceTitleText>{t("price")}</PriceTitleText>
                             <PriceTypeInputContainer>
-                                <PriceSmallTitleText>定價方式</PriceSmallTitleText>
+                                <PriceSmallTitleText>{t("priceMethod")}</PriceSmallTitleText>
                                 <PriceButton onPress={() => { setIsPriceTypeModalVisible(true) }}>
                                     <PriceButtonText>{handlePriceText()}</PriceButtonText>
                                     <PriceButtonForwardImage source={require("../../assets/images/c2c/next.png")} />
@@ -1880,26 +1880,26 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                 }
                             </PriceTypeInputContainer>
                             <PriceBottomRowContainer style={{ paddingTop: 16 }}>
-                                <PriceSmallTitleText>市場參考價</PriceSmallTitleText>
+                                <PriceSmallTitleText>{t("fiatMarketPrice")}</PriceSmallTitleText>
                                 <PriceMarketValueText>{inputPrice} {fiatCurrencyType} / {cryptoAssetType}</PriceMarketValueText>
                             </PriceBottomRowContainer>
                             <PriceBottomRowContainer>
-                                <PriceSmallTitleText>交易價格</PriceSmallTitleText>
+                                <PriceSmallTitleText>{t("tradePrice")}</PriceSmallTitleText>
                                 <PriceTradeText>{inputPrice} {fiatCurrencyType} / {cryptoAssetType}</PriceTradeText>
                             </PriceBottomRowContainer>
                         </PriceContainer>
 
                         <QuantityContainer>
-                            <QuantityTitleText>數量</QuantityTitleText>
+                            <QuantityTitleText>{t("amount")}</QuantityTitleText>
                             <QuantityInputContainer>
                                 <QuantityInputTitleRowContainer>
                                     {
                                         parseFloat(inputQuantity) > currentWalletBalance ?
-                                            <QuanitityTradeQuantityTitleNegative>交易數量</QuanitityTradeQuantityTitleNegative> :
-                                            <QuantitySmallTitleText>交易數量</QuantitySmallTitleText>
+                                            <QuanitityTradeQuantityTitleNegative>{t("tradeAmount")}</QuanitityTradeQuantityTitleNegative> :
+                                            <QuantitySmallTitleText>{t("tradeAmount")}</QuantitySmallTitleText>
                                     }
                                     <QuantityTradeQuantityCurrentWalletBalanceText>
-                                        可用資產 {currentWalletBalance} {cryptoAssetType}
+                                    {t("transferAvailableAmount")} {currentWalletBalance} {cryptoAssetType}
                                     </QuantityTradeQuantityCurrentWalletBalanceText>
                                 </QuantityInputTitleRowContainer>
                                 <QuantityTradeQuantityRowContainer>
@@ -1926,11 +1926,11 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                 </QuantityTradeQuantityRowContainer>
                                 {
                                     parseFloat(inputQuantity) > currentWalletBalance &&
-                                    <QuanitityTradeQuantityDetailNegative>超過您的可用資產</QuanitityTradeQuantityDetailNegative>
+                                    <QuanitityTradeQuantityDetailNegative>超過您的{t("transferAvailableAmount")}</QuanitityTradeQuantityDetailNegative>
                                 }
                             </QuantityInputContainer>
                             <QuantityInputContainer>
-                                <QuantitySmallTitleText>單筆限額</QuantitySmallTitleText>
+                                <QuantitySmallTitleText>{t("limitedAmountPerOrder")}</QuantitySmallTitleText>
                                 <QuantityPriceLimitRowContainer>
                                     <TextInput
                                         style={{
@@ -1984,7 +1984,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                         <QuantitySmallTitleText>付款時限</QuantitySmallTitleText>
                                 }
                                 <QuantityTimeLimitButton onPress={() => { setIsTimeLimitModalVisible(true) }}>
-                                    <QuantityTimeLimitButtonText>{inputLimitTime} 分鐘</QuantityTimeLimitButtonText>
+                                    <QuantityTimeLimitButtonText>{inputLimitTime} {t("minutes")}</QuantityTimeLimitButtonText>
                                     <QuantityTimeLimitButtonForwardImage source={require("../../assets/images/c2c/next.png")} />
                                 </QuantityTimeLimitButton>
                             </QuantityInputContainer>
@@ -2005,7 +2005,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                             swapPage === 1 &&
                             (<PaymentContainer>
                                 <PaymentTitleRowContainer>
-                                    <PaymentTitleText>付款方式</PaymentTitleText>
+                                    <PaymentTitleText>{t("payments")}</PaymentTitleText>
                                     <TouchableOpacity onPress={() => { setIsPaymentModalVisible(true), handleModalPaymentType() }}>
                                         <PaymentAddImage source={require("../../assets/images/c2c/add.png")} />
                                     </TouchableOpacity>
@@ -2019,7 +2019,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                             {
                                                 chosenPaymentType.some((x: any) => { return x.type == 'BANK' }) &&
                                                 <PaymentTypeView>
-                                                    <PaymentTypeViewText>銀行轉帳</PaymentTypeViewText>
+                                                    <PaymentTypeViewText>{t("bankTransfer")}</PaymentTypeViewText>
                                                     <TouchableOpacity onPress={() => { deletePayment('BANK') }}>
                                                         <PaymentTypeViewCancelImage source={require("../../assets/images/c2c/cancel_circle.png")} />
                                                     </TouchableOpacity>
@@ -2051,7 +2051,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
 
 
                         <TradeMemoContainer>
-                            <TradeMemoTitleText>交易備註</TradeMemoTitleText>
+                            <TradeMemoTitleText>{t("tradeMemo")}</TradeMemoTitleText>
                             <TradeMemoTextInputContainer>
                                 <TextInput
                                     style={{
@@ -2077,9 +2077,9 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                         </TradeMemoContainer>
 
                         <TradeConditionContainer>
-                            <TradeConditionTitleText>交易方條件</TradeConditionTitleText>
+                            <TradeConditionTitleText>{t("otherSideConditions")}</TradeConditionTitleText>
                             <TradeConditionRowContainer>
-                                <TradeConditionText>交易方最少完成</TradeConditionText>
+                                <TradeConditionText>{t("dealAtLeast")}</TradeConditionText>
                                 <TextInput
                                     style={{
                                         height: 36,
@@ -2099,10 +2099,10 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                     defaultValue={"0"}
                                     keyboardType={"number-pad"}
                                 />
-                                <TradeConditionText>筆交易</TradeConditionText>
+                                <TradeConditionText>{t("dealTime")}</TradeConditionText>
                             </TradeConditionRowContainer>
                             <TradeConditionRowContainer>
-                                <TradeConditionText>註冊帳戶不少於</TradeConditionText>
+                                <TradeConditionText>{t("signUpDays")}</TradeConditionText>
                                 <TextInput
                                     style={{
                                         height: 36,
@@ -2132,7 +2132,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                     <SwapPageContainer style={{ padding: 16 }}>
                         <ConfirmCardContainer>
                             <ConfirmCardRowContainer>
-                                <ConfirmCardTitle>交易價格</ConfirmCardTitle>
+                                <ConfirmCardTitle>{t("tradePrice")}</ConfirmCardTitle>
                                 {
                                     priceType === 0 ?
                                         <ConfirmCardTradePriceText>{inputPrice} {fiatCurrencyType}/{cryptoAssetType}</ConfirmCardTradePriceText> :
@@ -2140,23 +2140,23 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                 }
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
-                                <ConfirmCardTitle>定價方式</ConfirmCardTitle>
+                                <ConfirmCardTitle>{t("priceMethod")}</ConfirmCardTitle>
                                 <ConfirmCardSecondText>{handlePriceText()}</ConfirmCardSecondText>
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
-                                <ConfirmCardTitle>交易數量</ConfirmCardTitle>
+                                <ConfirmCardTitle>{t("tradeAmount")}</ConfirmCardTitle>
                                 <ConfirmCardSecondText>{inputQuantity}</ConfirmCardSecondText>
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
-                                <ConfirmCardTitle>單筆限額</ConfirmCardTitle>
+                                <ConfirmCardTitle>{t("limitedAmountPerOrder")}</ConfirmCardTitle>
                                 <ConfirmCardThirdText>{fiatCurrencyType} {inputMinLimitPrice} - {inputMaxLimitPrice}</ConfirmCardThirdText>
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
                                 <ConfirmCardTitle>放行時限</ConfirmCardTitle>
-                                <ConfirmCardThirdText>{inputLimitTime} 分鐘</ConfirmCardThirdText>
+                                <ConfirmCardThirdText>{inputLimitTime} {t("minutes")}</ConfirmCardThirdText>
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
-                                <ConfirmCardTitle>付款方式</ConfirmCardTitle>
+                                <ConfirmCardTitle>{t("payments")}</ConfirmCardTitle>
                                 <ConfirmCardPaymentContainer>
                                     {
                                         chosenPaymentType.some((x: any) => { return x.type == 'BANK' }) &&
@@ -2173,13 +2173,13 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                 </ConfirmCardPaymentContainer>
                             </ConfirmCardRowContainer>
                             <ConfirmCardColumnContainer>
-                                <ConfirmCardSmallTitle>備註</ConfirmCardSmallTitle>
+                                <ConfirmCardSmallTitle>{t("fiatMemo")}</ConfirmCardSmallTitle>
                                 <ConfirmCardFourthText>請買家務必於時限內付款，勿卡單。</ConfirmCardFourthText>
                             </ConfirmCardColumnContainer>
                             <ConfirmCardColumnContainer>
-                                <ConfirmCardSmallTitle>交易方條件</ConfirmCardSmallTitle>
+                                <ConfirmCardSmallTitle>{t("otherSideConditions")}</ConfirmCardSmallTitle>
                                 <ConfirmCardFourthText>
-                                    交易方最少完成 {inputConditionLimitOrder} 筆交易、註冊帳戶不少於 {inputConditionLimitSignUp} 天
+                                {t("dealAtLeast")} {inputConditionLimitOrder} {t("dealTimes")}、{t("signUpDays")} {inputConditionLimitSignUp} {t("days")}
                                 </ConfirmCardFourthText>
                             </ConfirmCardColumnContainer>
                         </ConfirmCardContainer>
@@ -2193,17 +2193,17 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                         <ConfirmUnClickView />
                                     </TouchableOpacity>
                             }
-                            <ConfirmRulesText>我已閱讀並同意</ConfirmRulesText>
+                            <ConfirmRulesText>{t("iAgree")}</ConfirmRulesText>
                             <TouchableOpacity onPress={() => { }}>
-                                <ConfirmRulesNegativeText>《交易條例》</ConfirmRulesNegativeText>
+                                <ConfirmRulesNegativeText>《{t("tradeRegulations")}》</ConfirmRulesNegativeText>
                             </TouchableOpacity>
                         </ConfirmRulesContainer>
                         <ConfirmButtonContainer>
                             <ConfirmUpdateButton onPress={() => { setSwapProgress(0) }}>
-                                <ConfirmUpdateButtonText>修改</ConfirmUpdateButtonText>
+                                <ConfirmUpdateButtonText>{t("modify")}</ConfirmUpdateButtonText>
                             </ConfirmUpdateButton>
                             <ConfirmButton onPress={() => { confirmRules && setIsPasswordModalVisible(true) }}>
-                                <ConfirmButtonText>確認並發佈</ConfirmButtonText>
+                                <ConfirmButtonText>{t("placeConfirm")}</ConfirmButtonText>
                             </ConfirmButton>
                         </ConfirmButtonContainer>
                     </SwapPageContainer>
@@ -2214,7 +2214,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                     <SwapPageContainer style={{ padding: 16 }}>
                         <ConfirmCardContainer>
                             <ConfirmCardRowContainer>
-                                <ConfirmCardTitle>交易價格</ConfirmCardTitle>
+                                <ConfirmCardTitle>{t("tradePrice")}</ConfirmCardTitle>
                                 {
                                     priceType === 0 ?
                                         <ConfirmCardTradePriceText>{inputPrice} {fiatCurrencyType}/{cryptoAssetType}</ConfirmCardTradePriceText> :
@@ -2222,23 +2222,23 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                 }
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
-                                <ConfirmCardTitle>定價方式</ConfirmCardTitle>
+                                <ConfirmCardTitle>{t("priceMethod")}</ConfirmCardTitle>
                                 <ConfirmCardSecondText>{handlePriceText()}</ConfirmCardSecondText>
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
-                                <ConfirmCardTitle>交易數量</ConfirmCardTitle>
+                                <ConfirmCardTitle>{t("tradeAmount")}</ConfirmCardTitle>
                                 <ConfirmCardSecondText>{inputQuantity}</ConfirmCardSecondText>
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
-                                <ConfirmCardTitle>單筆限額</ConfirmCardTitle>
+                                <ConfirmCardTitle>{t("limitedAmountPerOrder")}</ConfirmCardTitle>
                                 <ConfirmCardThirdText>{fiatCurrencyType} {inputMinLimitPrice} - {inputMaxLimitPrice}</ConfirmCardThirdText>
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
                                 <ConfirmCardTitle>放行時限</ConfirmCardTitle>
-                                <ConfirmCardThirdText>{inputLimitTime} 分鐘</ConfirmCardThirdText>
+                                <ConfirmCardThirdText>{inputLimitTime} {t("minutes")}</ConfirmCardThirdText>
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
-                                <ConfirmCardTitle>付款方式</ConfirmCardTitle>
+                                <ConfirmCardTitle>{t("payments")}</ConfirmCardTitle>
                                 <ConfirmCardPaymentContainer>
                                     {
                                         chosenPaymentType.some((x: any) => { return x.type == 'BANK' }) &&
@@ -2255,18 +2255,18 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                 </ConfirmCardPaymentContainer>
                             </ConfirmCardRowContainer>
                             <ConfirmCardColumnContainer>
-                                <ConfirmCardSmallTitle>備註</ConfirmCardSmallTitle>
+                                <ConfirmCardSmallTitle>{t("fiatMemo")}</ConfirmCardSmallTitle>
                                 <ConfirmCardFourthText>請買家務必於時限內付款，勿卡單。</ConfirmCardFourthText>
                             </ConfirmCardColumnContainer>
                             <ConfirmCardColumnContainer>
-                                <ConfirmCardSmallTitle>交易方條件</ConfirmCardSmallTitle>
+                                <ConfirmCardSmallTitle>{t("otherSideConditions")}</ConfirmCardSmallTitle>
                                 <ConfirmCardFourthText>
-                                    交易方最少完成 {inputConditionLimitOrder} 筆交易、註冊帳戶不少於 {inputConditionLimitSignUp} 天
+                                {t("dealAtLeast")} {inputConditionLimitOrder} {t("dealTimes")}、{t("signUpDays")} {inputConditionLimitSignUp} {t("days")}
                                 </ConfirmCardFourthText>
                             </ConfirmCardColumnContainer>
                         </ConfirmCardContainer>
                         <PostCompleteButton onPress={() => { navigation.goBack() }}>
-                            <PostCompleteButtonText>法幣交易總覽</PostCompleteButtonText>
+                            <PostCompleteButtonText>{t("fiatOverview")}</PostCompleteButtonText>
                         </PostCompleteButton>
                     </SwapPageContainer>
                 }
@@ -2289,7 +2289,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
             >
                 <View style={{ backgroundColor: '#242D37', paddingLeft: 16, paddingRight: 16, paddingBottom: 30 }}>
                     <ModalHeaderContainer>
-                        <ModalHeaderTitleText>幣種</ModalHeaderTitleText>
+                        <ModalHeaderTitleText>{t("token")}</ModalHeaderTitleText>
                     </ModalHeaderContainer>
                     <CryptoAssetModalContainer>
                         {
@@ -2345,7 +2345,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                         <TouchableOpacity onPress={() => { setIsFiatCurrencyModalVisible(false) }}>
                             <ModalCancelImage source={require("../../assets/images/c2c/cancel.png")} />
                         </TouchableOpacity>
-                        <ModalHeaderTitleText>法幣</ModalHeaderTitleText>
+                        <ModalHeaderTitleText>{t("fundFiat")}</ModalHeaderTitleText>
                         <ModalHeaderRightEmptyView />
                     </ModalFullScreenHeaderContainer>
                     <FiatCurrenctModalSearchbarContainer>
@@ -2427,12 +2427,12 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
             >
                 <View style={{ backgroundColor: '#242D37', paddingLeft: 16, paddingRight: 16, paddingBottom: 30 }}>
                     <ModalHeaderContainer>
-                        <ModalHeaderTitleText>定價方式</ModalHeaderTitleText>
+                        <ModalHeaderTitleText>{t("priceMethod")}</ModalHeaderTitleText>
                     </ModalHeaderContainer>
                     <PriceModalContainer>
                         <TouchableOpacity onPress={() => { setPriceType(0), setIsPriceTypeModalVisible(false) }}>
                             <PriceRowContainer>
-                                <PriceModalText>固定價格</PriceModalText>
+                                <PriceModalText>{t("FixedPrice")}</PriceModalText>
                                 {
                                     priceType === 0 &&
                                     <ModalSelectImage source={require("../../assets/images/trade/selected.png")} />
@@ -2478,7 +2478,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                 <ModalHeaderTitleText>付款時限</ModalHeaderTitleText>
                         }
                         <TouchableOpacity onPress={() => { setIsTimeLimitModalVisible(false) }}>
-                            <TimeLimitModalConfirmText>確定</TimeLimitModalConfirmText>
+                            <TimeLimitModalConfirmText>{t("OK")}</TimeLimitModalConfirmText>
                         </TouchableOpacity>
                     </ModalTitleBarHeaderContainer>
                     <TimeLmitPickerContainer>
@@ -2553,7 +2553,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                     marginRight: 53,
                 }}>
                     <PasswordModalContainer>
-                        <PasswordModalHeaderText>輸入資金密碼</PasswordModalHeaderText>
+                        <PasswordModalHeaderText>{t("enterFundingPass")}</PasswordModalHeaderText>
                         <PasswordModalHeaderDetailText>進行出售，請輸入您設定的資金密碼</PasswordModalHeaderDetailText>
 
                         <View style={{
@@ -2590,11 +2590,11 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                     <PasswordModalRowLine></PasswordModalRowLine>
                     <PasswordModalButtonContainer>
                         <PasswordModalCancelButton onPress={() => { setIsPasswordModalVisible(false), setPassword("") }}>
-                            <PasswordModalCancelButtonText>取消</PasswordModalCancelButtonText>
+                            <PasswordModalCancelButtonText>{t("cancel")}</PasswordModalCancelButtonText>
                         </PasswordModalCancelButton>
                         <PasswordModalButtonLine />
                         <PasswordModalSubmitButton onPress={() => { postAdvertisement() }}>
-                            <PasswordModalSubmitButtonText>確定</PasswordModalSubmitButtonText>
+                            <PasswordModalSubmitButtonText>{t("OK")}</PasswordModalSubmitButtonText>
                         </PasswordModalSubmitButton>
                     </PasswordModalButtonContainer>
                 </View>
@@ -2624,7 +2624,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                         <TouchableOpacity onPress={() => { setIsPaymentModalVisible(false) }} >
                             <ModalCancelImage source={require("../../assets/images/global/previous.png")} />
                         </TouchableOpacity>
-                        <ModalHeaderTitleText>付款方式</ModalHeaderTitleText>
+                        <ModalHeaderTitleText>{t("payments")}</ModalHeaderTitleText>
                         <TouchableOpacity onPress={() => { navigation.navigate("PaymentsCreate") }}>
                             <PaymentAddImage source={require("../../assets/images/c2c/add.png")} />
                         </TouchableOpacity>

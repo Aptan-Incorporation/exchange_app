@@ -442,7 +442,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                     </TouchableOpacity>
                 </PreviousIconContainer>
                 <HeaderTitleTextContainer>
-                    <HeaderTitleText>我的廣告</HeaderTitleText>
+                    <HeaderTitleText>{t("myAds")}</HeaderTitleText>
                 </HeaderTitleTextContainer>
                 <HeaderFunctionIconContainer>
                     <TouchableOpacity onPress={() => { navigation.navigate("C2cCreateScreen") }}>
@@ -454,18 +454,18 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                 swapPage === 0 ?
                     <SwapContainer>
                         <SwapLeftButtonClicked onPress={() => { setSwapPage(0) }}>
-                            <SwapButtonClickedText>在線</SwapButtonClickedText>
+                            <SwapButtonClickedText>{t("online")}</SwapButtonClickedText>
                         </SwapLeftButtonClicked>
                         <SwapRightButton onPress={() => { setSwapPage(1) }}>
-                            <SwapButtonText>下架</SwapButtonText>
+                            <SwapButtonText>{t("offline")}</SwapButtonText>
                         </SwapRightButton>
                     </SwapContainer> :
                     <SwapContainer>
                         <SwapLeftButton onPress={() => { setSwapPage(0) }}>
-                            <SwapButtonText>在線</SwapButtonText>
+                            <SwapButtonText>{t("online")}</SwapButtonText>
                         </SwapLeftButton>
                         <SwapRightButtonClicked onPress={() => { setSwapPage(1) }}>
-                            <SwapButtonClickedText>下架</SwapButtonClickedText>
+                            <SwapButtonClickedText>{t("offline")}</SwapButtonClickedText>
                         </SwapRightButtonClicked>
                     </SwapContainer>
             }
@@ -480,8 +480,8 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                             <CardTitleContainer>
                                                 {
                                                     x.type === 0 ?
-                                                        <CardBuyTitleText>買 {x.cryptoAsset}/{x.fiatCurrency}</CardBuyTitleText> :
-                                                        <CardSellTitleText>賣 {x.cryptoAsset}/{x.fiatCurrency}</CardSellTitleText>
+                                                        <CardBuyTitleText>{t("fiatOrderBuy")} {x.cryptoAsset}/{x.fiatCurrency}</CardBuyTitleText> :
+                                                        <CardSellTitleText>{t("fiatOrderSell")} {x.cryptoAsset}/{x.fiatCurrency}</CardSellTitleText>
                                                 }
                                                 <CardTitleInlineContainer>
                                                     {
@@ -505,7 +505,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                                         <CardSmallValueText>{x.totalTradingAmount}</CardSmallValueText>
                                                     </CardDetailColumnContainer>
                                                     <CardDetailColumnContainer>
-                                                        <CardSmallTitleText>限額({x.fiatCurrency})</CardSmallTitleText>
+                                                        <CardSmallTitleText>{t("limitedAmount")}({x.fiatCurrency})</CardSmallTitleText>
                                                         <CardSmallValueText>{x.orderLimitMin} - {x.orderLimitMax}</CardSmallValueText>
                                                     </CardDetailColumnContainer>
                                                 </CardDetailRowContainer>
@@ -525,7 +525,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                                 </CardDetailRowContainer>
                                                 <CardDetailRowContainer>
                                                     <CardButton onPress={() => { putAdvertisementOffline(x.id) }}>
-                                                        <CardButtonText>下架</CardButtonText>
+                                                        <CardButtonText>{t("offline")}</CardButtonText>
                                                     </CardButton>
                                                     <CardButton onPress={() => { putAdvertisementClose(x.id) }}>
                                                         <CardButtonText>關閉</CardButtonText>
@@ -552,8 +552,8 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                             <CardTitleContainer>
                                                 {
                                                     x.type === 0 ?
-                                                        <CardBuyTitleText>買 {x.cryptoAsset}/{x.fiatCurrency}</CardBuyTitleText> :
-                                                        <CardSellTitleText>賣 {x.cryptoAsset}/{x.fiatCurrency}</CardSellTitleText>
+                                                        <CardBuyTitleText>{t("fiatOrderBuy")} {x.cryptoAsset}/{x.fiatCurrency}</CardBuyTitleText> :
+                                                        <CardSellTitleText>{t("fiatOrderSell")} {x.cryptoAsset}/{x.fiatCurrency}</CardSellTitleText>
                                                 }
                                                 <CardTitleInlineContainer>
                                                     {
@@ -577,7 +577,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                                         <CardSmallValueText>{x.totalTradingAmount}</CardSmallValueText>
                                                     </CardDetailColumnContainer>
                                                     <CardDetailColumnContainer>
-                                                        <CardSmallTitleText>限額({x.fiatCurrency})</CardSmallTitleText>
+                                                        <CardSmallTitleText>{t("limitedAmount")}({x.fiatCurrency})</CardSmallTitleText>
                                                         <CardSmallValueText>{x.orderLimitMin} - {x.orderLimitMax}</CardSmallValueText>
                                                     </CardDetailColumnContainer>
                                                 </CardDetailRowContainer>

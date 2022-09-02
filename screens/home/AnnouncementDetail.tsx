@@ -118,7 +118,7 @@ const AnnouncementDetail = ({ navigation,route }: RootStackScreenProps<"Announce
         >
           <IconImg source={require("../../assets/images/global/previous.png")} />
         </TouchableOpacity>
-        <HeaderText>公告</HeaderText>
+        <HeaderText>{t("announcement")}</HeaderText>
       <View></View>
       </Header>
       <View style={{ paddingHorizontal: 16 }}>

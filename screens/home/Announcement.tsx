@@ -103,7 +103,7 @@ const Announcement = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
         >
           <IconImg source={require("../../assets/images/global/previous.png")} />
         </TouchableOpacity>
-        <HeaderText>公告</HeaderText>
+        <HeaderText>{t("announcement")}</HeaderText>
       <View></View>
       </Header>
       <View style={{ paddingHorizontal: 16 }}>
@@ -122,9 +122,9 @@ const Announcement = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
             style={{ marginRight: 10 }}
           >
             {index === -1 ? (
-              <HeaderTitleTextClicked>所有公告</HeaderTitleTextClicked>
+              <HeaderTitleTextClicked>{t("allAnn")}</HeaderTitleTextClicked>
             ) : (
-              <HeaderTitleText>所有公告</HeaderTitleText>
+              <HeaderTitleText>{t("allAnn")}</HeaderTitleText>
             )}
           </TouchableOpacity>
           <TouchableOpacity
@@ -134,9 +134,9 @@ const Announcement = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
             style={{ marginRight: 10 }}
           >
             {index === 0 ? (
-              <HeaderTitleTextClicked>最新活動</HeaderTitleTextClicked>
+              <HeaderTitleTextClicked>{t("event")}</HeaderTitleTextClicked>
             ) : (
-              <HeaderTitleText>最新活動</HeaderTitleText>
+              <HeaderTitleText>{t("event")}</HeaderTitleText>
             )}
           </TouchableOpacity>
           <TouchableOpacity
@@ -146,9 +146,9 @@ const Announcement = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
             style={{ marginRight: 10 }}
           >
             {index === 1 ? (
-              <HeaderTitleTextClicked>法幣交易</HeaderTitleTextClicked>
+              <HeaderTitleTextClicked>{t("fiatTrade")}</HeaderTitleTextClicked>
             ) : (
-              <HeaderTitleText>法幣交易</HeaderTitleText>
+              <HeaderTitleText>{t("fiatTrade")}</HeaderTitleText>
             )}
           </TouchableOpacity>
           <TouchableOpacity
@@ -158,9 +158,9 @@ const Announcement = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
             style={{ marginRight: 10 }}
           >
             {index === 2 ? (
-              <HeaderTitleTextClicked>合約交易</HeaderTitleTextClicked>
+              <HeaderTitleTextClicked>{t("tradeFutures")}</HeaderTitleTextClicked>
             ) : (
-              <HeaderTitleText>合約交易</HeaderTitleText>
+              <HeaderTitleText>{t("tradeFutures")}</HeaderTitleText>
             )}
           </TouchableOpacity>
           <TouchableOpacity
@@ -169,9 +169,9 @@ const Announcement = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
             }}
           >
             {index === 3 ? (
-              <HeaderTitleTextClicked>新聞</HeaderTitleTextClicked>
+              <HeaderTitleTextClicked>{t("news")}</HeaderTitleTextClicked>
             ) : (
-              <HeaderTitleText>新聞</HeaderTitleText>
+              <HeaderTitleText>{t("news")}</HeaderTitleText>
             )}
           </TouchableOpacity>
         </View>

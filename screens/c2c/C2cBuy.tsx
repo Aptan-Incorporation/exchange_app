@@ -299,7 +299,7 @@ const C2cBuyScreen = ({
               source={require("../../assets/images/global/previous.png")}
             />
           </TouchableOpacity>
-          <HeaderTitleText>購買 {CryptoAsset}</HeaderTitleText>
+          <HeaderTitleText>{t("fiatBuy")} {CryptoAsset}</HeaderTitleText>
           <HeaderEmptyContainer></HeaderEmptyContainer>
         </HeaderContainer>
         {swapPage === 1 && (
@@ -369,7 +369,7 @@ const C2cBuyScreen = ({
                 ></ProgressBarElseLine>
               </ProgressBarContainer>
               <TopInColumnContainer>
-                <TopContainerTitleText>等待放行</TopContainerTitleText>
+                <TopContainerTitleText>{t("waitSellerTransfer")}</TopContainerTitleText>
                 <TopContainerTimerContainer>
                   <CountdownTimer targetDate={payTimeLimit} />
                 </TopContainerTimerContainer>
@@ -392,7 +392,7 @@ const C2cBuyScreen = ({
                 ></ProgressBarElseLine>
               </ProgressBarContainer>
               <TopInColumnContainer>
-                <TopContainerTitleText>訂單已完成</TopContainerTitleText>
+                <TopContainerTitleText>{t("orderFinish")}</TopContainerTitleText>
                 <TopContainerDetailText>
                   購買的加密貨幣已發放至您的現貨資產
                 </TopContainerDetailText>

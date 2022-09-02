@@ -103,7 +103,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
       // console.log(x.data)
       let sum = 0
       setMemberNumber(x.data.memberNumber)
-      setRecord(x.data.records)
+      setRecord(x.data.records.reverse())
       setTradeMembers(x.data.tradeMembers)
       for(let i = 0;i < x.data.records.length ; i++){
         sum = sum + x.data.records[i].amount
@@ -307,7 +307,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
                           fontWeight: "400"
                         }}
                       >
-                        {new Date(x.createdDate).toISOString().split("T")[0]}
+                        {new Date(x.createdDate).toISOString().split("T")[0]} {new Date(x.createdDate).toISOString().split("T")[1].split(".")[0]}
                       </Text>
                       </View>
                       

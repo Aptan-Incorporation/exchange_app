@@ -54,30 +54,30 @@ const Member = ({ navigation }: RootStackScreenProps<"C2c">) => {
         >
           <IconImg source={require("../../assets/images/global/previous.png")} />
         </TouchableOpacity>
-        <HeaderText>C2C管理</HeaderText>
+        <HeaderText>{t("fiatManage")}</HeaderText>
         <View >
         </View>
       </Header>
       <View style={{ padding: 16 }}>
         <View style={{}}>
           <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37",justifyContent:"space-between" }} onPress={() => { navigation.navigate("C2cMember") }}>
-            <Text style={{ color: "white", fontSize: 15 }}>用戶中心</Text>
+            <Text style={{ color: "white", fontSize: 15 }}>{t("userCenter")}</Text>
             <IconImg source={require("../../assets/images/home/next.png")} />
           </TouchableOpacity>
           <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37",justifyContent:"space-between" }} onPress={() => { navigation.navigate("Payments") }}>
-            <Text style={{ color: "white", fontSize: 15 }}>帳戶設置</Text>
+            <Text style={{ color: "white", fontSize: 15 }}>{t("accountSet")}</Text>
             <IconImg source={require("../../assets/images/home/next.png")} />
           </TouchableOpacity>
           <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37",justifyContent:"space-between" }} onPress={() => { navigation.navigate("C2cApply") }}>
-            <Text style={{ color: "white", fontSize: 15 }}>申請商家質押</Text>
+            <Text style={{ color: "white", fontSize: 15 }}>{t("MchStack")}</Text>
             <IconImg source={require("../../assets/images/home/next.png")} />
           </TouchableOpacity>
           <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37",justifyContent:"space-between" }} onPress={() => { navigation.navigate("C2cNotification") }}>
-            <Text style={{ color: "white", fontSize: 15}}>C2C 通知設置</Text>
+            <Text style={{ color: "white", fontSize: 15}}>{t("fiatNoticeSet")}</Text>
             <IconImg source={require("../../assets/images/home/next.png")} />
           </TouchableOpacity>
           <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37",justifyContent:"space-between" }} onPress={() => { navigation.navigate("C2cHelp") }}>
-            <Text style={{ color: "white", fontSize: 15}}>幫助中心</Text>
+            <Text style={{ color: "white", fontSize: 15}}>{t("helpPage")}</Text>
             <IconImg source={require("../../assets/images/home/next.png")} />
           </TouchableOpacity>
         </View>

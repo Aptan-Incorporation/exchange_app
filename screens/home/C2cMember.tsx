@@ -110,10 +110,14 @@ const Member = ({ navigation }: RootStackScreenProps<"C2cMember">) => {
       setUser(x)
     })
     api.get("/user/security").then(x=>{
-      console.log(x.data)
       setKyc(x.data)
     })
-    
+    const interval = setInterval(() => {
+      api.get(`/otc/api/user/${JSON.parse(user!).account}`).then(x=>{
+        setUser(x)
+      })
+    }, 2000);
+    return () => clearInterval(interval); 
   }, [])
   useEffect(async () => {
     let user = await AsyncStorage.getItem("user")
@@ -155,7 +159,7 @@ const Member = ({ navigation }: RootStackScreenProps<"C2cMember">) => {
           </View>
           <View style={{ marginLeft: 12 }}>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-              <Text style={{ color: "#F4F5F6", fontSize: 16, fontWeight: "700" }}>zxc1234</Text>
+        <Text style={{ color: "#F4F5F6", fontSize: 16, fontWeight: "700" }}>{user.nickName ? user.nickName : "尚未設定暱稱"}</Text>
               <TouchableOpacity onPress={() => { navigation.navigate("EditName") }}>
               <IconImg source={require("../../assets/images/home/edit.png")} style={{ width: 20, height: 20, marginLeft: 5 }} />
 

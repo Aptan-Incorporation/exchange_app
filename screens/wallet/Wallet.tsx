@@ -467,7 +467,7 @@ const WalletScreen = ({
     // const [positionArray,setPositionArray] = useState([])
     const [loading,setLoading] = useState(false);
     const [balance,setBalance] = useState(0)
-    const [total,setTotal] = useState(0)
+    const [freeze,setFreeze] = useState(0)
     const positionArray = useContext(PositionContext)
     const { t } = useTranslation();
     const getBalance = async () => {
@@ -487,6 +487,7 @@ const WalletScreen = ({
             for(let i =0 ; i < x.wallet.coins.length;i++){
                 if(x.wallet.coins[i].symbol === "USDT"){
                     setBalance(x.wallet.coins[i].balance)
+                    setFreeze(x.wallet.coins[i].freeze)
                 }
             }
         })
@@ -494,14 +495,14 @@ const WalletScreen = ({
     };
 
     const getPosition = () => {
-        api.get("/investor/position").then((x) => {
-            // setPositionArray(x.data)
-            if(x.status != 400 && x.status != 401){
-                if(x.data.length != 0){
-                    setPosition(x.data[0].profitAndLoss)                
-                }
-            }
-        })
+        // api.get("/investor/position").then((x) => {
+        //     // setPositionArray(x.data)
+        //     if(x.status != 400 && x.status != 401){
+        //         if(x.data.length != 0){
+        //             setPosition(x.data[0].profitAndLoss)                
+        //         }
+        //     }
+        // })
     }
     const isFocused = useIsFocused();
 
@@ -529,9 +530,15 @@ const WalletScreen = ({
             return () => clearInterval(interval); 
 
         }
-        
-        
     },[isFocused])
+    useEffect(()=>{
+        let sum = 0
+        for(let i = 0;i< positionArray.length ;i++){
+            sum = sum + positionArray[i].profitAndLoss
+        }
+        setPosition(sum)
+        console.log(positionArray)
+    },[positionArray])
     return (
         <Container insets={insets.top}>
             {loading && 
@@ -539,23 +546,23 @@ const WalletScreen = ({
             }
             <Row>
                 <TouchableOpacity onPress={() => setIndex(0)} style={{marginRight:24}}>
-                    <Text style={index === 0 ? {color:"white",fontSize:20,fontWeight:"600"} : {color:"#5C6670",fontSize:16,fontWeight:"600"}}>總覽</Text>
+                    <Text style={index === 0 ? {color:"white",fontSize:20,fontWeight:"600"} : {color:"#5C6670",fontSize:16,fontWeight:"600"}}>{t("fundOverview")}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setIndex(1)} style={{marginRight:24}}>
-                    <Text style={index === 1 ? {color:"white",fontSize:20,fontWeight:"600"} : {color:"#5C6670",fontSize:16,fontWeight:"600"}}>現貨</Text>
+                    <Text style={index === 1 ? {color:"white",fontSize:20,fontWeight:"600"} : {color:"#5C6670",fontSize:16,fontWeight:"600"}}>{t("fundSpot")}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setIndex(2)} style={{marginRight:24}}>
-                    <Text style={index ===2 ? {color:"white",fontSize:20,fontWeight:"600"} : {color:"#5C6670",fontSize:16,fontWeight:"600"}}>合約</Text>
+                    <Text style={index ===2 ? {color:"white",fontSize:20,fontWeight:"600"} : {color:"#5C6670",fontSize:16,fontWeight:"600"}}>{t("fundFutures")}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => setIndex(3)}>
-                    <Text style={index === 3 ? {color:"white",fontSize:20,fontWeight:"600"} : {color:"#5C6670",fontSize:16,fontWeight:"600"}}>法幣</Text>
+                    <Text style={index === 3 ? {color:"white",fontSize:20,fontWeight:"600"} : {color:"#5C6670",fontSize:16,fontWeight:"600"}}>{t("fundFiat")}</Text>
                 </TouchableOpacity>
             </Row>
             {index === 0 &&
                 <>
                     <BG0>
                         <BG000>
-                            <TitleTitle>總價值</TitleTitle>
+                            <TitleTitle>{t("fundTotal")}</TitleTitle>
                         </BG000>
                         <TopArea>
                             <USDTcontent>
@@ -567,7 +574,7 @@ const WalletScreen = ({
 
                     <Body>
                         <Content>
-                            <Title>現貨</Title>
+                            <Title>{t("fundSpot")}</Title>
                             <NumArea>
                                 <Num1>{totalBalance} </Num1>
                                 <Text style={{color:"#F4F5F6",fontSize:12,fontWeight:"400"}}>USDT</Text>
@@ -575,7 +582,7 @@ const WalletScreen = ({
                         </Content>
 
                         <Content>
-                            <Title>合約</Title>
+                            <Title>{t("fundFutures")}</Title>
                             <NumArea>
                                 <Num1>{futuresBalance} </Num1>
                                 <Text style={{color:"#F4F5F6",fontSize:12,fontWeight:"400"}}>USDT</Text>
@@ -584,9 +591,9 @@ const WalletScreen = ({
                         </Content>
 
                         <Content>
-                            <Title>法幣</Title>
+                            <Title>{t("fundFiat")}</Title>
                             <NumArea>
-                                <Num1>0 </Num1>
+                                <Num1>{balance} </Num1>
                                 <Text style={{color:"#F4F5F6",fontSize:12,fontWeight:"400"}}>USDT</Text>
                             </NumArea>
                         </Content>
@@ -598,7 +605,7 @@ const WalletScreen = ({
                     <Background01>
                         <BG1>
                             <BG001>
-                                <Title1>總資產</Title1>
+                                <Title1>{t("fundTotal")}</Title1>
                                 <TouchableOpacity onPress={()=>{navigation.navigate("History")}}>
                                     <Img1 source={require("../../assets/images/wallet/history.png")} />
                                 </TouchableOpacity>
@@ -616,20 +623,20 @@ const WalletScreen = ({
                             <Withdraw onPress={()=>{
                                 navigation.navigate("Recharge")
                             }}>
-                                <WithdrawText>充值</WithdrawText>
+                                <WithdrawText>{t("deposit")}</WithdrawText>
                             </Withdraw>
 
 
                             <Recharge onPress={()=>{
                                 navigation.navigate("Withdraw")
                             }}>
-                                <RechargeText>提現</RechargeText>
+                                <RechargeText>{t("widthdraw")}</RechargeText>
                             </Recharge>
 
                             <Recharge onPress={()=>{
                                 navigation.navigate("Funds")
                             }}>
-                                <RechargeText>劃轉</RechargeText>
+                                <RechargeText>{t("fundingTransfer")}</RechargeText>
                             </Recharge>
 
                         </ButtonArea>
@@ -689,14 +696,14 @@ const WalletScreen = ({
                     <Background01>
                         <BG1>
                             <BG001>
-                                <Title1>總資產</Title1>
+                                <Title1>{t("fundTotal")}</Title1>
                                 <TouchableOpacity  onPress={()=>{navigation.navigate("ContractHistory")}}>
                                     <Img1 source={require("../../assets/images/wallet/history.png")} />
                                 </TouchableOpacity>
                             </BG001>
                             <TopArea>
                                 <USDTcontent>
-                                    <Number001>{futuresBalance} </Number001>
+                                    <Number001>{(futuresBalance + position).toFixed(7)} </Number001>
                                     <USDT1>USDT</USDT1>
                                 </USDTcontent>
                             </TopArea>
@@ -707,7 +714,7 @@ const WalletScreen = ({
                         <Below1>
                             <ImgArea>
                                 <View>
-                                    <Text1>保證金餘額</Text1>
+                                    <Text1>{t("marginBalance")}</Text1>
                                 </View>
                             </ImgArea>
                             <Num>{futuresBalance}</Num>
@@ -715,7 +722,7 @@ const WalletScreen = ({
                         <Below1  style={{marginTop:30}}>
                             <ImgArea>
                                 <View>
-                                    <Text1>錢包餘額</Text1>
+                                    <Text1>{t("walletBalance")}</Text1>
                                 </View>
                             </ImgArea>
                             <Num>{futuresBalance}</Num>
@@ -723,17 +730,17 @@ const WalletScreen = ({
                         <Below1  style={{marginTop:30}}>
                             <ImgArea>
                                 <View>
-                                    <Text1>未實現盈虧</Text1>
+                                    <Text1>{t("pnlU")}</Text1>
                                 </View>
                             </ImgArea>
-                            <Num>{position}</Num>
+                            <Num>{position.toFixed(7)}</Num>
                         </Below1>
                         
                     </BelowArea1>
                     <TouchableOpacity style={{ backgroundColor: "#3D6A97",borderRadius:4,justifyContent:"center",display:"flex",flexDirection:"row",padding:12,marginTop:30}}  onPress={()=>{
                                 navigation.navigate("Funds")
                             }}>
-                        <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>資金劃轉</Text>
+                        <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>{t("fundingTransfer")}</Text>
                     </TouchableOpacity>
                     <TradePositionContainer contentContainerStyle={{paddingBottom:20}}>
                                             {
@@ -745,7 +752,7 @@ const WalletScreen = ({
                                                                     {x.side === "BUY" ?                                                                    <TradePositionCardTitleText>多 {x.symbol}</TradePositionCardTitleText>
  :                                                                    <TradePositionCardTitleText style={{color:"#FB4C51"}}>空 {x.symbol}</TradePositionCardTitleText>
 }
-                                                                    <TradePositionCardSmallTitleText>未實現盈虧</TradePositionCardSmallTitleText>
+                                                                    <TradePositionCardSmallTitleText>{t("pnlU")}</TradePositionCardSmallTitleText>
                                                                 </TradePositionCardTitleRowContainer>
                                                                 <TradePositionCardTitleRowContainer>
                                                                     <TradePositionCardTitleValueText>{x.type === 'FULL' ? '全倉' : '逐倉'} {x.leverage}X</TradePositionCardTitleValueText>
@@ -754,21 +761,21 @@ const WalletScreen = ({
                                                             </TradePositionCardTitleContainer>
                                                             <TradePositionCardDetailRowContainer>
                                                                 <TradePositionCardDetailColumnContainer>
-                                                                    <TradePositionCardSmallTitleText>持倉量</TradePositionCardSmallTitleText>
+                                                                    <TradePositionCardSmallTitleText>{t("positionSize")}</TradePositionCardSmallTitleText>
                                                                     <TradePositionCardSmallValueText>{x.quantity}</TradePositionCardSmallValueText>
                                                                 </TradePositionCardDetailColumnContainer>
                                                                 <TradePositionCardDetailColumnContainer>
-                                                                    <TradePositionCardSmallTitleText>入場價</TradePositionCardSmallTitleText>
+                                                                    <TradePositionCardSmallTitleText>{t("entryPrice")}</TradePositionCardSmallTitleText>
                                                                     <TradePositionCardSmallValueText>{x.avgPrice}</TradePositionCardSmallValueText>
                                                                 </TradePositionCardDetailColumnContainer>
                                                             </TradePositionCardDetailRowContainer>
                                                             <TradePositionCardDetailRowContainer>
                                                                 <TradePositionCardDetailColumnContainer>
-                                                                    <TradePositionCardSmallTitleText>標記價</TradePositionCardSmallTitleText>
+                                                                    <TradePositionCardSmallTitleText>{t("marketPrice")}</TradePositionCardSmallTitleText>
                                                                     <TradePositionCardSmallValueText>{x.avgPrice}</TradePositionCardSmallValueText>
                                                                 </TradePositionCardDetailColumnContainer>
                                                                 <TradePositionCardDetailColumnContainer>
-                                                                    <TradePositionCardSmallTitleText>強平價</TradePositionCardSmallTitleText>
+                                                                    <TradePositionCardSmallTitleText>{t("liqPrice")}</TradePositionCardSmallTitleText>
                                                                     <TradePositionCardSmallValueText>{x.forceClose}</TradePositionCardSmallValueText>
                                                                 </TradePositionCardDetailColumnContainer>
                                                             </TradePositionCardDetailRowContainer>
@@ -776,7 +783,7 @@ const WalletScreen = ({
                                                                 <TradePositionCardButton onPress={() => { 
                                                                     AsyncStorage.setItem("position",JSON.stringify({position:x}))
                                                                     navigation.push("StopPositionScreen") }}>
-                                                                    <TradePositionCardButtonText>止盈/止損</TradePositionCardButtonText>
+                                                                    <TradePositionCardButtonText>{t("stopProfitLoss")}</TradePositionCardButtonText>
                                                                 </TradePositionCardButton>
                                                                 <TradePositionCardButton onPress={()=>{
                                                                     setLoading(true)
@@ -790,7 +797,7 @@ const WalletScreen = ({
                                                                         }
                                                                     })
                                                                 }}>
-                                                                    <TradePositionCardButtonText>平倉</TradePositionCardButtonText>
+                                                                    <TradePositionCardButtonText>{t("closePosition")}</TradePositionCardButtonText>
                                                                 </TradePositionCardButton>
                                                             </TradePositionCardButtonContainer>
                                                         </TradePositionCardContainer>
@@ -805,7 +812,7 @@ const WalletScreen = ({
                     <Background01>
                         <BG1>
                             <BG001>
-                                <Title1>總資產</Title1>
+                                <Title1>{t("fundTotal")}</Title1>
                                 <TouchableOpacity  onPress={()=>{navigation.navigate("C2cHistoryScreen")}}>
                                     <Img1 source={require("../../assets/images/wallet/history.png")} />
                                 </TouchableOpacity>
@@ -817,13 +824,20 @@ const WalletScreen = ({
                                 </USDTcontent>
                             </TopArea>
                         </BG1>
-
+                        <Below1 style={{marginTop:20}}>
+                            <ImgArea>
+                                <View>
+                                    <Text1>凍結金額</Text1>
+                                </View>
+                            </ImgArea>
+                            <Num>{freeze}</Num>
+                        </Below1>
                         <ButtonArea>
 
-                        <TouchableOpacity style={{ backgroundColor: "#3D6A97",borderRadius:4,justifyContent:"center",display:"flex",flexDirection:"row",padding:12,marginTop:30,width:"100%"}}  onPress={()=>{
+                        <TouchableOpacity style={{ backgroundColor: "#3D6A97",borderRadius:4,justifyContent:"center",display:"flex",flexDirection:"row",padding:12,marginTop:20,width:"100%"}}  onPress={()=>{
                                 navigation.navigate("OtcFunds")
                             }}>
-                        <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>資金劃轉</Text>
+                        <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>{t("fundingTransfer")}</Text>
                     </TouchableOpacity>
 
                             {/* <Recharge style={{width:"45%"}}>

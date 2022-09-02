@@ -166,7 +166,7 @@ const C2cApply = ({ navigation }: RootStackScreenProps<"C2cApply">) => {
             source={require("../../assets/images/global/previous.png")}
           />
         </TouchableOpacity>
-        <HeaderText>申請商家質押</HeaderText>
+        <HeaderText>{t("MchStack")}</HeaderText>
         <View></View>
       </Header>
       <ScrollView contentContainerStyle={{ padding: 16 }}>
@@ -218,7 +218,7 @@ const C2cApply = ({ navigation }: RootStackScreenProps<"C2cApply">) => {
                             fontWeight: "500"
                           }}
                         >
-                          目前等級
+                          {t("stackLevel")}
                         </Text>
                         <IconImg
                           source={require("../../assets/images/home/selected.png")}

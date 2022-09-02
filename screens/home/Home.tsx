@@ -91,9 +91,16 @@ const ColumnText = styled(Text)`
 const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
   const insets = useSafeAreaInsets();
   const [index, setIndex] = useState(0);
+  const [arr, setArr] = useState([]);
   const context = useContext(PriceContext)
   const {btcPrice,btcRate,btcAmt,ethPrice,ethRate,ethAmt,dogePrice,dogeRate,dogeAmt} = useContext(ThreePriceContext)
   const { t } = useTranslation();
+  useEffect(()=>{
+    let gfg = context.sort(function (a:any, b:any) {
+      return parseFloat(b.P) - parseFloat(a.P);
+    });
+    setArr(gfg)
+  },[context])
   return (
     <Container>
       <Header insets={insets.top}>
@@ -185,17 +192,17 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
         <View style={{ display: "flex", flexDirection: "row", width: "100%", height: 33, borderBottomWidth: 1, borderBottomColor: "#242D37", marginTop: 24 }}>
           {index === 0 ?
             <TouchableOpacity style={{ height: 33, borderBottomWidth: 2, borderBottomColor: "#608FBE" }} onPress={()=>{setIndex(0)}}>
-              <Text style={{ fontSize: 14, color: "white", fontWeight: "500" }}>漲幅榜</Text>
+              <Text style={{ fontSize: 14, color: "white", fontWeight: "500" }}>{t("gainersList")}</Text>
             </TouchableOpacity> :
             <TouchableOpacity style={{ height: 33 }}  onPress={()=>{setIndex(0)}}>
-              <Text style={{ fontSize: 14, color: "#BCC2C8", fontWeight: "500" }}>漲幅榜</Text>
+              <Text style={{ fontSize: 14, color: "#BCC2C8", fontWeight: "500" }}>{t("gainersList")}</Text>
             </TouchableOpacity>}
           {index === 1 ?
             <TouchableOpacity style={{ height: 33, borderBottomWidth: 2, borderBottomColor: "#608FBE",marginLeft:24 }}  onPress={()=>{setIndex(1)}}>
-              <Text style={{ fontSize: 14, color: "white", fontWeight: "500" }}>跌幅榜</Text>
+              <Text style={{ fontSize: 14, color: "white", fontWeight: "500" }}>{t("losersList")}</Text>
             </TouchableOpacity> :
             <TouchableOpacity style={{ height: 33,marginLeft:24 }}  onPress={()=>{setIndex(1)}}>
-              <Text style={{ fontSize: 14, color: "#BCC2C8", fontWeight: "500" }}>跌幅榜</Text>
+              <Text style={{ fontSize: 14, color: "#BCC2C8", fontWeight: "500" }}>{t("losersList")}</Text>
             </TouchableOpacity>}
           {/* {index === 2 ?
             <TouchableOpacity style={{ height: 33, borderBottomWidth: 2, borderBottomColor: "#608FBE" ,marginLeft:24}}  onPress={()=>{setIndex(2)}}>
@@ -207,11 +214,11 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
         </View>
         <View>
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop: 12 }}>
-            <ColumnText>交易對</ColumnText>
+            <ColumnText>{t("marketPair")}</ColumnText>
             <View style={{ display: "flex", flexDirection: "row" }}>
-              <ColumnText style={{ marginRight: 40 }}>價格/24hr交易量</ColumnText>
+              <ColumnText style={{ marginRight: 40 }}>{t("price")}/{t("24hVol")}</ColumnText>
               <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
-                <ColumnText>24H漲跌</ColumnText>
+                <ColumnText>{t("24Hchg")}</ColumnText>
               </View>
             </View>
           </View>
@@ -258,7 +265,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
             })
           }
           {
-                    index === 1 && context && context.map((x:any)=>{
+                    index === 1 && arr && arr.map((x:any)=>{
                       return(
                         <>
                         {x.s === "BTCUSDT" && parseFloat(x.P) < 0 &&

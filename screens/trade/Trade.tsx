@@ -1222,6 +1222,7 @@ const TradeScreen = ({
     const [nowTrade, setNowTrade] = useState("BTC-USDT");
     const [newTrade, setNewTrade] = useState("");
     const [lev, setLev] = useState([]);
+    const [fund, setFund] = useState(0);
 
     const toggleCommitStopModal = () => {
         setIsCommitStopVisible(!isCommitStopVisible)
@@ -1321,12 +1322,16 @@ const TradeScreen = ({
     };
 
     const getleverage = (symbol:string) => {
-        console.log(symbol)
         api.get(`/investor/leverage/${symbol}`).then((x) => {
             if (x.status != 400 && x.status != 401) {
-                console.log(x.data)
                 setLeverageViewNum(x.data)
             }
+        });   
+    };
+
+    const getfund = (symbol:string) => {
+        api.get(`/market/funding-rate?${symbol}`).then((x) => {
+            setFund(x[symbol])
         });   
     };
 
@@ -1370,6 +1375,7 @@ const TradeScreen = ({
                 // setPositionArray([])
                 setBalance(0)
             }
+            getfund(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade)
             if (token) {
                 getEntrust();
                 getPosition();
@@ -1386,16 +1392,17 @@ const TradeScreen = ({
             
             getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
             getPrice(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
-            const interval = setInterval(() => {
-                getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
-                if (token) {
-                    getEntrust();
-                    getPosition();
-                    getBalance(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,swapBuyPosition === "Open" ? "BUY":"SELL")
-                }
-            }, 2000);
-            AsyncStorage.setItem("interval", interval.toString())
-            return () => clearInterval(interval);
+            // const interval = setInterval(() => {
+            //     getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+            //     getfund(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade)
+            //     if (token) {
+            //         getEntrust();
+            //         getPosition();
+            //         getBalance(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,swapBuyPosition === "Open" ? "BUY":"SELL")
+            //     }
+            // }, 2000);
+            // AsyncStorage.setItem("interval", interval.toString())
+            // return () => clearInterval(interval);
         }
         else {
             AsyncStorage.removeItem("trade")
@@ -1499,12 +1506,15 @@ const TradeScreen = ({
                                 </TradeHeaderLeverageButton>
                             </TradeHeaderRightContainer>
                         </TradeHeaderContainer>
+                        <View style={{display:"flex",flexDirection:"row",width:"100%",justifyContent:"flex-end",paddingRight:16}}>
+                            <Text style={{color:"white",fontSize:12}}>{t("fundingRate")} {fund}</Text>
+                        </View>
                         <TradeContainer>
                             <TradeRowContainer>
                                 <TradeTableContainer>
                                     <TradeTableTopTitleContainer>
-                                        <TradeTableTopTitleText>價格</TradeTableTopTitleText>
-                                        <TradeTableTopTitleText>數量</TradeTableTopTitleText>
+                                        <TradeTableTopTitleText>{t("price")}</TradeTableTopTitleText>
+                                        <TradeTableTopTitleText>{t("amount")}</TradeTableTopTitleText>
                                     </TradeTableTopTitleContainer>
                                     <TradeTableTopTitleContainer>
                                         <TradeTableTopTitleText>(USDT)</TradeTableTopTitleText>
@@ -1573,18 +1583,18 @@ const TradeScreen = ({
                                             swapBuyPosition === 'Open' ?
                                                 <TradeFunctionPositionButtonContainer>
                                                     <TradeFunctionOpenPositionButtonClicked onPress={() => { setSwapBuyPosition('Open') }}>
-                                                        <TradeFunctionPositionButtonClickedText>買入</TradeFunctionPositionButtonClickedText>
+                                                        <TradeFunctionPositionButtonClickedText>{t("buyOrder")}</TradeFunctionPositionButtonClickedText>
                                                     </TradeFunctionOpenPositionButtonClicked>
                                                     <TradeFunctionClosePositionButton onPress={() => { setSwapBuyPosition('Close') }}>
-                                                        <TradeFunctionPositionButtonText>賣出</TradeFunctionPositionButtonText>
+                                                        <TradeFunctionPositionButtonText>{t("sellOrder")}</TradeFunctionPositionButtonText>
                                                     </TradeFunctionClosePositionButton>
                                                 </TradeFunctionPositionButtonContainer> :
                                                 <TradeFunctionPositionButtonContainer>
                                                     <TradeFunctionOpenPositionButton onPress={() => { setSwapBuyPosition('Open') }}>
-                                                        <TradeFunctionPositionButtonText>買入</TradeFunctionPositionButtonText>
+                                                        <TradeFunctionPositionButtonText>{t("buyOrder")}</TradeFunctionPositionButtonText>
                                                     </TradeFunctionOpenPositionButton>
                                                     <TradeFunctionClosePositionButtonClicked onPress={() => { setSwapBuyPosition('Close') }}>
-                                                        <TradeFunctionPositionButtonClickedText>賣出</TradeFunctionPositionButtonClickedText>
+                                                        <TradeFunctionPositionButtonClickedText>{t("sellOrder")}</TradeFunctionPositionButtonClickedText>
                                                     </TradeFunctionClosePositionButtonClicked>
                                                 </TradeFunctionPositionButtonContainer>
                                         }
@@ -1698,11 +1708,11 @@ const TradeScreen = ({
                                             />
                                         </SmallSliderContainer>
                                         <TradeFunctionPositionViewContainer>
-                                            <TradeFunctionPositionViewTitleText>可用</TradeFunctionPositionViewTitleText>
+                                            <TradeFunctionPositionViewTitleText>{t("availableU")}</TradeFunctionPositionViewTitleText>
                                             <TradeFunctionPositionViewValueText>{balance} USDT</TradeFunctionPositionViewValueText>
                                         </TradeFunctionPositionViewContainer>
                                         <TradeFunctionPositionViewContainer>
-                                            <TradeFunctionPositionViewTitleText>可開</TradeFunctionPositionViewTitleText>
+                                            <TradeFunctionPositionViewTitleText>{t("availableQ")}</TradeFunctionPositionViewTitleText>
                                             <TradeFunctionPositionViewValueText>{canOpen} {newTrade ? newTrade.split("USDT")[0] : nowTrade.split("-")[0]}</TradeFunctionPositionViewValueText>
                                         </TradeFunctionPositionViewContainer>
                                         <TradeFunctionPositionViewContainer>
@@ -1764,7 +1774,7 @@ const TradeScreen = ({
                                                         alert("請先登入");
                                                     }
                                                 }}>
-                                                    <TradeFunctionBuySellButtonText>開倉買入</TradeFunctionBuySellButtonText>
+                                                    <TradeFunctionBuySellButtonText>{t("futuresBuy")}</TradeFunctionBuySellButtonText>
                                                 </TradeFunctionBuyButton>
                                                 :
                                                 <TradeFunctionSellButton onPress={async () => {
@@ -1823,7 +1833,7 @@ const TradeScreen = ({
                                                         alert("請先登入");
                                                     }
                                                 }}>
-                                                    <TradeFunctionBuySellButtonText>開倉賣出</TradeFunctionBuySellButtonText>
+                                                    <TradeFunctionBuySellButtonText>{t("futuresSell")}</TradeFunctionBuySellButtonText>
                                                 </TradeFunctionSellButton>
                                             }
 
@@ -1837,29 +1847,29 @@ const TradeScreen = ({
                                     <TradePositionHeaderContainer>
                                         <TradePositionHeaderRowContainer>
                                             <TradePositionHeaderLeftSwapButtonClicked onPress={() => { setSwapPositionView(0) }}>
-                                                <TradePositionHeaderSwapButtonTextClicked>當前持倉</TradePositionHeaderSwapButtonTextClicked>
+                                                <TradePositionHeaderSwapButtonTextClicked>{t("activePosition")}</TradePositionHeaderSwapButtonTextClicked>
                                             </TradePositionHeaderLeftSwapButtonClicked>
                                             <TradePositionHeaderRightSwapButton onPress={() => { setSwapPositionView(1) }}>
-                                                <TradePositionHeaderSwapButtonText>當前委託</TradePositionHeaderSwapButtonText>
+                                                <TradePositionHeaderSwapButtonText>{t("activeOrder")}</TradePositionHeaderSwapButtonText>
                                             </TradePositionHeaderRightSwapButton>
                                         </TradePositionHeaderRowContainer>
                                         <TradePositionHeaderHistoryButton onPress={() => { navigation.navigate('HistoryScreen') }}>
                                             <TradePositionHeaderHistoryIcon source={require("../../assets/images/trade/order.png")} />
-                                            <TradePositionHeaderHistoryText>歷史訂單</TradePositionHeaderHistoryText>
+                                            <TradePositionHeaderHistoryText>{t("orderHistory")}</TradePositionHeaderHistoryText>
                                         </TradePositionHeaderHistoryButton>
                                     </TradePositionHeaderContainer> :
                                     <TradePositionHeaderContainer>
                                         <TradePositionHeaderRowContainer>
                                             <TradePositionHeaderLeftSwapButton onPress={() => { setSwapPositionView(0) }}>
-                                                <TradePositionHeaderSwapButtonText>當前持倉</TradePositionHeaderSwapButtonText>
+                                                <TradePositionHeaderSwapButtonText>{t("activePosition")}</TradePositionHeaderSwapButtonText>
                                             </TradePositionHeaderLeftSwapButton>
                                             <TradePositionHeaderRightSwapButtonClicked onPress={() => { setSwapPositionView(1) }}>
-                                                <TradePositionHeaderSwapButtonTextClicked>當前委託</TradePositionHeaderSwapButtonTextClicked>
+                                                <TradePositionHeaderSwapButtonTextClicked>{t("activeOrder")}</TradePositionHeaderSwapButtonTextClicked>
                                             </TradePositionHeaderRightSwapButtonClicked>
                                         </TradePositionHeaderRowContainer>
                                         <TradePositionHeaderHistoryButton onPress={() => { navigation.navigate('HistoryScreen') }}>
                                             <TradePositionHeaderHistoryIcon source={require("../../assets/images/trade/order.png")} />
-                                            <TradePositionHeaderHistoryText>歷史訂單</TradePositionHeaderHistoryText>
+                                            <TradePositionHeaderHistoryText>{t("orderHistory")}</TradePositionHeaderHistoryText>
                                         </TradePositionHeaderHistoryButton>
                                     </TradePositionHeaderContainer>
                             }
@@ -1877,7 +1887,7 @@ const TradeScreen = ({
                                                                     {x.side === "BUY" ? <TradePositionCardTitleText>多 {x.symbol}</TradePositionCardTitleText>
                                                                         : <TradePositionCardTitleText style={{ color: "#FB4C51" }}>空 {x.symbol}</TradePositionCardTitleText>
                                                                     }
-                                                                    <TradePositionCardSmallTitleText>未實現盈虧</TradePositionCardSmallTitleText>
+                                                                    <TradePositionCardSmallTitleText>{t("pnlU")}</TradePositionCardSmallTitleText>
                                                                 </TradePositionCardTitleRowContainer>
                                                                 <TradePositionCardTitleRowContainer>
                                                                     <TradePositionCardTitleValueText>{x.type === 'FULL' ? '全倉' : '逐倉'} {x.leverage}X</TradePositionCardTitleValueText>
@@ -1886,21 +1896,21 @@ const TradeScreen = ({
                                                             </TradePositionCardTitleContainer>
                                                             <TradePositionCardDetailRowContainer>
                                                                 <TradePositionCardDetailColumnContainer>
-                                                                    <TradePositionCardSmallTitleText>持倉量</TradePositionCardSmallTitleText>
+                                                                    <TradePositionCardSmallTitleText>{t("positionSize")}</TradePositionCardSmallTitleText>
                                                                     <TradePositionCardSmallValueText>{x.quantity}</TradePositionCardSmallValueText>
                                                                 </TradePositionCardDetailColumnContainer>
                                                                 <TradePositionCardDetailColumnContainer>
-                                                                    <TradePositionCardSmallTitleText>入場價</TradePositionCardSmallTitleText>
+                                                                    <TradePositionCardSmallTitleText>{t("entryPrice")}</TradePositionCardSmallTitleText>
                                                                     <TradePositionCardSmallValueText>{x.avgPrice}</TradePositionCardSmallValueText>
                                                                 </TradePositionCardDetailColumnContainer>
                                                             </TradePositionCardDetailRowContainer>
                                                             <TradePositionCardDetailRowContainer>
                                                                 <TradePositionCardDetailColumnContainer>
-                                                                    <TradePositionCardSmallTitleText>標記價</TradePositionCardSmallTitleText>
+                                                                    <TradePositionCardSmallTitleText>{t("marketPrice")}</TradePositionCardSmallTitleText>
                                                                     <TradePositionCardSmallValueText>{getRemark(x.symbol)}</TradePositionCardSmallValueText>
                                                                 </TradePositionCardDetailColumnContainer>
                                                                 <TradePositionCardDetailColumnContainer>
-                                                                    <TradePositionCardSmallTitleText>強平價</TradePositionCardSmallTitleText>
+                                                                    <TradePositionCardSmallTitleText>{t("liqPrice")}</TradePositionCardSmallTitleText>
                                                                     <TradePositionCardSmallValueText>{x.forceClose}</TradePositionCardSmallValueText>
                                                                 </TradePositionCardDetailColumnContainer>
                                                             </TradePositionCardDetailRowContainer>
@@ -1909,7 +1919,7 @@ const TradeScreen = ({
                                                                     AsyncStorage.setItem("position", JSON.stringify({ position: x }))
                                                                     navigation.push("StopPositionScreen")
                                                                 }}>
-                                                                    <TradePositionCardButtonText>止盈/止損</TradePositionCardButtonText>
+                                                                    <TradePositionCardButtonText>{t("stopProfitLoss")}</TradePositionCardButtonText>
                                                                 </TradePositionCardButton>
                                                                 <TradePositionCardButton disabled={isFocus} onPress={() => {
                                                                     setLoading(true)
@@ -1924,7 +1934,7 @@ const TradeScreen = ({
                                                                         }
                                                                     })
                                                                 }}>
-                                                                    <TradePositionCardButtonText>平倉</TradePositionCardButtonText>
+                                                                    <TradePositionCardButtonText>{t("closePostion")}</TradePositionCardButtonText>
                                                                 </TradePositionCardButton>
                                                             </TradePositionCardButtonContainer>
                                                         </TradePositionCardContainer>
@@ -1948,33 +1958,33 @@ const TradeScreen = ({
                                                             </TradeCommitCardTitleContainer>
                                                             <TradeCommitCardDetailRowContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
-                                                                    <TradeCommitCardSmallTitleText>交易類型</TradeCommitCardSmallTitleText>
+                                                                    <TradeCommitCardSmallTitleText>{t("tradeType")}</TradeCommitCardSmallTitleText>
                                                                     {
                                                                         x.type === 'LIMIT' &&
-                                                                        <TradeCommitCardSmallValueText>限價</TradeCommitCardSmallValueText>
+                                                                        <TradeCommitCardSmallValueText>{t("limitedOrder")}</TradeCommitCardSmallValueText>
                                                                     }
                                                                     {
                                                                         x.type === 'MARKET' &&
-                                                                        <TradeCommitCardSmallValueText>市價</TradeCommitCardSmallValueText>
+                                                                        <TradeCommitCardSmallValueText>{t("marketOrder")}</TradeCommitCardSmallValueText>
                                                                     }
                                                                     {
                                                                         x.type === 'STOP_MARKET' &&
-                                                                        <TradeCommitCardSmallValueText>計畫市價</TradeCommitCardSmallValueText>
+                                                                        <TradeCommitCardSmallValueText>{t("stopMarketOrder")}</TradeCommitCardSmallValueText>
                                                                     }
                                                                     {
                                                                         x.type === 'STOP_LIMIT' &&
-                                                                        <TradeCommitCardSmallValueText>計畫限價</TradeCommitCardSmallValueText>
+                                                                        <TradeCommitCardSmallValueText>{t("stopLimitOrder")}</TradeCommitCardSmallValueText>
                                                                     }
                                                                 </TradeCommitCardDetailColumnContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
-                                                                    <TradeCommitCardSmallTitleText>下單方向</TradeCommitCardSmallTitleText>
+                                                                    <TradeCommitCardSmallTitleText>{t("orderType")}</TradeCommitCardSmallTitleText>
                                                                     {
                                                                         x.side === 'BUY' &&
-                                                                        <TradeCommitCardBuyDirectionLongText>買入</TradeCommitCardBuyDirectionLongText>
+                                                                        <TradeCommitCardBuyDirectionLongText>{t("buyOrder")}</TradeCommitCardBuyDirectionLongText>
                                                                     }
                                                                     {
                                                                         x.side === 'SELL' &&
-                                                                        <TradeCommitCardBuyDirectionShortText>賣出</TradeCommitCardBuyDirectionShortText>
+                                                                        <TradeCommitCardBuyDirectionShortText>{t("sellOrder")}</TradeCommitCardBuyDirectionShortText>
                                                                     }
                                                                 </TradeCommitCardDetailColumnContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
@@ -1984,15 +1994,15 @@ const TradeScreen = ({
                                                             </TradeCommitCardDetailRowContainer>
                                                             <TradeCommitCardDetailRowContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
-                                                                    <TradeCommitCardSmallTitleText>委託量</TradeCommitCardSmallTitleText>
+                                                                    <TradeCommitCardSmallTitleText>{t("orderSize")}</TradeCommitCardSmallTitleText>
                                                                 <TradeCommitCardSmallValueText>{x.origQty}</TradeCommitCardSmallValueText>
                                                                 </TradeCommitCardDetailColumnContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
-                                                                    <TradeCommitCardSmallTitleText>委託價</TradeCommitCardSmallTitleText>
+                                                                    <TradeCommitCardSmallTitleText>{t("orderPrice")}</TradeCommitCardSmallTitleText>
                                                                     <TradeCommitCardSmallValueText>{x.type == "STOP_MARKET" ? "市價":x.price}</TradeCommitCardSmallValueText>
                                                                 </TradeCommitCardDetailColumnContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
-                                                                    <TradeCommitCardSmallTitleText>觸發價</TradeCommitCardSmallTitleText>
+                                                                    <TradeCommitCardSmallTitleText>{t("conditionPrice")}</TradeCommitCardSmallTitleText>
                                                                     <TradeCommitCardSmallValueText>{x.stopPrice}</TradeCommitCardSmallValueText>
                                                                 </TradeCommitCardDetailColumnContainer>
                                                             </TradeCommitCardDetailRowContainer>
@@ -2011,10 +2021,10 @@ const TradeScreen = ({
                                                             </TradeCommitCardDetailRowContainer> */}
                                                             <TradeCommitCardButtonContainer>
                                                                 <TradeCommitCardButton onPress={() => { toggleCommitStopModal() }}>
-                                                                    <TradeCommitCardButtonText>止盈/止損</TradeCommitCardButtonText>
+                                                                    <TradeCommitCardButtonText>{t("stopProfitLoss")}</TradeCommitCardButtonText>
                                                                 </TradeCommitCardButton>
                                                                 <TradeCommitCardButton onPress={() => { cancelCommitAlert(x.orderId) }}>
-                                                                    <TradeCommitCardButtonText>撤銷</TradeCommitCardButtonText>
+                                                                    <TradeCommitCardButtonText>{t("cancelOrder")}</TradeCommitCardButtonText>
                                                                 </TradeCommitCardButton>
                                                             </TradeCommitCardButtonContainer>
                                                         </TradeCommitCardContainer>
@@ -2059,11 +2069,11 @@ const TradeScreen = ({
                         <TouchableOpacity onPress={() => { setIsPositionViewVisible(false) }}>
                             <ModalLeftCancelButton source={require("../../assets/images/trade/cancel.png")} />
                         </TouchableOpacity>
-                        <ModalHedaerTitleText>擔保資產模式</ModalHedaerTitleText>
+                        <ModalHedaerTitleText>{t("marginMode")}</ModalHedaerTitleText>
                         <ModalEmptyDiv></ModalEmptyDiv>
                     </ModalHeaderContainer>
                     <PositionViewModalButton onPress={() => { setPositionView("Full"), setIsPositionViewVisible(false) }}>
-                        <PositionViewModalButtonText>全倉</PositionViewModalButtonText>
+                        <PositionViewModalButtonText>{t("crossPosition")}</PositionViewModalButtonText>
                         {
                             positionView === 'Full' &&
                             <ModalSelectedImage source={require("../../assets/images/trade/selected.png")} />
@@ -2073,7 +2083,7 @@ const TradeScreen = ({
                         所有品種合約的倉位共用一個帳戶權益，合約帳戶中的擔保資產合併計算。
                     </PositionViewModalDetailText>
                     <PositionViewModalButton onPress={() => { setPositionView("Each"), setIsPositionViewVisible(false) }}>
-                        <PositionViewModalButtonText>逐倉</PositionViewModalButtonText>
+                        <PositionViewModalButtonText>{t("isolatedPosition")}</PositionViewModalButtonText>
                         {
                             positionView === 'Each' &&
                             <ModalSelectedImage source={require("../../assets/images/trade/selected.png")} />
@@ -2083,7 +2093,7 @@ const TradeScreen = ({
                         每個品種合約對應一個合約帳戶，不同品種合約帳戶擔保資產相互獨立。
                     </PositionViewModalDetailText>
                     <ModalConfirmButton>
-                        <ModalConfirmButtonText>確認</ModalConfirmButtonText>
+                        <ModalConfirmButtonText>{t("OK")}</ModalConfirmButtonText>
                     </ModalConfirmButton>
                 </View>
             </Modal>
@@ -2108,7 +2118,7 @@ const TradeScreen = ({
                         <TouchableOpacity onPress={() => { setIsLeverageViewVisible(false) }}>
                             <ModalLeftCancelButton source={require("../../assets/images/trade/cancel.png")} />
                         </TouchableOpacity>
-                        <ModalHedaerTitleText>槓桿比例</ModalHedaerTitleText>
+                        <ModalHedaerTitleText>{t("leverage")}</ModalHedaerTitleText>
                         <ModalEmptyDiv></ModalEmptyDiv>
                     </ModalHeaderContainer>
 
@@ -2172,10 +2182,10 @@ const TradeScreen = ({
             >
                 <View style={{ backgroundColor: '#242D37', borderTopLeftRadius: 8, borderTopRightRadius: 8, paddingLeft: 16, paddingRight: 16, paddingBottom: 50 }}>
                     <BuyTypeTitleContainer>
-                        <BuyTypeModalTitleText>下單類型</BuyTypeModalTitleText>
+                        <BuyTypeModalTitleText>{t("orderType")}</BuyTypeModalTitleText>
                     </BuyTypeTitleContainer>
                     <BuyTypeModalPickerButton onPress={() => { setBuyType('Limit'), setIsBuyTypeModalVisible(false) }}>
-                        <BuyTypeModalPickerButtonText>限價</BuyTypeModalPickerButtonText>
+                        <BuyTypeModalPickerButtonText>{t("limitedOrder")}</BuyTypeModalPickerButtonText>
                         {
                             buyType === 'Limit' &&
                             <ModalSelectedImage source={require("../../assets/images/trade/selected.png")} />
@@ -2183,7 +2193,7 @@ const TradeScreen = ({
                     </BuyTypeModalPickerButton>
                     <BuyTypeModalLineText></BuyTypeModalLineText>
                     <BuyTypeModalPickerButton onPress={() => { setBuyType('Market'), setIsBuyTypeModalVisible(false) }}>
-                        <BuyTypeModalPickerButtonText>市價</BuyTypeModalPickerButtonText>
+                        <BuyTypeModalPickerButtonText>{t("marketOrder")}</BuyTypeModalPickerButtonText>
                         {
                             buyType === 'Market' &&
                             <ModalSelectedImage source={require("../../assets/images/trade/selected.png")} />
@@ -2191,7 +2201,7 @@ const TradeScreen = ({
                     </BuyTypeModalPickerButton>
                     <BuyTypeModalLineText></BuyTypeModalLineText>
                     <BuyTypeModalPickerButton onPress={() => { setBuyType('Plan_Limit'), setIsBuyTypeModalVisible(false) }}>
-                        <BuyTypeModalPickerButtonText>計畫限價</BuyTypeModalPickerButtonText>
+                        <BuyTypeModalPickerButtonText>{t("stopLimitOrder")}</BuyTypeModalPickerButtonText>
                         {
                             buyType === 'Plan_Limit' &&
                             <ModalSelectedImage source={require("../../assets/images/trade/selected.png")} />
@@ -2199,7 +2209,7 @@ const TradeScreen = ({
                     </BuyTypeModalPickerButton>
                     <BuyTypeModalLineText></BuyTypeModalLineText>
                     <BuyTypeModalPickerButton onPress={() => { setBuyType('Plan_Market'), setIsBuyTypeModalVisible(false) }}>
-                        <BuyTypeModalPickerButtonText>計畫市價</BuyTypeModalPickerButtonText>
+                        <BuyTypeModalPickerButtonText>{t("stopMarketOrder")}</BuyTypeModalPickerButtonText>
                         {
                             buyType === 'Plan_Market' &&
                             <ModalSelectedImage source={require("../../assets/images/trade/selected.png")} />
@@ -2228,7 +2238,7 @@ const TradeScreen = ({
                         <TouchableOpacity onPress={() => { setIsCommitStopVisible(false) }}>
                             <ModalLeftCancelButton source={require("../../assets/images/trade/cancel.png")} />
                         </TouchableOpacity>
-                        <ModalHedaerTitleText>止盈/止損</ModalHedaerTitleText>
+                        <ModalHedaerTitleText>{t("stopProfitLoss")}</ModalHedaerTitleText>
                         <ModalEmptyDiv></ModalEmptyDiv>
                     </ModalHeaderContainer>
                     {
@@ -2256,11 +2266,11 @@ const TradeScreen = ({
                                             <CommitStopModalCardDetailValueText>{x.condition}</CommitStopModalCardDetailValueText>
                                         </CommitStopModalCardDetailColumnContainer>
                                         <CommitStopModalCardDetailColumnContainer>
-                                            <CommitStopModalCardDetailTitleText>委託量</CommitStopModalCardDetailTitleText>
+                                            <CommitStopModalCardDetailTitleText>{t("orderSize")}</CommitStopModalCardDetailTitleText>
                                             <CommitStopModalCardDetailValueText>{x.volumnNum}</CommitStopModalCardDetailValueText>
                                         </CommitStopModalCardDetailColumnContainer>
                                         <CommitStopModalCardDetailColumnContainer>
-                                            <CommitStopModalCardDetailTitleText>委託價</CommitStopModalCardDetailTitleText>
+                                            <CommitStopModalCardDetailTitleText>{t("orderPrice")}</CommitStopModalCardDetailTitleText>
                                             <CommitStopModalCardDetailValueText>{x.volumnPrice}</CommitStopModalCardDetailValueText>
                                         </CommitStopModalCardDetailColumnContainer>
                                     </CommitStopModalCardDetailContainer>

@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as React from "react";
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
 import api from "../../common/api"
@@ -41,10 +41,11 @@ const IconImg = styled(Image)`
 
 const EditName = ({ navigation }: RootStackScreenProps<"EditName">) => {
   const insets = useSafeAreaInsets();
-  const [email, setEmail] = React.useState("");
+  const [nickName, setNickname] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [loading,setLoading] = useState(false);
   const { t } = useTranslation();
+
   return (
     <Container>
       {loading && 
@@ -58,16 +59,26 @@ const EditName = ({ navigation }: RootStackScreenProps<"EditName">) => {
           >
             <IconImg source={require("../../assets/images/global/previous.png")} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {
-              navigation.goBack();
+          <TouchableOpacity onPress={async () => {
+            let user = await AsyncStorage.getItem("user")
+            api.put(`/otc/api/user/${JSON.parse(user!).account}`,{nickName:nickName}).then(x=>{
+              if(x.status != 400){
+                Alert.alert("修改成功")
+                navigation.goBack();
+              }else{
+                alert(x.data.msg)
+              }
+            })
+        
+              
             }}>
              <HeaderText>完成</HeaderText>
           </TouchableOpacity>
         </Header>
         <View style={{ padding: 16 }}>
           <View>
-            <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginBottom:4}}>名稱</Text>
-            <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="輸入名稱" onChangeText={setEmail}/>
+            <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginBottom:4}}>暱稱</Text>
+            <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="輸入暱稱" onChangeText={setNickname}/>
           </View>
           <Text style={{marginTop:30,color:"#BCC2C8",fontSize:13,fontWeight:"500"}}>進行 C2C 交易使用的名稱，例如用戶全名、暱稱或商家名稱。</Text>
         </View>
