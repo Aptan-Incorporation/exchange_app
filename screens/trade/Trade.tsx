@@ -1392,17 +1392,17 @@ const TradeScreen = ({
             
             getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
             getPrice(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
-            // const interval = setInterval(() => {
-            //     getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
-            //     getfund(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade)
-            //     if (token) {
-            //         getEntrust();
-            //         getPosition();
-            //         getBalance(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,swapBuyPosition === "Open" ? "BUY":"SELL")
-            //     }
-            // }, 2000);
-            // AsyncStorage.setItem("interval", interval.toString())
-            // return () => clearInterval(interval);
+            const interval = setInterval(() => {
+                getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+                getfund(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade)
+                if (token) {
+                    getEntrust();
+                    getPosition();
+                    getBalance(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,swapBuyPosition === "Open" ? "BUY":"SELL")
+                }
+            }, 2000);
+            AsyncStorage.setItem("interval", interval.toString())
+            return () => clearInterval(interval);
         }
         else {
             AsyncStorage.removeItem("trade")
