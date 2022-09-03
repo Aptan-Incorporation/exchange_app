@@ -83,9 +83,9 @@ const GoogleVerifyStep1 = ({ navigation }: RootStackScreenProps<"GoogleVerifySte
             source={require("../../assets/images/global/previous.png")}
           />
         </TouchableOpacity>
-        <HeaderText>Google 驗證</HeaderText>
+        <HeaderText>{t("googleAuth")}</HeaderText>
         <TouchableOpacity onPress={()=>{navigation.navigate("GoogleVerifyStep2")}}>
-          <Text style={{color:"#A8C2DC",fontSize:16,fontWeight:"600"}}>下一步</Text>
+          <Text style={{color:"#A8C2DC",fontSize:16,fontWeight:"600"}}>{t("next")}</Text>
         </TouchableOpacity>
       </Header>
       <View style={{justifyContent:"center",alignItems:"center",display:"flex",flexDirection:"column",marginTop:20}}>

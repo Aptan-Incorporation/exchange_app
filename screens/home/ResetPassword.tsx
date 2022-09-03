@@ -97,7 +97,7 @@ const ResetPassword = ({ navigation }: RootStackScreenProps<"ResetPassword">) =>
           })
         }
         }}>
-        <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>確定</Text>
+        <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>{t("OK")}</Text>
       </TouchableOpacity>
     </View>
   </Container>

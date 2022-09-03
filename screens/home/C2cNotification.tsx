@@ -106,11 +106,11 @@ const C2cNotification = ({ navigation }: RootStackScreenProps<"C2cNotification">
             source={require("../../assets/images/global/previous.png")}
           />
         </TouchableOpacity>
-        <HeaderText>C2C 通知設置</HeaderText>
+        <HeaderText>{t("fiatNoticeSet")}</HeaderText>
         <View></View>
       </Header>
       <View style={{display:"flex",flexDirection:"row",justifyContent:"space-between",padding:16,alignItems:"center"}}>
-          <Text style={{color:"white",fontSize:15,fontWeight:"400"}}>信箱通知</Text>
+          <Text style={{color:"white",fontSize:15,fontWeight:"400"}}>{t("emailNotice")}</Text>
           <Switch
         trackColor={{ false: '#767577', true: '#6699CC' }}
         thumbColor={isEnabled ? 'white' : 'white'}
@@ -120,7 +120,7 @@ const C2cNotification = ({ navigation }: RootStackScreenProps<"C2cNotification">
       />
       </View>
       <View style={{display:"flex",flexDirection:"row",justifyContent:"space-between",padding:16,alignItems:"center"}}>
-          <Text style={{color:"white",fontSize:15,fontWeight:"400"}}>簡訊通知</Text>
+          <Text style={{color:"white",fontSize:15,fontWeight:"400"}}>{t("messageNotice")}</Text>
           <Switch
         trackColor={{ false: '#767577', true: '#6699CC' }}
         thumbColor={isEnabled ? 'white' : 'white'}

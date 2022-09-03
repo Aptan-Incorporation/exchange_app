@@ -105,7 +105,7 @@ const IdentityVerifyStep2 = ({ navigation }: RootStackScreenProps<"IdentityVerif
         >
           <IconImg source={require("../../assets/images/global/previous.png")} />
         </TouchableOpacity>
-        <HeaderText>身份驗證</HeaderText>
+        <HeaderText>{t("idAuth")}</HeaderText>
       <View></View>
       </Header>
       <View style={{ padding: 16,display:"flex",flexDirection:"column",alignItems:"center"  }}>

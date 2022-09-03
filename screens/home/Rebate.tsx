@@ -126,7 +126,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
             source={require("../../assets/images/global/previous.png")}
           />
         </TouchableOpacity>
-        <HeaderText>代理返傭</HeaderText>
+        <HeaderText>{t("referralManage")}</HeaderText>
         <View></View>
       </Header>
       <View style={{ padding: 16 }}>
@@ -138,7 +138,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
           }}
         >
           <GrayHeader>
-            <GrayText>我的推薦碼</GrayText>
+            <GrayText>{t("myReferralCode")}</GrayText>
             <View
               style={{
                 display: "flex",
@@ -170,7 +170,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
             }}
           >
             <View>
-              <USDText>返傭收入</USDText>
+              <USDText>{t("referralIncome")}</USDText>
             </View>
             <RedPercentText>{sum.toFixed(6)} USDT</RedPercentText>
           </View>
@@ -185,9 +185,9 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
             }}
           >
             <View>
-              <USDText>已交易用戶</USDText>
+              <USDText>{t("referralActiveMember")}</USDText>
             </View>
-            <RedPercentText>{tradeMembers.length} 人</RedPercentText>
+            <RedPercentText>{tradeMembers.length} {t("people")}</RedPercentText>
           </View>
           <View
             style={{
@@ -199,9 +199,9 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
             }}
           >
             <View>
-              <USDText>推薦用戶</USDText>
+              <USDText>{t("referralAllMember")}</USDText>
             </View>
-            <RedPercentText>{memberNumber} 人</RedPercentText>
+            <RedPercentText>{memberNumber} {t("people")}</RedPercentText>
           </View>
         </View>
         <View
@@ -227,7 +227,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
               }}
             >
               <Text style={{ fontSize: 14, color: "white", fontWeight: "500" }}>
-                返傭紀錄
+              {t("commissionHistory")}
               </Text>
             </TouchableOpacity>
           ) : (
@@ -240,7 +240,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
               <Text
                 style={{ fontSize: 14, color: "#BCC2C8", fontWeight: "500" }}
               >
-                返傭紀錄
+                {t("commissionHistory")}
               </Text>
             </TouchableOpacity>
           )}
@@ -257,7 +257,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
               }}
             >
               <Text style={{ fontSize: 14, color: "white", fontWeight: "500" }}>
-              推薦用戶
+              {t("referralAllMember")}
               </Text>
             </TouchableOpacity>
           ) : (
@@ -270,7 +270,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
               <Text
                 style={{ fontSize: 14, color: "#BCC2C8", fontWeight: "500" }}
               >
-                推薦用戶
+                {t("referralAllMember")}
               </Text>
             </TouchableOpacity>
           )}

@@ -301,13 +301,13 @@ const Payments = ({ navigation, route }: RootStackScreenProps<"Payments">) => {
                     </TouchableOpacity>
                 </PreviousIconContainer>
                 <HeaderTitleTextContainer>
-                    <HeaderTitleText>帳戶設置</HeaderTitleText>
+                    <HeaderTitleText>{t("accountSet")}</HeaderTitleText>
                 </HeaderTitleTextContainer>
                 {
                     isEdit ?
                         <HeaderEditComfirmContainer>
                             <TouchableOpacity onPress={() => { setIsEdit(false) }}>
-                                <HeaderEditComfirmText>確定</HeaderEditComfirmText>
+                                <HeaderEditComfirmText>{t("OK")}</HeaderEditComfirmText>
                             </TouchableOpacity>
                         </HeaderEditComfirmContainer> :
                         <HeaderFunctionIconContainer>

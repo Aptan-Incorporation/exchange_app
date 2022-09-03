@@ -253,15 +253,15 @@ const StopPositionScreen = ({
           <StopPositionInRowContainer>
             <StopPositionColumnContainer>
             <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
-                <Text style={{color:"white"}}>入場價格</Text>
+                <Text style={{color:"white"}}>{t("enterPrice")}</Text>
                 <Text style={{color:"white"}}>{positionArray.avgPrice}</Text>
               </View>
               <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
-                <Text style={{color:"white"}}>市價</Text>
+                <Text style={{color:"white"}}>{t("marketPrice")}</Text>
                 <Text style={{color:"white"}}>{price}</Text>
               </View>
               <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10,marginBottom:20 }}>
-                <Text style={{color:"white"}}>強平價格</Text>
+                <Text style={{color:"white"}}>{t("liqPrice")}</Text>
                 <Text style={{color:"white"}}>{positionArray.forceClose}</Text>
               </View>
               <StopPositionLabelText>止盈價</StopPositionLabelText>

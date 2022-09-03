@@ -494,17 +494,17 @@ const HistoryScreen = ({
                 <TouchableOpacity onPress={() => { navigation.goBack() }}>
                     <PreviousButton source={require("../../assets/images/global/previous.png")} />
                 </TouchableOpacity>
-                <MainHeaderTitleText>歷史訂單</MainHeaderTitleText>
+                <MainHeaderTitleText>{t("orderHistory")}</MainHeaderTitleText>
                 <EmptyDiv></EmptyDiv>
             </MainHeaderContainer>
             <HeaderContainer>
                 {
                     swapView === 'HistoryCommit' ?
                         <TouchableOpacity onPress={() => { setSwapView('HistoryCommit') }} style={{ borderBottomWidth: 2, borderBottomColor: '#6699CC', marginRight: 24, paddingRight: 1, paddingLeft: 1 }}>
-                            <SwapButtonClickedText>歷史委託</SwapButtonClickedText>
+                            <SwapButtonClickedText>{t("historyOrder")}</SwapButtonClickedText>
                         </TouchableOpacity> :
                         <TouchableOpacity onPress={() => { setSwapView('HistoryCommit') }} style={{ marginRight: 24 }}>
-                            <SwapButtonText>歷史委託</SwapButtonText>
+                            <SwapButtonText>{t("historyOrder")}</SwapButtonText>
                         </TouchableOpacity>
                 }
                 {/* {
@@ -563,35 +563,35 @@ const HistoryScreen = ({
                                 <CardDetailContainer>
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>交易類型</CardDetailTitleText>
+                                            <CardDetailTitleText>{t("tradeType")}</CardDetailTitleText>
                                             <CardDetailValueText>{x.type === "LIMIT" ? "限價" : x.type === "MARKET" ? "市價" : x.type === "STOP_LIMIT" ? "計畫限價":"計畫市價"}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>委託量</CardDetailTitleText>
+                                            <CardDetailTitleText>{t("orderSize")}</CardDetailTitleText>
                                         <CardDetailValueText>{x.origQty}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
-                                        {/* <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>手續費</CardDetailTitleText>
+                                        <CardDetailInColumnContainer>
+                                            <CardDetailTitleText>{t("withdrawFee")}</CardDetailTitleText>
                                             <CardDetailValueText>{x.handlingFee && x.handlingFee.toFixed(2) + " USDT"}</CardDetailValueText>
-                                        </CardDetailInColumnContainer> */}
+                                        </CardDetailInColumnContainer>
                                     </CardDetailColumnContainer>
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>下單方向</CardDetailTitleText>
                                             {
                                                 x.side === 'BUY' ?
-                                                    <CardDetailValueDirectionLong>買入</CardDetailValueDirectionLong> :
-                                                    <CardDetailValueDirectionShort>賣出</CardDetailValueDirectionShort>
+                                                    <CardDetailValueDirectionLong>{t("buyOrder")}</CardDetailValueDirectionLong> :
+                                                    <CardDetailValueDirectionShort>{t("sellOrder")}</CardDetailValueDirectionShort>
                                             }
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>委託價</CardDetailTitleText>
+                                            <CardDetailTitleText>成交價</CardDetailTitleText>
                                             <CardDetailValueText>{x.type == "STOP_MARKET" ? "市價":x.price}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
-                                        {/* <CardDetailInColumnContainer>
+                                        <CardDetailInColumnContainer>
                                             <CardDetailTitleText>實現盈虧</CardDetailTitleText>
                                             <CardDetailValueText>{x.profitAndLoss && x.profitAndLoss.toFixed(2) + " USDT"}</CardDetailValueText>
-                                        </CardDetailInColumnContainer> */}
+                                        </CardDetailInColumnContainer>
                                         {/* <CardDetailInColumnContainer>
                                             <CardDetailTitleText>止盈/止損</CardDetailTitleText>
                                             <TouchableOpacity onPress={() => { }}>
@@ -605,7 +605,7 @@ const HistoryScreen = ({
                                     <CardDetailValueText>{x.status}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>觸發價</CardDetailTitleText>
+                                            <CardDetailTitleText>{t("conditionPrice")}</CardDetailTitleText>
                                             <CardDetailValueText>{x.stopPrice}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         {/* <CardDetailInColumnContainer>
@@ -639,11 +639,11 @@ const HistoryScreen = ({
                                 <CardDetailContainer>
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>交易類型</CardDetailTitleText>
+                                            <CardDetailTitleText>{t("tradeType")}</CardDetailTitleText>
                                             <CardDetailValueText>{x.type === "LIMIT" ? "限價" : x.type === "MARKET" ? "市價" : x.type === "STOP_LIMIT" ? "計畫限價":"計畫市價"}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>委託量</CardDetailTitleText>
+                                            <CardDetailTitleText>{t("orderSize")}</CardDetailTitleText>
                                             <CardDetailValueText>{x.origQty}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                     </CardDetailColumnContainer>
@@ -652,22 +652,22 @@ const HistoryScreen = ({
                                             <CardDetailTitleText>下單方向</CardDetailTitleText>
                                             {
                                                 x.side === 'BUY' ?
-                                                    <CardDetailValueDirectionLong>買入</CardDetailValueDirectionLong> :
-                                                    <CardDetailValueDirectionShort>賣出</CardDetailValueDirectionShort>
+                                                    <CardDetailValueDirectionLong>{t("buyOrder")}</CardDetailValueDirectionLong> :
+                                                    <CardDetailValueDirectionShort>{t("sellOrder")}</CardDetailValueDirectionShort>
                                             }
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>委託價</CardDetailTitleText>
+                                            <CardDetailTitleText>{t("orderPrice")}</CardDetailTitleText>
                                             <CardDetailValueText>{x.price}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                     </CardDetailColumnContainer>
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>成交率</CardDetailTitleText>
+                                            <CardDetailTitleText>{t("dealRate")}</CardDetailTitleText>
                                             <CardDetailValueText>0</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>觸發價</CardDetailTitleText>
+                                            <CardDetailTitleText>{t("conditionPrice")}</CardDetailTitleText>
                                             <CardDetailValueText>{x.stopPrice}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                     </CardDetailColumnContainer>

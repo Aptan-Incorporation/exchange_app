@@ -70,20 +70,20 @@ const WithdrawScreen = ({ navigation }: RootStackScreenProps<"Withdraw">) => {
             source={require("../../assets/images/global/previous.png")}
           />
         </TouchableOpacity>
-        <HeaderText>提現USDT</HeaderText>
+        <HeaderText>{t("widthdraw")}USDT</HeaderText>
         <View></View>
       </Header>
       <View style={{padding:16}}>
-         <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500"}}>USDT提現地址</Text>
+         <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500"}}>USDT{t("widthdrawAddress")}</Text>
          <TextInput style={{backgroundColor:"#242D37",borderRadius:4,padding:12,color:"white",marginTop:5}} placeholder="輸入USDT提現地址" onChangeText={text => setAddress(text)}/>
          {/* <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>備註</Text>
          <TextInput style={{backgroundColor:"#242D37",borderRadius:4,padding:12,color:"white",marginTop:5}} placeholder="選填"/> */}
-         <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>網路</Text>
+         <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>{t("network")}</Text>
          <View style={{backgroundColor:"#242D37",borderRadius:4,padding:12,color:"white",marginTop:5}}>
           <Text style={{color:"white"}}>TRON(TRC20)</Text>
          </View>
 
-         <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>數量</Text>
+         <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>{t("amount")}</Text>
          <TextInput style={{backgroundColor:"#242D37",borderRadius:4,padding:12,color:"white",marginTop:5}} placeholder="輸入提現數量" keyboardType={"decimal-pad"} returnKeyType={"done"} onChangeText={text => setNumber(text)}/>
          <TouchableOpacity style={{display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:"#3D6A97",padding:12,borderRadius:4,marginTop:30}} onPress={()=>{
                   if(!address){
@@ -103,7 +103,7 @@ const WithdrawScreen = ({ navigation }: RootStackScreenProps<"Withdraw">) => {
                     })
                   }       
                 }}>
-             <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>提現</Text>
+             <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>{t("widthdraw")}</Text>
          </TouchableOpacity>
       </View>
     </Container>

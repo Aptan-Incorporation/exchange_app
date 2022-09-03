@@ -81,7 +81,7 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
             source={require("../../assets/images/global/previous.png")}
           />
         </TouchableOpacity>
-        <HeaderText>安全設置</HeaderText>
+        <HeaderText>{t("security")}</HeaderText>
         <View></View>
       </Header>
       <View style={{ padding: 16 }}>
@@ -104,7 +104,7 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
               }
             }}
           >
-            <Text style={{ color: "white", fontSize: 15 }}>手機驗證</Text>
+            <Text style={{ color: "white", fontSize: 15 }}>{t("mobileVerification")}</Text>
             <View
               style={{
                 display: "flex",
@@ -150,7 +150,7 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
               }
             }}
           >
-            <Text style={{ color: "white", fontSize: 15 }}>Google 驗證</Text>
+            <Text style={{ color: "white", fontSize: 15 }}>{t("googleAuth")}</Text>
             <View
               style={{
                 display: "flex",
@@ -193,7 +193,7 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
               }
             }}
           >
-            <Text style={{ color: "white", fontSize: 15 }}>身份驗證</Text>
+            <Text style={{ color: "white", fontSize: 15 }}>{t("idAuth")}</Text>
             <View
               style={{
                 display: "flex",
@@ -227,7 +227,7 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
               }
             }}
           >
-            <Text style={{ color: "white", fontSize: 15 }}>資金密碼</Text>
+            <Text style={{ color: "white", fontSize: 15 }}>{t("fundPass")}</Text>
             <View
               style={{
                 display: "flex",
@@ -266,7 +266,7 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
               navigation.navigate("ResetPassword");
             }}
           >
-            <Text style={{ color: "white", fontSize: 15 }}>登入密碼重置</Text>
+            <Text style={{ color: "white", fontSize: 15 }}>{t("resetFundPass")}</Text>
             
           </TouchableOpacity>
         </View>

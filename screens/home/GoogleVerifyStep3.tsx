@@ -88,7 +88,7 @@ const GoogleVerifyStep3 = ({ navigation }: RootStackScreenProps<"GoogleVerifySte
             source={require("../../assets/images/global/previous.png")}
           />
         </TouchableOpacity>
-        <HeaderText>Google 驗證</HeaderText>
+        <HeaderText>{t("googleAuth")}</HeaderText>
         <TouchableOpacity onPress={()=>{
           if(!code){
             Alert.alert("請輸入驗證碼")

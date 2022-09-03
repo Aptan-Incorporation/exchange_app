@@ -187,7 +187,7 @@ const ResetFundPassword = ({ navigation }: RootStackScreenProps<"ResetFundPasswo
       </Header>
       <View style={{ padding: 16 }}>
       
-      <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginBottom:4}}>密碼</Text>
+      <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginBottom:4}}>{t("password")}</Text>
         <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="請輸入密碼" secureTextEntry onChangeText={setPassword}/>
         
         <View style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
@@ -274,7 +274,7 @@ const ResetFundPassword = ({ navigation }: RootStackScreenProps<"ResetFundPasswo
           }
           
         }}>
-        <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>確認</Text>
+        <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>{t("OK")}</Text>
       </TouchableOpacity>
       </View>
       <Modal
@@ -333,7 +333,7 @@ const ResetFundPassword = ({ navigation }: RootStackScreenProps<"ResetFundPasswo
                     <PasswordModalRowLine></PasswordModalRowLine>
                     <PasswordModalButtonContainer>
                         <PasswordModalCancelButton onPress={() => { setIsPasswordModalVisible(false) }}>
-                            <PasswordModalCancelButtonText>取消</PasswordModalCancelButtonText>
+                            <PasswordModalCancelButtonText>{t("cancel")}</PasswordModalCancelButtonText>
                         </PasswordModalCancelButton>
                         <PasswordModalButtonLine />
                         <PasswordModalSubmitButton onPress={() => { 
@@ -350,7 +350,7 @@ const ResetFundPassword = ({ navigation }: RootStackScreenProps<"ResetFundPasswo
                             }
                           })
                          }}>
-                            <PasswordModalSubmitButtonText>確定</PasswordModalSubmitButtonText>
+                            <PasswordModalSubmitButtonText>{t("OK")}</PasswordModalSubmitButtonText>
                         </PasswordModalSubmitButton>
                     </PasswordModalButtonContainer>
                 </View>
@@ -411,7 +411,7 @@ const ResetFundPassword = ({ navigation }: RootStackScreenProps<"ResetFundPasswo
                     <PasswordModalRowLine></PasswordModalRowLine>
                     <PasswordModalButtonContainer>
                         <PasswordModalCancelButton onPress={() => { setIsPasswordModalVisible2(false) }}>
-                            <PasswordModalCancelButtonText>取消</PasswordModalCancelButtonText>
+                            <PasswordModalCancelButtonText>{t("cancel")}</PasswordModalCancelButtonText>
                         </PasswordModalCancelButton>
                         <PasswordModalButtonLine />
                         <PasswordModalSubmitButton onPress={() => {  
@@ -428,7 +428,7 @@ const ResetFundPassword = ({ navigation }: RootStackScreenProps<"ResetFundPasswo
                             }
                           })
                         }}>
-                            <PasswordModalSubmitButtonText>確定</PasswordModalSubmitButtonText>
+                            <PasswordModalSubmitButtonText>{t("OK")}</PasswordModalSubmitButtonText>
                         </PasswordModalSubmitButton>
                     </PasswordModalButtonContainer>
                 </View>

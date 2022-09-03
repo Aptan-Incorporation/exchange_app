@@ -255,7 +255,7 @@ const C2cApply = ({ navigation }: RootStackScreenProps<"C2cApply">) => {
               <Text
                 style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}
               >
-                質押金額
+                {t("stackAmount")}
               </Text>
               <View
                 style={{
@@ -293,7 +293,7 @@ const C2cApply = ({ navigation }: RootStackScreenProps<"C2cApply">) => {
               <Text
                 style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}
               >
-                單筆最高限額
+                {t("maxAmountPer")}
               </Text>
               <View
                 style={{
@@ -331,7 +331,7 @@ const C2cApply = ({ navigation }: RootStackScreenProps<"C2cApply">) => {
               <Text
                 style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}
               >
-                單日最高限額
+                {t("maxAmountPerDay")}
               </Text>
               <View
                 style={{
@@ -374,7 +374,7 @@ const C2cApply = ({ navigation }: RootStackScreenProps<"C2cApply">) => {
               marginBottom: 12
             }}
           >
-            升級限制
+            {t("levelRestrict")}
           </Text>
           <View
             style={{
@@ -394,7 +394,7 @@ const C2cApply = ({ navigation }: RootStackScreenProps<"C2cApply">) => {
               <Text
                 style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}
               >
-                交易人次
+                {t("fiatTraderNum")}
               </Text>
               <View
                 style={{
@@ -432,7 +432,7 @@ const C2cApply = ({ navigation }: RootStackScreenProps<"C2cApply">) => {
               <Text
                 style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}
               >
-                有效筆數
+                {t("fiatTradeNum")}
               </Text>
               <View
                 style={{
@@ -470,7 +470,7 @@ const C2cApply = ({ navigation }: RootStackScreenProps<"C2cApply">) => {
               <Text
                 style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}
               >
-                累計金額{" "}
+                {t("accumulatedAmount")}{" "}
               </Text>
               <View
                 style={{
@@ -508,7 +508,7 @@ const C2cApply = ({ navigation }: RootStackScreenProps<"C2cApply">) => {
               <Text
                 style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}
               >
-                成功率
+                {t("completeRate")}
               </Text>
               <View
                 style={{
@@ -571,9 +571,9 @@ const C2cApply = ({ navigation }: RootStackScreenProps<"C2cApply">) => {
             }}
           >
             {advertiserLevel === level[level.length -1 ].name ? <Text style={{ color: "white", fontSize: 14, fontWeight: "500" }}>
-              已達最高等級
+            {t("highestLevel")}
             </Text>:<Text style={{ color: "white", fontSize: 14, fontWeight: "500" }}>
-              升級
+            {t("fiatUpgrade")}
             </Text>}
             
           </TouchableOpacity>

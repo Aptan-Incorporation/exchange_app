@@ -94,18 +94,18 @@ const FundsScreen = ({ navigation }: RootStackScreenProps<"OtcFunds">) => {
             source={require("../../assets/images/global/previous.png")}
           />
         </TouchableOpacity>
-        <HeaderText>資金劃轉</HeaderText>
+        <HeaderText>{t("fundingTransfer")}</HeaderText>
         <View></View>
       </Header>
       <View style={{padding:16}}>
           <View style={{display:"flex",flexDirection:"row",justifyContent:"space-between",backgroundColor:"#242D37",borderRadius:4,alignItems:"center"}}>
               <View style={{width:"80%"}}>
                 <View style={{display:"flex",flexDirection:"row",width:"100%",padding:12,alignItems:"center",borderBottomWidth:1,borderBottomColor:"#333C47"}}>
-                    <Text style={{color:"#8D97A2",fontSize:13,fontWeight:"500"}}>從</Text>
+                    <Text style={{color:"#8D97A2",fontSize:13,fontWeight:"500"}}>{t("from")}</Text>
                     <Text style={{color:"white",fontSize:15,fontWeight:"400",marginLeft:20}}>{status === 0 ? "現貨資產" :"法幣資產"}</Text>
                 </View>
                 <View style={{display:"flex",flexDirection:"row",width:"100%",padding:12,alignItems:"center"}}>
-                    <Text style={{color:"#8D97A2",fontSize:13,fontWeight:"500"}}>至</Text>
+                    <Text style={{color:"#8D97A2",fontSize:13,fontWeight:"500"}}>{t("to")}</Text>
                     <Text style={{color:"white",fontSize:15,fontWeight:"400",marginLeft:20}}>{status === 0 ? "法幣資產" :"現貨資產"}</Text>
                 </View>
               </View>
@@ -121,7 +121,7 @@ const FundsScreen = ({ navigation }: RootStackScreenProps<"OtcFunds">) => {
                   <Image source={require("../../assets/images/wallet/swap.png")} style={{width:28,height:28}}/>
               </TouchableOpacity>
           </View>
-         <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>數量</Text>
+         <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>{t("amount")}</Text>
          <TextInput style={{backgroundColor:"#242D37",borderRadius:4,padding:12,color:"white",marginTop:5}} placeholder="輸入劃轉數量" keyboardType={"decimal-pad"} returnKeyType={"done"} onChangeText={text => setNum(text)} value={num}/>
          <TouchableOpacity onPress={()=>{
              if(status === 0){
@@ -130,7 +130,7 @@ const FundsScreen = ({ navigation }: RootStackScreenProps<"OtcFunds">) => {
                 setNum(futuresBalance.toString())
             }
          }}>
-            <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:10}}>可用 {status === 0 ? totalBalance : futuresBalance} USDT</Text>
+            <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:10}}>{t("availableU")} {status === 0 ? totalBalance : futuresBalance} USDT</Text>
          </TouchableOpacity>
          <TouchableOpacity style={{display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:"#3D6A97",padding:12,borderRadius:4,marginTop:30}} onPress={async ()=>{
             let token = await AsyncStorage.getItem("token");

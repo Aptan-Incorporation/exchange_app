@@ -106,7 +106,7 @@ const C2cHelp = ({ navigation }: RootStackScreenProps<"C2cHelp">) => {
             source={require("../../assets/images/global/previous.png")}
           />
         </TouchableOpacity>
-        <HeaderText>幫助中心</HeaderText>
+        <HeaderText>{t("helpPage")}</HeaderText>
         <View></View>
       </Header>
       <View style={{display:"flex",flexDirection:"column",padding:16}}>

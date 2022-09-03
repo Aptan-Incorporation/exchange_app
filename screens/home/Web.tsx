@@ -84,7 +84,7 @@ const Web = ({ navigation }: RootStackScreenProps<"Web">) => {
             source={require("../../assets/images/global/previous.png")}
           />
         </TouchableOpacity>
-        <HeaderText>Google 驗證</HeaderText>
+        <HeaderText>{t("googleAuth")}</HeaderText>
         <View></View>
       </Header>
       <WebView 

@@ -84,7 +84,7 @@ const Consult = ({ navigation }: RootStackScreenProps<"Consult">) => {
             source={require("../../assets/images/global/previous.png")}
           />
         </TouchableOpacity>
-        <HeaderText>客服中心</HeaderText>
+        <HeaderText>{t("messageNotice")}</HeaderText>
         <View></View>
       </Header>
       <WebView 

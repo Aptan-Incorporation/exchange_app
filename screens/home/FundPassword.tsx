@@ -65,11 +65,11 @@ const FundPassword = ({ navigation }: RootStackScreenProps<"FundPassword">) => {
         >
           <IconImg source={require("../../assets/images/global/previous.png")} />
         </TouchableOpacity>
-        <HeaderText>資金密碼</HeaderText>
+        <HeaderText>{t("fundPass")}</HeaderText>
       <View></View>
       </Header>
       <View style={{ padding: 16 }}>
-      <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginBottom:4}}>資金密碼</Text>
+      <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginBottom:4}}>{t("fundPass")}</Text>
         <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="密碼長度至少為8個字元" secureTextEntry onChangeText={setPassword}/>
         <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>資金密碼確認</Text>
         <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="再次輸入密碼" secureTextEntry onChangeText={setPassword2}/>

@@ -59,7 +59,7 @@ const Member = ({ navigation }: RootStackScreenProps<"Member">) => {
         >
           <IconImg source={require("../../assets/images/global/previous.png")} />
         </TouchableOpacity>
-        <HeaderText>會員中心</HeaderText>
+        <HeaderText>{t("memberCenter")}</HeaderText>
         <View >
         </View>
       </Header>
@@ -76,27 +76,27 @@ const Member = ({ navigation }: RootStackScreenProps<"Member">) => {
         <View style={{ marginTop: 24 }}>
           <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }} onPress={() => { navigation.navigate("Setting") }}>
             <IconImg source={require("../../assets/images/home/security.png")} />
-            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>安全設置</Text>
+            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>{t("security")}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }} onPress={() => { navigation.navigate("C2c") }}>
             <IconImg source={require("../../assets/images/home/setup.png")} />
-            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>C2C管理</Text>
+            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>{t("fiatManage")}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }} onPress={() => { navigation.navigate("Advertisement") }}>
             <IconImg source={require("../../assets/images/home/ad.png")} />
-            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>我的廣告</Text>
+            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>{t("myAds")}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }} onPress={() => { navigation.navigate("Rebate") }}>
             <IconImg source={require("../../assets/images/home/bonus.png")} />
-            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>代理返佣</Text>
+            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>{t("referralManage")}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }} onPress={() => { navigation.navigate("Announcement") }}>
             <IconImg source={require("../../assets/images/home/announcement.png")} />
-            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>公告</Text>
+            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>{t("announcement")}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }}>
             <IconImg source={require("../../assets/images/home/guide.png")} />
-            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>新手指南</Text>
+            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>{t("guide")}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }} onPress={() => {
             AsyncStorage.removeItem("token")
@@ -104,7 +104,7 @@ const Member = ({ navigation }: RootStackScreenProps<"Member">) => {
             navigation.goBack()
           }}>
             <IconImg source={require("../../assets/images/home/logout.png")} />
-            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>登出</Text>
+            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>{t("logOut")}</Text>
           </TouchableOpacity>
         </View>
       </View>

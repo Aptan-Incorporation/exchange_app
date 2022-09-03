@@ -393,7 +393,7 @@ const GraphPage = (props: {
                     <GraphHeaderBottomRowColumnContainer>
                         <GraphHeaderBottomInlineRowContainer>
                             <GraphHeaderSmallTitleText>{t("marketPrice")}</GraphHeaderSmallTitleText>
-                            <GraphHeaderSmallValueText>{remarkPrice.slice(0,-4)}</GraphHeaderSmallValueText>
+                            <GraphHeaderSmallValueText>{remarkPrice}</GraphHeaderSmallValueText>
                         </GraphHeaderBottomInlineRowContainer>
                         <GraphHeaderBottomInlineRowContainer>
                             <GraphHeaderSmallTitleText>{t("indexPrice")}</GraphHeaderSmallTitleText>

@@ -1299,12 +1299,12 @@ const TradeScreen = ({
     };
 
     const getPrice = (trade: string) => {
-        axios
-            .get(`https://api1.binance.com/api/v3/ticker/price?symbol=${trade.split("-")[0]}USDT`)
-            .then((x) => {
-                setWareHousedPrice(x.data.price.slice(0, -6));
-                setBuyPrice(x.data.price.slice(0, -6))
-            });
+        // axios
+        //     .get(`https://api1.binance.com/api/v3/ticker/price?symbol=${trade.split("-")[0]}USDT`)
+        //     .then((x) => {
+        //         setWareHousedPrice(x.data.price.slice(0, -6));
+        //         setBuyPrice(x.data.price.slice(0, -6))
+        //     });
     };
 
     const getBalance = (symbol:string,side:string) => {
@@ -1360,6 +1360,8 @@ const TradeScreen = ({
             const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade
             const remark = _.find(context, function(o) { return o.s == t })
             setRemarkPrice(remark!.m)
+            setWareHousedPrice(remark!.s);
+            setBuyPrice(remark!.s)
         }
     }, [context])
 
@@ -1553,7 +1555,7 @@ const TradeScreen = ({
                                         }
                                     </TradeTableBottomTitleContainer>
                                     <TradeTableBottomTitleContainer>
-                                        <TradeTableBottomTitleOwnValueText>{remarkPrice.slice(0,-4)}</TradeTableBottomTitleOwnValueText>
+                                        <TradeTableBottomTitleOwnValueText>{remarkPrice}</TradeTableBottomTitleOwnValueText>
                                     </TradeTableBottomTitleContainer>
                                     <TradeTableBuyContainer>
                                         {

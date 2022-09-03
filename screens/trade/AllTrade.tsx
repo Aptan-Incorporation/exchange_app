@@ -267,10 +267,10 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
                 justifyContent: "space-between"
               }}
             >
-              <ColumnText>交易對</ColumnText>
+              <ColumnText>{t("marketPair")}</ColumnText>
 
               <View style={{ display: "flex", flexDirection: "row" }}>
-                <ColumnText style={{ marginRight: 40 }}>價格/交易量</ColumnText>
+                <ColumnText style={{ marginRight: 40 }}>{t("price")}/交易量</ColumnText>
                 <View
                   style={{
                     width: 88,
@@ -279,7 +279,7 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
                     justifyContent: "flex-end"
                   }}
                 >
-                  <ColumnText>24H漲跌</ColumnText>
+                  <ColumnText>{t("24Hchg")}</ColumnText>
                 </View>
               </View>
             </View>

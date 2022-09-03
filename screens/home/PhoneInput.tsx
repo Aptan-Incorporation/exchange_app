@@ -70,9 +70,9 @@ const PhoneInput = ({ navigation }: RootStackScreenProps<"PhoneInput">) => {
       </Header>
       <View style={{ padding: 16 }}>
         <View>
-          <Text style={{ color: "white", fontSize: 32, fontWeight: "600" }}>手機驗證</Text>
+          <Text style={{ color: "white", fontSize: 32, fontWeight: "600" }}>{t("mobileVerification")}</Text>
           <Text style={{ color: "#DDE0E3", fontSize: 15, fontWeight: "400", marginTop: 24, marginBottom: 4 }}>為了您的帳號安全，請輸入有效的手機號碼以完成會員基礎驗證。</Text>
-          <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:40,marginBottom:5}}>手機號碼</Text>
+          <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:40,marginBottom:5}}>{t("mobile")}</Text>
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
             <TextInput style={{ width: "100%", height: 48, backgroundColor: "#242D37", borderRadius: 4,color:"white",fontSize:15,paddingLeft:10 }} placeholder="請輸入手機號碼如：886915547875" onChangeText={text =>{
               setPhone(text)
@@ -89,7 +89,7 @@ const PhoneInput = ({ navigation }: RootStackScreenProps<"PhoneInput">) => {
             })
           }}
           >
-          <Text style={{ color: "white", fontSize: 14, fontWeight: "500" }}>繼續</Text>
+          <Text style={{ color: "white", fontSize: 14, fontWeight: "500" }}>{t("nextStep")}</Text>
         </TouchableOpacity>
       </View>
     </Container>

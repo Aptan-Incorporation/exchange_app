@@ -280,13 +280,13 @@ const PaymentsCreate = ({ navigation, route }: RootStackScreenProps<"PaymentsCre
                     </TouchableOpacity>
                 </PreviousIconContainer>
                 <HeaderTitleTextContainer>
-                    <HeaderTitleText>新增帳戶</HeaderTitleText>
+                    <HeaderTitleText>{t("addAccount")}</HeaderTitleText>
                 </HeaderTitleTextContainer>
                 <HeaderEmptyContainer />
             </HeaderContainer>
             <BodyContainer>
                 <PaymentTypeContainer>
-                    <BodyTitleText>帳戶類型</BodyTitleText>
+                    <BodyTitleText>{t("accountType")}</BodyTitleText>
                     <PaymentTypeButton onPress={() => { setIsPaymentTypeModalVisible(true) }} disabled={true}>
                         <PaymentTypeButtonText>{handlePaymentType(inputPaymentType)}</PaymentTypeButtonText>
                         <PaymentTypeForwardImage source={require("../../assets/images/home/next.png")} />
@@ -295,7 +295,7 @@ const PaymentsCreate = ({ navigation, route }: RootStackScreenProps<"PaymentsCre
                 {
                     inputPaymentType === 'BANK' &&
                     <SwapContainer>
-                        <BodyTitleText>帳戶姓名</BodyTitleText>
+                        <BodyTitleText>{t("accountName")}</BodyTitleText>
                         <TextInput
                             style={{
                                 height: 48,
@@ -310,11 +310,11 @@ const PaymentsCreate = ({ navigation, route }: RootStackScreenProps<"PaymentsCre
                             }}
                             value={inputBankAccountOwnerName}
                             onChangeText={(text) => { setInputBankAccountOwnerName(text) }}
-                            placeholder={"請輸入帳戶姓名"}
+                            placeholder={t("enterAccountName")}
                             placeholderTextColor={'#8D97A2'}
                             keyboardType={"default"}
                         />
-                        <BodyTitleText>銀行代碼</BodyTitleText>
+                        <BodyTitleText>{t("bankName")}</BodyTitleText>
                         <TextInput
                             style={{
                                 height: 48,
@@ -329,12 +329,12 @@ const PaymentsCreate = ({ navigation, route }: RootStackScreenProps<"PaymentsCre
                             }}
                             value={inputBankCode}
                             onChangeText={(text) => { setInputBankCode(text) }}
-                            placeholder={"請輸入銀行代碼"}
+                            placeholder={t("enterBankName")}
                             placeholderTextColor={'#8D97A2'}
                             keyboardType={"number-pad"}
                             maxLength={3}
                         />
-                        <BodyTitleText>銀行帳號</BodyTitleText>
+                        <BodyTitleText>{t("accountNum")}</BodyTitleText>
                         <TextInput
                             style={{
                                 height: 48,
@@ -349,7 +349,7 @@ const PaymentsCreate = ({ navigation, route }: RootStackScreenProps<"PaymentsCre
                             }}
                             value={inputBankAccount}
                             onChangeText={(text) => { setInputBankAccount(text) }}
-                            placeholder={"請輸入銀行帳號"}
+                            placeholder={t("enterAccountNum")}
                             placeholderTextColor={'#8D97A2'}
                             keyboardType={"number-pad"}
                         />
@@ -357,12 +357,12 @@ const PaymentsCreate = ({ navigation, route }: RootStackScreenProps<"PaymentsCre
                             inputBankAccountOwnerName !== "" && inputBankCode !== "" && inputBankAccount !== "" ?
                                 <CreateButtonContainer>
                                     <CreateButton onPress={() => { createBANK() }}>
-                                        <CreateButtonText>新增</CreateButtonText>
+                                        <CreateButtonText>{t("add")}</CreateButtonText>
                                     </CreateButton>
                                 </CreateButtonContainer> :
                                 <CreateButtonContainer>
                                     <CreateButtonDisabled disabled={true}>
-                                        <CreateButtonDisabledText>新增</CreateButtonDisabledText>
+                                        <CreateButtonDisabledText>{t("add")}</CreateButtonDisabledText>
                                     </CreateButtonDisabled>
                                 </CreateButtonContainer>
                         }

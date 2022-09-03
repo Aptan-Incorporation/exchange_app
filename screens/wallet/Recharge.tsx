@@ -85,7 +85,7 @@ const RechargeScreen = ({ navigation }: RootStackScreenProps<"Recharge">) => {
             source={require("../../assets/images/global/previous.png")}
           />
         </TouchableOpacity>
-        <HeaderText>充值USDT</HeaderText>
+        <HeaderText>{t("deposit")}USDT</HeaderText>
         <View></View>
       </Header>
       <View style={{justifyContent:"center",alignItems:"center",display:"flex",flexDirection:"column",marginTop:20}}>
@@ -95,7 +95,7 @@ const RechargeScreen = ({ navigation }: RootStackScreenProps<"Recharge">) => {
           </View>
           <Text style={{color:"#8D97A2",fontSize:13,fontWeight:"500",marginTop:20}}>此地址只可接收USDT</Text>
           <View style={{width:"90%"}}>
-          <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>網路</Text>
+          <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>{t("network")}</Text>
           <View style={{backgroundColor:"#242D37",borderRadius:4,padding:12,marginTop:5}}>
           <Text style={{color:"white"}}>TRON(TRC20)</Text>
           </View>

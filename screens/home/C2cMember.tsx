@@ -139,13 +139,13 @@ const Member = ({ navigation }: RootStackScreenProps<"C2cMember">) => {
         </View>
         {role === "user" ? 
          <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-         <Text style={{ color: "#BCC2C8", fontSize: 13, fontWeight: "500", marginRight: 5 }}>切換商家</Text>
+         <Text style={{ color: "#BCC2C8", fontSize: 13, fontWeight: "500", marginRight: 5 }}>{t("switchMch")}</Text>
          <TouchableOpacity onPress={()=>{setRole("advertiser")}}>
            <IconImg source={require("../../assets/images/home/swap.png")} />
          </TouchableOpacity>
        </View>:
         <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-        <Text style={{ color: "#BCC2C8", fontSize: 13, fontWeight: "500", marginRight: 5 }}>切換用戶</Text>
+        <Text style={{ color: "#BCC2C8", fontSize: 13, fontWeight: "500", marginRight: 5 }}>{t("switchUser")}</Text>
         <TouchableOpacity onPress={()=>{setRole("user")}}>
           <IconImg source={require("../../assets/images/home/swap.png")} />
         </TouchableOpacity>
@@ -165,20 +165,20 @@ const Member = ({ navigation }: RootStackScreenProps<"C2cMember">) => {
 
               </TouchableOpacity>
             </View>
-            {role === "user" ?            <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "600", marginTop: 4 }}>已驗證用戶</Text>
-:            <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "600", marginTop: 4 }}>已驗證商家</Text>
+            {role === "user" ?            <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "600", marginTop: 4 }}>{t("verifiedUser")}</Text>
+:            <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "600", marginTop: 4 }}>{t("verifiedMch")}</Text>
 }
           </View>
         </View>
         <View style={{ marginTop: 24 }}>
           <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: "#242D37", padding: 16, borderRadius: 8 }}>
-            <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>認證狀態</Text>
+            <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("verifyStatus")}</Text>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
               <IconImg source={require("../../assets/images/home/check.png")} style={{ width: 16, height: 16, marginRight: 5 }} />
-              <Text style={{ color: "#F4F5F6", fontSize: 12, fontWeight: "400", marginRight: 5 }}>信箱</Text>
+              <Text style={{ color: "#F4F5F6", fontSize: 12, fontWeight: "400", marginRight: 5 }}>{t("email")}</Text>
               {kyc.phone && <>
                 <IconImg source={require("../../assets/images/home/check.png")} style={{ width: 16, height: 16, marginRight: 5 }} />
-                <Text style={{ color: "#F4F5F6", fontSize: 12, fontWeight: "400", marginRight: 5 }}>手機</Text>
+                <Text style={{ color: "#F4F5F6", fontSize: 12, fontWeight: "400", marginRight: 5 }}>{t("mobile")}</Text>
               </>}
               {kyc.kyc && <>
                 <IconImg source={require("../../assets/images/home/check.png")} style={{ width: 16, height: 16, marginRight: 5 }} />
@@ -191,14 +191,14 @@ const Member = ({ navigation }: RootStackScreenProps<"C2cMember">) => {
           </View>
           <View style={{ display: "flex", flexDirection: "column", backgroundColor: "#242D37", padding: 16, borderRadius: 8, marginTop: 16 }}>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>30日成單數</Text>
+              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("thirtyDaysDeal")}</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{obj.completeOrders30daysCount}</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>次</Text>
+                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("times")}</Text>
               </View>
             </View>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
-              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>30日成單率</Text>
+              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("thirtyDaysDealRate")}</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{obj.completeOrders30daysRate}</Text>
                 <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>%</Text>
@@ -207,47 +207,47 @@ const Member = ({ navigation }: RootStackScreenProps<"C2cMember">) => {
           </View>
           <View style={{ display: "flex", flexDirection: "column", backgroundColor: "#242D37", padding: 16, borderRadius: 8, marginTop: 16 }}>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>30日平均放行時間</Text>
+              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("thirtyDaysAvgSellTime")}</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{obj.averageConfirmTime30days > 0 ? obj.averageConfirmTime30days/(1000*60) : obj.averageConfirmTime30days}</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>分鐘</Text>
+                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("minutes")}</Text>
               </View>
             </View>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
-              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>30日平均付款時間</Text>
+              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("thirtyDaysAvgBuyTime")}</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{obj.averagePayTime30days > 0 ? obj.averagePayTime30days/(1000*60) : obj.averagePayTime30days}</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>分鐘</Text>
+                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("minutes")}</Text>
               </View>
             </View>
           </View>
           <View style={{ display: "flex", flexDirection: "column", backgroundColor: "#242D37", padding: 16, borderRadius: 8, marginTop: 16 }}>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>帳戶已創建</Text>
+              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("accountEst")}</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{obj.accountCreatedTime > 0 ? (obj.accountCreatedTime/(1000*60*60*24)).toFixed(0):obj.accountCreatedTime}</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>天</Text>
+                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("days")}</Text>
               </View>
             </View>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
-              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>首次交易至今</Text>
+              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("firstDealtill")}</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{obj.firstCompleteTime > 0 ?(obj.firstCompleteTime/(1000*60*60*24)).toFixed(0):obj.firstCompleteTime}</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>天</Text>
+                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("days")}</Text>
               </View>
             </View>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
-              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>交易人數</Text>
+              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("dealPeopleNum")}</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{obj.completeUsers}</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>人</Text>
+                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("people")}</Text>
               </View>
             </View>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
-              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>總成單數</Text>
+              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("dealNum")}</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{obj.buyCompleteOrdersCount + obj.sellCompleteOrdersCount}</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>次</Text>
+                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("times")}</Text>
               </View>
             </View>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
@@ -263,14 +263,14 @@ const Member = ({ navigation }: RootStackScreenProps<"C2cMember">) => {
           </View>
           <View style={{ display: "flex", flexDirection: "column", backgroundColor: "#242D37", padding: 16, borderRadius: 8, marginTop: 16 }}>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>30日大致交易量</Text>
+              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("thirtyDaysDealAmount")}</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{obj.completeAmount30days}</Text>
                 <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>USDT</Text>
               </View>
             </View>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
-              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>大致總交易量</Text>
+              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("totalDealAmount")}</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{obj.buyCompleteAmount + obj.sellCompleteAmount}</Text>
                 <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>USDT</Text>
@@ -290,34 +290,34 @@ const Member = ({ navigation }: RootStackScreenProps<"C2cMember">) => {
           {role === "advertiser" && <>
           <View style={{ display: "flex", flexDirection: "column", backgroundColor: "#242D37", padding: 16, borderRadius: 8, marginTop: 16 }}>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>質押等級</Text>
+              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("stackAmount")}</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{user.advertiserLevel ? user.advertiserLevel.name:"尚無等級"}</Text>
               </View>
             </View>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
-              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>單筆最高限額</Text>
+              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("maxAmountPer")}</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{user.advertiserLevel ? user.advertiserLevel.maxAmountPerOrder:0}</Text>
                 <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>USDT</Text>
               </View>
             </View>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
-              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>單日最高限額</Text>
+              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("maxAmountPerDay")}</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{user.advertiserLevel ? user.advertiserLevel.maxAmountPerDay:0}</Text>
                 <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>USDT</Text>
               </View>
             </View>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
-              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>買入手續費</Text>
+              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("fiatBuyFee")}</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{user.buyFeeRate}</Text>
                 <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>%</Text>
               </View>
             </View>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 12 }}>
-              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>賣出手續費</Text>
+              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("fiatSellFee")}</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{user.sellFeeRate}</Text>
                 <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>%</Text>
@@ -326,7 +326,7 @@ const Member = ({ navigation }: RootStackScreenProps<"C2cMember">) => {
           </View>
           <View style={{ display: "flex", flexDirection: "column", backgroundColor: "#242D37", padding: 16, borderRadius: 8, marginTop: 16 }}>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>商戶限制剩餘時間</Text>
+              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("restrictTime")}</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <TouchableOpacity onPress={() => {
                   setModalVisible(true)
@@ -356,23 +356,23 @@ const Member = ({ navigation }: RootStackScreenProps<"C2cMember">) => {
               <TouchableOpacity onPress={() => { setModalVisible(false) }}>
                 <ModalLeftCancelButton source={require("../../assets/images/trade/cancel.png")} />
               </TouchableOpacity>
-              <ModalHedaerTitleText>商戶限制剩餘時間</ModalHedaerTitleText>
+              <ModalHedaerTitleText>{t("restrictTime")}</ModalHedaerTitleText>
               <ModalEmptyDiv></ModalEmptyDiv>
             </ModalHeaderContainer>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>廣告單限制</Text>
+              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("adsRestrict")}</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>0</Text>
               </View>
             </View>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 30 }}>
-              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>C2C 交易限制</Text>
+              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("fiatRestrict")}</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>0</Text>
               </View>
             </View>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginTop: 30,marginBottom: 10 }}>
-              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>換轉限制</Text>
+              <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("transferRestrict")}</Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>0</Text>
               </View>
