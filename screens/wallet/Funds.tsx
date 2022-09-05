@@ -93,11 +93,11 @@ const FundsScreen = ({ navigation }: RootStackScreenProps<"Funds">) => {
               <View style={{width:"80%"}}>
                 <View style={{display:"flex",flexDirection:"row",width:"100%",padding:12,alignItems:"center",borderBottomWidth:1,borderBottomColor:"#333C47"}}>
                     <Text style={{color:"#8D97A2",fontSize:13,fontWeight:"500"}}>{t("from")}</Text>
-                    <Text style={{color:"white",fontSize:15,fontWeight:"400",marginLeft:20}}>{status === 0 ? "現貨資產" :"合約資產"}</Text>
+                    <Text style={{color:"white",fontSize:15,fontWeight:"400",marginLeft:20}}>{status === 0 ? t("spotFund") :t("contractFund")}</Text>
                 </View>
                 <View style={{display:"flex",flexDirection:"row",width:"100%",padding:12,alignItems:"center"}}>
                     <Text style={{color:"#8D97A2",fontSize:13,fontWeight:"500"}}>{t("to")}</Text>
-                    <Text style={{color:"white",fontSize:15,fontWeight:"400",marginLeft:20}}>{status === 0 ? "合約資產" :"現貨資產"}</Text>
+                    <Text style={{color:"white",fontSize:15,fontWeight:"400",marginLeft:20}}>{status === 0 ? t("contractFund") :t("spotFund")}</Text>
                 </View>
               </View>
               <TouchableOpacity  style={{marginRight:10}} onPress={()=>{
@@ -128,7 +128,7 @@ const FundsScreen = ({ navigation }: RootStackScreenProps<"Funds">) => {
             if(!token){
                 Alert.alert("請先登入")
             }else if(!num){
-                Alert.alert("請輸入數量")
+                Alert.alert(t("fiatSellQty"))
             }else{
                 let obj ={
                     from: status === 0 ? "SPOT" :"FUTURE",
@@ -148,7 +148,7 @@ const FundsScreen = ({ navigation }: RootStackScreenProps<"Funds">) => {
             }
             
          }}>
-             <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>劃轉</Text>
+             <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>{t("transfer")} </Text>
          </TouchableOpacity>
       </View>
     </Container>

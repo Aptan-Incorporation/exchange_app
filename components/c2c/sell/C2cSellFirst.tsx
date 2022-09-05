@@ -544,7 +544,7 @@ const C2cSellFirst = (props: {
                     <TopInputLeftContainer>
                         <TopInputLeftRowContainer>
                             <TextInput
-                                placeholder={"請輸入金額"}
+                                placeholder={t("fiatSellAmount")} 
                                 value={inputAmount}
                                 onChangeText={inputAmount => setInputAmount(inputAmount)}
                                 placeholderTextColor={'#8D97A2'}
@@ -557,13 +557,13 @@ const C2cSellFirst = (props: {
                             </TopInputCurrencyTextContainer>
                             <TopInputAllButtonContainer>
                                 <TouchableOpacity onPress={() => { handleOnChangeAllAmount() }}>
-                                    <TopInputAllButtonText>全部</TopInputAllButtonText>
+                                    <TopInputAllButtonText>{t("fiatAll")} </TopInputAllButtonText>
                                 </TouchableOpacity>
                             </TopInputAllButtonContainer>
                         </TopInputLeftRowContainer>
                         <TopInputLeftRowContainer>
                             <TextInput
-                                placeholder={"請輸入數量"}
+                                placeholder={t("fiatSellQty")}  
                                 value={inputNumber}
                                 onChangeText={inputNumber => setInputNumber(inputNumber)}
                                 placeholderTextColor={'#8D97A2'}
@@ -576,7 +576,7 @@ const C2cSellFirst = (props: {
                             </TopInputCurrencyTextContainer>
                             <TopInputAllButtonContainer>
                                 <TouchableOpacity onPress={() => { handleOnChangeAllNumber() }}>
-                                    <TopInputAllButtonText>全部</TopInputAllButtonText>
+                                    <TopInputAllButtonText>{t("fiatAll")} </TopInputAllButtonText>
                                 </TouchableOpacity>
                             </TopInputAllButtonContainer>
                         </TopInputLeftRowContainer>

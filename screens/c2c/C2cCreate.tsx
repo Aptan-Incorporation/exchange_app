@@ -1462,7 +1462,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
     // 判斷帳戶類型
     const handlePaymentType = (payment: string) => {
         if (payment === 'BANK') {
-            return '銀行帳戶'
+            return t("bankAccount")
         } else if (payment === 'TOUCHNGO') {
             return 'TouchnGO'
         } else if (payment === 'PPAY') {
@@ -1860,7 +1860,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                                 }}
                                                 value={inputPrice}
                                                 onChangeText={(text) => { setInputPrice(text) }}
-                                                placeholder={"輸入固定價格"}
+                                                placeholder={t("enterFixedPrice")}
                                                 placeholderTextColor={'#8D97A2'}
                                                 keyboardType={"decimal-pad"}
                                             />
@@ -1992,7 +1992,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
 
                         <TradeFeeNotifyContainer>
                             <TradeFeeNotifyImage source={require("../../assets/images/c2c/funds.png")} />
-                            <TradeFeeNotifyText>廣告預估手續費 {handleCountFee()} {cryptoAssetType}</TradeFeeNotifyText>
+                            <TradeFeeNotifyText>{t("estAdsFee")} {handleCountFee()} {cryptoAssetType}</TradeFeeNotifyText>
                         </TradeFeeNotifyContainer>
 
                     </SwapPageContainer>
@@ -2013,7 +2013,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                 {
                                     chosenPaymentType.length < 1 ?
                                         <PaymentRowContainer>
-                                            <PaymentText>請添加至少一種付款方式</PaymentText>
+                                            <PaymentText>{t("addOnePayment")} </PaymentText>
                                         </PaymentRowContainer> :
                                         <PaymentRowContainer horizontal={true}>
                                             {

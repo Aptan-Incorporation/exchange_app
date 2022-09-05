@@ -519,10 +519,10 @@ const HistoryScreen = ({
                 {
                     swapView === 'AssetsRecord' ?
                         <TouchableOpacity onPress={() => { setSwapView('AssetsRecord') }} style={{ borderBottomWidth: 2, borderBottomColor: '#6699CC', marginRight: 24, paddingRight: 1, paddingLeft: 1 }}>
-                            <SwapButtonClickedText>資產紀錄</SwapButtonClickedText>
+                            <SwapButtonClickedText>{t("transactionHistory")} </SwapButtonClickedText>
                         </TouchableOpacity> :
                         <TouchableOpacity onPress={() => { setSwapView('AssetsRecord') }} style={{ marginRight: 24 }}>
-                            <SwapButtonText>資產紀錄</SwapButtonText>
+                            <SwapButtonText>{t("transactionHistory")} </SwapButtonText>
                         </TouchableOpacity>
                 }
                 {/* {
@@ -554,8 +554,8 @@ const HistoryScreen = ({
                                         {
                                             x.status === "CREATE"?
                                                 <HistoryCommitCardTitleProgressCancelText>已建立</HistoryCommitCardTitleProgressCancelText> :x.status === "DEAL"?
-                                                <HistoryCommitCardTitleProgressCancelText>已成交</HistoryCommitCardTitleProgressCancelText>:
-                                                <HistoryCommitCardTitleProgressCancelText>已取消</HistoryCommitCardTitleProgressCancelText>
+                                                <HistoryCommitCardTitleProgressCancelText>{t("orderFilled")}    </HistoryCommitCardTitleProgressCancelText>:
+                                                <HistoryCommitCardTitleProgressCancelText>{t("orderCanceled")} </HistoryCommitCardTitleProgressCancelText>
                                         }
                                     </CardTitleRowContainer>
                                     <CardTitleTimeText>{new Date(x.createdDate).getFullYear()}-{new Date(x.createdDate).getMonth()+1 < 10 ? "0"+(new Date(x.createdDate).getMonth()+1) : new Date(x.createdDate).getMonth()+1}-{new Date(x.createdDate).getDate() < 10 ? "0"+(new Date(x.createdDate).getDate()) : new Date(x.createdDate).getDate()} {new Date(x.createdDate).getHours() < 10 ? "0"+(new Date(x.createdDate).getHours()) : new Date(x.createdDate).getHours()}:{new Date(x.createdDate).getMinutes() < 10 ? "0"+(new Date(x.createdDate).getMinutes()) : new Date(x.createdDate).getMinutes()}</CardTitleTimeText>
@@ -585,11 +585,11 @@ const HistoryScreen = ({
                                             }
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>成交價</CardDetailTitleText>
+                                            <CardDetailTitleText>{t("dealPrice")}  </CardDetailTitleText>
                                             <CardDetailValueText>{x.type == "STOP_MARKET" ? "市價":x.price}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>實現盈虧</CardDetailTitleText>
+                                            <CardDetailTitleText>{t("realizedPNL")}   </CardDetailTitleText>
                                             <CardDetailValueText>{x.profitAndLoss && x.profitAndLoss.toFixed(2) + " USDT"}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         {/* <CardDetailInColumnContainer>
@@ -601,7 +601,7 @@ const HistoryScreen = ({
                                     </CardDetailColumnContainer>
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>狀態</CardDetailTitleText>
+                                            <CardDetailTitleText>{t("orderStatus")} </CardDetailTitleText>
                                     <CardDetailValueText>{x.status}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
@@ -696,7 +696,7 @@ const HistoryScreen = ({
                                     }
                                 </AssetsRecordTitleContainer>
                                 <AssetsRecordDetailContainer>
-                                    <AssetsRecordTimeText>{x.createdDate.split("T")[0]}  {x.createdDate.split("T")[1].split(".")[0]}</AssetsRecordTimeText>
+                                    <AssetsRecordTimeText>{new Date(x.createdDate).toISOString().split("T")[0]} {new Date(x.createdDate).toISOString().split("T")[1].split(".")[0]}</AssetsRecordTimeText>
                                     {/* {
                                         x.type === 'buy' ?
                                             <AssetsRecordTypeLeverageTextSecondary>{x.typeName}・{x.leverage}X</AssetsRecordTypeLeverageTextSecondary> :

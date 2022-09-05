@@ -429,7 +429,7 @@ const C2cBuyFirst = (props: {
                             </TopInputCurrencyTextContainer>
                             <TopInputAllButtonContainer>
                                 <TouchableOpacity onPress={() => { handleOnChangeAllAmount() }}>
-                                    <TopInputAllButtonText>全部</TopInputAllButtonText>
+                                    <TopInputAllButtonText>{t("fiatAll")} </TopInputAllButtonText>
                                 </TouchableOpacity>
                             </TopInputAllButtonContainer>
                         </TopInputLeftRowContainer>
@@ -448,7 +448,7 @@ const C2cBuyFirst = (props: {
                             </TopInputCurrencyTextContainer>
                             <TopInputAllButtonContainer>
                                 <TouchableOpacity onPress={() => { handleOnChangeAllNumber() }}>
-                                    <TopInputAllButtonText>全部</TopInputAllButtonText>
+                                    <TopInputAllButtonText>{t("fiatAll")} </TopInputAllButtonText>
                                 </TouchableOpacity>
                             </TopInputAllButtonContainer>
                         </TopInputLeftRowContainer>

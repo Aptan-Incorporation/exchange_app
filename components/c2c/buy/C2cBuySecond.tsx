@@ -657,7 +657,7 @@ const C2cBuySecond = (props: {
             getBuyStatus()
         }
         if(status2 === -1){
-            alert("訂單取消")
+            alert(t("fiatOrderCanceled"))
             navigation.goBack()
         }
         if(status2 === -2){
@@ -851,7 +851,7 @@ const C2cBuySecond = (props: {
                     <CancelButtonText style={{ color: handleCancelButtonTextStyle() }}>{t("fiatCancelOrder")}</CancelButtonText>
                 </CancelButton>
                 <SubmitButton onPress={() => { handleSubmitAlert() }} disabled={handleButtonDisabled()} style={{ backgroundColor: handleSubmitButtonStyle() }}>
-                    <SubmitButtonText style={{ color: handleSubmitButtonTextStyle() }}>{submitText}</SubmitButtonText>
+                    <SubmitButtonText style={{ color: handleSubmitButtonTextStyle() }}>{submitText === "放行中..." ? t("fiatTransfer") :submitText}</SubmitButtonText>
                 </SubmitButton>
             </BottomButtonContainer>
 

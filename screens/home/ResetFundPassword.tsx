@@ -188,10 +188,10 @@ const ResetFundPassword = ({ navigation }: RootStackScreenProps<"ResetFundPasswo
       <View style={{ padding: 16 }}>
       
       <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginBottom:4}}>{t("password")}</Text>
-        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="請輸入密碼" secureTextEntry onChangeText={setPassword}/>
+        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder={t("enterPass")} secureTextEntry onChangeText={setPassword}/>
         
         <View style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
-        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>信箱驗證碼</Text>
+        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>{t("emailCode")}</Text>
 
         <TouchableOpacity onPress={()=>{
           // setIsPasswordModalVisible(true)
@@ -210,15 +210,15 @@ const ResetFundPassword = ({ navigation }: RootStackScreenProps<"ResetFundPasswo
           })
         }}>
           {emailSend ?  <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>{count}s</Text>
- : <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>發送信箱驗證碼</Text>
+ : <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>{t("sendEmailCode")}</Text>
 }
         </TouchableOpacity>
         </View>
-        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="請輸入信箱驗證碼" onChangeText={setEmailcode}/>
+        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder={t("enterEmailCode")} onChangeText={setEmailcode}/>
         
         {kyc.phone && <>
            <View style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
-           <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>手機驗證碼</Text>
+           <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>{t("mobileCode")}</Text>
 
            <TouchableOpacity onPress={()=>{
           // setIsPasswordModalVisible2(true)
@@ -237,28 +237,28 @@ const ResetFundPassword = ({ navigation }: RootStackScreenProps<"ResetFundPasswo
          })
         }}>
           {phoneSend ?          <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,borderBottomWidth:1,borderBottomColor:"white"}}>{count2}s</Text>
-:           <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,borderBottomWidth:1,borderBottomColor:"white"}}>發送手機驗證碼</Text>
+:           <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,borderBottomWidth:1,borderBottomColor:"white"}}>{t("sendMobileCode")}</Text>
 }
         </TouchableOpacity>
            </View>
-        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="請輸入手機驗證碼" onChangeText={setPhonecode}/>
+        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder={t("enterMobileCode")} onChangeText={setPhonecode}/>
         
         </>}   
-        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>新資金密碼</Text>
-        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="請輸入新資金密碼" secureTextEntry onChangeText={setPassword2}/>
+        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>{t("newFundPass")}</Text>
+        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder={t("enterNewFundPass")} secureTextEntry onChangeText={setPassword2}/>
         <TouchableOpacity style={{display:"flex",flexDirection:"row",backgroundColor:"#3D6A97",borderRadius:4,justifyContent:"center",alignItems:"center",height:44,marginTop:42}} onPress={()=>{
           //  navigation.navigate("Setting")
           if(!password){
-            Alert.alert("請輸入密碼")
+            Alert.alert(t("enterPass"))
           }
           else if(!emailCode){
             Alert.alert("請輸入信箱驗證")
           }
           else if(kyc.phone && !phoneCode){
-            Alert.alert("請輸入手機驗證碼")
+            Alert.alert(t("enterMobileCode"))
           }
           else if(!password2){
-            Alert.alert("請輸入新資金密碼")
+            Alert.alert(t("enterNewFundPass"))
           }
           
           else{

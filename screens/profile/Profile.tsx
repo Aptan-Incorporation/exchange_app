@@ -51,7 +51,7 @@ const ProfileScreen = ({
           >
             <IconImg source={require("../../assets/images/global/previous.png")} />
           </TouchableOpacity>
-          <HeaderText>首頁</HeaderText>
+          <HeaderText>{t("home")} </HeaderText>
           <View></View>
         </Header>
         <View style={{ padding: 16 }}>

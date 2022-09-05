@@ -66,12 +66,12 @@ const ResetPassword = ({ navigation }: RootStackScreenProps<"ResetPassword">) =>
         <Spinner visible={true} textContent={''} />
       }
       <View>
-        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginBottom:4}}>舊密碼</Text>
-        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="輸入舊密碼" secureTextEntry onChangeText={setPassword}/>
-        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>新密碼</Text>
-        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="輸入新密碼，長度至少為8個字元" secureTextEntry onChangeText={setPassword2}/>
-        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>確認新密碼</Text>
-        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="再次輸入新密碼" secureTextEntry onChangeText={setPassword3}/>
+        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginBottom:4}}>{t("oldPass")}   </Text>
+        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder={t("enterOldPass")} secureTextEntry onChangeText={setPassword}/>
+        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>{t("enterOldPass")}</Text>
+        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder={t("enterNewPass")} secureTextEntry onChangeText={setPassword2}/>
+        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>{t("checkNewPass")}</Text>
+        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder={t("enterAgainNewPass")} secureTextEntry onChangeText={setPassword3}/>
 
       </View>
       <TouchableOpacity style={{display:"flex",flexDirection:"row",backgroundColor:"#3D6A97",borderRadius:4,justifyContent:"center",alignItems:"center",height:44,marginTop:42}} onPress={()=>{

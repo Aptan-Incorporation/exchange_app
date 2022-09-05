@@ -219,7 +219,7 @@ const ContractHistory = ({ navigation }: RootStackScreenProps<"ContractHistory">
             source={require("../../assets/images/global/previous.png")}
           />
         </TouchableOpacity>
-        <HeaderText>資金紀錄</HeaderText>
+        <HeaderText>{t("fundTransactionHistory")}</HeaderText>
         <View></View>
       </Header>
       {
@@ -236,7 +236,7 @@ const ContractHistory = ({ navigation }: RootStackScreenProps<"ContractHistory">
                       }
                   </AssetsRecordTitleContainer>
                   <AssetsRecordDetailContainer>
-                    <AssetsRecordTimeText>{x.createdDate.split("T")[0]}  {x.createdDate.split("T")[1].split(".")[0]}</AssetsRecordTimeText>
+                    <AssetsRecordTimeText>{new Date(x.createdDate).toISOString().split("T")[0]} {new Date(x.createdDate).toISOString().split("T")[1].split(".")[0]}</AssetsRecordTimeText>
                       {/* {
                           x.type === 'buy' ?
                               <AssetsRecordTypeLeverageTextSecondary>{x.typeName}・{x.leverage}X</AssetsRecordTypeLeverageTextSecondary> :

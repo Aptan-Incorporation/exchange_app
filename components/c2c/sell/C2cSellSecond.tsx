@@ -600,7 +600,7 @@ const C2cSellSecond = (props: {
       setSubmitText("確認收款並放行");
     }
     if(status === -1){
-        alert("訂單取消")
+        alert(t("fiatOrderCanceled"))
         navigation.goBack()
     }
   }, [status,status2]);
@@ -758,7 +758,7 @@ const C2cSellSecond = (props: {
                         api.postData(`/otc/api/otcOrder/${BuyId}/cancel`, {}).then(x => {
                           console.log(x)
                       if (x.status != 400) {
-                        alert("訂單取消");
+                        alert(t("fiatOrderCanceled"));
                         navigation.goBack()
                       }else{
                           alert(x.data.msg)
@@ -830,7 +830,7 @@ const C2cSellSecond = (props: {
           style={{ backgroundColor: handleSubmitButtonStyle() }}
         >
           <SubmitButtonText style={{ color: handleSubmitButtonTextStyle() }}>
-            {submitText}
+            {submitText === "等待買家確認交易" ? t("fiatBuyerCheck2") : submitText}
           </SubmitButtonText>
         </SubmitButton>
       </BottomButtonContainer>

@@ -115,13 +115,13 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
               {kyc.phone ? <Text
                 style={{ color: "#8D97A2", fontSize: 15, fontWeight: "400" }}
               >
-                已驗證
+                {t("verificationComp")}
               </Text>:
               <>
               <Text
                 style={{ color: "#8D97A2", fontSize: 15, fontWeight: "400" }}
               >
-                驗證
+                {t("verificationUnavb")}
               </Text>
               <IconImg
                 source={require("../../assets/images/home/next.png")}
@@ -161,13 +161,13 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
               {kyc.googleAuth ? <Text
                 style={{ color: "#8D97A2", fontSize: 15, fontWeight: "400" }}
               >
-                已驗證
+                {t("verificationComp")}
               </Text>:
               <>
               <Text
                 style={{ color: "#8D97A2", fontSize: 15, fontWeight: "400" }}
               >
-                驗證
+                {t("verificationUnavb")}
               </Text>
               <IconImg
                 source={require("../../assets/images/home/next.png")}
@@ -238,13 +238,13 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
               {kyc.financePwd ? <Text
                 style={{ color: "#8D97A2", fontSize: 15, fontWeight: "400" }}
               >
-                已設置
+                {t("verificationSet")}
               </Text>:
               <>
               <Text
                 style={{ color: "#8D97A2", fontSize: 15, fontWeight: "400" }}
               >
-                驗證
+                {t("verificationUnset")}
               </Text>
               <IconImg
                 source={require("../../assets/images/home/next.png")}

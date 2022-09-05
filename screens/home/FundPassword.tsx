@@ -97,7 +97,7 @@ const FundPassword = ({ navigation }: RootStackScreenProps<"FundPassword">) => {
           }
           
         }}>
-        <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>儲存</Text>
+        <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>{t("verificationUnset")}  </Text>
       </TouchableOpacity>
       </View>
     </Container>

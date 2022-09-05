@@ -306,7 +306,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
               <ColumnText>{t("marketPair")}</ColumnText>
 
               <View style={{ display: "flex", flexDirection: "row" }}>
-                <ColumnText style={{ marginRight: 40 }}>{t("price")}/交易量</ColumnText>
+                <ColumnText style={{ marginRight: 40 }}>{t("price")}/{t("vol")}</ColumnText>
                 <View
                   style={{
                     width: 88,
@@ -426,7 +426,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                               fontWeight: "400"
                             }}
                           >
-                            {x.c}
+                            {(parseFloat(x.c) < 10 && parseFloat(x.c) > 1) ? x.c.slice(0, -3) : parseFloat(x.c) < 10 ? x.c.slice(0, -2) :x.c.slice(0, -4)}
                           </Text>
                           <Text
                             style={{
@@ -558,7 +558,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                               fontWeight: "400"
                             }}
                           >
-                            {x.c}
+                            {(parseFloat(x.c) < 10 && parseFloat(x.c) > 1) ? x.c.slice(0, -3) : parseFloat(x.c) < 10 ? x.c.slice(0, -2) :x.c.slice(0, -4)}
                           </Text>
                           <Text
                             style={{
@@ -618,7 +618,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
               <ColumnText>{t("marketPair")}</ColumnText>
 
               <View style={{ display: "flex", flexDirection: "row" }}>
-                <ColumnText style={{ marginRight: 40 }}>{t("price")}/交易量</ColumnText>
+                <ColumnText style={{ marginRight: 40 }}>{t("price")}/{t("vol")}</ColumnText>
                 <View
                   style={{
                     width: 88,
@@ -730,7 +730,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                               fontWeight: "400"
                             }}
                           >
-                            {x.c}
+                            {(parseFloat(x.c) < 10 && parseFloat(x.c) > 1) ? x.c.slice(0, -3) : parseFloat(x.c) < 10 ? x.c.slice(0, -2) :x.c.slice(0, -4)}
                           </Text>
                           <Text
                             style={{
@@ -874,7 +874,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                               fontWeight: "400"
                             }}
                           >
-                            {x.c}
+                            {(parseFloat(x.c) < 10 && parseFloat(x.c) > 1) ? x.c.slice(0, -3) : parseFloat(x.c) < 10 ? x.c.slice(0, -2) :x.c.slice(0, -4)}
                           </Text>
                           <Text
                             style={{

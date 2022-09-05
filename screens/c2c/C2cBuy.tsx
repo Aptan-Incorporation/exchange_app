@@ -394,7 +394,7 @@ const C2cBuyScreen = ({
               <TopInColumnContainer>
                 <TopContainerTitleText>{t("orderFinish")}</TopContainerTitleText>
                 <TopContainerDetailText>
-                  購買的加密貨幣已發放至您的現貨資產
+                {t("fiatOrderFinishedMsg")}
                 </TopContainerDetailText>
               </TopInColumnContainer>
             </TopContainer>

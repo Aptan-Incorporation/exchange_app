@@ -76,10 +76,11 @@ const EmailVerify = ({ navigation }: RootStackScreenProps<"EmailVerify">) => {
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between",marginTop:40}}>
             <TextInput style={{ width: "100%", height: 48, backgroundColor: "#242D37", borderRadius: 4,color:"white",fontSize:15,paddingLeft:10 }} maxLength={6} onChangeText={text =>{
              if(text.length === 6){
+                let obj = promoCode ? {account:email,password:password,password2:password,inviteCode:promoCode}:{account:email,password:password,password2:password}
                 setLoading(true)
                 api.postData("/auth/email/check-code",{email:email,code:text}).then(x=>{
                   if(x.status !== 400){
-                    api.postData("/auth/register",{account:email,password:password,password2:password,inviteCode:promoCode}).then(x=>{
+                    api.postData("/auth/register",obj).then(x=>{
                       setLoading(false)
                       if(x.status !== 400){
                         Alert.alert("註冊成功")

@@ -112,11 +112,11 @@ const IdentityVerifyStep2 = ({ navigation }: RootStackScreenProps<"IdentityVerif
         <TouchableOpacity style={{display:"flex",flexDirection:"row",justifyContent:"center"}} onPress={pickImage} >
           <Image source={image ? { uri: image }:require("../../assets/images/home/front.png")} style={{width:311,height:186}}/>
         </TouchableOpacity>
-        <Text style={{color:"#BCC2C8",fontSize:13,fontWeight:"500",marginTop:20}}>請上傳身分證正面之照片，照片應清晰且完整。</Text>
+        <Text style={{color:"#BCC2C8",fontSize:13,fontWeight:"500",marginTop:20}}> {t("idCardFrontMsg")}  </Text>
         <TouchableOpacity style={{display:"flex",flexDirection:"row",justifyContent:"center",marginTop:20}} onPress={pickImage2}>
           <Image source={image2 ? { uri: image2 }:require("../../assets/images/home/back.png")} style={{width:311,height:186}}/>
         </TouchableOpacity>
-        <Text style={{color:"#BCC2C8",fontSize:13,fontWeight:"500",marginTop:20}}>請上傳身分證反面之照片，照片應清晰且完整。</Text>
+        <Text style={{color:"#BCC2C8",fontSize:13,fontWeight:"500",marginTop:20}}>{t("saveIdCard")}</Text>
 
         <TouchableOpacity style={{display:"flex",flexDirection:"row",backgroundColor:"#3D6A97",borderRadius:4,justifyContent:"center",alignItems:"center",height:44,marginTop:42,width:"100%"}} onPress={async()=>{
            if(!image){
@@ -163,7 +163,7 @@ const IdentityVerifyStep2 = ({ navigation }: RootStackScreenProps<"IdentityVerif
             })
           }
         }}>
-        <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>儲存</Text>
+        <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>{t("saveIdCard")}</Text>
       </TouchableOpacity>
       </View>
     </Container>

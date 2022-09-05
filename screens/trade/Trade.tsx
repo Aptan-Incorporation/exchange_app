@@ -574,27 +574,23 @@ align-items: center;
 
 const TradePositionHeaderLeftSwapButton = styled(TouchableOpacity)`
 height: 32px;
-width: 57px;
 border: none;
 `;
 
 const TradePositionHeaderLeftSwapButtonClicked = styled(TouchableOpacity)`
 height: 32px;
-width: 57px;
 border-bottom-width: 2px;
 border-bottom-color: ${props => props.theme.color.Primary};
 `;
 
 const TradePositionHeaderRightSwapButton = styled(TouchableOpacity)`
 height: 32px;
-width: 57px;
 border: none;
 margin-left: 25px;
 `;
 
 const TradePositionHeaderRightSwapButtonClicked = styled(TouchableOpacity)`
 height: 32px;
-width: 57px;
 border-bottom-width: 2px;
 border-bottom-color: ${props => props.theme.color.Primary};
 margin-left: 25px;
@@ -1291,11 +1287,11 @@ const TradeScreen = ({
                 setAsksArray(x.data.asks.reverse());
                 setBidsArray(x.data.bids);
             });
-        axios
-            .get(`https://api1.binance.com/api/v3/ticker/price?symbol=${trade.split("-")[0]}USDT`)
-            .then((x) => {
-                setPrice(x.data.price.slice(0, -6));
-            });
+        // axios
+        //     .get(`https://api1.binance.com/api/v3/ticker/price?symbol=${trade.split("-")[0]}USDT`)
+        //     .then((x) => {
+        //         setPrice(x.data.price.slice(0, -6));
+        //     });
     };
 
     const getPrice = (trade: string) => {
@@ -1331,6 +1327,7 @@ const TradeScreen = ({
 
     const getfund = (symbol:string) => {
         api.get(`/market/funding-rate?${symbol}`).then((x) => {
+            console.log(x[symbol])
             setFund(x[symbol])
         });   
     };
@@ -1360,10 +1357,20 @@ const TradeScreen = ({
             const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade
             const remark = _.find(context, function(o) { return o.s == t })
             setRemarkPrice(remark!.m)
-            setWareHousedPrice(remark!.s);
-            setBuyPrice(remark!.s)
+            // setWareHousedPrice(remark!.c);
+            // setBuyPrice(remark!.c)
+            setPrice(remark!.c)
         }
     }, [context])
+    useEffect(async () => {
+        if (context) {
+            let trade = await AsyncStorage.getItem("trade")
+            const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade
+            const remark = _.find(context, function(o) { return o.s == t })
+            setWareHousedPrice((parseFloat(remark!.c) < 10 && parseFloat(remark!.c) > 1) ? remark!.c.slice(0, -3) : parseFloat(remark!.c) < 10 ? remark!.c.slice(0, -2) :remark!.c.slice(0, -4));
+            setBuyPrice((parseFloat(remark!.c) < 10 && parseFloat(remark!.c) > 1) ? remark!.c.slice(0, -3) : parseFloat(remark!.c) < 10 ? remark!.c.slice(0, -2) :remark!.c.slice(0, -4))
+        }
+    }, [])
 
     useEffect(async () => {
         if (isFocused) {
@@ -1434,7 +1441,7 @@ const TradeScreen = ({
                 swapIndex === 0 ?
                     <SwapContainer>
                         <SwapTradeButtonClicked onPress={() => { setSwapIndex(0) }}>
-                            <SwapButtonClickedText>交易</SwapButtonClickedText>
+                            <SwapButtonClickedText>{t("trade")} </SwapButtonClickedText>
                         </SwapTradeButtonClicked>
                         <SwapGraphButton onPress={() => { setSwapIndex(1) }}>
                             <SwapButtonText>走勢圖</SwapButtonText>
@@ -1442,7 +1449,7 @@ const TradeScreen = ({
                     </SwapContainer> :
                     <SwapContainer>
                         <SwapTradeButton onPress={() => { setSwapIndex(0) }}>
-                            <SwapButtonText>交易</SwapButtonText>
+                            <SwapButtonText>{t("trade")} </SwapButtonText>
                         </SwapTradeButton>
                         <SwapGraphButtonClicked onPress={() => { setSwapIndex(1) }}>
                             <SwapButtonClickedText>走勢圖</SwapButtonClickedText>
@@ -1509,7 +1516,7 @@ const TradeScreen = ({
                             </TradeHeaderRightContainer>
                         </TradeHeaderContainer>
                         <View style={{display:"flex",flexDirection:"row",width:"100%",justifyContent:"flex-end",paddingRight:16}}>
-                            <Text style={{color:"white",fontSize:12}}>{t("fundingRate")} {fund}</Text>
+                            <Text style={{color:"white",fontSize:12}}>{t("fundingRate")} {fund != 0 ? (fund*100).toFixed(4) : fund} %</Text>
                         </View>
                         <TradeContainer>
                             <TradeRowContainer>
@@ -1550,12 +1557,12 @@ const TradeScreen = ({
                                     <TradeTableBottomTitleContainer>
                                         {
                                             isPositive === true ?
-                                                <TradeTableBottomTitlePriceRiseText>{price}</TradeTableBottomTitlePriceRiseText> :
-                                                <TradeTableBottomTitlePriceFallText>{price}</TradeTableBottomTitlePriceFallText>
+                                                <TradeTableBottomTitlePriceRiseText>{(parseFloat(price) < 10 && parseFloat(price) > 1) ? price.slice(0, -3) : parseFloat(price) < 10 ? price.slice(0, -2) :price.slice(0, -4)}</TradeTableBottomTitlePriceRiseText> :
+                                                <TradeTableBottomTitlePriceFallText>{(parseFloat(price) < 10 && parseFloat(price) > 1) ? price.slice(0, -3) : parseFloat(price) < 10 ? price.slice(0, -2) :price.slice(0, -4)}</TradeTableBottomTitlePriceFallText>
                                         }
                                     </TradeTableBottomTitleContainer>
                                     <TradeTableBottomTitleContainer>
-                                        <TradeTableBottomTitleOwnValueText>{remarkPrice}</TradeTableBottomTitleOwnValueText>
+                                        <TradeTableBottomTitleOwnValueText>{(parseFloat(remarkPrice) < 10 && parseFloat(remarkPrice) > 1) ? remarkPrice.slice(0, -3) : parseFloat(remarkPrice) < 10 ? remarkPrice.slice(0, -2) :remarkPrice.slice(0, -4)}</TradeTableBottomTitleOwnValueText>
                                     </TradeTableBottomTitleContainer>
                                     <TradeTableBuyContainer>
                                         {
@@ -1727,7 +1734,7 @@ const TradeScreen = ({
                                                         } else if (!stopPrice && (buyType === "Plan_Market" || buyType === "Plan_Limit")) {
                                                             Alert.alert("請輸入觸發價");
                                                         } else if (!sliderNum) {
-                                                            Alert.alert("請輸入數量");
+                                                            Alert.alert(t("fiatSellQty"));
                                                         } else {
                                                             var obj = buyType === "Limit" ?
                                                                 {
@@ -1787,7 +1794,7 @@ const TradeScreen = ({
                                                         } else if (!stopPrice && (buyType === "Plan_Market" || buyType === "Plan_Limit")) {
                                                             Alert.alert("請輸入觸發價");
                                                         } else if (!sliderNum) {
-                                                            Alert.alert("請輸入數量");
+                                                            Alert.alert(t("fiatSellQty"));
                                                         } else {
                                                             var obj = buyType === "Limit" ?
                                                                 {
@@ -1990,7 +1997,7 @@ const TradeScreen = ({
                                                                     }
                                                                 </TradeCommitCardDetailColumnContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
-                                                                    <TradeCommitCardSmallTitleText>狀態</TradeCommitCardSmallTitleText>
+                                                                    <TradeCommitCardSmallTitleText>{t("orderStatus")}</TradeCommitCardSmallTitleText>
                                                                     <TradeCommitCardSmallValueText>{x.status}</TradeCommitCardSmallValueText>
                                                                 </TradeCommitCardDetailColumnContainer>
                                                             </TradeCommitCardDetailRowContainer>

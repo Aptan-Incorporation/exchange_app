@@ -228,7 +228,7 @@ const C2cBuyLast = (props: {
                 </FirstCardRowContainer>
             </FirstCardContainer>
             <SecondCardContainer>
-                <SecondCardTitleText>付款資訊</SecondCardTitleText>
+                <SecondCardTitleText>{t("fiatPaymentInfo")}   </SecondCardTitleText>
                 <SecondCardFirstRowContainer>
                     <SecondCardSmallTitleText>{t("payments")}</SecondCardSmallTitleText>
                     <SecondCardSmallValueText>{handleChange()}</SecondCardSmallValueText>

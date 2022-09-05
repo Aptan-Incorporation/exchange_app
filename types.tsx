@@ -97,6 +97,7 @@ export type RootStackParamList = {
   OtcFunds:undefined;
   AllLanguage:undefined;
   ContractHistory:undefined;
+  HelpCenter:undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

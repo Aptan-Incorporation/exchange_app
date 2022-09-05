@@ -82,7 +82,7 @@ const Register = ({ navigation }: RootStackScreenProps<"Register">) => {
         }else if(email.length < 8){
           Alert.alert("信箱不得小於8碼")
         }else if(!password){
-          Alert.alert("請輸入密碼")
+          Alert.alert(t("enterPass"))
         }else if(password.length < 8){
           Alert.alert("密碼不得小於8碼")
         }else if(!password2){

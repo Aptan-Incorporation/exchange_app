@@ -89,7 +89,7 @@ const WithdrawScreen = ({ navigation }: RootStackScreenProps<"Withdraw">) => {
                   if(!address){
                     alert("請輸入地址")
                   }else if (!number){
-                    alert("請輸入數量")
+                    alert(t("fiatSellQty"))
                   }else{
                     setLoading(true)
                     api.postData("/wallet/withdraw",{amount:number,address:address}).then(x=>{

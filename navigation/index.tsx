@@ -56,6 +56,7 @@ import ResetGoogle from "../screens/home/ResetGoogle";
 import Announcement from "../screens/home/Announcement";
 import AnnouncementDetail from "../screens/home/AnnouncementDetail";
 import AllLanguage from "../screens/home/AllLanguage";
+import HelpCenter from "../screens/home/HelpCenter";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -134,6 +135,7 @@ function RootNavigator() {
       <Stack.Screen name="C2cCreateScreen" component={C2cCreateScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Web" component={Web} options={{ headerShown: false }} />
       <Stack.Screen name="Consult" component={Consult} options={{ headerShown: false }} />
+      <Stack.Screen name="HelpCenter" component={HelpCenter} options={{ headerShown: false }} />
       <Stack.Group screenOptions={{ presentation: 'modal',headerShown: false }}>
       <Stack.Screen name="Modal" component={ModalScreen} />
       <Stack.Screen name="AllLanguage" component={AllLanguage} />

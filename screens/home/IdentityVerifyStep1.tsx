@@ -85,13 +85,13 @@ const IdentityVerifyStep1 = ({ navigation }: RootStackScreenProps<"IdentityVerif
       <View></View>
       </Header>
       <View style={{ padding: 16 }}>
-      <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginBottom:4}}>用戶姓名</Text>
-        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="請輸入姓名" onChangeText={setName}/>
-        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>戶籍地址</Text>
-        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="請輸入完成的戶籍地址" onChangeText={setAddress}/>
-        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>出生日期</Text>
+      <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginBottom:4}}>{t("UserName")}  </Text>
+        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder={t("enterUserName")} onChangeText={setName}/>
+        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>{t("UserAddress")}  </Text>
+        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder={t("enterUserAddress")} onChangeText={setAddress}/>
+        <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>{t("UserBirthday")}  </Text>
         <TouchableOpacity style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,display:"flex",justifyContent:"space-between",flexDirection:"row",alignItems:"center"}} onPress={showDatePicker}>
-          <Text style={{color:"#8D97A2",fontSize:15,fontWeight:"400"}}>{birth}</Text>
+          <Text style={{color:"#8D97A2",fontSize:15,fontWeight:"400"}}>{birth === "請選擇出生年月日" ? t("enterUserBirthday") :birth}</Text>
           <IconImg source={require("../../assets/images/home/next.png")} />
 
         </TouchableOpacity>

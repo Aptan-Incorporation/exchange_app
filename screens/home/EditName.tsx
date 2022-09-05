@@ -72,15 +72,15 @@ const EditName = ({ navigation }: RootStackScreenProps<"EditName">) => {
         
               
             }}>
-             <HeaderText>完成</HeaderText>
+             <HeaderText>{t("nickNameDone")}</HeaderText>
           </TouchableOpacity>
         </Header>
         <View style={{ padding: 16 }}>
           <View>
-            <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginBottom:4}}>暱稱</Text>
+            <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginBottom:4}}>{t("nickName")}   </Text>
             <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="輸入暱稱" onChangeText={setNickname}/>
           </View>
-          <Text style={{marginTop:30,color:"#BCC2C8",fontSize:13,fontWeight:"500"}}>進行 C2C 交易使用的名稱，例如用戶全名、暱稱或商家名稱。</Text>
+          <Text style={{marginTop:30,color:"#BCC2C8",fontSize:13,fontWeight:"500"}}>{t("nickNameMsg")} </Text>
         </View>
       </Container>
   );

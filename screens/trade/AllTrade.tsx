@@ -270,7 +270,7 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
               <ColumnText>{t("marketPair")}</ColumnText>
 
               <View style={{ display: "flex", flexDirection: "row" }}>
-                <ColumnText style={{ marginRight: 40 }}>{t("price")}/交易量</ColumnText>
+                <ColumnText style={{ marginRight: 40 }}>{t("price")}/{t("vol")}</ColumnText>
                 <View
                   style={{
                     width: 88,

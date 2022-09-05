@@ -113,7 +113,7 @@ const GoogleVerifyStep3 = ({ navigation }: RootStackScreenProps<"GoogleVerifySte
           }
           
         }}>
-          <Text style={{color:"#A8C2DC",fontSize:16,fontWeight:"600"}}>完成</Text>
+          <Text style={{color:"#A8C2DC",fontSize:16,fontWeight:"600"}}>{t("nickNameDone")}</Text>
         </TouchableOpacity>
       </Header>
       <View style={{padding:16}}>

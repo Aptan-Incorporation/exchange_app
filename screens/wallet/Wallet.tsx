@@ -827,7 +827,7 @@ const WalletScreen = ({
                         <Below1 style={{marginTop:20}}>
                             <ImgArea>
                                 <View>
-                                    <Text1>凍結金額</Text1>
+                                    <Text1>{t("freezeAmount")} </Text1>
                                 </View>
                             </ImgArea>
                             <Num>{freeze}</Num>

@@ -166,13 +166,13 @@ export default function App() {
       const bnb = _.find(lastJsonMessage, function(o) { return o.s == "BNB-USDT" })
       const eth = _.find(lastJsonMessage, function(o) { return o.s == "ETH-USDT" })
       const btc = _.find(lastJsonMessage, function(o) { return o.s == "BTC-USDT" })
-      setDogePrice(bnb.c.slice(0, -4));
+      setDogePrice((parseFloat(bnb.c) < 10 && parseFloat(bnb.c) > 1) ? bnb.c.slice(0, -3) : parseFloat(bnb.c) < 10 ? bnb.c.slice(0, -2) :bnb.c.slice(0, -4));
       setDogeRate(bnb.P);
       setDogeAmt(bnb.v.split(".")[0]);
-      setEthPrice(eth.c.slice(0, -4));
+      setEthPrice((parseFloat(eth.c) < 10 && parseFloat(eth.c) > 1) ? eth.c.slice(0, -3) : parseFloat(eth.c) < 10 ? eth.c.slice(0, -2) :eth.c.slice(0, -4));
       setEthRate(eth.P);
       setEthAmt(eth.v.split(".")[0]);
-      setBtcPrice(btc.c.slice(0, -4));
+      setBtcPrice((parseFloat(btc.c) < 10 && parseFloat(btc.c) > 1) ? btc.c.slice(0, -3) : parseFloat(btc.c) < 10 ? btc.c.slice(0, -2) :btc.c.slice(0, -4));
       setBtcRate(btc.P);
       setBtcAmt(btc.v.split(".")[0]);
       // for(let i = 0;i < lastJsonMessage.length;i++){

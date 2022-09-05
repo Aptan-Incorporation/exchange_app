@@ -94,9 +94,13 @@ const Member = ({ navigation }: RootStackScreenProps<"Member">) => {
             <IconImg source={require("../../assets/images/home/announcement.png")} />
             <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>{t("announcement")}</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }} onPress={() => { navigation.navigate("HelpCenter") }}>
+            <IconImg source={require("../../assets/images/home/guide.png")} />
+            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>{t("helpPage")}</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }}>
             <IconImg source={require("../../assets/images/home/guide.png")} />
-            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>{t("guide")}</Text>
+            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>隱私政策</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }} onPress={() => {
             AsyncStorage.removeItem("token")

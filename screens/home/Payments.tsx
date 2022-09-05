@@ -206,7 +206,7 @@ const Payments = ({ navigation, route }: RootStackScreenProps<"Payments">) => {
     // 判斷帳戶類型
     const handlePaymentType = (payment: string) => {
         if (payment === 'BANK') {
-            return '銀行帳戶'
+            return t("bankAccount")
         } else if (payment === 'TOUCHNGO') {
             return 'TouchnGO'
         } else if (payment === 'PPAY') {

@@ -130,7 +130,7 @@ const C2cNotification = ({ navigation }: RootStackScreenProps<"C2cNotification">
       />
       </View>
       <View style={{display:"flex",flexDirection:"row",justifyContent:"space-between",padding:16,alignItems:"center"}}>
-          <Text style={{color:"white",fontSize:15,fontWeight:"400"}}>推播通知</Text>
+          <Text style={{color:"white",fontSize:15,fontWeight:"400"}}>{t("pushNotify")}  </Text>
           <Switch
         trackColor={{ false: '#767577', true: '#6699CC' }}
         thumbColor={isEnabled ? 'white' : 'white'}

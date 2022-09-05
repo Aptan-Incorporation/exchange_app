@@ -116,7 +116,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
         >
           <IconImg source={require("../../assets/images/home/avatar.png")} />
         </TouchableOpacity>
-        <HeaderText>首頁</HeaderText>
+        <HeaderText>{t("home")} </HeaderText>
         <View style={{display:"flex",flexDirection:"row"}}>
         <TouchableOpacity
           style={{marginRight:10}}
@@ -147,7 +147,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                           }}>
           <GrayHeader>
             <IconImg source={require("../../assets/images/home/btc.png")} />
-            <GrayText>比特幣 BTCUSDT</GrayText>
+            <GrayText>{t("bitcoin")}   BTCUSDT</GrayText>
           </GrayHeader>
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 16 }}>
             <View>
@@ -163,7 +163,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                           }}>
           <GrayHeader>
             <IconImg source={require("../../assets/images/home/eth.png")} />
-            <GrayText>以太坊 ETHUSDT</GrayText>
+            <GrayText>{t("ethereum")}   ETHUSDT</GrayText>
           </GrayHeader>
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 16 }}>
             <View>
@@ -179,7 +179,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                           }}>
           <GrayHeader>
             <IconImg source={require("../../assets/images/home/bnb.png")} />
-            <GrayText>幣安幣 BNBUSDT</GrayText>
+            <GrayText>{t("binance")}   BNBUSDT</GrayText>
           </GrayHeader>
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 16 }}>
             <View>
@@ -235,7 +235,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                         <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.s}</Text>
                     <View style={{ display: "flex", flexDirection: "row" }}>
                       <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                        <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.c.slice(0,-4)}</Text>
+                        <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{(parseFloat(x.c) < 10 && parseFloat(x.c) > 1) ? x.c.slice(0, -3) : parseFloat(x.c) < 10 ? x.c.slice(0, -2) :x.c.slice(0, -4)}</Text>
                         <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{x.v}</Text>
                       </View>
                       <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#2FB364", borderRadius: 4, alignItems: "center" }}>
@@ -251,7 +251,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                         <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.s}</Text>
                       <View style={{ display: "flex", flexDirection: "row" }}>
                         <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                          <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.c.slice(0,-4)}</Text>
+                          <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{(parseFloat(x.c) < 10 && parseFloat(x.c) > 1) ? x.c.slice(0, -3) : parseFloat(x.c) < 10 ? x.c.slice(0, -2) :x.c.slice(0, -4)}</Text>
                           <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{x.v}</Text>
                         </View>
                         <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#2FB364", borderRadius: 4, alignItems: "center" }}>
@@ -276,7 +276,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                         <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.s}</Text>
                         <View style={{ display: "flex", flexDirection: "row" }}>
                           <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.c.slice(0,-4)}</Text>
+                            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{(parseFloat(x.c) < 10 && parseFloat(x.c) > 1) ? x.c.slice(0, -3) : parseFloat(x.c) < 10 ? x.c.slice(0, -2) :x.c.slice(0, -4)}</Text>
                             <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{x.v}</Text>
                           </View>
                           <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#FB4C51", borderRadius: 4, alignItems: "center" }}>
@@ -292,7 +292,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                         <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.s}</Text>
                         <View style={{ display: "flex", flexDirection: "row" }}>
                           <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.c.slice(0,-4)}</Text>
+                            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{(parseFloat(x.c) < 10 && parseFloat(x.c) > 1) ? x.c.slice(0, -3) : parseFloat(x.c) < 10 ? x.c.slice(0, -2) :x.c.slice(0, -4)}</Text>
                             <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{x.v}</Text>
                           </View>
                           <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#FB4C51", borderRadius: 4, alignItems: "center" }}>
