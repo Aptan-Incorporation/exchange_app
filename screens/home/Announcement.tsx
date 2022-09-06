@@ -146,9 +146,9 @@ const Announcement = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
             style={{ marginRight: 10 }}
           >
             {index === 1 ? (
-              <HeaderTitleTextClicked>{t("fiatTrade")}</HeaderTitleTextClicked>
+              <HeaderTitleTextClicked>{t("tradeFiat")}</HeaderTitleTextClicked>
             ) : (
-              <HeaderTitleText>{t("fiatTrade")}</HeaderTitleText>
+              <HeaderTitleText>{t("tradeFiat")}</HeaderTitleText>
             )}
           </TouchableOpacity>
           <TouchableOpacity
@@ -184,7 +184,7 @@ const Announcement = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                 })
               }}>
               <Text style={{ color: "#F4F5F6", fontSize: 16, fontWeight: "700" }}>{x.subject}</Text>
-            <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "600", marginTop: 4 }}>{`${new Date(x.createdDate).toISOString().split("T")[0]}`}</Text>
+            <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "600", marginTop: 4 }}>{new Date(x.createdDate).getFullYear()}-{new Date(x.createdDate).getMonth()+1 < 10 ? "0"+(new Date(x.createdDate).getMonth()+1) : new Date(x.createdDate).getMonth()+1}-{new Date(x.createdDate).getDate() < 10 ? "0"+(new Date(x.createdDate).getDate()) : new Date(x.createdDate).getDate()} {new Date(x.createdDate).getHours() < 10 ? "0"+(new Date(x.createdDate).getHours()) : new Date(x.createdDate).getHours()}:{new Date(x.createdDate).getMinutes() < 10 ? "0"+(new Date(x.createdDate).getMinutes()) : new Date(x.createdDate).getMinutes()}</Text>
               </TouchableOpacity>
             )
           })}

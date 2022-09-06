@@ -29,6 +29,20 @@ export const PriceContext = createContext(
     }],
 );
 
+export const PriceContext2 = createContext(
+  [{
+    E:"",
+    P:"",
+    c:"",
+    e:"",
+    p:"",
+    s:"",
+    v:"",
+    w:"",
+    m:""
+  }],
+);
+
 export const PositionContext = createContext(
   [{
     "avgPrice": 0,
@@ -110,6 +124,7 @@ export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
   const [market,setMarket] = useState([])
+  const [market2,setMarket2] = useState([])
   const [position,setPosition] = useState([])
   const [future,setFuture] = useState([])
   const [order, setOrder] = useState({data:{status:3}});
@@ -163,6 +178,7 @@ export default function App() {
         return parseFloat(a.P) - parseFloat(b.P);
       });
       setMarket(gfg.reverse())
+      setMarket2(gfg)
       const bnb = _.find(lastJsonMessage, function(o) { return o.s == "BNB-USDT" })
       const eth = _.find(lastJsonMessage, function(o) { return o.s == "ETH-USDT" })
       const btc = _.find(lastJsonMessage, function(o) { return o.s == "BTC-USDT" })
@@ -234,6 +250,7 @@ export default function App() {
         <FutureContext.Provider value={future}>
         <OrderContext.Provider value={order}>
         <PriceContext.Provider value={market}>
+        <PriceContext2.Provider value={market2}>
         <ThreePriceContext.Provider value={  {
             btcPrice:btcPrice,
             btcRate:btcRate,
@@ -250,6 +267,7 @@ export default function App() {
             <StatusBar />
           </ThemeProvider>
           </ThreePriceContext.Provider>
+          </PriceContext2.Provider>
           </PriceContext.Provider>
           </OrderContext.Provider>
           </FutureContext.Provider>

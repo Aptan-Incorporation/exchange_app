@@ -98,6 +98,8 @@ export type RootStackParamList = {
   AllLanguage:undefined;
   ContractHistory:undefined;
   HelpCenter:undefined;
+  HelpDetail:undefined;
+  HelpCenterEn:undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<

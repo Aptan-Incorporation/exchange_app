@@ -128,7 +128,7 @@ const SliderContainer = (props: {
         <Container>
             <TradeFunctionNumberInputContainer>
                 <TextInput
-                    placeholder={"數量"}
+                    placeholder={t("amount")}
                     value={newInputNum}
                     onChangeText={(newInputNum) => { 
                         console.log(newInputNum)

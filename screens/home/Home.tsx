@@ -4,7 +4,7 @@ import { RootStackScreenProps } from "../../types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as React from "react";
 import { useState,useEffect,useContext } from "react";
-import { PriceContext,ThreePriceContext } from "../../App" 
+import { PriceContext,PriceContext2,ThreePriceContext } from "../../App" 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from "react-i18next";
 
@@ -92,14 +92,16 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
   const insets = useSafeAreaInsets();
   const [index, setIndex] = useState(0);
   const [arr, setArr] = useState([]);
+  const [arr2, setArr2] = useState([]);
   const context = useContext(PriceContext)
+  const context2 = useContext(PriceContext2)
   const {btcPrice,btcRate,btcAmt,ethPrice,ethRate,ethAmt,dogePrice,dogeRate,dogeAmt} = useContext(ThreePriceContext)
   const { t } = useTranslation();
   useEffect(()=>{
-    let gfg = context.sort(function (a:any, b:any) {
+    let gfg = context2.sort(function (a:any, b:any) {
       return parseFloat(b.P) - parseFloat(a.P);
     });
-    setArr(gfg)
+    setArr(gfg.reverse())
   },[context])
   return (
     <Container>

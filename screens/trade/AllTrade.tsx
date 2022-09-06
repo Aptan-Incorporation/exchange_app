@@ -335,7 +335,7 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
                               fontWeight: "400"
                             }}
                           >
-                            {x.c}
+                            {(parseFloat(x.c) < 10 && parseFloat(x.c) > 1) ? x.c.slice(0, -3) : parseFloat(x.c) < 10 ? x.c.slice(0, -2) :x.c.slice(0, -4)}
                           </Text>
                           <Text
                             style={{
@@ -425,7 +425,7 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
                               fontWeight: "400"
                             }}
                           >
-                            {x.c}
+                            {(parseFloat(x.c) < 10 && parseFloat(x.c) > 1) ? x.c.slice(0, -3) : parseFloat(x.c) < 10 ? x.c.slice(0, -2) :x.c.slice(0, -4)}
                           </Text>
                           <Text
                             style={{

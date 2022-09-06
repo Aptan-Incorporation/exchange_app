@@ -7,7 +7,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ColorSchemeName, Image,Alert } from 'react-native';
+import { ColorSchemeName, Image,Alert,View,Text} from 'react-native';
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../screens/ModalScreen';
@@ -57,6 +57,9 @@ import Announcement from "../screens/home/Announcement";
 import AnnouncementDetail from "../screens/home/AnnouncementDetail";
 import AllLanguage from "../screens/home/AllLanguage";
 import HelpCenter from "../screens/home/HelpCenter";
+import HelpCenterEn from "../screens/home/HelpCenterEn";
+import HelpDetail from "../screens/home/HelpDetail";
+import { useTranslation } from "react-i18next";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -77,6 +80,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   const context = useContext(OrderContext)
   const navigation = useNavigation();
+  
   useEffect(()=>{
     // console.log(context)
 
@@ -96,7 +100,6 @@ function RootNavigator() {
       //   ]
       // );
     }
-   
   },[context])
 
   return (
@@ -136,6 +139,8 @@ function RootNavigator() {
       <Stack.Screen name="Web" component={Web} options={{ headerShown: false }} />
       <Stack.Screen name="Consult" component={Consult} options={{ headerShown: false }} />
       <Stack.Screen name="HelpCenter" component={HelpCenter} options={{ headerShown: false }} />
+      <Stack.Screen name="HelpCenterEn" component={HelpCenterEn} options={{ headerShown: false }} />
+      <Stack.Screen name="HelpDetail" component={HelpDetail} options={{ headerShown: false }} />
       <Stack.Group screenOptions={{ presentation: 'modal',headerShown: false }}>
       <Stack.Screen name="Modal" component={ModalScreen} />
       <Stack.Screen name="AllLanguage" component={AllLanguage} />
@@ -151,13 +156,14 @@ function RootNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 const Icon = styled(Image)`
-  width:75px;
-  height:49px;
+  width:31px;
+  height:28px;
   margin-top:20px;
 `
 
 function BottomTabNavigator() {
   const colorScheme = useColorScheme();
+  const { t } = useTranslation();
 
   return (
     <BottomTab.Navigator
@@ -173,7 +179,13 @@ function BottomTabNavigator() {
         options={({ navigation }: RootTabScreenProps<"Home">) => ({
           title: "",
           tabBarIcon: ({ focused }) => (
-            focused ? <Icon source={require("../assets/images/global/home-blue.png")} /> : <Icon source={require("../assets/images/global/home-gray.png")} />
+            focused ? <View style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+              <Icon source={require("../assets/images/global/home-blue.png")} />
+              <Text style={{fontSize:10,color:"#6699CC"}}>{t("home")}</Text>
+            </View> : <View style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+              <Icon source={require("../assets/images/global/home-gray.png")} />
+              <Text style={{fontSize:10,color:"#8D97A2"}}>{t("home")}</Text>
+            </View> 
           ),
           headerShown: false
         })}
@@ -184,7 +196,13 @@ function BottomTabNavigator() {
         options={({ navigation }: RootTabScreenProps<"Market">) => ({
           title: "",
           tabBarIcon: ({ focused }) => (
-            focused ? <Icon source={require("../assets/images/global/market-blue.png")} /> : <Icon source={require("../assets/images/global/market-gray.png")} />
+            focused ? <View style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+            <Icon source={require("../assets/images/global/market-blue.png")} />
+            <Text style={{fontSize:10,color:"#6699CC"}}>{t("market")}</Text>
+          </View> : <View style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+              <Icon source={require("../assets/images/global/market-gray.png")} />
+              <Text style={{fontSize:10,color:"#8D97A2"}}>{t("market")}</Text>
+            </View>
           ),
           headerShown: false
         })}
@@ -195,7 +213,13 @@ function BottomTabNavigator() {
         options={({ navigation }: RootTabScreenProps<"Trade">) => ({
           title: "",
           tabBarIcon: ({ focused }) => (
-            focused ? <Icon source={require("../assets/images/global/trade-blue.png")} /> : <Icon source={require("../assets/images/global/trade-gray.png")} />
+            focused ? <View style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+            <Icon source={require("../assets/images/global/trade-blue.png")} />
+            <Text style={{fontSize:10,color:"#6699CC"}}>{t("trade")}</Text>
+          </View>  : <View style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+              <Icon source={require("../assets/images/global/trade-gray.png")} />
+              <Text style={{fontSize:10,color:"#8D97A2"}}>{t("trade")}</Text>
+            </View>
           ),
           headerShown: false
         })}
@@ -206,7 +230,13 @@ function BottomTabNavigator() {
         options={({ navigation }: RootTabScreenProps<"C2c">) => ({
           title: "",
           tabBarIcon: ({ focused }) => (
-            focused ? <Icon source={require("../assets/images/global/c2c-blue.png")} /> : <Icon source={require("../assets/images/global/c2c-gray.png")} />
+            focused ? <View style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+            <Icon source={require("../assets/images/global/c2c-blue.png")} />
+            <Text style={{fontSize:10,color:"#6699CC"}}>C2C</Text>
+          </View> : <View style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+              <Icon source={require("../assets/images/global/c2c-gray.png")} />
+              <Text style={{fontSize:10,color:"#8D97A2"}}>C2C</Text>
+            </View>
           ),
           headerShown: false
         })}
@@ -217,7 +247,13 @@ function BottomTabNavigator() {
         options={({ navigation }: RootTabScreenProps<"Wallet">) => ({
           title: "",
           tabBarIcon: ({ focused }) => (
-            focused ? <Icon source={require("../assets/images/global/wallet-blue.png")} /> : <Icon source={require("../assets/images/global/wallet-gray.png")} />
+            focused ? <View style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+            <Icon source={require("../assets/images/global/wallet-blue.png")} />
+            <Text style={{fontSize:10,color:"#6699CC"}}>{t("fund")}</Text>
+          </View>  : <View style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+              <Icon source={require("../assets/images/global/wallet-gray.png")} />
+              <Text style={{fontSize:10,color:"#8D97A2"}}>{t("fund")}</Text>
+            </View>
           ),
           headerShown: false
         })}

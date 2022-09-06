@@ -9,7 +9,8 @@ import {
   ScrollView,
   Dimensions,
   ActivityIndicator,
-  StyleSheet
+  StyleSheet,
+  PixelRatio
 } from "react-native";
 import styled from "styled-components";
 import { RootStackScreenProps } from "../../types";
@@ -68,10 +69,10 @@ const HeaderText = styled(Text)`
   font-size: 16px;
   color: white;
   font-weight:600;
-  margin-right:50;
+  margin-right:30;
 `;
 
-const AnnouncementDetail = ({ navigation,route }: RootStackScreenProps<"AnnouncementDetail">) => {
+const HelpDetail = ({ navigation,route }: RootStackScreenProps<"HelpDetail">) => {
   const { id } = route.params;
   const [index, setIndex] = useState(0);
   const [announce, setAnnounce] = useState({
@@ -92,7 +93,8 @@ const AnnouncementDetail = ({ navigation,route }: RootStackScreenProps<"Announce
   const [loading, setLoading] = useState(true)
   const { t } = useTranslation();
   const onProductDetailsWebViewMessage = (event:any) => {
-    setWebviewHeight(event.nativeEvent.data)
+    console.log((parseInt(event.nativeEvent.data)/PixelRatio.get()).toString())
+    setWebviewHeight((parseInt(event.nativeEvent.data)/PixelRatio.get()).toString())
   }
   const webViewScript = `
     setTimeout(function() { 
@@ -119,20 +121,19 @@ const AnnouncementDetail = ({ navigation,route }: RootStackScreenProps<"Announce
         >
           <IconImg source={require("../../assets/images/global/previous.png")} />
         </TouchableOpacity>
-        <HeaderText>{t("announcement")}</HeaderText>
+        <HeaderText>{announce.subject}</HeaderText>
       <View></View>
       </Header>
-      <View style={{ paddingHorizontal: 16 }}>
+      <View style={{ display:"flex",flexDirection:"column",paddingHorizontal: 16 }}>
         
         <ScrollView style={{display:"flex",flexDirection:"column"}} contentContainerStyle={{}}>
 
-              <View style={{display: "flex", flexDirection: "column", height: 60, borderBottomWidth: 1, borderBottomColor: "#242D37",justifyContent:"center",paddingBottom:10}}>
+              {/* <View style={{display: "flex", flexDirection: "column", height: 60, borderBottomWidth: 1, borderBottomColor: "#242D37",justifyContent:"center",paddingBottom:10}}>
               <Text style={{ color: "#F4F5F6", fontSize: 25, fontWeight: "700" }}>{announce.subject}</Text>
-            <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "600", marginTop: 4 }}>{new Date(announce.createdDate).getFullYear()}-{new Date(announce.createdDate).getMonth()+1 < 10 ? "0"+(new Date(announce.createdDate).getMonth()+1) : new Date(announce.createdDate).getMonth()+1}-{new Date(announce.createdDate).getDate() < 10 ? "0"+(new Date(announce.createdDate).getDate()) : new Date(announce.createdDate).getDate()} {new Date(announce.createdDate).getHours() < 10 ? "0"+(new Date(announce.createdDate).getHours()) : new Date(announce.createdDate).getHours()}:{new Date(announce.createdDate).getMinutes() < 10 ? "0"+(new Date(announce.createdDate).getMinutes()) : new Date(announce.createdDate).getMinutes()}</Text>
-              </View>
+              </View> */}
               <View style={{flex:1,backgroundColor:"#18222d"}}>
               <WebView 
-              style={{height:windowHeight- 180,backgroundColor:"#18222d",marginTop:10}}
+              style={{height:windowHeight-120,backgroundColor:"#18222d"}}
               originWhitelist={['*']}
               onMessage={onProductDetailsWebViewMessage}
               javaScriptEnabled={true}
@@ -141,14 +142,12 @@ const AnnouncementDetail = ({ navigation,route }: RootStackScreenProps<"Announce
               onLoadEnd={x=>setLoading(false)}
               source={{ html: `
               <body style="
-                background-color: #18222d; color:white; height: 100%;">
+                background-color: #18222d; color:white;">
                   ${announce.content}
                </body>` }}
               />
               {loading ? <ActivityIndicatorElement /> : null}
-              </View>
-              
-              {/* <Text style={{ color: "white", fontSize: 13, fontWeight: "600", marginTop: 4 }}>{announce.content}</Text>             */}
+              </View>              
         </ScrollView>
       </View>
     </Container>
@@ -175,4 +174,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AnnouncementDetail;
+export default HelpDetail;

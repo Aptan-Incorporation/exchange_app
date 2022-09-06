@@ -350,5 +350,7 @@
   "vol":"Vol",
   "home":"Home",
   "trade":"Trade",
-  "fundTransactionHistory":"Transaction History"
+  "fundTransactionHistory":"Transaction History",
+  "privacy":"Privacy Policy",
+  "charts":"Charts" 
 }

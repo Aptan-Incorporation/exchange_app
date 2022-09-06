@@ -43,7 +43,7 @@ const Member = ({ navigation }: RootStackScreenProps<"Member">) => {
   const [active, setActive] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [userId, setUserId] = React.useState("");
-  const { t } = useTranslation();
+  const { t,i18n } = useTranslation();
   useEffect(async () => {
     let user = await AsyncStorage.getItem("user")
     setEmail(JSON.parse(user!).account)
@@ -94,13 +94,20 @@ const Member = ({ navigation }: RootStackScreenProps<"Member">) => {
             <IconImg source={require("../../assets/images/home/announcement.png")} />
             <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>{t("announcement")}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }} onPress={() => { navigation.navigate("HelpCenter") }}>
-            <IconImg source={require("../../assets/images/home/guide.png")} />
+          <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }} onPress={() => { 
+            if(i18n.language === "en"){
+              navigation.navigate("HelpCenterEn")
+          }else{
+            navigation.navigate("HelpCenter")
+            } }}>
+            <IconImg source={require("../../assets/images/home/icon_help.png")} />
             <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>{t("helpPage")}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }}>
-            <IconImg source={require("../../assets/images/home/guide.png")} />
-            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>隱私政策</Text>
+          <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }}   onPress={() => { navigation.navigate("HelpDetail",{
+                  id: i18n.language === "tw" ? 67 :34,
+                })}}>
+            <IconImg source={require("../../assets/images/home/icon_privacy.png")} />
+            <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>{t("privacy")}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }} onPress={() => {
             AsyncStorage.removeItem("token")

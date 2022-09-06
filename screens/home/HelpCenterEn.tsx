@@ -73,7 +73,7 @@ const ModalEmptyDiv = styled(View)`
   height: 28px;
 `;
 
-const HelpCenter = ({ navigation }: RootStackScreenProps<"HelpCenter">) => {
+const HelpCenterEn = ({ navigation }: RootStackScreenProps<"HelpCenterEn">) => {
   const insets = useSafeAreaInsets();
   const [active, setActive] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -141,122 +141,87 @@ const HelpCenter = ({ navigation }: RootStackScreenProps<"HelpCenter">) => {
       </Header>
       <ScrollView contentContainerStyle={{ padding: 16,paddingBottom:100 }}>
       <View style={{ display: "flex", flexDirection: "column", backgroundColor: "#242D37", padding: 16, borderRadius: 8 }}>
-            <Text style={{color:"white",fontSize:18}}>{t("1")}</Text>
+            <Text style={{color:"white",fontSize:18}}>Crypto Futures FAQ</Text>
             <TouchableOpacity onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 37 : 3,
+                  id: 19,
                 })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("2")}</Text>
+              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>Introduction to perpetual contracts</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 38 : 4,
+                  id: 20,
                 })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("3")}</Text>
+              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>The transaction mode of the contract</Text>
             </TouchableOpacity>
             <TouchableOpacity  onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 39 : 5,
+                  id: 21,
                 })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("4")}</Text>
+              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>Auto-Reduce and Forced Liquidation</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 40 : 6,
+                  id: 22,
                 })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("5")}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity  onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 41 : 7,
-                })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("6")}</Text>
+              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>Margin and P&L calculation</Text>
             </TouchableOpacity>
       </View>
       <View style={{ display: "flex", flexDirection: "column", backgroundColor: "#242D37", padding: 16, borderRadius: 8, marginTop: 16 }}>
-            <Text style={{color:"white",fontSize:18}}>{t("7")}</Text>
+            <Text style={{color:"white",fontSize:18}}>List of Trading Agreements</Text>
             <TouchableOpacity  onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 42 : 8,
+                  id: 23,
                 })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("8")}</Text>
+              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>Contractual Service Agreement</Text>
             </TouchableOpacity>
             <TouchableOpacity  onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 45 : 11,
+                  id: 24,
                 })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("9")}</Text>
+              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>Legal Statement</Text>
             </TouchableOpacity>
             <TouchableOpacity  onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 43 : 9,
+                  id: 25,
                 })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("10")}</Text>
+              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>Notice of risk of currency withdrawal</Text>
             </TouchableOpacity>
             <TouchableOpacity  onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 44 : 10,
+                  id: 26,
                 })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("11")}</Text>
+              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>Service Agreement</Text>
             </TouchableOpacity>
             <TouchableOpacity  onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 46 : 12,
+                  id: 27,
                 })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("12")}</Text>
+              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>User Invitation Agreement </Text>
             </TouchableOpacity>
       </View>
       <View style={{ display: "flex", flexDirection: "column", backgroundColor: "#242D37", padding: 16, borderRadius: 8, marginTop: 16 }}>
-            <Text style={{color:"white",fontSize:18}}>{t("13")}</Text>
+            <Text style={{color:"white",fontSize:18}}>Terms</Text>
             <TouchableOpacity  onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 61 : 52,
+                  id: 28,
                 })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("14")}</Text>
+              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>Login password and money password reset, retrieve password</Text>
             </TouchableOpacity>
             <TouchableOpacity  onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 62 : 54,
+                  id: 29,
                 })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("15")}</Text>
+              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>What should I do if I don't receive the verification code or other notifications </Text>
             </TouchableOpacity>
             <TouchableOpacity  onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 63 : 55,
+                  id: 30,
                 })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("16")}</Text>
+              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>Why do I need KYC verification and how do I do it</Text>
             </TouchableOpacity>
             <TouchableOpacity  onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 64 : 56,
+                  id: 31,
                 })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("17")}</Text>
+              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>About withdrawal fee and limit</Text>
             </TouchableOpacity>
             <TouchableOpacity  onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 65 : 57,
+                  id: 32,
                 })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("18")}</Text>
+              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>Deposit Hasn’t Been Credited To My Account </Text>
             </TouchableOpacity>
             <TouchableOpacity  onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 66 : 58,
+                  id: 33,
                 })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("19")}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity  onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 47 : 13,
-                })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("20")}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity  onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 48 : 14,
-                })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("21")}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity  onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 49 : 15,
-                })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("22")}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity  onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 50 : 16,
-                })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("23")}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity  onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 51 : 17,
-                })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("24")}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity  onPress={() => { navigation.navigate("HelpDetail",{
-                  id: language === "tw" ? 52 : 18,
-                })}}>
-              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}>{t("25")}</Text>
+              <Text style={{color:"white",fontSize:15,marginTop:10,marginLeft:20}}> What If I Deposit The Wrong Token</Text>
             </TouchableOpacity>
             
       </View>
@@ -265,4 +230,4 @@ const HelpCenter = ({ navigation }: RootStackScreenProps<"HelpCenter">) => {
   );
 };
 
-export default HelpCenter;
+export default HelpCenterEn;

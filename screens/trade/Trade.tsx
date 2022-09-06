@@ -1146,13 +1146,13 @@ const TradeScreen = ({
 
     const buyTypeChange = () => {
         if (buyType === 'Limit') {
-            return "限價";
+            return t("limitedOrder");
         } else if (buyType === 'Market') {
-            return "市價";
+            return t("marketOrder");
         } else if (buyType === 'Plan_Limit') {
-            return "計畫限價";
+            return t("stopLimitOrder");
         } else if (buyType === 'Plan_Market') {
-            return "計畫市價";
+            return t("stopMarketOrder");
         } else {
             return "";
         }
@@ -1170,9 +1170,9 @@ const TradeScreen = ({
 
     const positionViewChange = () => {
         if (positionView === 'Full') {
-            return "全倉";
+            return t("crossPosition");
         } else if (positionView === 'Each') {
-            return "逐倉";
+            return t("isolatedPosition");
         } else {
             return "";
         }
@@ -1391,6 +1391,10 @@ const TradeScreen = ({
                 getBalance(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,swapBuyPosition === "Open" ? "BUY":"SELL")
                 getleverage(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade)
             }
+            const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade
+            const remark = _.find(context, function(o) { return o.s == t })
+            setWareHousedPrice((parseFloat(remark!.c) < 10 && parseFloat(remark!.c) > 1) ? remark!.c.slice(0, -3) : parseFloat(remark!.c) < 10 ? remark!.c.slice(0, -2) :remark!.c.slice(0, -4));
+            setBuyPrice((parseFloat(remark!.c) < 10 && parseFloat(remark!.c) > 1) ? remark!.c.slice(0, -3) : parseFloat(remark!.c) < 10 ? remark!.c.slice(0, -2) :remark!.c.slice(0, -4))
             // let leverage = await AsyncStorage.getItem("leverage")
             // if (leverage) {
             //     setLeverageViewNum(parseInt(leverage))
@@ -1444,7 +1448,7 @@ const TradeScreen = ({
                             <SwapButtonClickedText>{t("trade")} </SwapButtonClickedText>
                         </SwapTradeButtonClicked>
                         <SwapGraphButton onPress={() => { setSwapIndex(1) }}>
-                            <SwapButtonText>走勢圖</SwapButtonText>
+                            <SwapButtonText>{t("charts")}</SwapButtonText>
                         </SwapGraphButton>
                     </SwapContainer> :
                     <SwapContainer>
@@ -1452,7 +1456,7 @@ const TradeScreen = ({
                             <SwapButtonText>{t("trade")} </SwapButtonText>
                         </SwapTradeButton>
                         <SwapGraphButtonClicked onPress={() => { setSwapIndex(1) }}>
-                            <SwapButtonClickedText>走勢圖</SwapButtonClickedText>
+                            <SwapButtonClickedText>{t("charts")}</SwapButtonClickedText>
                         </SwapGraphButtonClicked>
                     </SwapContainer>
             }
@@ -1542,7 +1546,7 @@ const TradeScreen = ({
                                                             <LinearGradient colors={['transparent', 'rgba(251, 76, 81, 0.2)']} start={{ x: 0, y: 0.0 }} end={{ x: percent, y: 0.0 }}>
                                                                 <TradeTableRowContainer>
 
-                                                                    <TradeTableSellPriceText>{x[0].slice(0, 2) + x[0].slice(2, -6)}</TradeTableSellPriceText>
+                                                                    <TradeTableSellPriceText>{(parseFloat(x[0]) < 10 && parseFloat(x[0]) > 1) ? x[0].slice(0, -5) : parseFloat(x[0]) < 10 ? x[0].slice(0, -4) :x[0].slice(0, -6)}</TradeTableSellPriceText>
                                                                     <TradeTableNumberText>{x[1].slice(0, -5)}</TradeTableNumberText>
 
                                                                 </TradeTableRowContainer>
@@ -1575,7 +1579,7 @@ const TradeScreen = ({
                                                     <>
                                                     {i<6 && <LinearGradient colors={['transparent', 'rgba(47, 178, 100, 0.2)']} start={{ x: 0, y: 0.0 }} end={{ x: percent, y: 0.0 }}>
                                                         <TradeTableRowContainer>
-                                                            <TradeTableBuyPriceText>{x[0].slice(0, 2) + x[0].slice(2, -6)}</TradeTableBuyPriceText>
+                                                            <TradeTableBuyPriceText>{(parseFloat(x[0]) < 10 && parseFloat(x[0]) > 1) ? x[0].slice(0, -5) : parseFloat(x[0]) < 10 ? x[0].slice(0, -4) :x[0].slice(0, -6)}</TradeTableBuyPriceText>
                                                             <TradeTableNumberText>{x[1].slice(0, -5)}</TradeTableNumberText>
                                                         </TradeTableRowContainer>
                                                     </LinearGradient>}
@@ -1614,7 +1618,7 @@ const TradeScreen = ({
                                         {(buyType === "Plan_Limit" || buyType === "Plan_Market") &&
                                             <TradeFunctionPriceInputContainer>
                                                 <TextInput
-                                                    placeholder={"觸發價"}
+                                                    placeholder={t("conditionPrice")}
                                                     value={stopPrice}
                                                     onChangeText={stopPrice => setStopPrice(stopPrice)}
                                                     placeholderTextColor={
