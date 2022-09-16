@@ -237,7 +237,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                         <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.s}</Text>
                     <View style={{ display: "flex", flexDirection: "row" }}>
                       <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                        <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{(parseFloat(x.c) < 10 && parseFloat(x.c) > 1) ? x.c.slice(0, -3) : parseFloat(x.c) < 10 ? x.c.slice(0, -2) :x.c.slice(0, -4)}</Text>
+                        <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{(parseFloat(x.c) < 0.006 && parseFloat(x.c) > 0) ? x.c : (parseFloat(x.c) < 0.1 && parseFloat(x.c) > 0.006)  ? x.c.slice(0, -1) : (parseFloat(x.c) < 1 && parseFloat(x.c) > 0.1) ?x.c.slice(0, -2): (parseFloat(x.c) < 50 && parseFloat(x.c) > 1) ?x.c.slice(0, -3) : x.c.slice(0, -4)}</Text>
                         <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{x.v}</Text>
                       </View>
                       <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#2FB364", borderRadius: 4, alignItems: "center" }}>
@@ -253,7 +253,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                         <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.s}</Text>
                       <View style={{ display: "flex", flexDirection: "row" }}>
                         <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                          <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{(parseFloat(x.c) < 10 && parseFloat(x.c) > 1) ? x.c.slice(0, -3) : parseFloat(x.c) < 10 ? x.c.slice(0, -2) :x.c.slice(0, -4)}</Text>
+                          <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{(parseFloat(x.c) < 0.006 && parseFloat(x.c) > 0) ? x.c : (parseFloat(x.c) < 0.1 && parseFloat(x.c) > 0.006)  ? x.c.slice(0, -1) : (parseFloat(x.c) < 1 && parseFloat(x.c) > 0.1) ?x.c.slice(0, -2): (parseFloat(x.c) < 50 && parseFloat(x.c) > 1) ?x.c.slice(0, -3) : x.c.slice(0, -4)}</Text>
                           <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{x.v}</Text>
                         </View>
                         <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#2FB364", borderRadius: 4, alignItems: "center" }}>
@@ -278,7 +278,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                         <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.s}</Text>
                         <View style={{ display: "flex", flexDirection: "row" }}>
                           <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{(parseFloat(x.c) < 10 && parseFloat(x.c) > 1) ? x.c.slice(0, -3) : parseFloat(x.c) < 10 ? x.c.slice(0, -2) :x.c.slice(0, -4)}</Text>
+                            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{(parseFloat(x.c) < 0.006 && parseFloat(x.c) > 0) ? x.c : (parseFloat(x.c) < 0.1 && parseFloat(x.c) > 0.006)  ? x.c.slice(0, -1) : (parseFloat(x.c) < 1 && parseFloat(x.c) > 0.1) ?x.c.slice(0, -2): (parseFloat(x.c) < 50 && parseFloat(x.c) > 1) ?x.c.slice(0, -3) : x.c.slice(0, -4)}</Text>
                             <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{x.v}</Text>
                           </View>
                           <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#FB4C51", borderRadius: 4, alignItems: "center" }}>
@@ -294,7 +294,7 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
                         <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{x.s}</Text>
                         <View style={{ display: "flex", flexDirection: "row" }}>
                           <View style={{ marginRight: 40, display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{(parseFloat(x.c) < 10 && parseFloat(x.c) > 1) ? x.c.slice(0, -3) : parseFloat(x.c) < 10 ? x.c.slice(0, -2) :x.c.slice(0, -4)}</Text>
+                            <Text style={{ color: "#F4F5F6", fontSize: 15, fontWeight: "400" }}>{(parseFloat(x.c) < 0.006 && parseFloat(x.c) > 0) ? x.c : (parseFloat(x.c) < 0.1 && parseFloat(x.c) > 0.006)  ? x.c.slice(0, -1) : (parseFloat(x.c) < 1 && parseFloat(x.c) > 0.1) ?x.c.slice(0, -2): (parseFloat(x.c) < 50 && parseFloat(x.c) > 1) ?x.c.slice(0, -3) : x.c.slice(0, -4)}</Text>
                             <Text style={{ color: "#8D97A2", fontSize: 12, fontWeight: "400" }}>{x.v}</Text>
                           </View>
                           <View style={{ width: 88, display: "flex", flexDirection: "row", justifyContent: "center", backgroundColor: "#FB4C51", borderRadius: 4, alignItems: "center" }}>

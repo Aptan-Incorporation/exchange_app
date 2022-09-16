@@ -17,7 +17,7 @@ import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
-
+import _ from "lodash"
 const Container = styled(View)`
   display: flex;
   flex-direction: column;
@@ -162,14 +162,14 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
       getFavorite();
     }
     if(context){
-      setArray(context);
+      setArray(_.orderBy(context,["s"]));
     }
   }, []);
 
   useEffect(async () => {
     if(search == ""){
       if(context){
-        setArray(context);
+        setArray(_.orderBy(context,["s"]));
         let a = [];
         for(let i = 0;i < favorite.length;i++){
           for(let j = 0;j<context.length;j++){
@@ -195,8 +195,8 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
     }
     setFavorite2(a)
     if (index === 1) {
-      setArray(context);
-      var filteredData = filterByName(context);
+      setArray(_.orderBy(context,["s"]));
+      var filteredData = filterByName(_.orderBy(context,["s"]));
       setArray(filteredData);
     } else {
       var filteredData = filterByName(favorite3);
@@ -335,7 +335,7 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
                               fontWeight: "400"
                             }}
                           >
-                            {(parseFloat(x.c) < 10 && parseFloat(x.c) > 1) ? x.c.slice(0, -3) : parseFloat(x.c) < 10 ? x.c.slice(0, -2) :x.c.slice(0, -4)}
+                            {(parseFloat(x.c) < 0.006 && parseFloat(x.c) > 0) ? x.c : (parseFloat(x.c) < 0.1 && parseFloat(x.c) > 0.006)  ? x.c.slice(0, -1) : (parseFloat(x.c) < 1 && parseFloat(x.c) > 0.1) ?x.c.slice(0, -2): (parseFloat(x.c) < 50 && parseFloat(x.c) > 1) ?x.c.slice(0, -3) : x.c.slice(0, -4)}
                           </Text>
                           <Text
                             style={{
@@ -425,7 +425,7 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
                               fontWeight: "400"
                             }}
                           >
-                            {(parseFloat(x.c) < 10 && parseFloat(x.c) > 1) ? x.c.slice(0, -3) : parseFloat(x.c) < 10 ? x.c.slice(0, -2) :x.c.slice(0, -4)}
+                            {(parseFloat(x.c) < 0.006 && parseFloat(x.c) > 0) ? x.c : (parseFloat(x.c) < 0.1 && parseFloat(x.c) > 0.006)  ? x.c.slice(0, -1) : (parseFloat(x.c) < 1 && parseFloat(x.c) > 0.1) ?x.c.slice(0, -2): (parseFloat(x.c) < 50 && parseFloat(x.c) > 1) ?x.c.slice(0, -3) : x.c.slice(0, -4)}
                           </Text>
                           <Text
                             style={{

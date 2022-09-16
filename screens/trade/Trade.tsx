@@ -1367,8 +1367,8 @@ const TradeScreen = ({
             let trade = await AsyncStorage.getItem("trade")
             const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade
             const remark = _.find(context, function(o) { return o.s == t })
-            setWareHousedPrice((parseFloat(remark!.c) < 10 && parseFloat(remark!.c) > 1) ? remark!.c.slice(0, -3) : parseFloat(remark!.c) < 10 ? remark!.c.slice(0, -2) :remark!.c.slice(0, -4));
-            setBuyPrice((parseFloat(remark!.c) < 10 && parseFloat(remark!.c) > 1) ? remark!.c.slice(0, -3) : parseFloat(remark!.c) < 10 ? remark!.c.slice(0, -2) :remark!.c.slice(0, -4))
+            setWareHousedPrice((parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0) ? remark!.c : (parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006)  ? remark!.c.slice(0, -1) : (parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1) ?remark!.c.slice(0, -2): (parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1) ? remark!.c.slice(0, -3) : remark!.c.slice(0, -4));
+            setBuyPrice((parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0) ? remark!.c : (parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006)  ? remark!.c.slice(0, -1) : (parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1) ?remark!.c.slice(0, -2): (parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1) ? remark!.c.slice(0, -3) : remark!.c.slice(0, -4))
         }
     }, [])
 
@@ -1393,8 +1393,8 @@ const TradeScreen = ({
             }
             const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade
             const remark = _.find(context, function(o) { return o.s == t })
-            setWareHousedPrice((parseFloat(remark!.c) < 10 && parseFloat(remark!.c) > 1) ? remark!.c.slice(0, -3) : parseFloat(remark!.c) < 10 ? remark!.c.slice(0, -2) :remark!.c.slice(0, -4));
-            setBuyPrice((parseFloat(remark!.c) < 10 && parseFloat(remark!.c) > 1) ? remark!.c.slice(0, -3) : parseFloat(remark!.c) < 10 ? remark!.c.slice(0, -2) :remark!.c.slice(0, -4))
+            setWareHousedPrice((parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0) ? remark!.c : (parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006)  ? remark!.c.slice(0, -1) : (parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1) ?remark!.c.slice(0, -2): (parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1) ? remark!.c.slice(0, -3) : remark!.c.slice(0, -4));
+            setBuyPrice((parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0) ? remark!.c : (parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006)  ? remark!.c.slice(0, -1) : (parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1) ?remark!.c.slice(0, -2): (parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1) ? remark!.c.slice(0, -3) : remark!.c.slice(0, -4))
             // let leverage = await AsyncStorage.getItem("leverage")
             // if (leverage) {
             //     setLeverageViewNum(parseInt(leverage))
@@ -1546,7 +1546,7 @@ const TradeScreen = ({
                                                             <LinearGradient colors={['transparent', 'rgba(251, 76, 81, 0.2)']} start={{ x: 0, y: 0.0 }} end={{ x: percent, y: 0.0 }}>
                                                                 <TradeTableRowContainer>
 
-                                                                    <TradeTableSellPriceText>{(parseFloat(x[0]) < 10 && parseFloat(x[0]) > 1) ? x[0].slice(0, -5) : parseFloat(x[0]) < 10 ? x[0].slice(0, -4) :x[0].slice(0, -6)}</TradeTableSellPriceText>
+                                                                    <TradeTableSellPriceText>{(parseFloat(x[0]) < 0.006 && parseFloat(x[0]) > 0) ? price.slice(0,-2) : (parseFloat(x[0]) < 0.1 && parseFloat(x[0]) > 0.006)  ? x[0].slice(0, -3) : (parseFloat(x[0]) < 1 && parseFloat(x[0]) > 0.1) ? x[0].slice(0, -4): (parseFloat(x[0]) < 50 && parseFloat(x[0]) > 1) ?x[0].slice(0, -5) : x[0].slice(0, -6)}</TradeTableSellPriceText>
                                                                     <TradeTableNumberText>{x[1].slice(0, -5)}</TradeTableNumberText>
 
                                                                 </TradeTableRowContainer>
@@ -1561,12 +1561,12 @@ const TradeScreen = ({
                                     <TradeTableBottomTitleContainer>
                                         {
                                             isPositive === true ?
-                                                <TradeTableBottomTitlePriceRiseText>{(parseFloat(price) < 10 && parseFloat(price) > 1) ? price.slice(0, -3) : parseFloat(price) < 10 ? price.slice(0, -2) :price.slice(0, -4)}</TradeTableBottomTitlePriceRiseText> :
-                                                <TradeTableBottomTitlePriceFallText>{(parseFloat(price) < 10 && parseFloat(price) > 1) ? price.slice(0, -3) : parseFloat(price) < 10 ? price.slice(0, -2) :price.slice(0, -4)}</TradeTableBottomTitlePriceFallText>
+                                                <TradeTableBottomTitlePriceRiseText>{(parseFloat(price) < 0.006 && parseFloat(price) > 0) ? price : (parseFloat(price) < 0.1 && parseFloat(price) > 0.006)  ? price.slice(0, -1) : (parseFloat(price) < 1 && parseFloat(price) > 0.1) ?price.slice(0, -2): (parseFloat(price) < 50 && parseFloat(price) > 1) ?price.slice(0, -3) : price.slice(0, -4)}</TradeTableBottomTitlePriceRiseText> :
+                                                <TradeTableBottomTitlePriceFallText>{(parseFloat(price) < 0.006 && parseFloat(price) > 0) ? price : (parseFloat(price) < 0.1 && parseFloat(price) > 0.006)  ? price.slice(0, -1) : (parseFloat(price) < 1 && parseFloat(price) > 0.1) ?price.slice(0, -2): (parseFloat(price) < 50 && parseFloat(price) > 1) ?price.slice(0, -3) : price.slice(0, -4)}</TradeTableBottomTitlePriceFallText>
                                         }
                                     </TradeTableBottomTitleContainer>
                                     <TradeTableBottomTitleContainer>
-                                        <TradeTableBottomTitleOwnValueText>{(parseFloat(remarkPrice) < 10 && parseFloat(remarkPrice) > 1) ? remarkPrice.slice(0, -3) : parseFloat(remarkPrice) < 10 ? remarkPrice.slice(0, -2) :remarkPrice.slice(0, -4)}</TradeTableBottomTitleOwnValueText>
+                                        <TradeTableBottomTitleOwnValueText>{(parseFloat(remarkPrice) < 0.006 && parseFloat(remarkPrice) > 0) ? remarkPrice : (parseFloat(remarkPrice) < 0.1 && parseFloat(remarkPrice) > 0.006)  ? remarkPrice.slice(0, -1) : (parseFloat(remarkPrice) < 1 && parseFloat(remarkPrice) > 0.1) ?remarkPrice.slice(0, -2): (parseFloat(remarkPrice) < 50 && parseFloat(remarkPrice) > 1) ?remarkPrice.slice(0, -3) : remarkPrice.slice(0, -4)}</TradeTableBottomTitleOwnValueText>
                                     </TradeTableBottomTitleContainer>
                                     <TradeTableBuyContainer>
                                         {
@@ -1579,7 +1579,7 @@ const TradeScreen = ({
                                                     <>
                                                     {i<6 && <LinearGradient colors={['transparent', 'rgba(47, 178, 100, 0.2)']} start={{ x: 0, y: 0.0 }} end={{ x: percent, y: 0.0 }}>
                                                         <TradeTableRowContainer>
-                                                            <TradeTableBuyPriceText>{(parseFloat(x[0]) < 10 && parseFloat(x[0]) > 1) ? x[0].slice(0, -5) : parseFloat(x[0]) < 10 ? x[0].slice(0, -4) :x[0].slice(0, -6)}</TradeTableBuyPriceText>
+                                                            <TradeTableBuyPriceText>{(parseFloat(x[0]) < 0.006 && parseFloat(x[0]) > 0) ? price.slice(0,-2) : (parseFloat(x[0]) < 0.1 && parseFloat(x[0]) > 0.006)  ? x[0].slice(0, -3) : (parseFloat(x[0]) < 1 && parseFloat(x[0]) > 0.1) ? x[0].slice(0, -4): (parseFloat(x[0]) < 50 && parseFloat(x[0]) > 1) ?x[0].slice(0, -5) : x[0].slice(0, -6)}</TradeTableBuyPriceText>
                                                             <TradeTableNumberText>{x[1].slice(0, -5)}</TradeTableNumberText>
                                                         </TradeTableRowContainer>
                                                     </LinearGradient>}

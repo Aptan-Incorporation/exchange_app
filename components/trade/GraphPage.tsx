@@ -387,17 +387,17 @@ const GraphPage = (props: {
                 <GraphHeaderBottomRowContainer>
                     {
                         isPositive === true ?
-                            <GraphHeaderTitleRisePriceText>{(parseFloat(price) < 10 && parseFloat(price) > 1) ? price.slice(0, -3) : parseFloat(price) < 10 ? price.slice(0, -2) :price.slice(0, -4)}</GraphHeaderTitleRisePriceText> :
-                            <GraphHeaderTitleFallPriceText>{(parseFloat(price) < 10 && parseFloat(price) > 1) ? price.slice(0, -3) : parseFloat(price) < 10 ? price.slice(0, -2) :price.slice(0, -4)}</GraphHeaderTitleFallPriceText>
+                            <GraphHeaderTitleRisePriceText>{(parseFloat(price) < 0.006 && parseFloat(price) > 0) ? price : (parseFloat(price) < 0.1 && parseFloat(price) > 0.006)  ? price.slice(0, -1) : (parseFloat(price) < 1 && parseFloat(price) > 0.1) ?price.slice(0, -2): (parseFloat(price) < 50 && parseFloat(price) > 1) ?price.slice(0, -3) : price.slice(0, -4)}</GraphHeaderTitleRisePriceText> :
+                            <GraphHeaderTitleFallPriceText>{(parseFloat(price) < 0.006 && parseFloat(price) > 0) ? price : (parseFloat(price) < 0.1 && parseFloat(price) > 0.006)  ? price.slice(0, -1) : (parseFloat(price) < 1 && parseFloat(price) > 0.1) ?price.slice(0, -2): (parseFloat(price) < 50 && parseFloat(price) > 1) ?price.slice(0, -3) : price.slice(0, -4)}</GraphHeaderTitleFallPriceText>
                     }
                     <GraphHeaderBottomRowColumnContainer>
                         <GraphHeaderBottomInlineRowContainer>
                             <GraphHeaderSmallTitleText>{t("marketPrice")}</GraphHeaderSmallTitleText>
-                            <GraphHeaderSmallValueText>{(parseFloat(remarkPrice) < 10 && parseFloat(remarkPrice) > 1) ? remarkPrice.slice(0, -3) : parseFloat(remarkPrice) < 10 ? remarkPrice.slice(0, -2) :remarkPrice.slice(0, -4)}</GraphHeaderSmallValueText>
+                            <GraphHeaderSmallValueText>{(parseFloat(remarkPrice) < 0.006 && parseFloat(remarkPrice) > 0) ? remarkPrice : (parseFloat(remarkPrice) < 0.1 && parseFloat(remarkPrice) > 0.006)  ? remarkPrice.slice(0, -1) : (parseFloat(remarkPrice) < 1 && parseFloat(remarkPrice) > 0.1) ?remarkPrice.slice(0, -2): (parseFloat(remarkPrice) < 50 && parseFloat(remarkPrice) > 1) ?remarkPrice.slice(0, -3) : remarkPrice.slice(0, -4)}</GraphHeaderSmallValueText>
                         </GraphHeaderBottomInlineRowContainer>
                         <GraphHeaderBottomInlineRowContainer>
                             <GraphHeaderSmallTitleText>{t("indexPrice")}</GraphHeaderSmallTitleText>
-                            <GraphHeaderSmallValueText>{(parseFloat(price) < 10 && parseFloat(price) > 1) ? price.slice(0, -3) : parseFloat(price) < 10 ? price.slice(0, -2) :price.slice(0, -4)}</GraphHeaderSmallValueText>
+                            <GraphHeaderSmallValueText>{(parseFloat(price) < 0.006 && parseFloat(price) > 0) ? price : (parseFloat(price) < 0.1 && parseFloat(price) > 0.006)  ? price.slice(0, -1) : (parseFloat(price) < 1 && parseFloat(price) > 0.1) ?price.slice(0, -2): (parseFloat(price) < 50 && parseFloat(price) > 1) ?price.slice(0, -3) : price.slice(0, -4)}</GraphHeaderSmallValueText>
                         </GraphHeaderBottomInlineRowContainer>
                         {/* <GraphHeaderBottomInlineRowContainer>
                             <GraphHeaderSmallTitleText>資金費率</GraphHeaderSmallTitleText>
@@ -436,7 +436,7 @@ const GraphPage = (props: {
                             bidsArray.map((x:any) => {
                                 return (
                                     <GraphDetailBuyContainer>
-                                        <GraphDetailBuyPriceTitleText>{(parseFloat(x[0]) < 10 && parseFloat(x[0]) > 1) ? x[0].slice(0, -5) : parseFloat(x[0]) < 10 ? x[0].slice(0, -4) :x[0].slice(0, -6)}</GraphDetailBuyPriceTitleText>
+                                        <GraphDetailBuyPriceTitleText>{(parseFloat(x[0]) < 0.006 && parseFloat(x[0]) > 0) ? price.slice(0,-2) : (parseFloat(x[0]) < 0.1 && parseFloat(x[0]) > 0.006)  ? x[0].slice(0, -3) : (parseFloat(x[0]) < 1 && parseFloat(x[0]) > 0.1) ? x[0].slice(0, -4): (parseFloat(x[0]) < 50 && parseFloat(x[0]) > 1) ?x[0].slice(0, -5) : x[0].slice(0, -6)}</GraphDetailBuyPriceTitleText>
                                     </GraphDetailBuyContainer>
                                 )
                             })
@@ -482,7 +482,7 @@ const GraphPage = (props: {
                             asksArray.map((x:any) => {
                                 return (
                                     <GraphDetailSellContainer>
-                                        <GraphDetailSellPriceText>{(parseFloat(x[0]) < 10 && parseFloat(x[0]) > 1) ? x[0].slice(0, -5) : parseFloat(x[0]) < 10 ? x[0].slice(0, -4) :x[0].slice(0, -6)}</GraphDetailSellPriceText>
+                                        <GraphDetailSellPriceText>{(parseFloat(x[0]) < 0.006 && parseFloat(x[0]) > 0) ? price.slice(0,-2) : (parseFloat(x[0]) < 0.1 && parseFloat(x[0]) > 0.006)  ? x[0].slice(0, -3) : (parseFloat(x[0]) < 1 && parseFloat(x[0]) > 0.1) ? x[0].slice(0, -4): (parseFloat(x[0]) < 50 && parseFloat(x[0]) > 1) ?x[0].slice(0, -5) : x[0].slice(0, -6)}</GraphDetailSellPriceText>
                                     </GraphDetailSellContainer>
                                 )
                             })
