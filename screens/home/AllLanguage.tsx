@@ -83,16 +83,16 @@ const AllLanguage = ({ navigation }: RootStackScreenProps<"AllLanguage">) => {
 
   const arr = [
     {
-      key:"簡體中文",
-      value:"cn"
-    },
-    {
       key:"繁體中文",
       value:"tw"
     },
     {
-      key:"英文",
+      key:"English",
       value:"en"
+    },
+    {
+      key:"简体中文",
+      value:"cn"
     },
   ]
 
