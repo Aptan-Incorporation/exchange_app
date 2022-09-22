@@ -472,7 +472,7 @@ const GraphPage = (props: {
                         <GraphDetailLatestPriceText>{(parseFloat(price) < 10 && parseFloat(price) > 1) ? price.slice(0, -3) : parseFloat(price) < 10 ? price.slice(0, -2) :price.slice(0, -4)}</GraphDetailLatestPriceText>
                     </GraphDetailPriceColumnContainer>
                     <GraphDetailPriceColumnContainer>
-                        <GraphDetailPriceRightTitleText>指數價</GraphDetailPriceRightTitleText>
+                        <GraphDetailPriceRightTitleText>{t("indexPrice")}</GraphDetailPriceRightTitleText>
                         <GraphDetailIndexPriceText>{(parseFloat(price) < 10 && parseFloat(price) > 1) ? price.slice(0, -3) : parseFloat(price) < 10 ? price.slice(0, -2) :price.slice(0, -4)}</GraphDetailIndexPriceText>
                     </GraphDetailPriceColumnContainer>
                 </GraphDetailPriceRowContainer>

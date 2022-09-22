@@ -14,15 +14,15 @@ import { RootStackScreenProps } from "../../types";
 import { useState, useEffect } from "react";
 import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Clipboard from 'expo-clipboard';
+import * as Clipboard from "expo-clipboard";
 import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
   flex-direction: column;
-  background-color: #131B24;
+  background-color: #131b24;
   border: none;
-  flex:1;
+  flex: 1;
 `;
 
 const Header = styled(View)<{ insets: number }>`
@@ -35,13 +35,12 @@ const Header = styled(View)<{ insets: number }>`
   padding-right: 16px;
   padding-bottom: 11px;
   background-color: #18222d;
-
 `;
 
 const HeaderText = styled(Text)`
   font-size: 16px;
   color: white;
-  font-weight:600;
+  font-weight: 600;
 `;
 
 const IconImg = styled(Image)`
@@ -49,7 +48,9 @@ const IconImg = styled(Image)`
   height: 28px;
 `;
 
-const GoogleVerifyStep1 = ({ navigation }: RootStackScreenProps<"GoogleVerifyStep1">) => {
+const GoogleVerifyStep1 = ({
+  navigation
+}: RootStackScreenProps<"GoogleVerifyStep1">) => {
   const [positionArray, setPositionArray] = useState([]);
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
@@ -60,9 +61,9 @@ const GoogleVerifyStep1 = ({ navigation }: RootStackScreenProps<"GoogleVerifySte
   };
 
   const copyToClipboard = async () => {
-    await Clipboard.setString('hello world');
-    Alert.alert("複製成功")
-};
+    await Clipboard.setString("hello world");
+    Alert.alert(t("copied"));
+  };
 
   useEffect(async () => {
     let token = await AsyncStorage.getItem("token");
@@ -84,26 +85,71 @@ const GoogleVerifyStep1 = ({ navigation }: RootStackScreenProps<"GoogleVerifySte
           />
         </TouchableOpacity>
         <HeaderText>{t("googleAuth")}</HeaderText>
-        <TouchableOpacity onPress={()=>{navigation.navigate("GoogleVerifyStep2")}}>
-          <Text style={{color:"#A8C2DC",fontSize:16,fontWeight:"600"}}>{t("next")}</Text>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("GoogleVerifyStep2");
+          }}
+        >
+          <Text style={{ color: "#A8C2DC", fontSize: 16, fontWeight: "600" }}>
+            {t("next")}
+          </Text>
         </TouchableOpacity>
       </Header>
-      <View style={{justifyContent:"center",alignItems:"center",display:"flex",flexDirection:"column",marginTop:20}}>
-          <Text style={{color:"#8D97A2",fontSize:13,fontWeight:"500",marginTop:20}}>請下載 Google 驗證 APP。</Text>
-          <View style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-            <TouchableOpacity onPress={()=>{
-              AsyncStorage.setItem("web","https://apps.apple.com/tw/app/google-authenticator/id388497605")
-              navigation.navigate("Web")
-            }}>
-               <Image source={require("../../assets/images/home/appstore.png")} style={{width:223,height:80,marginTop:40}}/>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={()=>{
-              AsyncStorage.setItem("web","https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=zh_TW&gl=US")
-              navigation.navigate("Web")
-            }}>
-              <Image source={require("../../assets/images/home/googleplay.png")} style={{width:223,height:80,marginTop:20}}/>
-            </TouchableOpacity>
-          </View>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          display: "flex",
+          flexDirection: "column",
+          marginTop: 20
+        }}
+      >
+        <Text
+          style={{
+            color: "#8D97A2",
+            fontSize: 13,
+            fontWeight: "500",
+            marginTop: 20
+          }}
+        >
+          請下載 Google 驗證 APP。
+        </Text>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center"
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              AsyncStorage.setItem(
+                "web",
+                "https://apps.apple.com/tw/app/google-authenticator/id388497605"
+              );
+              navigation.navigate("Web");
+            }}
+          >
+            <Image
+              source={require("../../assets/images/home/appstore.png")}
+              style={{ width: 223, height: 80, marginTop: 40 }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              AsyncStorage.setItem(
+                "web",
+                "https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=zh_TW&gl=US"
+              );
+              navigation.navigate("Web");
+            }}
+          >
+            <Image
+              source={require("../../assets/images/home/googleplay.png")}
+              style={{ width: 223, height: 80, marginTop: 20 }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
     </Container>
   );

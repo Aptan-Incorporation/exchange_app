@@ -191,23 +191,6 @@ export default function App() {
       setBtcPrice((parseFloat(btc.c) < 0.006 && parseFloat(btc.c) > 0) ? btc.c : (parseFloat(btc.c) < 0.1 && parseFloat(btc.c) > 0.006)  ? btc.c.slice(0, -1) : (parseFloat(btc.c) < 1 && parseFloat(btc.c) > 0.1) ?btc.c.slice(0, -2): (parseFloat(btc.c) < 50 && parseFloat(btc.c) > 1) ?btc.c.slice(0, -3) : btc.c.slice(0, -4));
       setBtcRate(btc.P);
       setBtcAmt(btc.v.split(".")[0]);
-      // for(let i = 0;i < lastJsonMessage.length;i++){
-      //   if(lastJsonMessage[i].s === "BNB-USDT"){
-      //     setDogePrice(lastJsonMessage[i].c.slice(0, -4));
-      //     setDogeRate(lastJsonMessage[i].P);
-      //     setDogeAmt(lastJsonMessage[i].v.split(".")[0]);
-      //   }
-      //   if(lastJsonMessage[i].s === "ETH-USDT"){
-      //     setEthPrice(lastJsonMessage[i].c.slice(0, -4));
-      //     setEthRate(lastJsonMessage[i].P);
-      //     setEthAmt(lastJsonMessage[i].v.split(".")[0]);
-      //   }
-      //   if(lastJsonMessage[i].s === "BTC-USDT"){
-      //     setBtcPrice(lastJsonMessage[i].c.slice(0, -4));
-      //     setBtcRate(lastJsonMessage[i].P);
-      //     setBtcAmt(lastJsonMessage[i].v.split(".")[0]);
-      //   }
-      // }
     }
   },[lastJsonMessage]);
   useEffect(() => {
@@ -219,6 +202,7 @@ export default function App() {
   useEffect(() => {
     if(lastJsonMessage3){
       if(lastJsonMessage3.channel === "position"){
+        // console.log(lastJsonMessage3.data)
         setPosition(lastJsonMessage3.data)
       }else{
         setFuture(lastJsonMessage3.data)

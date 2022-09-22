@@ -749,13 +749,13 @@ const WalletScreen = ({
                                                         <TradePositionCardContainer>
                                                             <TradePositionCardTitleContainer>
                                                                 <TradePositionCardTitleRowContainer>
-                                                                    {x.side === "BUY" ?                                                                    <TradePositionCardTitleText>多 {x.symbol}</TradePositionCardTitleText>
- :                                                                    <TradePositionCardTitleText style={{color:"#FB4C51"}}>空 {x.symbol}</TradePositionCardTitleText>
+                                                                    {x.side === "BUY" ?                                                                    <TradePositionCardTitleText>{t("long")} {x.symbol}</TradePositionCardTitleText>
+ :                                                                    <TradePositionCardTitleText style={{color:"#FB4C51"}}>{t("short")} {x.symbol}</TradePositionCardTitleText>
 }
                                                                     <TradePositionCardSmallTitleText>{t("pnlU")}</TradePositionCardSmallTitleText>
                                                                 </TradePositionCardTitleRowContainer>
                                                                 <TradePositionCardTitleRowContainer>
-                                                                    <TradePositionCardTitleValueText>{x.type === 'FULL' ? '全倉' : '逐倉'} {x.leverage}X</TradePositionCardTitleValueText>
+                                                                    <TradePositionCardTitleValueText>{x.type === 'FULL' ? t("crossPosition") : '逐倉'} {x.leverage}X</TradePositionCardTitleValueText>
                                                                     {x.profitAndLoss > 0 ? <TradePositionCardBigValueText>{x.profitAndLoss}</TradePositionCardBigValueText>:<TradePositionCardBigValueText style={{color:"#FB4C51"}}>{x.profitAndLoss}</TradePositionCardBigValueText>} 
                                                                 </TradePositionCardTitleRowContainer>
                                                             </TradePositionCardTitleContainer>

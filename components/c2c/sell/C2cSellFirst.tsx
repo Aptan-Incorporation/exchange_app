@@ -621,7 +621,7 @@ const C2cSellFirst = (props: {
                     }
                 </BottomDetailPayTypeContainer>
                 <BottomDetailLine></BottomDetailLine> */}
-                <BottomDetailSmallTitleText>放行時限</BottomDetailSmallTitleText>
+                <BottomDetailSmallTitleText>{t("limitedTime")}</BottomDetailSmallTitleText>
                 <BottomDetailSmallValueText>{PaymentTimeLimit / 60000}分鐘</BottomDetailSmallValueText>
                 <BottomDetailLine></BottomDetailLine>
                 <BottomDetailSmallTitleText>{t("fiatMemo")}</BottomDetailSmallTitleText>

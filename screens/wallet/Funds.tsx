@@ -113,7 +113,7 @@ const FundsScreen = ({ navigation }: RootStackScreenProps<"Funds">) => {
               </TouchableOpacity>
           </View>
          <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>{t("amount")}</Text>
-         <TextInput style={{backgroundColor:"#242D37",borderRadius:4,padding:12,color:"white",marginTop:5}} placeholder="輸入劃轉數量" keyboardType={"decimal-pad"} returnKeyType={"done"} onChangeText={text => setNum(text)} value={num}/>
+         <TextInput style={{backgroundColor:"#242D37",borderRadius:4,padding:12,color:"white",marginTop:5}} placeholder={t("enterTransferAmount")} keyboardType={"decimal-pad"} returnKeyType={"done"} onChangeText={text => setNum(text)} value={num}/>
          <TouchableOpacity onPress={()=>{
              if(status === 0){
                 setNum(totalBalance.toString())

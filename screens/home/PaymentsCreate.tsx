@@ -220,7 +220,7 @@ const PaymentsCreate = ({ navigation, route }: RootStackScreenProps<"PaymentsCre
     const { t } = useTranslation();
     const handlePaymentType = (payment: string) => {
         if (payment === 'BANK') {
-            return '銀行轉帳'
+            return t("bankTransfer")
         } else if (payment === 'TOUCHNGO') {
             return 'TouchnGo'
         } else if (payment === 'PPAY') {

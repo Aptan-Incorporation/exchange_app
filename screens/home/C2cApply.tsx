@@ -548,7 +548,7 @@ const C2cApply = ({ navigation }: RootStackScreenProps<"C2cApply">) => {
             }}
             onPress={() => { 
               if(advertiserLevel === level[level.length -1 ].name){
-                Alert.alert("已達最高等級")
+                Alert.alert(t("maxLevel"))
               }else{
                 Alert.alert('確定升級？', '升級後將自動從法幣錢包餘額扣除押金，是否繼續升級？', [
                   {

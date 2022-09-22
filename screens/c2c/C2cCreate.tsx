@@ -1321,9 +1321,9 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
 
     const handlePriceText = () => {
         if (priceType === 0) {
-            return '固定價格'
+            return t("FixedPrice")
         } else {
-            return '浮動價格'
+            return t("flexiblePrice")
         }
     };
 
@@ -1916,7 +1916,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                         }}
                                         value={inputQuantity}
                                         onChangeText={(text) => { setInputQuantity(text) }}
-                                        placeholder={"輸入交易數量"}
+                                        placeholder={t("enterTradeAmount")}
                                         placeholderTextColor={'#8D97A2'}
                                         keyboardType={"decimal-pad"}
                                     />
@@ -1945,7 +1945,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                         }}
                                         value={inputMinLimitPrice}
                                         onChangeText={(text) => { setInputMinLimitPrice(text) }}
-                                        placeholder={"最小"}
+                                        placeholder={t("min")}
                                         placeholderTextColor={'#8D97A2'}
                                         keyboardType={"decimal-pad"}
                                     />
@@ -1968,7 +1968,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                         }}
                                         value={inputMaxLimitPrice}
                                         onChangeText={(text) => { setInputMaxLimitPrice(text) }}
-                                        placeholder={"最大"}
+                                        placeholder={t("max")}
                                         placeholderTextColor={'#8D97A2'}
                                         keyboardType={"decimal-pad"}
                                     />
@@ -1980,7 +1980,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                             <QuantityInputContainer>
                                 {
                                     swapPage === 0 ?
-                                        <QuantitySmallTitleText>放行時限</QuantitySmallTitleText> :
+                                        <QuantitySmallTitleText>{t("limitedTime")}</QuantitySmallTitleText> :
                                         <QuantitySmallTitleText>付款時限</QuantitySmallTitleText>
                                 }
                                 <QuantityTimeLimitButton onPress={() => { setIsTimeLimitModalVisible(true) }}>
@@ -2136,7 +2136,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                 {
                                     priceType === 0 ?
                                         <ConfirmCardTradePriceText>{inputPrice} {fiatCurrencyType}/{cryptoAssetType}</ConfirmCardTradePriceText> :
-                                        <ConfirmCardTradePriceText>浮動價格 {fiatCurrencyType}/{cryptoAssetType}</ConfirmCardTradePriceText>
+                                        <ConfirmCardTradePriceText>{t("flexiblePrice")} {fiatCurrencyType}/{cryptoAssetType}</ConfirmCardTradePriceText>
                                 }
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
@@ -2152,7 +2152,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                 <ConfirmCardThirdText>{fiatCurrencyType} {inputMinLimitPrice} - {inputMaxLimitPrice}</ConfirmCardThirdText>
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
-                                <ConfirmCardTitle>放行時限</ConfirmCardTitle>
+                                <ConfirmCardTitle>{t("limitedTime")}</ConfirmCardTitle>
                                 <ConfirmCardThirdText>{inputLimitTime} {t("minutes")}</ConfirmCardThirdText>
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
@@ -2218,7 +2218,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                 {
                                     priceType === 0 ?
                                         <ConfirmCardTradePriceText>{inputPrice} {fiatCurrencyType}/{cryptoAssetType}</ConfirmCardTradePriceText> :
-                                        <ConfirmCardTradePriceText>浮動價格 {fiatCurrencyType}/{cryptoAssetType}</ConfirmCardTradePriceText>
+                                        <ConfirmCardTradePriceText>{t("flexiblePrice")} {fiatCurrencyType}/{cryptoAssetType}</ConfirmCardTradePriceText>
                                 }
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
@@ -2234,7 +2234,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                                 <ConfirmCardThirdText>{fiatCurrencyType} {inputMinLimitPrice} - {inputMaxLimitPrice}</ConfirmCardThirdText>
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
-                                <ConfirmCardTitle>放行時限</ConfirmCardTitle>
+                                <ConfirmCardTitle>{t("limitedTime")}</ConfirmCardTitle>
                                 <ConfirmCardThirdText>{inputLimitTime} {t("minutes")}</ConfirmCardThirdText>
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
@@ -2442,7 +2442,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                         <PriceModalLine />
                         <TouchableOpacity onPress={() => { setPriceType(1), setIsPriceTypeModalVisible(false) }}>
                             <PriceRowContainer>
-                                <PriceModalText>浮動價格</PriceModalText>
+                                <PriceModalText>{t("flexiblePrice")}</PriceModalText>
                                 {
                                     priceType === 1 &&
                                     <ModalSelectImage source={require("../../assets/images/trade/selected.png")} />
@@ -2454,7 +2454,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                 </View>
             </Modal>
 
-            {/* Time Limit Modal 放行時限*/}
+            {/* Time Limit Modal {t("limitedTime")}*/}
             <Modal
                 isVisible={isTimeLimitModalVisible}
                 deviceHeight={windowHeight}
@@ -2474,7 +2474,7 @@ const C2cCreateScreen = ({ navigation }: RootStackScreenProps<"C2cCreateScreen">
                         </TouchableOpacity>
                         {
                             swapPage === 0 ?
-                                <ModalHeaderTitleText>放行時限</ModalHeaderTitleText> :
+                                <ModalHeaderTitleText>{t("limitedTime")}</ModalHeaderTitleText> :
                                 <ModalHeaderTitleText>付款時限</ModalHeaderTitleText>
                         }
                         <TouchableOpacity onPress={() => { setIsTimeLimitModalVisible(false) }}>

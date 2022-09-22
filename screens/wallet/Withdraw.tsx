@@ -75,7 +75,7 @@ const WithdrawScreen = ({ navigation }: RootStackScreenProps<"Withdraw">) => {
       </Header>
       <View style={{padding:16}}>
          <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500"}}>USDT{t("widthdrawAddress")}</Text>
-         <TextInput style={{backgroundColor:"#242D37",borderRadius:4,padding:12,color:"white",marginTop:5}} placeholder="輸入USDT提現地址" onChangeText={text => setAddress(text)}/>
+         <TextInput style={{backgroundColor:"#242D37",borderRadius:4,padding:12,color:"white",marginTop:5}} placeholder={t("enterAddress")} onChangeText={text => setAddress(text)}/>
          {/* <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>備註</Text>
          <TextInput style={{backgroundColor:"#242D37",borderRadius:4,padding:12,color:"white",marginTop:5}} placeholder="選填"/> */}
          <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>{t("network")}</Text>
@@ -84,7 +84,7 @@ const WithdrawScreen = ({ navigation }: RootStackScreenProps<"Withdraw">) => {
          </View>
 
          <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24}}>{t("amount")}</Text>
-         <TextInput style={{backgroundColor:"#242D37",borderRadius:4,padding:12,color:"white",marginTop:5}} placeholder="輸入提現數量" keyboardType={"decimal-pad"} returnKeyType={"done"} onChangeText={text => setNumber(text)}/>
+         <TextInput style={{backgroundColor:"#242D37",borderRadius:4,padding:12,color:"white",marginTop:5}} placeholder={t("enterWidthdrawAmount")} keyboardType={"decimal-pad"} returnKeyType={"done"} onChangeText={text => setNumber(text)}/>
          <TouchableOpacity style={{display:"flex",justifyContent:"center",alignItems:"center",backgroundColor:"#3D6A97",padding:12,borderRadius:4,marginTop:30}} onPress={()=>{
                   if(!address){
                     alert("請輸入地址")

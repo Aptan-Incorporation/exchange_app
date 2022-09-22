@@ -12,11 +12,11 @@ import Modal from "react-native-modal";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import styled from "styled-components";
 import { RootStackScreenProps } from "../../types";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import api from "../../common/api";
 import Spinner from "react-native-loading-spinner-overlay";
-import axios from "axios"
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from "react-i18next";
 
 const windowHeight = Dimensions.get("window").height;
@@ -27,7 +27,7 @@ const Container = styled(View)`
   flex-direction: column;
   flex: 1;
   background-color: #18222d;
-  width:100%;
+  width: 100%;
 `;
 
 // Stop Position Modal 當前持倉止盈/止損
@@ -178,10 +178,10 @@ const ModalButtonText = styled(Text)`
 `;
 
 const StopPositionScreen = ({
-  navigation
+  navigation,route
 }: RootStackScreenProps<"StopPositionScreen">) => {
   const insets = useSafeAreaInsets();
-
+  const { remarkPrice } = route.params;
   // Position Detail Button
   const [isStopPositionVisible, setIsStopPositionVisible] = useState(false);
   const [positionStopEarnPrice, setPositionStopEarnPrice] = useState("");
@@ -208,34 +208,75 @@ const StopPositionScreen = ({
   const [predictEarningMsg, setPredictEarningMsg] = useState("");
   const [predictLostMsg, setPredictLostMsg] = useState("");
   const [price, setPrice] = useState("");
-  const [positionArray,setPositionArray] = useState({avgPrice:"0",forceClose:"0"})
+  const [symbol, setSymbol] = useState("");
+  const [positionArray, setPositionArray] = useState({
+    avgPrice: "0",
+    forceClose: "0"
+  });
   const { t } = useTranslation();
   const togglePositionSellVolumnModal = () => {
     setIsPositionSellVoiumnVisible(!isPositionSellVolumnVisible);
   };
 
   const getPosition = async () => {
-    let position = await AsyncStorage.getItem('position')
-    let symbol = JSON.parse(position!).position.symbol
-    setPositionArray(JSON.parse(position!).position); 
-
-    api.get("/investor/position").then((x) => {
-        if(x.status != 400 && x.status != 401){
-        axios
-        .get(`https://api1.binance.com/api/v3/ticker/price?symbol=${symbol.split("-")[0]}USDT`)
-        .then((x) => {
-            setPrice(x.data.price.slice(0,-6));
-        }); 
+    let position = await AsyncStorage.getItem("position");
+    let symbol = JSON.parse(position!).position.symbol;
+    setSymbol(JSON.parse(position!).position.symbol)
+    if (JSON.parse(position!).position.profitPrice) {
+      setPositionStopEarnPrice(
+        JSON.parse(position!).position.profitPrice.toString()
+      );
+      api
+        .getData(
+          `/order/position/stop-price?symbol=${symbol}&profitPrice=` +
+            JSON.parse(position!).position.profitPrice
+        )
+        .then(x => {
+          if (x.status === 400) {
+            setPredictEarning(0);
+            setPredictEarningMsg(x.data.msg);
+          } else {
+            setPredictEarning(x.data);
+            setPredictEarningMsg("");
           }
-    })
-    
-  };
-  useEffect(async ()=>{
-    let token = await AsyncStorage.getItem("token")
-    if(token){
-      getPosition()
+        });
     }
-  },[])
+    if (JSON.parse(position!).position.lossPrice) {
+      setPositionStopLostPrice(
+        JSON.parse(position!).position.lossPrice.toString()
+      );
+      api
+        .getData(
+          `/order/position/stop-price?symbol=${symbol}&lossPrice=` +
+            JSON.parse(position!).position.lossPrice
+        )
+        .then(x => {
+          if (x.status === 400) {
+            setPredictLoss(0);
+            setPredictLostMsg(x.data.msg);
+          } else {
+            setPredictLoss(x.data);
+            setPredictLostMsg("");
+          }
+        });
+    }
+    setPositionArray(JSON.parse(position!).position);
+    axios
+      .get(
+        `https://api1.binance.com/api/v3/ticker/price?symbol=${
+          symbol.split("-")[0]
+        }USDT`
+      )
+      .then(x => {
+        setPrice(x.data.price.slice(0, -6));
+      });
+  };
+  useEffect(async () => {
+    let token = await AsyncStorage.getItem("token");
+    if (token) {
+      getPosition();
+    }
+  }, []);
 
   return (
     <Container>
@@ -245,51 +286,80 @@ const StopPositionScreen = ({
           paddingLeft: 16,
           paddingRight: 16,
           paddingBottom: 200,
-          width:"100%"
+          width: "100%"
         }}
       >
         {loading && <Spinner visible={true} textContent={""} />}
         <StopPositionRowContainer style={{ paddingTop: 16 }}>
           <StopPositionInRowContainer>
             <StopPositionColumnContainer>
-            <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
-                <Text style={{color:"white"}}>{t("enterPrice")}</Text>
-                <Text style={{color:"white"}}>{positionArray.avgPrice}</Text>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: "140%",
+                  marginTop: 10
+                }}
+              >
+                <Text style={{ color: "white" }}>{t("entryPrice")}</Text>
+                <Text style={{ color: "white" }}>{(parseFloat(positionArray.avgPrice) < 0.006 && parseFloat(positionArray.avgPrice) > 0) ? positionArray.avgPrice : (parseFloat(positionArray.avgPrice) < 0.1 && parseFloat(positionArray.avgPrice) > 0.006)  ? positionArray.avgPrice.toString().slice(0, -1) : (parseFloat(positionArray.avgPrice) < 1 && parseFloat(positionArray.avgPrice) > 0.1) ?positionArray.avgPrice.toString().slice(0, -2): (parseFloat(positionArray.avgPrice) < 50 && parseFloat(positionArray.avgPrice) > 1) ?positionArray.avgPrice.toString().slice(0, -3) : positionArray.avgPrice.toString().slice(0, -4)}</Text>
               </View>
-              <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
-                <Text style={{color:"white"}}>{t("marketPrice")}</Text>
-                <Text style={{color:"white"}}>{price}</Text>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: "140%",
+                  marginTop: 10
+                }}
+              >
+                <Text style={{ color: "white" }}>{t("marketPrice")}</Text>
+                <Text style={{ color: "white" }}>{(parseFloat(remarkPrice) < 0.006 && parseFloat(remarkPrice) > 0) ? remarkPrice : (parseFloat(remarkPrice) < 0.1 && parseFloat(remarkPrice) > 0.006)  ? remarkPrice.slice(0, -1) : (parseFloat(remarkPrice) < 1 && parseFloat(remarkPrice) > 0.1) ?remarkPrice.slice(0, -2): (parseFloat(remarkPrice) < 50 && parseFloat(remarkPrice) > 1) ?remarkPrice.slice(0, -3) : remarkPrice.slice(0, -4)}</Text>
               </View>
-              <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10,marginBottom:20 }}>
-                <Text style={{color:"white"}}>{t("liqPrice")}</Text>
-                <Text style={{color:"white"}}>{positionArray.forceClose}</Text>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: "140%",
+                  marginTop: 10,
+                  marginBottom: 20
+                }}
+              >
+                <Text style={{ color: "white" }}>{t("liqPrice")}</Text>
+                <Text style={{ color: "white" }}>
+                  {positionArray.forceClose}
+                </Text>
               </View>
-              <StopPositionLabelText>止盈價</StopPositionLabelText>
+              <StopPositionLabelText>{t("stopProfitPrice")}</StopPositionLabelText>
               <StopPositionInputContainer>
                 <TextInput
                   placeholder={"價格"}
                   value={positionStopEarnPrice}
-                  onChangeText={async (positionStopEarnPrice) =>{
-                    let position = await AsyncStorage.getItem('position')
-                    let  symbol = JSON.parse(position!).position.symbol
-                    setPositionStopEarnPrice(positionStopEarnPrice)
-                    if(positionStopEarnPrice){
-                        api.getData(`/order/position/stop-price?symbol=${symbol}&profitPrice=`+positionStopEarnPrice).then(x=>{
-                            if(x.status === 400){
-                                setPredictEarning(0)
-                                setPredictEarningMsg(x.data.msg)
-                            }else{
-                                setPredictEarning(x.data)  
-                                setPredictEarningMsg("")
-
-                            }
-                        })
-                    }else{
-                        setPredictEarning(0)
+                  onChangeText={async positionStopEarnPrice => {
+                    let position = await AsyncStorage.getItem("position");
+                    let symbol = JSON.parse(position!).position.symbol;
+                    setPositionStopEarnPrice(positionStopEarnPrice);
+                    if (positionStopEarnPrice) {
+                      api
+                        .getData(
+                          `/order/position/stop-price?symbol=${symbol}&profitPrice=` +
+                            positionStopEarnPrice
+                        )
+                        .then(x => {
+                          if (x.status === 400) {
+                            setPredictEarning(0);
+                            setPredictEarningMsg(x.data.msg);
+                          } else {
+                            setPredictEarning(x.data);
+                            setPredictEarningMsg("");
+                          }
+                        });
+                    } else {
+                      setPredictEarning(0);
                     }
-                    
-                  }
-                  }
+                  }}
                   placeholderTextColor={"#8D97A2"}
                   returnKeyType={"done"}
                   keyboardType={"decimal-pad"}
@@ -309,20 +379,42 @@ const StopPositionScreen = ({
                   </StopPositionButtonRightText>
                 </StopPositionInputRightContainer>
               </StopPositionInputContainer>
-              <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
-                <Text style={{color:"white"}}>倉位金額</Text>
-                <Text style={{color:"white"}}>{positionArray.avgPrice}</Text>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: "140%",
+                  marginTop: 10
+                }}
+              >
+                <Text style={{ color: "white" }}>{t("positionValue")}</Text>
+                <Text style={{ color: "white" }}>{positionArray.avgPrice}</Text>
               </View>
-              <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
-                <Text style={{color:"white"}}>預計盈虧</Text>
-                <Text style={{color:"white"}}>{predictEarning}</Text>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: "140%",
+                  marginTop: 10
+                }}
+              >
+                <Text style={{ color: "white" }}>{t("estimatedPNL")}</Text>
+                <Text style={{ color: "white" }}>{predictEarning}</Text>
               </View>
-              {predictEarningMsg != "" && 
-              <View style={{ display: "flex",flexDirection:"row",marginTop:10,width:"140%" }}>
-                <Text style={{color:"#FB4C51"}}>{predictEarningMsg}</Text>
-              </View>
-              }
-              
+              {predictEarningMsg != "" && (
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginTop: 10,
+                    width: "140%"
+                  }}
+                >
+                  <Text style={{ color: "#FB4C51" }}>{predictEarningMsg}</Text>
+                </View>
+              )}
             </StopPositionColumnContainer>
           </StopPositionInRowContainer>
           {/* <StopPositionInRowContainer>
@@ -349,28 +441,32 @@ const StopPositionScreen = ({
         <StopPositionRowContainer>
           <StopPositionInRowContainer>
             <StopPositionColumnContainer>
-              <StopPositionLabelText>止損價</StopPositionLabelText>
+              <StopPositionLabelText>{t("stopLossPrice")}</StopPositionLabelText>
               <StopPositionInputContainer>
                 <TextInput
                   placeholder={"價格"}
                   value={positionStopLostPrice}
-                  onChangeText={async (positionStopLostPrice) =>{
-                    setPositionStopLostPrice(positionStopLostPrice)
-                    let position = await AsyncStorage.getItem('position')
-                    let  symbol = JSON.parse(position!).position.symbol
-                    if(positionStopLostPrice){
-                        api.getData(`/order/position/stop-price?symbol=${symbol}&lossPrice=`+positionStopLostPrice).then(x=>{
-                            if(x.status === 400){
-                                setPredictLoss(0)
-                                setPredictLostMsg(x.data.msg)
-                            }else{
-                                setPredictLoss(x.data)  
-                                setPredictLostMsg("")
-
-                            }
-                        })
-                    }else{
-                        setPredictLoss(0)
+                  onChangeText={async positionStopLostPrice => {
+                    setPositionStopLostPrice(positionStopLostPrice);
+                    let position = await AsyncStorage.getItem("position");
+                    let symbol = JSON.parse(position!).position.symbol;
+                    if (positionStopLostPrice) {
+                      api
+                        .getData(
+                          `/order/position/stop-price?symbol=${symbol}&lossPrice=` +
+                            positionStopLostPrice
+                        )
+                        .then(x => {
+                          if (x.status === 400) {
+                            setPredictLoss(0);
+                            setPredictLostMsg(x.data.msg);
+                          } else {
+                            setPredictLoss(x.data);
+                            setPredictLostMsg("");
+                          }
+                        });
+                    } else {
+                      setPredictLoss(0);
                     }
                   }}
                   placeholderTextColor={"#8D97A2"}
@@ -393,23 +489,45 @@ const StopPositionScreen = ({
                   </StopPositionButtonRightText>
                 </StopPositionInputRightContainer>
               </StopPositionInputContainer>
-              <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
-                <Text style={{color:"white"}}>倉位金額</Text>
-                <Text style={{color:"white"}}>{positionArray.avgPrice}</Text>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: "140%",
+                  marginTop: 10
+                }}
+              >
+                <Text style={{ color: "white" }}>{t("positionValue")}</Text>
+                <Text style={{ color: "white" }}>{positionArray.avgPrice}</Text>
               </View>
-              <View style={{ display: "flex",flexDirection:"row",justifyContent:"space-between",width:"140%",marginTop:10 }}>
-                <Text style={{color:"white"}}>預計盈虧</Text>
-                <Text style={{color:"white"}}>{predictLoss}</Text>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: "140%",
+                  marginTop: 10
+                }}
+              >
+                <Text style={{ color: "white" }}>{t("estimatedPNL")}</Text>
+                <Text style={{ color: "white" }}>{predictLoss}</Text>
               </View>
-              {predictLostMsg != "" && 
-              <View style={{ display: "flex",flexDirection:"row",marginTop:10,width:"140%" }}>
-                <Text style={{color:"#FB4C51"}}>{predictLostMsg}</Text>
-              </View>
-              }
+              {predictLostMsg != "" && (
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginTop: 10,
+                    width: "140%"
+                  }}
+                >
+                  <Text style={{ color: "#FB4C51" }}>{predictLostMsg}</Text>
+                </View>
+              )}
             </StopPositionColumnContainer>
-            
           </StopPositionInRowContainer>
-          
+
           {/* <StopPositionInRowContainer>
                         <StopPositionColumnContainer>
                             <StopPositionLabelText>賣出價</StopPositionLabelText>
@@ -439,23 +557,33 @@ const StopPositionScreen = ({
         {positionStopEarnPrice !== "" || positionStopLostPrice !== "" ? (
           <StopPositionSubmitButton
             onPress={() => {
-                setLoading(true)
-                api.postData("/order/position/stop-price",{profitPrice:positionStopEarnPrice ? positionStopEarnPrice: null,lossPrice:positionStopLostPrice?positionStopLostPrice:null,symbol:"BTC-USDT"}).then(x=>{
-                    setLoading(false)
-                    if(x.status === 400){
-                        Alert.alert(x.data.msg)
-                    }else{
-                        Alert.alert("設置成功")
-                        navigation.goBack();
-                    }
+              setLoading(true);
+              api
+                .postData("/order/position/stop-price", {
+                  profitPrice: positionStopEarnPrice
+                    ? positionStopEarnPrice
+                    : null,
+                  lossPrice: positionStopLostPrice
+                    ? positionStopLostPrice
+                    : null,
+                  symbol: symbol
                 })
+                .then(x => {
+                  setLoading(false);
+                  if (x.status === 400) {
+                    Alert.alert(x.data.msg);
+                  } else {
+                    Alert.alert("設置成功");
+                    navigation.goBack();
+                  }
+                });
             }}
           >
-            <StopPositionSubmitButtonText>送出</StopPositionSubmitButtonText>
+            <StopPositionSubmitButtonText>{t("confirmSend")}</StopPositionSubmitButtonText>
           </StopPositionSubmitButton>
         ) : (
           <StopPositionDisabledSubmitButton disabled={true}>
-            <StopPositionSubmitButtonText>送出</StopPositionSubmitButtonText>
+            <StopPositionSubmitButtonText>{t("confirmSend")}</StopPositionSubmitButtonText>
           </StopPositionDisabledSubmitButton>
         )}
 

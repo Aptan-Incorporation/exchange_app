@@ -15,7 +15,7 @@ import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
 import { useIsFocused } from '@react-navigation/native';
-import { ThreePriceContext, PriceContext,PositionContext,FutureContext } from "../../App"
+import { PriceContext,PositionContext,FutureContext } from "../../App"
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Dropdown } from 'react-native-element-dropdown';
 import _ from "lodash"
@@ -1127,7 +1127,6 @@ const TradeScreen = ({
     const [remarkPrice, setRemarkPrice] = useState("");
     const [wareHousedPrice, setWareHousedPrice] = useState("");
     const [loading, setLoading] = useState(false);
-    const { btcPrice } = useContext(ThreePriceContext)
     const context = useContext(PriceContext)
     const positionArray = useContext(PositionContext)
     const entrustArray = useContext(FutureContext)
@@ -1162,7 +1161,7 @@ const TradeScreen = ({
         if (buyType === 'Limit' || buyType === 'Plan_Limit') {
             return "價格";
         } else if (buyType === 'Market' || buyType === 'Plan_Market') {
-            return "市價";
+            return t("marketOrder");
         } else {
             return "";
         }
@@ -1773,14 +1772,27 @@ const TradeScreen = ({
                                                             console.log(obj)
                                                             setLoading(true)
                                                             api
-                                                                .post("/order/futures/open-order", obj)
+                                                                .postData("/order/futures/open-order", obj)
                                                                 .then((x) => {
+                                                                    console.log(x)
                                                                     setLoading(false)
-                                                                    //   setBuyPrice("")
-                                                                    setStopPrice("")
+                                                                    if(x.status != 400){
+                                                                        setStopPrice("")
                                                                     setSliderNum(0)
                                                                     getEntrust();
                                                                     getPosition();
+                                                                    }else{
+                                                                        console.log(x.data.msg.includes("未達最低開單數量"))
+                                                                        if(x.data.msg.includes("未達最低開單數量")){
+                                                                            alert(t("lessQtyMin")+x.data.msg.split("未達最低開單數量")[1])
+                                                                        }
+                                                                        else if(x.data.msg.includes("超過合約最大持倉價值")){
+                                                                            alert(t("overPositionValue")+x.data.msg.split("超過合約最大持倉價值")[1])
+                                                                        }else{
+                                                                            alert(x.data.msg)
+                                                                        }
+                                                                    }
+                                                                    
                                                                 });
                                                         }
                                                     } else {
@@ -1832,14 +1844,25 @@ const TradeScreen = ({
                                                                 }
                                                             setLoading(true)
                                                             api
-                                                                .post("/order/futures/open-order", obj)
-                                                                .then((x) => {
+                                                                .postData("/order/futures/open-order", obj)
+                                                                .then((x) => {                                                                    
                                                                     setLoading(false)
-                                                                    setBuyPrice("")
-                                                                    setStopPrice("")
-                                                                    setSliderNum(0)
-                                                                    getEntrust();
-                                                                    getPosition();
+                                                                    if(x.status != 400){
+                                                                        setBuyPrice("") 
+                                                                        setStopPrice("")
+                                                                        setSliderNum(0)
+                                                                        getEntrust();
+                                                                        getPosition();
+                                                                    }else{
+                                                                        if(x.data.msg.includes("未達最低開單數量")){
+                                                                            alert(t("lessQtyMin")+x.data.msg.split("未達最低開單數量")[1])
+                                                                        }
+                                                                        else if(x.data.msg.includes("超過合約最大持倉價值")){
+                                                                            alert(t("overPositionValue")+x.data.msg.split("超過合約最大持倉價值")[1])
+                                                                        }else{
+                                                                            alert(x.data.msg)
+                                                                        }
+                                                                    }
                                                                 });
                                                         }
                                                     } else {
@@ -1897,13 +1920,13 @@ const TradeScreen = ({
                                                         <TradePositionCardContainer>
                                                             <TradePositionCardTitleContainer>
                                                                 <TradePositionCardTitleRowContainer>
-                                                                    {x.side === "BUY" ? <TradePositionCardTitleText>多 {x.symbol}</TradePositionCardTitleText>
-                                                                        : <TradePositionCardTitleText style={{ color: "#FB4C51" }}>空 {x.symbol}</TradePositionCardTitleText>
+                                                                    {x.side === "BUY" ? <TradePositionCardTitleText>{t("long")} {x.symbol}</TradePositionCardTitleText>
+                                                                        : <TradePositionCardTitleText style={{ color: "#FB4C51" }}>{t("short")} {x.symbol}</TradePositionCardTitleText>
                                                                     }
                                                                     <TradePositionCardSmallTitleText>{t("pnlU")}</TradePositionCardSmallTitleText>
                                                                 </TradePositionCardTitleRowContainer>
                                                                 <TradePositionCardTitleRowContainer>
-                                                                    <TradePositionCardTitleValueText>{x.type === 'FULL' ? '全倉' : '逐倉'} {x.leverage}X</TradePositionCardTitleValueText>
+                                                                    <TradePositionCardTitleValueText>{x.type === 'FULL' ? t("crossPosition") : '逐倉'} {x.leverage}X</TradePositionCardTitleValueText>
                                                                     {x.profitAndLoss > 0 ? <TradePositionCardBigValueText>{x.profitAndLoss}</TradePositionCardBigValueText> : <TradePositionCardBigValueText style={{ color: "#FB4C51" }}>{x.profitAndLoss}</TradePositionCardBigValueText>}
                                                                 </TradePositionCardTitleRowContainer>
                                                             </TradePositionCardTitleContainer>
@@ -1914,13 +1937,13 @@ const TradeScreen = ({
                                                                 </TradePositionCardDetailColumnContainer>
                                                                 <TradePositionCardDetailColumnContainer>
                                                                     <TradePositionCardSmallTitleText>{t("entryPrice")}</TradePositionCardSmallTitleText>
-                                                                    <TradePositionCardSmallValueText>{x.avgPrice}</TradePositionCardSmallValueText>
+                                                                    <TradePositionCardSmallValueText>{(parseFloat(x.avgPrice) < 0.006 && parseFloat(x.avgPrice) > 0) ? x.avgPrice : (parseFloat(x.avgPrice) < 0.1 && parseFloat(x.avgPrice) > 0.006)  ? x.avgPrice.toString().slice(0, -1) : (parseFloat(x.avgPrice) < 1 && parseFloat(x.avgPrice) > 0.1) ?x.avgPrice.toString().slice(0, -2): (parseFloat(x.avgPrice) < 50 && parseFloat(x.avgPrice) > 1) ?x.avgPrice.toString().slice(0, -3) : x.avgPrice.toString().slice(0, -4)}</TradePositionCardSmallValueText>
                                                                 </TradePositionCardDetailColumnContainer>
                                                             </TradePositionCardDetailRowContainer>
                                                             <TradePositionCardDetailRowContainer>
                                                                 <TradePositionCardDetailColumnContainer>
                                                                     <TradePositionCardSmallTitleText>{t("marketPrice")}</TradePositionCardSmallTitleText>
-                                                                    <TradePositionCardSmallValueText>{getRemark(x.symbol)}</TradePositionCardSmallValueText>
+                                                                    <TradePositionCardSmallValueText>{(parseFloat(getRemark(x.symbol)) < 0.006 && parseFloat(getRemark(x.symbol)) > 0) ? getRemark(x.symbol) : (parseFloat(getRemark(x.symbol)) < 0.1 && parseFloat(getRemark(x.symbol)) > 0.006)  ? getRemark(x.symbol).toString().slice(0, -1) : (parseFloat(getRemark(x.symbol)) < 1 && parseFloat(getRemark(x.symbol)) > 0.1) ?getRemark(x.symbol).toString().slice(0, -2): (parseFloat(getRemark(x.symbol)) < 50 && parseFloat(getRemark(x.symbol)) > 1) ? getRemark(x.symbol).toString().slice(0, -3) : getRemark(x.symbol).toString().slice(0, -4)}</TradePositionCardSmallValueText>
                                                                 </TradePositionCardDetailColumnContainer>
                                                                 <TradePositionCardDetailColumnContainer>
                                                                     <TradePositionCardSmallTitleText>{t("liqPrice")}</TradePositionCardSmallTitleText>
@@ -1930,7 +1953,8 @@ const TradeScreen = ({
                                                             <TradePositionCardButtonContainer>
                                                                 <TradePositionCardButton onPress={() => {
                                                                     AsyncStorage.setItem("position", JSON.stringify({ position: x }))
-                                                                    navigation.push("StopPositionScreen")
+
+                                                                    navigation.navigate("StopPositionScreen",{remarkPrice:getRemark(x.symbol)})
                                                                 }}>
                                                                     <TradePositionCardButtonText>{t("stopProfitLoss")}</TradePositionCardButtonText>
                                                                 </TradePositionCardButton>
@@ -2012,7 +2036,7 @@ const TradeScreen = ({
                                                                 </TradeCommitCardDetailColumnContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
                                                                     <TradeCommitCardSmallTitleText>{t("orderPrice")}</TradeCommitCardSmallTitleText>
-                                                                    <TradeCommitCardSmallValueText>{x.type == "STOP_MARKET" ? "市價":x.price}</TradeCommitCardSmallValueText>
+                                                                    <TradeCommitCardSmallValueText>{x.type == "STOP_MARKET" ? t("marketOrder"):x.price}</TradeCommitCardSmallValueText>
                                                                 </TradeCommitCardDetailColumnContainer>
                                                                 <TradeCommitCardDetailColumnContainer>
                                                                     <TradeCommitCardSmallTitleText>{t("conditionPrice")}</TradeCommitCardSmallTitleText>

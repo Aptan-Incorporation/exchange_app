@@ -14,16 +14,16 @@ import { RootStackScreenProps } from "../../types";
 import { useState, useEffect } from "react";
 import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Clipboard from 'expo-clipboard';
-import { WebView } from 'react-native-webview';
+import * as Clipboard from "expo-clipboard";
+import { WebView } from "react-native-webview";
 import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
   display: flex;
   flex-direction: column;
-  background-color: #131B24;
+  background-color: #131b24;
   border: none;
-  flex:1;
+  flex: 1;
 `;
 
 const Header = styled(View)<{ insets: number }>`
@@ -36,14 +36,13 @@ const Header = styled(View)<{ insets: number }>`
   padding-right: 16px;
   padding-bottom: 11px;
   background-color: #18222d;
-
 `;
 
 const HeaderText = styled(Text)`
   font-size: 16px;
   color: white;
-  font-weight:600;
-  margin-right:30;
+  font-weight: 600;
+  margin-right: 30;
 `;
 
 const IconImg = styled(Image)`
@@ -63,9 +62,9 @@ const Consult = ({ navigation }: RootStackScreenProps<"Consult">) => {
   };
 
   const copyToClipboard = async () => {
-    await Clipboard.setString('hello world');
-    Alert.alert("複製成功")
-};
+    await Clipboard.setString("hello world");
+    Alert.alert(t("copied"));
+  };
 
   // useEffect(async () => {
   //   let web = await AsyncStorage.getItem("web");
@@ -87,9 +86,7 @@ const Consult = ({ navigation }: RootStackScreenProps<"Consult">) => {
         <HeaderText>{t("messageNotice")}</HeaderText>
         <View></View>
       </Header>
-      <WebView 
-      source={{ uri: "https://chat.usefordemo.com/" }}
-    />
+      <WebView source={{ uri: "https://chat.usefordemo.com/" }} />
     </Container>
   );
 };

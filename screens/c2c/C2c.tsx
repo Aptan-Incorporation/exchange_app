@@ -580,7 +580,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                             <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshBuy('USDT') }}>
                                 <HeaderCurrencyButtonTextClicked>USDT</HeaderCurrencyButtonTextClicked>
                             </HeaderCurrencyButtonClicked>
-                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshBuy('BTC') }}>
+                            {/* <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshBuy('BTC') }}>
                                 <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
                             </HeaderCurrencyButton>
                             <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshBuy('ETH') }}>
@@ -588,7 +588,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                             </HeaderCurrencyButton>
                             <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshBuy('DOGE') }}>
                                 <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
-                            </HeaderCurrencyButton>
+                            </HeaderCurrencyButton> */}
                         </HeaderCurrencyPageContainer>)
                 }
                 {
@@ -598,7 +598,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                             <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshBuy('USDT') }}>
                                 <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
                             </HeaderCurrencyButton>
-                            <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshBuy('BTC') }}>
+                            {/* <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshBuy('BTC') }}>
                                 <HeaderCurrencyButtonTextClicked>BTC</HeaderCurrencyButtonTextClicked>
                             </HeaderCurrencyButtonClicked>
                             <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshBuy('ETH') }}>
@@ -606,7 +606,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                             </HeaderCurrencyButton>
                             <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshBuy('DOGE') }}>
                                 <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
-                            </HeaderCurrencyButton>
+                            </HeaderCurrencyButton> */}
                         </HeaderCurrencyPageContainer>)
                 }
                 {
@@ -616,7 +616,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                             <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshBuy('USDT') }}>
                                 <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
                             </HeaderCurrencyButton>
-                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshBuy('BTC') }}>
+                            {/* <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshBuy('BTC') }}>
                                 <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
                             </HeaderCurrencyButton>
                             <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshBuy('ETH') }}>
@@ -624,7 +624,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                             </HeaderCurrencyButtonClicked>
                             <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshBuy('DOGE') }}>
                                 <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
-                            </HeaderCurrencyButton>
+                            </HeaderCurrencyButton> */}
                         </HeaderCurrencyPageContainer>)
                 }
                 {
@@ -634,7 +634,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                             <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshBuy('USDT') }}>
                                 <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
                             </HeaderCurrencyButton>
-                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshBuy('BTC') }}>
+                            {/* <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshBuy('BTC') }}>
                                 <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
                             </HeaderCurrencyButton>
                             <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshBuy('ETH') }}>
@@ -642,7 +642,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                             </HeaderCurrencyButton>
                             <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshBuy('DOGE') }}>
                                 <HeaderCurrencyButtonTextClicked>DOGE</HeaderCurrencyButtonTextClicked>
-                            </HeaderCurrencyButtonClicked>
+                            </HeaderCurrencyButtonClicked> */}
                         </HeaderCurrencyPageContainer>)
                 }
                 {/* Sell Page CryptoAsset Swap */}
@@ -653,7 +653,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                             <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshSell('USDT') }}>
                                 <HeaderCurrencyButtonTextClicked>USDT</HeaderCurrencyButtonTextClicked>
                             </HeaderCurrencyButtonClicked>
-                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshSell('BTC') }}>
+                            {/* <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshSell('BTC') }}>
                                 <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
                             </HeaderCurrencyButton>
                             <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshSell('ETH') }}>
@@ -661,7 +661,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                             </HeaderCurrencyButton>
                             <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshSell('DOGE') }}>
                                 <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
-                            </HeaderCurrencyButton>
+                            </HeaderCurrencyButton> */}
                         </HeaderCurrencyPageContainer>)
                 }
                 {
@@ -671,7 +671,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                             <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshSell('USDT') }}>
                                 <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
                             </HeaderCurrencyButton>
-                            <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshSell('BTC') }}>
+                            {/* <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshSell('BTC') }}>
                                 <HeaderCurrencyButtonTextClicked>BTC</HeaderCurrencyButtonTextClicked>
                             </HeaderCurrencyButtonClicked>
                             <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshSell('ETH') }}>
@@ -679,7 +679,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                             </HeaderCurrencyButton>
                             <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshSell('DOGE') }}>
                                 <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
-                            </HeaderCurrencyButton>
+                            </HeaderCurrencyButton> */}
                         </HeaderCurrencyPageContainer>)
                 }
                 {
@@ -689,7 +689,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                             <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshSell('USDT') }}>
                                 <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
                             </HeaderCurrencyButton>
-                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshSell('BTC') }}>
+                            {/* <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshSell('BTC') }}>
                                 <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
                             </HeaderCurrencyButton>
                             <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshSell('ETH') }}>
@@ -697,7 +697,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                             </HeaderCurrencyButtonClicked>
                             <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshSell('DOGE') }}>
                                 <HeaderCurrencyButtonText>DOGE</HeaderCurrencyButtonText>
-                            </HeaderCurrencyButton>
+                            </HeaderCurrencyButton> */}
                         </HeaderCurrencyPageContainer>)
                 }
                 {
@@ -707,7 +707,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                             <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('USDT'), swapPageRefreshSell('USDT') }}>
                                 <HeaderCurrencyButtonText>USDT</HeaderCurrencyButtonText>
                             </HeaderCurrencyButton>
-                            <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshSell('BTC') }}>
+                            {/* <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('BTC'), swapPageRefreshSell('BTC') }}>
                                 <HeaderCurrencyButtonText>BTC</HeaderCurrencyButtonText>
                             </HeaderCurrencyButton>
                             <HeaderCurrencyButton onPress={() => { setSwapBuyCurrencyType('ETH'), swapPageRefreshSell('ETH') }}>
@@ -715,7 +715,7 @@ const C2cScreen = ({ navigation }: RootStackScreenProps<"C2cScreen">) => {
                             </HeaderCurrencyButton>
                             <HeaderCurrencyButtonClicked onPress={() => { setSwapBuyCurrencyType('DOGE'), swapPageRefreshSell('DOGE') }}>
                                 <HeaderCurrencyButtonTextClicked>DOGE</HeaderCurrencyButtonTextClicked>
-                            </HeaderCurrencyButtonClicked>
+                            </HeaderCurrencyButtonClicked> */}
                         </HeaderCurrencyPageContainer>)
                 }
             </HeaderContainer>

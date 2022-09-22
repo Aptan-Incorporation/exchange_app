@@ -1,4 +1,11 @@
-import { Text, View, TouchableOpacity, Image, ScrollView,Alert } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  Alert
+} from "react-native";
 import styled from "styled-components";
 import { RootStackScreenProps } from "../../types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -6,8 +13,8 @@ import * as React from "react";
 import { useState, useEffect, useContext } from "react";
 import { PriceContext, ThreePriceContext } from "../../App";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Clipboard from 'expo-clipboard';
-import api from "../../common/api"
+import * as Clipboard from "expo-clipboard";
+import api from "../../common/api";
 import { useTranslation } from "react-i18next";
 
 const Container = styled(View)`
@@ -52,8 +59,8 @@ const PriceText = styled(Text)`
 
 const USDText = styled(Text)`
   font-size: 15px;
-  color: #8D97A2;
-  font-weight:500;
+  color: #8d97a2;
+  font-weight: 500;
 `;
 
 const PercentText = styled(Text)`
@@ -64,7 +71,7 @@ const PercentText = styled(Text)`
 
 const RedPercentText = styled(Text)`
   font-size: 15px;
-  color: #F4F5F6;
+  color: #f4f5f6;
   font-weight: 700;
 `;
 
@@ -95,25 +102,25 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
   const { t } = useTranslation();
   const copyToClipboard = async () => {
     await Clipboard.setString("ABC963412");
-    Alert.alert("複製成功")
+    Alert.alert(t("copied"));
   };
 
-  useEffect(()=>{
-    api.get("/investor/commission").then(x=>{
+  useEffect(() => {
+    api.get("/investor/commission").then(x => {
       // console.log(x.data)
-      let sum = 0
-      setMemberNumber(x.data.memberNumber)
-      setRecord(x.data.records.reverse())
-      setTradeMembers(x.data.tradeMembers)
-      for(let i = 0;i < x.data.records.length ; i++){
-        sum = sum + x.data.records[i].amount
+      let sum = 0;
+      setMemberNumber(x.data.memberNumber);
+      setRecord(x.data.records.reverse());
+      setTradeMembers(x.data.tradeMembers);
+      for (let i = 0; i < x.data.records.length; i++) {
+        sum = sum + x.data.records[i].amount;
       }
-      setSum(sum)
-    })
-    api.get("/investor/invite-code").then(x=>{
-      setCode(x.data)
-    })
-  },[])
+      setSum(sum);
+    });
+    api.get("/investor/invite-code").then(x => {
+      setCode(x.data);
+    });
+  }, []);
   return (
     <Container>
       <Header insets={insets.top}>
@@ -146,19 +153,27 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
                 justifyContent: "space-between"
               }}
             ></View>
-            <View style={{display:"flex",flexDirection:"row",justifyContent:"space-between",alignItems:"center",marginTop:10}}>
-            <Text style={{ color: "#608FBE", fontSize: 20,fontWeight:"700" }}>
-              {code}
-            </Text>
-            <TouchableOpacity onPress={copyToClipboard}>
-            <IconImg
-            source={require("../../assets/images/wallet/copy.png")}
-            style={{width:20,height:20}}
-            />
-            </TouchableOpacity>
-            
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginTop: 10
+              }}
+            >
+              <Text
+                style={{ color: "#608FBE", fontSize: 20, fontWeight: "700" }}
+              >
+                {code}
+              </Text>
+              <TouchableOpacity onPress={copyToClipboard}>
+                <IconImg
+                  source={require("../../assets/images/wallet/copy.png")}
+                  style={{ width: 20, height: 20 }}
+                />
+              </TouchableOpacity>
             </View>
-            
           </GrayHeader>
           <View
             style={{
@@ -187,7 +202,9 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
             <View>
               <USDText>{t("referralActiveMember")}</USDText>
             </View>
-            <RedPercentText>{tradeMembers.length} {t("people")}</RedPercentText>
+            <RedPercentText>
+              {tradeMembers.length} {t("people")}
+            </RedPercentText>
           </View>
           <View
             style={{
@@ -201,7 +218,9 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
             <View>
               <USDText>{t("referralAllMember")}</USDText>
             </View>
-            <RedPercentText>{memberNumber} {t("people")}</RedPercentText>
+            <RedPercentText>
+              {memberNumber} {t("people")}
+            </RedPercentText>
           </View>
         </View>
         <View
@@ -227,7 +246,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
               }}
             >
               <Text style={{ fontSize: 14, color: "white", fontWeight: "500" }}>
-              {t("commissionHistory")}
+                {t("commissionHistory")}
               </Text>
             </TouchableOpacity>
           ) : (
@@ -257,7 +276,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
               }}
             >
               <Text style={{ fontSize: 14, color: "white", fontWeight: "500" }}>
-              {t("referralAllMember")}
+                {t("referralAllMember")}
               </Text>
             </TouchableOpacity>
           ) : (
@@ -290,27 +309,35 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
                         alignItems: "center"
                       }}
                     >
-                      <View style={{display:"flex",flexDirection:"column"}}>
-                      <Text
-                        style={{
-                          color: "#F4F5F6",
-                          fontSize: 15,
-                          fontWeight: "400"
-                        }}
+                      <View
+                        style={{ display: "flex", flexDirection: "column" }}
                       >
-                        ID {x.childAccount}
-                      </Text>
-                      <Text
-                        style={{
-                          color: "#8D97A2",
-                          fontSize: 12,
-                          fontWeight: "400"
-                        }}
-                      >
-                        {new Date(x.createdDate).toISOString().split("T")[0]} {new Date(x.createdDate).toISOString().split("T")[1].split(".")[0]}
-                      </Text>
+                        <Text
+                          style={{
+                            color: "#F4F5F6",
+                            fontSize: 15,
+                            fontWeight: "400"
+                          }}
+                        >
+                          ID {x.childAccount}
+                        </Text>
+                        <Text
+                          style={{
+                            color: "#8D97A2",
+                            fontSize: 12,
+                            fontWeight: "400"
+                          }}
+                        >
+                          {new Date(x.createdDate).toISOString().split("T")[0]}{" "}
+                          {
+                            new Date(x.createdDate)
+                              .toISOString()
+                              .split("T")[1]
+                              .split(".")[0]
+                          }
+                        </Text>
                       </View>
-                      
+
                       <View
                         style={{
                           display: "flex",
@@ -335,7 +362,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
                   </>
                 );
               })}
-              {index === 1 &&
+            {index === 1 &&
               tradeMembers.map((x: any) => {
                 return (
                   <>
@@ -348,17 +375,19 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
                         alignItems: "center"
                       }}
                     >
-                      <View style={{display:"flex",flexDirection:"column"}}>
-                      <Text
-                        style={{
-                          color: "#F4F5F6",
-                          fontSize: 15,
-                          fontWeight: "400"
-                        }}
+                      <View
+                        style={{ display: "flex", flexDirection: "column" }}
                       >
-                        ID {x}
-                      </Text>
-                      {/* <Text
+                        <Text
+                          style={{
+                            color: "#F4F5F6",
+                            fontSize: 15,
+                            fontWeight: "400"
+                          }}
+                        >
+                          ID {x}
+                        </Text>
+                        {/* <Text
                         style={{
                           color: "#8D97A2",
                           fontSize: 12,
@@ -368,7 +397,7 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
                         2021-10-26 16:12:08
                       </Text> */}
                       </View>
-                      
+
                       <View
                         style={{
                           display: "flex",

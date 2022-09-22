@@ -182,7 +182,7 @@ const ResetFundPassword = ({ navigation }: RootStackScreenProps<"ResetFundPasswo
         >
           <IconImg source={require("../../assets/images/global/previous.png")} />
         </TouchableOpacity>
-        <HeaderText>重置資金密碼</HeaderText>
+        <HeaderText>{t("resetFundPass2")}</HeaderText>
       <View></View>
       </Header>
       <View style={{ padding: 16 }}>

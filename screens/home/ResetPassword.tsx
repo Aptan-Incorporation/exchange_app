@@ -58,7 +58,7 @@ const ResetPassword = ({ navigation }: RootStackScreenProps<"ResetPassword">) =>
       >
         <IconImg source={require("../../assets/images/global/previous.png")} />
       </TouchableOpacity>
-      <HeaderText>登入密碼重置</HeaderText>
+      <HeaderText>{t("resetFundPass")}</HeaderText>
       <View></View>
     </Header>
     <View style={{ padding: 16 }}>

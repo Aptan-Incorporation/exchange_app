@@ -661,7 +661,7 @@ const C2cBuySecond = (props: {
             navigation.goBack()
         }
         if(status2 === -2){
-            alert("訂單申訴中")
+            alert(t("orderApealing"))
             navigation.goBack()
         }
 

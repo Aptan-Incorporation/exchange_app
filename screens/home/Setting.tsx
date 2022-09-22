@@ -98,7 +98,7 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
             }}
             onPress={() => {
               if(kyc.phone){
-                alert("手機已驗證")
+                alert(t("mobileVerifyComp"))
               }else{
                 navigation.navigate("PhoneInput");
               }
@@ -187,7 +187,7 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
             }}
             onPress={() => {
               if(kyc.kyc == "CREATE"){
-                alert("身份已驗證")
+                alert(t("idAuthenticationComp"))
               }else{
                 navigation.navigate("IdentityVerifyStep1");
               }
@@ -204,7 +204,7 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
               <Text
                 style={{ color: "#8D97A2", fontSize: 15, fontWeight: "400" }}
               >
-                驗證
+                {t("verificationUnavb")}
               </Text>
               <IconImg source={require("../../assets/images/home/next.png")} />
             </View>

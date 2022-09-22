@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import Swiper from "react-native-web-swiper";
 import api from "../../common/api"
 import Carousel from 'react-native-snap-carousel';
+import { useIsFocused } from '@react-navigation/native';
 
 const width = Dimensions.get('window').width;
 
@@ -103,7 +104,8 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
   const context2 = useContext(PriceContext2)
   const [imgArr, setImgArr] = useState([]);
   const {btcPrice,btcRate,btcAmt,ethPrice,ethRate,ethAmt,dogePrice,dogeRate,dogeAmt} = useContext(ThreePriceContext)
-  const { t } = useTranslation();
+  const { t,i18n } = useTranslation();
+  const isFocused = useIsFocused();
   const images = [
     {
       source: {
@@ -136,12 +138,10 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
 
 
   useEffect(() => {
-    console.log(width)
-    api.get("/info/carousel").then(x => {
-      console.log(x.data);
+    api.get("/info/carousel?lang="+i18n.language).then(x => {
       setImgArr(x.data);
     });
-  }, []);
+  }, [isFocused]);
 
   const _renderItem = ({item, index}) => {
     return (

@@ -72,11 +72,13 @@ const Announcement = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
   const [announce, setAnnounce] = useState([]);
   const insets = useSafeAreaInsets();
   const TextEl = useRef<TextInput | null>(null);
-  const { t } = useTranslation();
+  const { t,i18n } = useTranslation();
   useEffect(() => {
+    console.log(i18n.language)
     let category = "ACTIVITY"
     if(index === -1){
-      api.get("/info/announcement").then(x=>{
+      api.get("/info/announcement?lang="+ i18n.language).then(x=>{
+        console.log(x.data)
         setAnnounce(x.data)
       })
     }else{
@@ -87,7 +89,7 @@ const Announcement = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
       }else if(index === 3){
         category = "NEWS"
       }
-      api.get("/info/announcement?topic="+category).then(x=>{
+      api.get("/info/announcement?topic="+category+"&lang="+ i18n.language).then(x=>{
         setAnnounce(x.data)
       })
     }

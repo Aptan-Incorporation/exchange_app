@@ -182,7 +182,7 @@ const Member = ({ navigation }: RootStackScreenProps<"C2cMember">) => {
               </>}
               {kyc.kyc && <>
                 <IconImg source={require("../../assets/images/home/check.png")} style={{ width: 16, height: 16, marginRight: 5 }} />
-              <Text style={{ color: "#F4F5F6", fontSize: 12, fontWeight: "400", marginRight: 5 }}>身份</Text>
+              <Text style={{ color: "#F4F5F6", fontSize: 12, fontWeight: "400", marginRight: 5 }}>{t("identity")}</Text>
               </>}
               
               {/* <IconImg source={require("../../assets/images/home/check.png")} style={{ width: 16, height: 16, marginRight: 5 }} />
@@ -254,10 +254,10 @@ const Member = ({ navigation }: RootStackScreenProps<"C2cMember">) => {
               <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}></Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{obj.buyCompleteOrdersCount}</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>買</Text>
+                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("fiatOrderBuy")}</Text>
                 <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "600", marginRight: 5, marginLeft: 5 }}>|</Text>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{obj.sellCompleteOrdersCount}</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>賣</Text>
+                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("fiatOrderSell")}</Text>
               </View>
             </View>
           </View>
@@ -280,10 +280,10 @@ const Member = ({ navigation }: RootStackScreenProps<"C2cMember">) => {
               <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}></Text>
               <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{obj.buyCompleteAmount}</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>買</Text>
+                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("fiatOrderBuy")}</Text>
                 <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "600", marginRight: 5, marginLeft: 5 }}>|</Text>
                 <Text style={{ color: "#F4F5F6", fontSize: 13, fontWeight: "600", marginRight: 5 }}>{obj.sellCompleteAmount}</Text>
-                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>賣</Text>
+                <Text style={{ color: "#8D97A2", fontSize: 13, fontWeight: "500" }}>{t("fiatOrderSell")}</Text>
               </View>
             </View>
           </View>

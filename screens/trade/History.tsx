@@ -564,7 +564,7 @@ const HistoryScreen = ({
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>{t("tradeType")}</CardDetailTitleText>
-                                            <CardDetailValueText>{x.type === "LIMIT" ? "限價" : x.type === "MARKET" ? "市價" : x.type === "STOP_LIMIT" ? "計畫限價":"計畫市價"}</CardDetailValueText>
+                                            <CardDetailValueText>{x.type === "LIMIT" ? t("limitedOrder") : x.type === "MARKET" ? t("marketOrder") : x.type === "STOP_LIMIT" ? t("stopLimitOrder"):t("stopMarketOrder")}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>{t("orderSize")}</CardDetailTitleText>
@@ -577,7 +577,7 @@ const HistoryScreen = ({
                                     </CardDetailColumnContainer>
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>下單方向</CardDetailTitleText>
+                                            <CardDetailTitleText>{t("side")}</CardDetailTitleText>
                                             {
                                                 x.side === 'BUY' ?
                                                     <CardDetailValueDirectionLong>{t("buyOrder")}</CardDetailValueDirectionLong> :
@@ -586,7 +586,7 @@ const HistoryScreen = ({
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>{t("dealPrice")}  </CardDetailTitleText>
-                                            <CardDetailValueText>{x.type == "STOP_MARKET" ? "市價":x.price}</CardDetailValueText>
+                                            <CardDetailValueText>{x.type == "STOP_MARKET" ? t("marketOrder"):x.price}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>{t("realizedPNL")}   </CardDetailTitleText>
@@ -640,7 +640,7 @@ const HistoryScreen = ({
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>{t("tradeType")}</CardDetailTitleText>
-                                            <CardDetailValueText>{x.type === "LIMIT" ? "限價" : x.type === "MARKET" ? "市價" : x.type === "STOP_LIMIT" ? "計畫限價":"計畫市價"}</CardDetailValueText>
+                                            <CardDetailValueText>{x.type === "LIMIT" ? t("limitedOrder") : x.type === "MARKET" ? t("marketOrder") : x.type === "STOP_LIMIT" ? t("stopLimitOrder"):t("stopMarketOrder")}</CardDetailValueText>
                                         </CardDetailInColumnContainer>
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>{t("orderSize")}</CardDetailTitleText>
@@ -649,7 +649,7 @@ const HistoryScreen = ({
                                     </CardDetailColumnContainer>
                                     <CardDetailColumnContainer>
                                         <CardDetailInColumnContainer>
-                                            <CardDetailTitleText>下單方向</CardDetailTitleText>
+                                            <CardDetailTitleText>{t("side")}</CardDetailTitleText>
                                             {
                                                 x.side === 'BUY' ?
                                                     <CardDetailValueDirectionLong>{t("buyOrder")}</CardDetailValueDirectionLong> :
@@ -687,7 +687,23 @@ const HistoryScreen = ({
                         return (
                             <CardContainer>
                                 <AssetsRecordTitleContainer>
-                                    <AssetsRecordTitleText>{x.remark}</AssetsRecordTitleText>
+
+                                    <AssetsRecordTitleText>
+                                    {x.remark === "手續費" && t("orderFee")}
+                                    {x.remark === "反佣增加餘額" && t("commisionAdd")}
+                                    {x.remark === "建立倉位佔用合約帳戶保證金" && t("positionBuildMargin")}
+                                    {x.remark === "加倉佔用合約帳戶保證金" && t("positionAddMargin")}
+                                    {x.remark === "倉位實現損益" && t("positionPNL")}
+                                    {x.remark === "強平結算" && t("positionLiqudation")}
+                                    {x.remark === "內部劃轉" && t("internalTransfer")}
+                                    {x.remark === "調整槓桿變更倉位佔用保證金" && t("leverageMargin")}
+                                    {x.remark === "保證金為負值" && t("marginNegtive")}
+                                    {x.remark === "餘額為負值" && t("balanceNegtive")}
+                                    {x.remark === "投資人充值" && t("spotDeposit")}
+                                    {x.remark === "委託單成交扣除餘額" && t("orderFee")}
+                                    {x.remark === "投資人提現" && t("spotWithdraw")}
+                                    {x.remark === "減倉釋放合約帳戶保證金" && t("positionReleaseMargin")}
+                                    </AssetsRecordTitleText>
                                     {
                                         x.payment !== '' ?
                                             <AssetsRecordAmountText>{x.payment} {x.coin}</AssetsRecordAmountText> :
@@ -720,8 +736,8 @@ const HistoryScreen = ({
                                 <CardTitleContainer>
                                     {
                                         x.side === 'BUY' ?
-                                            <CardTitleSecondaryText>{x.symbol}・全倉{x.leverage}X</CardTitleSecondaryText> :
-                                            <CardTitleSecondaryLightText>{x.symbol}・全倉{x.leverage}X</CardTitleSecondaryLightText>
+                                            <CardTitleSecondaryText>{x.symbol}・{t("crossPosition")}{x.leverage}X</CardTitleSecondaryText> :
+                                            <CardTitleSecondaryLightText>{x.symbol}・{t("crossPosition")}{x.leverage}X</CardTitleSecondaryLightText>
                                     }
                                     {/* <CardTitleTimeText>{new Date(x.createdDate).getFullYear()}-{new Date(x.createdDate).getMonth()+1 < 10 ? "0"+(new Date(x.createdDate).getMonth()+1) : new Date(x.createdDate).getMonth()+1}-{new Date(x.createdDate).getDate() < 10 ? "0"+(new Date(x.createdDate).getDate()) : new Date(x.createdDate).getDate()} {new Date(x.createdDate).getHours() < 10 ? "0"+(new Date(x.createdDate).getHours()) : new Date(x.createdDate).getHours()}:{new Date(x.createdDate).getMinutes() < 10 ? "0"+(new Date(x.createdDate).getMinutes()) : new Date(x.createdDate).getMinutes()}</CardTitleTimeText> */}
                                 </CardTitleContainer>

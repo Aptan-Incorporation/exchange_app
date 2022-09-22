@@ -227,7 +227,22 @@ const HistoryScreen = ({ navigation }: RootStackScreenProps<"History">) => {
           return (
               <CardContainer>
                   <AssetsRecordTitleContainer>
-                      <AssetsRecordTitleText>{x.remark}</AssetsRecordTitleText>
+                      <AssetsRecordTitleText>
+                      {x.remark === "手續費" && t("orderFee")}
+                                    {x.remark === "反佣增加餘額" && t("commisionAdd")}
+                                    {x.remark === "建立倉位佔用合約帳戶保證金" && t("positionBuildMargin")}
+                                    {x.remark === "加倉佔用合約帳戶保證金" && t("positionAddMargin")}
+                                    {x.remark === "倉位實現損益" && t("positionPNL")}
+                                    {x.remark === "強平結算" && t("positionLiqudation")}
+                                    {x.remark === "內部劃轉" && t("internalTransfer")}
+                                    {x.remark === "調整槓桿變更倉位佔用保證金" && t("leverageMargin")}
+                                    {x.remark === "保證金為負值" && t("marginNegtive")}
+                                    {x.remark === "餘額為負值" && t("balanceNegtive")}
+                                    {x.remark === "投資人充值" && t("spotDeposit")}
+                                    {x.remark === "委託單成交扣除餘額" && t("orderFee")}
+                                    {x.remark === "投資人提現" && t("spotWithdraw")}
+                                    {x.remark === "減倉釋放合約帳戶保證金" && t("positionReleaseMargin")}
+                      </AssetsRecordTitleText>
                       {
                           x.payment !== '' ?
                               <AssetsRecordAmountText>{x.payment} {x.coin}</AssetsRecordAmountText> :

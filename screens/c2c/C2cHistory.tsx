@@ -830,7 +830,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                 <CardContainer onPress={()=>{
                                     
                                     if(x.status === -2){
-                                        alert("訂單申訴中")
+                                        alert(t("orderApealing"))
                                     }else{
                                         api.get(`/otc/api/advertisement/`).then(y=>{
                                             console.log(y)
@@ -1487,7 +1487,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                 <BottomPaddingView></BottomPaddingView>
             </DetailContainer>
 
-            {/* Time Limit Modal 放行時限*/}
+            {/* Time Limit Modal {t("limitedTime")}*/}
             <Modal
                 isVisible={isDetailModalVisible}
                 deviceHeight={windowHeight}
@@ -1552,7 +1552,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                 {
                                     detailModalInfo.payments != null &&
                                     (detailModalInfo.payments.some((x: any) => { return x.type == 'BANK' }) &&
-                                        <ModalDetailPaymentText>銀行轉帳</ModalDetailPaymentText>)
+                                        <ModalDetailPaymentText>{t("bankTransfer")}</ModalDetailPaymentText>)
                                 }
                                 {
                                     detailModalInfo.payments != null &&
