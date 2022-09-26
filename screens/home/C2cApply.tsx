@@ -550,7 +550,7 @@ const C2cApply = ({ navigation }: RootStackScreenProps<"C2cApply">) => {
               if(advertiserLevel === level[level.length -1 ].name){
                 Alert.alert(t("maxLevel"))
               }else{
-                Alert.alert('確定升級？', '升級後將自動從法幣錢包餘額扣除押金，是否繼續升級？', [
+                Alert.alert(t("upgradeCheck"), t("upgradeCheckMsg"), [
                   {
                     text: '取消',
                     onPress: () => console.log('Cancel Pressed'),

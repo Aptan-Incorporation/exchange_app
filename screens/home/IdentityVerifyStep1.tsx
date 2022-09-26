@@ -103,7 +103,7 @@ const IdentityVerifyStep1 = ({ navigation }: RootStackScreenProps<"IdentityVerif
            }))
            navigation.navigate("IdentityVerifyStep2")
         }}>
-        <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>繼續</Text>
+        <Text style={{color:"white",fontSize:14,fontWeight:"500"}}>{t("nextStep")}</Text>
       </TouchableOpacity>
       <DateTimePickerModal
         isVisible={isDatePickerVisible}

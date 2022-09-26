@@ -1655,7 +1655,17 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
                 } else if (x.status == 493) {
                     Alert.alert("資金密碼錯誤")
                 } else {
-                    Alert.alert(x.data.msg)
+                    if(x.data.msg === "單筆限額超出最大值"){
+                        Alert.alert(t("fiatUnitOverMax"))
+                    }else if(x.data.msg === "已存在同類型廣告單"){
+                        Alert.alert(t("fiatSameAds"))
+                    }else if(x.data.msg === "需要層級質押"){
+                        Alert.alert(t("needPassMach"))
+                    }else if(x.data.msg === "資金密碼錯誤"){
+                        Alert.alert(t("wrongFundPass"))
+                    }else{
+                        Alert.alert(x.data.msg)
+                    }
                 };
             })
             .catch((Error) => { console.log(Error) })
@@ -1931,7 +1941,7 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
                                 }
                             </QuantityInputContainer>
                             <QuantityInputContainer>
-                                <QuantitySmallTitleText>單筆限額</QuantitySmallTitleText>
+                                <QuantitySmallTitleText>{t("limitedAmountPerOrder")}</QuantitySmallTitleText>
                                 <QuantityPriceLimitRowContainer>
                                     <TextInput
                                         style={{
@@ -1982,7 +1992,7 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
                                 {
                                     swapPage === 0 ?
                                         <QuantitySmallTitleText>{t("limitedTime")}</QuantitySmallTitleText> :
-                                        <QuantitySmallTitleText>付款時限</QuantitySmallTitleText>
+                                        <QuantitySmallTitleText>{t("releaseLimitedTime")}</QuantitySmallTitleText>
                                 }
                                 <QuantityTimeLimitButton onPress={() => { setIsTimeLimitModalVisible(true) }}>
                                     <QuantityTimeLimitButtonText>{inputLimitTime} 分鐘</QuantityTimeLimitButtonText>
@@ -2064,7 +2074,7 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
                                     }}
                                     value={inputTradeMemo}
                                     onChangeText={(text) => { setInputTradeMemo(text) }}
-                                    placeholder={"您的交易備註將在交易方下單前顯示"}
+                                    placeholder={t("memoMsg")}
                                     placeholderTextColor={'#8D97A2'}
                                     multiline={true}
                                     maxLength={100}
@@ -2147,7 +2157,7 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
                                 <ConfirmCardSecondText>{inputQuantity}</ConfirmCardSecondText>
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
-                                <ConfirmCardTitle>單筆限額</ConfirmCardTitle>
+                                <ConfirmCardTitle>{t("limitedAmountPerOrder")}</ConfirmCardTitle>
                                 <ConfirmCardThirdText>{fiatCurrencyType} {inputMinLimitPrice} - {inputMaxLimitPrice}</ConfirmCardThirdText>
                             </ConfirmCardRowContainer>
                             <ConfirmCardRowContainer>
@@ -2173,7 +2183,7 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
                             </ConfirmCardRowContainer>
                             <ConfirmCardColumnContainer>
                                 <ConfirmCardSmallTitle>{t("fiatMemo")}</ConfirmCardSmallTitle>
-                                <ConfirmCardFourthText>請買家務必於時限內付款，勿卡單。</ConfirmCardFourthText>
+                                <ConfirmCardFourthText>{t("payPlz")}</ConfirmCardFourthText>
                             </ConfirmCardColumnContainer>
                             <ConfirmCardColumnContainer>
                                 <ConfirmCardSmallTitle>{t("otherSideConditions")}</ConfirmCardSmallTitle>
@@ -2255,7 +2265,7 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
                             </ConfirmCardRowContainer>
                             <ConfirmCardColumnContainer>
                                 <ConfirmCardSmallTitle>{t("fiatMemo")}</ConfirmCardSmallTitle>
-                                <ConfirmCardFourthText>請買家務必於時限內付款，勿卡單。</ConfirmCardFourthText>
+                                <ConfirmCardFourthText>{t("payPlz")}</ConfirmCardFourthText>
                             </ConfirmCardColumnContainer>
                             <ConfirmCardColumnContainer>
                                 <ConfirmCardSmallTitle>{t("otherSideConditions")}</ConfirmCardSmallTitle>
@@ -2474,7 +2484,7 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
                         {
                             swapPage === 0 ?
                                 <ModalHeaderTitleText>{t("limitedTime")}</ModalHeaderTitleText> :
-                                <ModalHeaderTitleText>付款時限</ModalHeaderTitleText>
+                                <ModalHeaderTitleText>{t("releaseLimitedTime")}</ModalHeaderTitleText>
                         }
                         <TouchableOpacity onPress={() => { setIsTimeLimitModalVisible(false) }}>
                             <TimeLimitModalConfirmText>{t("OK")}</TimeLimitModalConfirmText>
@@ -2553,7 +2563,7 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
                 }}>
                     <PasswordModalContainer>
                         <PasswordModalHeaderText>{t("enterFundingPass")}</PasswordModalHeaderText>
-                        <PasswordModalHeaderDetailText>進行出售，請輸入您設定的資金密碼</PasswordModalHeaderDetailText>
+                        <PasswordModalHeaderDetailText>{t("sellingEnterPass")}</PasswordModalHeaderDetailText>
 
                         <View style={{
                             height: 32,
@@ -2571,7 +2581,7 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
                         }}>
                             <TextInput
                                 style={{ width: '90%', color: '#FFFFFF' }}
-                                placeholder="輸入資金密碼"
+                                placeholder={t("enterFundPass")}
                                 placeholderTextColor={'#98999A'}
                                 autoCapitalize="none"
                                 autoCorrect={false}
@@ -2628,7 +2638,7 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
                             <PaymentAddImage source={require("../../assets/images/c2c/add.png")} />
                         </TouchableOpacity>
                     </ModalFullScreenHeaderContainer>
-                    <PaymentModalRemindText>請選擇最少一種付款方式</PaymentModalRemindText>
+                    <PaymentModalRemindText>{t("atLeastPayment")}</PaymentModalRemindText>
                     <PaymentModalContainer>
                         {
                             paymentList.map((x: any, i) => {

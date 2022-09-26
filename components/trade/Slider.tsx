@@ -188,7 +188,7 @@ const SliderContainer = (props: {
                 <LeverageViewModalNotificationImage source={require("../../assets/images/trade/notification.png")} />
                 <LeverageViewModalNotificationText style={{ paddingLeft: 8 }}>{t("leverageMsg")}</LeverageViewModalNotificationText>
             </LeverageViewModalDetailRowContainer>
-            <LeverageViewModalDetailRowContainer style={{ paddingTop: 10 }}>
+            {/* <LeverageViewModalDetailRowContainer style={{ paddingTop: 10 }}>
                 <LeverageViewModalDetailText>調整槓桿後，您的 {trade.split("-")[0]} 永續合約資金將變化為：</LeverageViewModalDetailText>
             </LeverageViewModalDetailRowContainer>
             <LeverageViewModalDetailRowContainer>
@@ -196,7 +196,7 @@ const SliderContainer = (props: {
             </LeverageViewModalDetailRowContainer>
             <LeverageViewModalDetailRowContainer>
                 <LeverageViewModalDetailText>{positionNum} BTC 可用擔保金額</LeverageViewModalDetailText>
-            </LeverageViewModalDetailRowContainer>
+            </LeverageViewModalDetailRowContainer> */}
             <ModalConfirmButton onPress={() => { 
                 var obj = {
                     leverage:value.length ? value[0]:parseInt(value),
@@ -208,7 +208,13 @@ const SliderContainer = (props: {
                         AsyncStorage.setItem("leverage",value.length ? value[0].toString():parseInt(value).toString())
                         sendDataLeverageModal() 
                     }else{
-                        Alert.alert(x.data.msg)
+                        if(x.data.msg === "合約可用保證金餘額不足"){
+                            Alert.alert(t("marginShort"))
+
+                        }else{
+                            Alert.alert(x.data.msg)
+
+                        }
                     }
                 })
             }}>

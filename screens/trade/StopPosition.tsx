@@ -178,7 +178,8 @@ const ModalButtonText = styled(Text)`
 `;
 
 const StopPositionScreen = ({
-  navigation,route
+  navigation,
+  route
 }: RootStackScreenProps<"StopPositionScreen">) => {
   const insets = useSafeAreaInsets();
   const { remarkPrice } = route.params;
@@ -221,7 +222,7 @@ const StopPositionScreen = ({
   const getPosition = async () => {
     let position = await AsyncStorage.getItem("position");
     let symbol = JSON.parse(position!).position.symbol;
-    setSymbol(JSON.parse(position!).position.symbol)
+    setSymbol(JSON.parse(position!).position.symbol);
     if (JSON.parse(position!).position.profitPrice) {
       setPositionStopEarnPrice(
         JSON.parse(position!).position.profitPrice.toString()
@@ -234,7 +235,7 @@ const StopPositionScreen = ({
         .then(x => {
           if (x.status === 400) {
             setPredictEarning(0);
-            setPredictEarningMsg(x.data.msg);
+            setPredictEarningMsg(t("profitHigherPrice"));
           } else {
             setPredictEarning(x.data);
             setPredictEarningMsg("");
@@ -253,7 +254,7 @@ const StopPositionScreen = ({
         .then(x => {
           if (x.status === 400) {
             setPredictLoss(0);
-            setPredictLostMsg(x.data.msg);
+            setPredictLostMsg(t("lossLowerPrice"));
           } else {
             setPredictLoss(x.data);
             setPredictLostMsg("");
@@ -303,7 +304,21 @@ const StopPositionScreen = ({
                 }}
               >
                 <Text style={{ color: "white" }}>{t("entryPrice")}</Text>
-                <Text style={{ color: "white" }}>{(parseFloat(positionArray.avgPrice) < 0.006 && parseFloat(positionArray.avgPrice) > 0) ? positionArray.avgPrice : (parseFloat(positionArray.avgPrice) < 0.1 && parseFloat(positionArray.avgPrice) > 0.006)  ? positionArray.avgPrice.toString().slice(0, -1) : (parseFloat(positionArray.avgPrice) < 1 && parseFloat(positionArray.avgPrice) > 0.1) ?positionArray.avgPrice.toString().slice(0, -2): (parseFloat(positionArray.avgPrice) < 50 && parseFloat(positionArray.avgPrice) > 1) ?positionArray.avgPrice.toString().slice(0, -3) : positionArray.avgPrice.toString().slice(0, -4)}</Text>
+                <Text style={{ color: "white" }}>
+                  {parseFloat(positionArray.avgPrice) < 0.006 &&
+                  parseFloat(positionArray.avgPrice) > 0
+                    ? positionArray.avgPrice
+                    : parseFloat(positionArray.avgPrice) < 0.1 &&
+                      parseFloat(positionArray.avgPrice) > 0.006
+                    ? positionArray.avgPrice.toString().slice(0, -1)
+                    : parseFloat(positionArray.avgPrice) < 1 &&
+                      parseFloat(positionArray.avgPrice) > 0.1
+                    ? positionArray.avgPrice.toString().slice(0, -2)
+                    : parseFloat(positionArray.avgPrice) < 50 &&
+                      parseFloat(positionArray.avgPrice) > 1
+                    ? positionArray.avgPrice.toString().slice(0, -3)
+                    : positionArray.avgPrice.toString().slice(0, -4)}
+                </Text>
               </View>
               <View
                 style={{
@@ -315,7 +330,21 @@ const StopPositionScreen = ({
                 }}
               >
                 <Text style={{ color: "white" }}>{t("marketPrice")}</Text>
-                <Text style={{ color: "white" }}>{(parseFloat(remarkPrice) < 0.006 && parseFloat(remarkPrice) > 0) ? remarkPrice : (parseFloat(remarkPrice) < 0.1 && parseFloat(remarkPrice) > 0.006)  ? remarkPrice.slice(0, -1) : (parseFloat(remarkPrice) < 1 && parseFloat(remarkPrice) > 0.1) ?remarkPrice.slice(0, -2): (parseFloat(remarkPrice) < 50 && parseFloat(remarkPrice) > 1) ?remarkPrice.slice(0, -3) : remarkPrice.slice(0, -4)}</Text>
+                <Text style={{ color: "white" }}>
+                  {parseFloat(remarkPrice) < 0.006 &&
+                  parseFloat(remarkPrice) > 0
+                    ? remarkPrice
+                    : parseFloat(remarkPrice) < 0.1 &&
+                      parseFloat(remarkPrice) > 0.006
+                    ? remarkPrice.slice(0, -1)
+                    : parseFloat(remarkPrice) < 1 &&
+                      parseFloat(remarkPrice) > 0.1
+                    ? remarkPrice.slice(0, -2)
+                    : parseFloat(remarkPrice) < 50 &&
+                      parseFloat(remarkPrice) > 1
+                    ? remarkPrice.slice(0, -3)
+                    : remarkPrice.slice(0, -4)}
+                </Text>
               </View>
               <View
                 style={{
@@ -332,10 +361,12 @@ const StopPositionScreen = ({
                   {positionArray.forceClose}
                 </Text>
               </View>
-              <StopPositionLabelText>{t("stopProfitPrice")}</StopPositionLabelText>
+              <StopPositionLabelText>
+                {t("stopProfitPrice")}
+              </StopPositionLabelText>
               <StopPositionInputContainer>
                 <TextInput
-                  placeholder={"價格"}
+                  placeholder={t("price")}
                   value={positionStopEarnPrice}
                   onChangeText={async positionStopEarnPrice => {
                     let position = await AsyncStorage.getItem("position");
@@ -350,7 +381,7 @@ const StopPositionScreen = ({
                         .then(x => {
                           if (x.status === 400) {
                             setPredictEarning(0);
-                            setPredictEarningMsg(x.data.msg);
+                            setPredictEarningMsg(t("profitHigherPrice"));
                           } else {
                             setPredictEarning(x.data);
                             setPredictEarningMsg("");
@@ -422,7 +453,7 @@ const StopPositionScreen = ({
                             <StopPositionLabelText>賣出價</StopPositionLabelText>
                             <StopPositionInputContainer>
                                 <TextInput
-                                    placeholder={"價格"}
+                                    placeholder={t("price")}
                                     value={positionStopEarn_SellPrice}
                                     onChangeText={positionStopEarn_SellPrice => setPositionStopEarn_SellPrice(positionStopEarn_SellPrice)}
                                     placeholderTextColor={'#8D97A2'}
@@ -441,10 +472,12 @@ const StopPositionScreen = ({
         <StopPositionRowContainer>
           <StopPositionInRowContainer>
             <StopPositionColumnContainer>
-              <StopPositionLabelText>{t("stopLossPrice")}</StopPositionLabelText>
+              <StopPositionLabelText>
+                {t("stopLossPrice")}
+              </StopPositionLabelText>
               <StopPositionInputContainer>
                 <TextInput
-                  placeholder={"價格"}
+                  placeholder={t("price")}
                   value={positionStopLostPrice}
                   onChangeText={async positionStopLostPrice => {
                     setPositionStopLostPrice(positionStopLostPrice);
@@ -459,7 +492,7 @@ const StopPositionScreen = ({
                         .then(x => {
                           if (x.status === 400) {
                             setPredictLoss(0);
-                            setPredictLostMsg(x.data.msg);
+                            setPredictLostMsg(t("lossLowerPrice"));
                           } else {
                             setPredictLoss(x.data);
                             setPredictLostMsg("");
@@ -533,7 +566,7 @@ const StopPositionScreen = ({
                             <StopPositionLabelText>賣出價</StopPositionLabelText>
                             <StopPositionInputContainer>
                                 <TextInput
-                                    placeholder={"價格"}
+                                    placeholder={t("price")}
                                     value={positionStopLost_SellPrice}
                                     onChangeText={positionStopLost_SellPrice => setPositionStopLost_SellPrice(positionStopLost_SellPrice)}
                                     placeholderTextColor={'#8D97A2'}
@@ -571,7 +604,17 @@ const StopPositionScreen = ({
                 .then(x => {
                   setLoading(false);
                   if (x.status === 400) {
-                    Alert.alert(x.data.msg);
+                    if (
+                      x.data.msg == "止盈價格需高於倉位平均價格且高於當前價格"
+                    ) {
+                      Alert.alert(t("profitHigherPrice"));
+                    } else if (
+                      x.data.msg == "止損價格需低於倉位平均價格且低於當前價格"
+                    ) {
+                      Alert.alert(t("lossLowerPrice"));
+                    } else {
+                      Alert.alert(x.data.msg);
+                    }
                   } else {
                     Alert.alert("設置成功");
                     navigation.goBack();
@@ -579,11 +622,15 @@ const StopPositionScreen = ({
                 });
             }}
           >
-            <StopPositionSubmitButtonText>{t("confirmSend")}</StopPositionSubmitButtonText>
+            <StopPositionSubmitButtonText>
+              {t("confirmSend")}
+            </StopPositionSubmitButtonText>
           </StopPositionSubmitButton>
         ) : (
           <StopPositionDisabledSubmitButton disabled={true}>
-            <StopPositionSubmitButtonText>{t("confirmSend")}</StopPositionSubmitButtonText>
+            <StopPositionSubmitButtonText>
+              {t("confirmSend")}
+            </StopPositionSubmitButtonText>
           </StopPositionDisabledSubmitButton>
         )}
 

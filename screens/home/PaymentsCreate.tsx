@@ -271,7 +271,7 @@ const PaymentsCreate = ({ navigation, route }: RootStackScreenProps<"PaymentsCre
         <Container insets={insets.top}>
             {
                 loading &&
-                <Spinner visible={true} textContent={'載入中'} color={'#FFFFFF'} textStyle={{ color: '#FFFFFF' }} />
+                <Spinner visible={true} textContent={t("loading")} color={'#FFFFFF'} textStyle={{ color: '#FFFFFF' }} />
             }
             <HeaderContainer>
                 <PreviousIconContainer>

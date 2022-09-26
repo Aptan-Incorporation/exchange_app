@@ -98,7 +98,12 @@ const WithdrawScreen = ({ navigation }: RootStackScreenProps<"Withdraw">) => {
                         alert("提現成功")
                         navigation.goBack()
                       }else{
-                        alert(x.data.msg)
+                        if(x.data.msg === "錢包地址輸入錯誤"){
+                          alert(t("wrongAddress"))
+                        }else{
+                          alert(x.data.msg)
+                        }
+                        
                       }
                     })
                   }       

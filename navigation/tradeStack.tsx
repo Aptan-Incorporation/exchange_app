@@ -7,6 +7,8 @@ import HistoryScreen from '../screens/trade/History'
 import { Image, TouchableOpacity, Text } from "react-native";
 import styled from "styled-components";
 import AllTradeScreen from "../screens/trade/AllTrade";
+import { useTranslation } from "react-i18next";
+
 const CancelButton = styled(Image)`
   width:28px;
   height:28px;
@@ -20,6 +22,8 @@ const PreviousButton = styled(Image)`
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const TradeStack = () => {
+  const { t } = useTranslation();
+
   return (
     <Stack.Navigator>
       <Stack.Group screenOptions={{ headerShown: false }}>
@@ -32,7 +36,7 @@ const TradeStack = () => {
             <CancelButton source={require("../assets/images/global/cancel.png")} />
           </TouchableOpacity>
         ),
-        title: '止盈/止損',
+        title: t("stopProfitLoss"),
         headerStyle: { backgroundColor: '#18222D' },
       })}>
         <Stack.Screen name="StopPositionScreen" component={StopPositionScreen} />

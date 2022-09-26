@@ -301,7 +301,7 @@ const ResetFundPassword = ({ navigation }: RootStackScreenProps<"ResetFundPasswo
                 }}>
                     <PasswordModalContainer>
                         <PasswordModalHeaderText>輸入信箱</PasswordModalHeaderText>
-                        {/* <PasswordModalHeaderDetailText>進行出售，請輸入您設定的資金密碼</PasswordModalHeaderDetailText> */}
+                        {/* <PasswordModalHeaderDetailText>{t("sellingEnterPass")}</PasswordModalHeaderDetailText> */}
 
                         <View style={{
                             height: 32,
@@ -379,7 +379,7 @@ const ResetFundPassword = ({ navigation }: RootStackScreenProps<"ResetFundPasswo
                 }}>
                     <PasswordModalContainer>
                         <PasswordModalHeaderText>輸入手機</PasswordModalHeaderText>
-                        {/* <PasswordModalHeaderDetailText>進行出售，請輸入您設定的資金密碼</PasswordModalHeaderDetailText> */}
+                        {/* <PasswordModalHeaderDetailText>{t("sellingEnterPass")}</PasswordModalHeaderDetailText> */}
 
                         <View style={{
                             height: 32,

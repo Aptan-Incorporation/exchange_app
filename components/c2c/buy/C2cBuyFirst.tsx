@@ -394,7 +394,7 @@ const C2cBuyFirst = (props: {
         <View style={{ backgroundColor: '#131B24' }}>
             {
                 loading &&
-                <Spinner visible={true} textContent={'載入中'} color={'#FFFFFF'} textStyle={{ color: '#FFFFFF' }} />
+                <Spinner visible={true} textContent={t("loading")} color={'#FFFFFF'} textStyle={{ color: '#FFFFFF' }} />
             }
             <TopContainer>
                 <TopDetailContainer>
@@ -493,7 +493,7 @@ const C2cBuyFirst = (props: {
                     }
                 </BottomDetailPayTypeContainer>
                 <BottomDetailLine></BottomDetailLine>
-                <BottomDetailSmallTitleText>付款時限</BottomDetailSmallTitleText>
+                <BottomDetailSmallTitleText>{t("releaseLimitedTime")}</BottomDetailSmallTitleText>
                 <BottomDetailSmallValueText>{PaymentTimeLimit / 60000}{t("minutes")}</BottomDetailSmallValueText>
                 <BottomDetailLine></BottomDetailLine>
                 <BottomDetailSmallTitleText>{t("fiatMemo")}</BottomDetailSmallTitleText>

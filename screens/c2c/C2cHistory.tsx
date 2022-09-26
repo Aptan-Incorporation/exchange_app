@@ -754,7 +754,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
         <Container insets={insets.top}>
             {
                 loading &&
-                <Spinner visible={true} textContent={'載入中'} color={'#FFFFFF'} textStyle={{ color: '#FFFFFF' }} />
+                <Spinner visible={true} textContent={t("loading")} color={'#FFFFFF'} textStyle={{ color: '#FFFFFF' }} />
             }
             <HeaderContainer>
                 <TouchableOpacity onPress={() => { navigation.goBack() }}>
@@ -1420,7 +1420,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                 <CardBottomStatusText>{t("orderFinished")} </CardBottomStatusText>
                                                 <CardBottomButton onPress={() => {
                                                     handleUpdateModal(
-                                                        "詳情",
+                                                        t("checkOrder"),
                                                         x.id,
                                                         x.buyUser,
                                                         x.sellUser,
@@ -1438,7 +1438,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                         x.status
                                                     )
                                                 }}>
-                                                    <CardBottomButtonText>詳情</CardBottomButtonText>
+                        <CardBottomButtonText>{t("checkOrder")}</CardBottomButtonText>
                                                 </CardBottomButton>
                                             </CardBottomContainer>
                                             :
@@ -1446,7 +1446,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                 <CardBottomStatusText>{t("orderFinished")} </CardBottomStatusText>
                                                 <CardBottomButton onPress={() => {
                                                     handleUpdateModal(
-                                                        "查看",
+                                                        t("checkOrder"),
                                                         x.id,
                                                         x.buyUser,
                                                         x.sellUser,

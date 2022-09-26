@@ -433,7 +433,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
         <Container insets={insets.top}>
             {
                 loading &&
-                <Spinner visible={true} textContent={'載入中'} color={'#FFFFFF'} textStyle={{ color: '#FFFFFF' }} />
+                <Spinner visible={true} textContent={t("loading")} color={'#FFFFFF'} textStyle={{ color: '#FFFFFF' }} />
             }
             <HeaderContainer>
                 <PreviousIconContainer>
@@ -501,7 +501,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                             <CardDetailContainer>
                                                 <CardDetailRowContainer>
                                                     <CardDetailColumnContainer>
-                                                        <CardSmallTitleText>剩餘數量({x.cryptoAsset})</CardSmallTitleText>
+                                                        <CardSmallTitleText>{t("amountLeft")}({x.cryptoAsset})</CardSmallTitleText>
                                                         <CardSmallValueText>{x.totalTradingAmount}</CardSmallValueText>
                                                     </CardDetailColumnContainer>
                                                     <CardDetailColumnContainer>
@@ -511,7 +511,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                                 </CardDetailRowContainer>
                                                 <CardDetailRowContainer>
                                                     <CardDetailColumnContainer>
-                                                        <CardSmallTitleText>廣告手續費</CardSmallTitleText>
+                                                        <CardSmallTitleText>{t("adsFee")}</CardSmallTitleText>
                                                         {
                                                             x.type === 0 ?
                                                                 <CardSmallValueText>{(x.price * x.totalTradingAmount * buyFeeRate).toFixed(2)}</CardSmallValueText> :
@@ -519,7 +519,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                                         }
                                                     </CardDetailColumnContainer>
                                                     <CardDetailColumnContainer>
-                                                        <CardSmallTitleText>創建時間</CardSmallTitleText>
+                                                        <CardSmallTitleText>{t("buildTime")}</CardSmallTitleText>
                                                         <CardSmallValueText>{handleCreateTime(x.createdDate)}</CardSmallValueText>
                                                     </CardDetailColumnContainer>
                                                 </CardDetailRowContainer>
@@ -528,7 +528,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                                         <CardButtonText>{t("offline")}</CardButtonText>
                                                     </CardButton>
                                                     <CardButton onPress={() => { putAdvertisementClose(x.id) }}>
-                                                        <CardButtonText>關閉</CardButtonText>
+                                                        <CardButtonText>{t("close")}</CardButtonText>
                                                     </CardButton>
                                                 </CardDetailRowContainer>
                                             </CardDetailContainer>
@@ -573,7 +573,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                             <CardDetailContainer>
                                                 <CardDetailRowContainer>
                                                     <CardDetailColumnContainer>
-                                                        <CardSmallTitleText>剩餘數量({x.cryptoAsset})</CardSmallTitleText>
+                                                        <CardSmallTitleText>{t("amountLeft")}({x.cryptoAsset})</CardSmallTitleText>
                                                         <CardSmallValueText>{x.totalTradingAmount}</CardSmallValueText>
                                                     </CardDetailColumnContainer>
                                                     <CardDetailColumnContainer>
@@ -583,7 +583,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                                 </CardDetailRowContainer>
                                                 <CardDetailRowContainer>
                                                     <CardDetailColumnContainer>
-                                                        <CardSmallTitleText>廣告手續費</CardSmallTitleText>
+                                                        <CardSmallTitleText>{t("adsFee")}</CardSmallTitleText>
                                                         {
                                                             x.type === 0 ?
                                                                 <CardSmallValueText>{(x.price * x.totalTradingAmount * buyFeeRate).toFixed(2)}</CardSmallValueText> :
@@ -591,7 +591,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                                         }
                                                     </CardDetailColumnContainer>
                                                     <CardDetailColumnContainer>
-                                                        <CardSmallTitleText>創建時間</CardSmallTitleText>
+                                                        <CardSmallTitleText>{t("buildTime")}</CardSmallTitleText>
                                                         <CardSmallValueText>{handleCreateTime(x.createdDate)}</CardSmallValueText>
                                                     </CardDetailColumnContainer>
                                                 </CardDetailRowContainer>

@@ -12,6 +12,7 @@ import StopPositionScreen from "../screens/trade/StopPosition"
 import styled from "styled-components";
 import { Image, TouchableOpacity, Text } from "react-native";
 import C2cHistoryScreen from "../screens/c2c/C2cHistory";
+import { useTranslation } from "react-i18next";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const CancelButton = styled(Image)`
@@ -20,6 +21,8 @@ const CancelButton = styled(Image)`
 `;
 
 const WalletStack = () => {
+  const { t } = useTranslation();
+
   return (
     <Stack.Navigator>
       <Stack.Group screenOptions={{ headerShown: false }}>
@@ -40,7 +43,7 @@ const WalletStack = () => {
             <CancelButton source={require("../assets/images/global/cancel.png")} />
           </TouchableOpacity>
         ),
-        title: '止盈/止損',
+        title: t("stopProfitLoss"),
         headerStyle: { backgroundColor: '#18222D' },
       })}>
         <Stack.Screen name="StopPositionScreen" component={StopPositionScreen} />

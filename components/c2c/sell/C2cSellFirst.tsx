@@ -522,7 +522,7 @@ const C2cSellFirst = (props: {
         <View style={{ backgroundColor: '#131B24' }}>
             {
                 loading &&
-                <Spinner visible={true} textContent={'載入中'} color={'#FFFFFF'} textStyle={{ color: '#FFFFFF' }} />
+                <Spinner visible={true} textContent={t("loading")} color={'#FFFFFF'} textStyle={{ color: '#FFFFFF' }} />
             }
             <TopContainer>
                 <TopDetailContainer>
@@ -653,7 +653,7 @@ const C2cSellFirst = (props: {
                 }}>
                     <ModalContainer>
                         <ModalHeaderText>輸入資金密碼</ModalHeaderText>
-                        <ModalHeaderDetailText>進行出售，請輸入您設定的資金密碼</ModalHeaderDetailText>
+                        <ModalHeaderDetailText>{t("sellingEnterPass")}</ModalHeaderDetailText>
 
                         <View style={{
                             height: 32,

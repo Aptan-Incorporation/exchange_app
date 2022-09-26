@@ -159,7 +159,7 @@ const FundsScreen = ({ navigation }: RootStackScreenProps<"OtcFunds">) => {
                   api.postData("/api/transfer/",obj).then(x=>{
                     setLoading(false)
                      if(x.status != 400){
-                        Alert.alert("劃轉成功")
+                        Alert.alert(t("transferSuccess"))
                         navigation.goBack()
                      }else{
                         Alert.alert(x.data.msg)
@@ -169,7 +169,7 @@ const FundsScreen = ({ navigation }: RootStackScreenProps<"OtcFunds">) => {
                   api.postData("/otc/api/transfer/",obj).then(x=>{
                     setLoading(false)
                      if(x.status != 400){
-                        Alert.alert("劃轉成功")
+                        Alert.alert(t("transferSuccess"))
                         navigation.goBack()
                      }else{
                         Alert.alert(x.data.msg)

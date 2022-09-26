@@ -159,7 +159,7 @@ const Member = ({ navigation }: RootStackScreenProps<"C2cMember">) => {
           </View>
           <View style={{ marginLeft: 12 }}>
             <View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-        <Text style={{ color: "#F4F5F6", fontSize: 16, fontWeight: "700" }}>{user.nickName ? user.nickName : "尚未設定暱稱"}</Text>
+        <Text style={{ color: "#F4F5F6", fontSize: 16, fontWeight: "700" }}>{user.nickName ? user.nickName : t("nickNameYet")}</Text>
               <TouchableOpacity onPress={() => { navigation.navigate("EditName") }}>
               <IconImg source={require("../../assets/images/home/edit.png")} style={{ width: 20, height: 20, marginLeft: 5 }} />
 
