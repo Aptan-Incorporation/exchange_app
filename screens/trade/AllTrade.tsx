@@ -219,7 +219,7 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
         <View style={{ display: "flex", flexDirection: "row", width: "100%" }}>
           <TextInput
             ref={TextEl}
-            placeholder={"搜尋"}
+            placeholder={t("search")}
             value={search}
             onChangeText={search => setSearch(search)}
             placeholderTextColor={"#8D97A2"}

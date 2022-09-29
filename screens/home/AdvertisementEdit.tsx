@@ -1585,7 +1585,7 @@ const AdvertisementEdit = ({ navigation, route }: RootStackScreenProps<"Advertis
                     setSellFeeRate(x.sellFeeRate);
                 }
                 else {
-                    Alert.alert("用戶資訊獲取失敗，請重新操作")
+                    Alert.alert(t("fiatGetInfoFail"))
                 }
             })
             .catch((Error) => console.log(Error));

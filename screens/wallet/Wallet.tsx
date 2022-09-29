@@ -8,8 +8,9 @@ import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay'
-import { PositionContext } from "../../App"
+import { PositionContext,PriceContext } from "../../App"
 import { useTranslation } from "react-i18next";
+import _ from "lodash"
 
 const Container = styled(View) <{ insets: number }>`
     display: flex ;
@@ -469,6 +470,8 @@ const WalletScreen = ({
     const [balance,setBalance] = useState(0)
     const [freeze,setFreeze] = useState(0)
     const positionArray = useContext(PositionContext)
+    const context = useContext(PriceContext)
+
     const { t } = useTranslation();
     const getBalance = async () => {
         api.get("/investor/property").then(x=>{
@@ -503,6 +506,10 @@ const WalletScreen = ({
         //         }
         //     }
         // })
+    }
+    const getRemark = (s:string)=>{
+        const remark = _.find(context, function(o) { return o.s == s })
+        return remark ? remark.m : ""
     }
     const isFocused = useIsFocused();
 
@@ -766,13 +773,13 @@ const WalletScreen = ({
                                                                 </TradePositionCardDetailColumnContainer>
                                                                 <TradePositionCardDetailColumnContainer>
                                                                     <TradePositionCardSmallTitleText>{t("entryPrice")}</TradePositionCardSmallTitleText>
-                                                                    <TradePositionCardSmallValueText>{x.avgPrice}</TradePositionCardSmallValueText>
+                                                                    <TradePositionCardSmallValueText>{(parseFloat(x.avgPrice) < 0.006 && parseFloat(x.avgPrice) > 0) ? x.avgPrice : (parseFloat(x.avgPrice) < 0.1 && parseFloat(x.avgPrice) > 0.006)  ? x.avgPrice.toString().slice(0, -1) : (parseFloat(x.avgPrice) < 1 && parseFloat(x.avgPrice) > 0.1) ?x.avgPrice.toString().slice(0, -2): (parseFloat(x.avgPrice) < 50 && parseFloat(x.avgPrice) > 1) ?x.avgPrice.toString().slice(0, -3) : x.avgPrice.toString().slice(0, -4)}</TradePositionCardSmallValueText>
                                                                 </TradePositionCardDetailColumnContainer>
                                                             </TradePositionCardDetailRowContainer>
                                                             <TradePositionCardDetailRowContainer>
                                                                 <TradePositionCardDetailColumnContainer>
                                                                     <TradePositionCardSmallTitleText>{t("marketPrice")}</TradePositionCardSmallTitleText>
-                                                                    <TradePositionCardSmallValueText>{x.avgPrice}</TradePositionCardSmallValueText>
+                                                                    <TradePositionCardSmallValueText>{(parseFloat(getRemark(x.symbol)) < 0.006 && parseFloat(getRemark(x.symbol)) > 0) ? getRemark(x.symbol) : (parseFloat(getRemark(x.symbol)) < 0.1 && parseFloat(getRemark(x.symbol)) > 0.006)  ? getRemark(x.symbol).toString().slice(0, -1) : (parseFloat(getRemark(x.symbol)) < 1 && parseFloat(getRemark(x.symbol)) > 0.1) ?getRemark(x.symbol).toString().slice(0, -2): (parseFloat(getRemark(x.symbol)) < 50 && parseFloat(getRemark(x.symbol)) > 1) ? getRemark(x.symbol).toString().slice(0, -3) : getRemark(x.symbol).toString().slice(0, -4)}</TradePositionCardSmallValueText>
                                                                 </TradePositionCardDetailColumnContainer>
                                                                 <TradePositionCardDetailColumnContainer>
                                                                     <TradePositionCardSmallTitleText>{t("liqPrice")}</TradePositionCardSmallTitleText>
@@ -782,7 +789,7 @@ const WalletScreen = ({
                                                             <TradePositionCardButtonContainer>
                                                                 <TradePositionCardButton onPress={() => { 
                                                                     AsyncStorage.setItem("position",JSON.stringify({position:x}))
-                                                                    navigation.push("StopPositionScreen") }}>
+                                                                    navigation.push("StopPositionScreen",{remarkPrice:getRemark(x.symbol)}) }}>
                                                                     <TradePositionCardButtonText>{t("stopProfitLoss")}</TradePositionCardButtonText>
                                                                 </TradePositionCardButton>
                                                                 <TradePositionCardButton onPress={()=>{
@@ -797,7 +804,7 @@ const WalletScreen = ({
                                                                         }
                                                                     })
                                                                 }}>
-                                                                    <TradePositionCardButtonText>{t("closePosition")}</TradePositionCardButtonText>
+                                                                    <TradePositionCardButtonText>{t("closePostion")}</TradePositionCardButtonText>
                                                                 </TradePositionCardButton>
                                                             </TradePositionCardButtonContainer>
                                                         </TradePositionCardContainer>

@@ -435,5 +435,13 @@
   "close":"关闭",
   "atLeastPayment":"至少选择一种付款方式",
   "enterNickName":"输入昵称",
-  "marginShort":"合约可用保证金余额不足"
+  "marginShort":"合约可用保证金余额不足",
+  "search":"搜寻",
+  "repost":"重新上架",
+  "adsEdit":"编辑",
+  "enterEmail":"输入电邮",
+  "enterPassLogin":"输入登入密码",
+  "fiatGetInfoFail":"用户资讯获取失败，请重新操作",
+  "crossMsg":"所有品种合约的仓位共用一个帐户权益，合约帐户中的担保资产合并计算",
+  "isolatedMsg":"每个品种合约对应一个合约帐户，不同品种合约帐户担保资产相互独立"
 }

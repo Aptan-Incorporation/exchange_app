@@ -56,21 +56,7 @@ const Header = styled(View) <{ insets: number }>`
 `;
 
 const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
-  const {
-    btcPrice,
-    btcRate,
-    btcAmt,
-    ethPrice,
-    ethRate,
-    ethAmt,
-    dogePrice,
-    dogeRate,
-    dogeAmt
-  } = useContext(ThreePriceContext);
   const [search, setSearch] = useState("");
-  const [btc, setBtc] = useState(false);
-  const [eth, setEth] = useState(false);
-  const [doge, setDoge] = useState(false);
   const [index, setIndex] = useState(0);
   const [favorite, setFavorite] = useState([""]);
   const insets = useSafeAreaInsets();
@@ -158,23 +144,15 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
         getFavorite();
       }
     }
-    // if(context){
-    //   // setArray(context);
-    //   let gfg = context.sort(function (a:any, b:any) {
-    //     return a.s > b.s;
-    //   });
-    //   setArray(gfg);
-    // }
-
-  }, [context]);
+  }, [search]);
 
   useEffect(async () => {
     if(search == ""){
       if(context){
-        let gfg = context.sort(function (a:any, b:any) {
-          return a.s > b.s;
-        });
-        setArray(gfg);
+        // let gfg = context.sort(function (a:any, b:any) {
+        //   return a.s > b.s;
+        // });
+        setArray(context);
         let a = [];
         for(let i = 0;i < favorite.length;i++){
           for(let j = 0;j<context.length;j++){
@@ -188,7 +166,6 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
     }
   }, [context]);
 
-
   useEffect(() => {
     let a = [];
     for(let i = 0;i < favorite.length;i++){
@@ -200,19 +177,17 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
     }
     setFavorite2(a)
     if (index === 1) {
-      let gfg = context.sort(function (a:any, b:any) {
-        return a.s > b.s;
-      });
-      setArray(gfg);
-      var filteredData = filterByName(gfg);
+      // let gfg = context.sort(function (a:any, b:any) {
+      //   return a.s > b.s;
+      // });
+      setArray(context);
+      var filteredData = filterByName(context);
       setArray(filteredData);
     } else {
       var filteredData = filterByName(favorite3);
       setFavorite2(filteredData);
     }
-
-
-  }, [btcPrice, ethPrice, dogePrice, search]);
+  }, [context, search]);
 
   return (
     <Container>
@@ -254,7 +229,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
         <View style={{ display: "flex", flexDirection: "row", width: "100%" }}>
           <TextInput
             ref={TextEl}
-            placeholder={"搜尋"}
+            placeholder={t("search")}
             value={search}
             onChangeText={search => setSearch(search)}
             placeholderTextColor={"#8D97A2"}
@@ -295,7 +270,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
           </Pressable>
         </View>
         {index === 0 ? (
-          <>
+          <ScrollView  contentContainerStyle={{paddingBottom:180}}>
             <View
               style={{
                 display: "flex",
@@ -605,7 +580,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
                 </>
               );
             })}
-          </>
+          </ScrollView>
         ) : (
           <>
             <View

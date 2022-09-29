@@ -68,9 +68,9 @@ const Login = ({ navigation }: RootStackScreenProps<"Login">) => {
           <View>
             <Text style={{color:"white",fontSize:32,fontWeight:"600"}}>{t("login")}</Text>
             <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>{t("email")}</Text>
-            <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="輸入電子信箱" onChangeText={setEmail}/>
+            <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder={t("enterEmail")} onChangeText={setEmail}/>
             <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>{t("password")}</Text>
-            <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="輸入密碼" secureTextEntry  onChangeText={setPassword}/>
+            <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder={t("enterPassLogin")} secureTextEntry  onChangeText={setPassword}/>
           </View>
           <TouchableOpacity style={{display:"flex",flexDirection:"row",justifyContent:"flex-end"}} onPress={()=>{
              navigation.navigate("ForgotPassword")

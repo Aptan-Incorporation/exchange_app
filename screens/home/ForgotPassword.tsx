@@ -67,7 +67,7 @@ const ForgotPassword = ({ navigation }: RootStackScreenProps<"ForgotPassword">) 
       <View>
         <Text style={{color:"white",fontSize:32,fontWeight:"600"}}>{t("forgetPass")}</Text>
         <Text style={{color:"#DDE0E3",fontSize:13,fontWeight:"500",marginTop:24,marginBottom:4}}>{t("email")}</Text>
-        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder="輸入電子信箱" onChangeText={setEmail}/>
+        <TextInput style={{width:"100%",height:48,backgroundColor:"#242D37",borderRadius:4,paddingLeft:16,color:"white",fontSize:15}} placeholder={t("enterEmail")} onChangeText={setEmail}/>
       </View>
       <TouchableOpacity style={{display:"flex",flexDirection:"row",backgroundColor:"#3D6A97",borderRadius:4,justifyContent:"center",alignItems:"center",height:44,marginTop:42}} onPress={()=>{
         if(!email){

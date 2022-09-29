@@ -104,7 +104,7 @@ const Member = ({ navigation }: RootStackScreenProps<"Member">) => {
             <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>{t("helpPage")}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ display: "flex", flexDirection: "row", height: 56, alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#242D37" }}   onPress={() => { navigation.navigate("HelpDetail",{
-                  id: i18n.language === "tw" ? 67 :34,
+                  id: i18n.language === "tw" ? 67 : i18n.language === "en" ? 35 : 34,
                 })}}>
             <IconImg source={require("../../assets/images/home/icon_privacy.png")} />
             <Text style={{ color: "white", fontSize: 15, marginLeft: 16 }}>{t("privacy")}</Text>

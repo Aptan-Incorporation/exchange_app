@@ -435,5 +435,13 @@
   "close":"關閉",
   "atLeastPayment":"至少選擇一種付款方式",
   "enterNickName":"輸入暱稱",
-  "marginShort":"合約可用保證金餘額不足"
+  "marginShort":"合約可用保證金餘額不足",
+  "search":"搜尋",
+  "repost":"重新上架",
+  "adsEdit":"編輯",
+  "enterEmail":"輸入電子信箱",
+  "enterPassLogin":"輸入登入密碼",
+  "fiatGetInfoFail": "用戶資訊獲取失敗，請重新操作",
+  "crossMsg":"所有品種合約的倉位共用一個帳戶權益，合約帳戶中的擔保資產合併計算",
+  "isolatedMsg":"每個品種合約對應一個合約帳戶，不同品種合約帳戶擔保資產相互獨立"
 }

@@ -324,7 +324,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                     setSellFeeRate(x.sellFeeRate);
                 }
                 else {
-                    Alert.alert("用戶資訊獲取失敗，請重新操作")
+                    Alert.alert(t("fiatGetInfoFail"))
                 }
             })
             .catch((Error) => console.log(Error));
@@ -597,7 +597,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                                 </CardDetailRowContainer>
                                                 <CardDetailRowContainer>
                                                     <CardButton onPress={() => { putAdvertisementOnline(x.id) }}>
-                                                        <CardButtonText>重新上架</CardButtonText>
+                                                        <CardButtonText>{t("repost")}</CardButtonText>
                                                     </CardButton>
                                                     <CardButton onPress={() => {
                                                         navigation.navigate("AdvertisementEdit", {
@@ -618,7 +618,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                                                             conditionCompleteOrders: x.conditionCompleteOrders
                                                         } as any)
                                                     }}>
-                                                        <CardButtonText>編輯</CardButtonText>
+                                                        <CardButtonText>{t("adsEdit")}</CardButtonText>
                                                     </CardButton>
                                                 </CardDetailRowContainer>
                                             </CardDetailContainer>
