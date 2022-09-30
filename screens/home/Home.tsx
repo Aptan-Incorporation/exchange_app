@@ -4,7 +4,7 @@ import { RootStackScreenProps } from "../../types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as React from "react";
 import { useState,useEffect,useContext } from "react";
-import { PriceContext,PriceContext2,ThreePriceContext } from "../../App" 
+import { Context } from "../../App" 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from "react-i18next";
 import Swiper from "react-native-web-swiper";
@@ -100,35 +100,10 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
   const [index, setIndex] = useState(0);
   const [arr, setArr] = useState([]);
   const [arr2, setArr2] = useState([]);
-  const context = useContext(PriceContext)
-  const context2 = useContext(PriceContext2)
+  const { market2:context2,market:context,three } = useContext(Context)
   const [imgArr, setImgArr] = useState([]);
-  const {btcPrice,btcRate,btcAmt,ethPrice,ethRate,ethAmt,dogePrice,dogeRate,dogeAmt} = useContext(ThreePriceContext)
   const { t,i18n } = useTranslation();
   const isFocused = useIsFocused();
-  const images = [
-    {
-      source: {
-        uri: 'https://cdn.pixabay.com/photo/2017/05/19/07/34/teacup-2325722__340.jpg',
-      },
-    },
-    {
-      source: {
-        uri: 'https://cdn.pixabay.com/photo/2017/05/02/22/43/mushroom-2279558__340.jpg',
-      },
-    },
-    {
-      source: {
-        uri: 'https://cdn.pixabay.com/photo/2017/05/18/21/54/tower-bridge-2324875__340.jpg',
-      },
-    },
-    {
-      source: {
-        uri: 'https://cdn.pixabay.com/photo/2017/05/16/21/24/gorilla-2318998__340.jpg',
-      },
-    },
-    
-  ];
   useEffect(()=>{
     let gfg = context2.sort(function (a:any, b:any) {
       return parseFloat(b.P) - parseFloat(a.P);
@@ -217,10 +192,10 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
           </GrayHeader>
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 16 }}>
             <View>
-              <PriceText>{btcPrice}</PriceText>
-              <USDText>≈ {btcPrice} USD</USDText>
+              <PriceText>{three.btcPrice}</PriceText>
+              <USDText>≈ {three.btcPrice} USD</USDText>
             </View>
-            {parseFloat(btcRate) > 0 ? <PercentText>{"+"+btcRate}%</PercentText> : <RedPercentText>{btcRate}%</RedPercentText>}
+            {parseFloat(three.btcRate) > 0 ? <PercentText>{"+"+three.btcRate}%</PercentText> : <RedPercentText>{three.btcRate}%</RedPercentText>}
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={{ width: "100%", borderRadius: 8, backgroundColor: "#242D37", marginTop: 16 }}  onPress={()=>{
@@ -233,10 +208,10 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
           </GrayHeader>
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 16 }}>
             <View>
-              <PriceText>{ethPrice}</PriceText>
-              <USDText>≈ {ethPrice} USD</USDText>
+              <PriceText>{three.ethPrice}</PriceText>
+              <USDText>≈ {three.ethPrice} USD</USDText>
             </View>
-            {parseFloat(ethRate) > 0 ? <PercentText>{"+"+ethRate}%</PercentText> : <RedPercentText>{ethRate}%</RedPercentText>}
+            {parseFloat(three.ethRate) > 0 ? <PercentText>{"+"+three.ethRate}%</PercentText> : <RedPercentText>{three.ethRate}%</RedPercentText>}
           </View>
         </TouchableOpacity>
 

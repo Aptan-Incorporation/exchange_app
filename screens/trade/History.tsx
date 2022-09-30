@@ -6,7 +6,6 @@ import { RootStackScreenProps } from "../../types";
 import { useState,useEffect,useContext } from "react";
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FutureContext } from "../../App"
 import { useTranslation } from "react-i18next";
 
 const windowHeight = Dimensions.get('window').height;
@@ -745,7 +744,7 @@ const HistoryScreen = ({
                                     <CardDetailColumnContainer>
                                         {/* <CardDetailInColumnContainer>
                                             <CardDetailTitleText>開倉均價</CardDetailTitleText>
-                                            <CardDetailValueText>{x.avgPrice}</CardDetailValueText>
+                                            <CardDetailValueText>{x.avgPrice.toFixed(6)}</CardDetailValueText>
                                         </CardDetailInColumnContainer> */}
                                         <CardDetailInColumnContainer>
                                             <CardDetailTitleText>未實現盈虧</CardDetailTitleText>
@@ -757,7 +756,7 @@ const HistoryScreen = ({
                                         </CardDetailInColumnContainer>
                                         {/* <CardDetailInColumnContainer>
                                             <CardDetailTitleText>入場價格</CardDetailTitleText>
-                                            <CardDetailValueText>{x.avgPrice}</CardDetailValueText>
+                                            <CardDetailValueText>{x.avgPrice.toFixed(6)}</CardDetailValueText>
                                         </CardDetailInColumnContainer> */}
                                     </CardDetailColumnContainer>
                                     <CardDetailColumnContainer>

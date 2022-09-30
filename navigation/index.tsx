@@ -48,7 +48,7 @@ import C2cHelp from "../screens/home/C2cHelp";
 import EditName from "../screens/home/EditName";
 import Rebate from "../screens/home/Rebate";
 import {useEffect,useContext} from "react"
-import { OrderContext } from "../App" 
+import { Context } from "../App" 
 import { useNavigation } from '@react-navigation/native';
 import ForgotPassword from "../screens/home/ForgotPassword";
 import ResetPassword from "../screens/home/ResetPassword";
@@ -78,7 +78,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
-  const context = useContext(OrderContext)
+  const {order:context} = useContext(Context)
   const navigation = useNavigation();
   
   useEffect(()=>{

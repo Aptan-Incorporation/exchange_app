@@ -60,12 +60,9 @@ const IconImg = styled(Image)`
 `
 
 
-const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) => {
+const MarketTradeScreen = ({ navigation }: RootStackScreenProps<"MarketTradeScreen">) => {
+
   const [search, setSearch] = useState("");
-  const [btc, setBtc] = useState(false);
-  const [eth, setEth] = useState(false);
-  const [doge, setDoge] = useState(false);
-  const [index, setIndex] = useState(1);
   const [favorite, setFavorite] = useState([""]);
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
@@ -128,7 +125,7 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
         let a = [];
         for(let i = 0;i < x.data.length;i++){
           for(let j = 0;j<context.length;j++){
-            if(x.data[i].split("-")[0]+x.data[i].split("-")[1] == context[j].s){
+            if(x.data[i] == context[j].s){
               a.push(context[j])
             }
           }
@@ -155,45 +152,38 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
     }
   }, []);
 
-  useEffect(async () => {
-    if(search == ""){
-      if(context){
-        setArray(_.orderBy(context,["s"]));
-        let a = [];
-        for(let i = 0;i < favorite.length;i++){
-          for(let j = 0;j<context.length;j++){
-            if(favorite[i].split("-")[0]+favorite[i].split("-")[1] == context[j].s){
-              a.push(context[j])
-            }
-          }
-        }
-        setFavorite2(a)
-      }
-    }
-  }, [context]);
-
-
   useEffect(() => {
     let a = [];
-    for(let i = 0;i < favorite.length;i++){
-      for(let j = 0;j<context.length;j++){
-        if(favorite[i].split("-")[0]+favorite[i].split("-")[1] == context[j].s){
-          a.push(context[j])
-        }
-      }
-    }
+    // for(let i = 0;i < favorite.length;i++){
+    //   for(let j = 0;j<context.length;j++){
+    //     if(favorite[i] == context[j].s){
+    //       a.push(context[j])
+    //     }
+    //   }
+    // }
     setFavorite2(a)
-    if (index === 1) {
-      setArray(_.orderBy(context,["s"]));
-      var filteredData = filterByName(_.orderBy(context,["s"]));
-      setArray(filteredData);
-    } else {
-      var filteredData = filterByName(favorite3);
-      setFavorite2(filteredData);
-    }
+    setArray(context);
+    var filteredData = filterByName(context);
+    setArray(filteredData);
+  }, [search]);
 
+  // useEffect(async () => {
+  //   if(search == ""){
+  //     if(context){
+  //       setArray(_.orderBy(context,["s"]));
+  //       let a = [];
+  //       for(let i = 0;i < favorite.length;i++){
+  //         for(let j = 0;j<context.length;j++){
+  //           if(favorite[i].split("-")[0]+favorite[i].split("-")[1] == context[j].s){
+  //             a.push(context[j])
+  //           }
+  //         }
+  //       }
+  //       setFavorite2(a)
+  //     }
+  //   }
+  // }, [context]);
 
-  }, [context, search]);
 
   return (
     <Container>
@@ -257,20 +247,6 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
               }}
             >
               <ColumnText>{t("marketPair")}</ColumnText>
-
-              <View style={{ display: "flex", flexDirection: "row" }}>
-                <ColumnText style={{ marginRight: 40 }}>{t("price")}/{t("vol")}</ColumnText>
-                <View
-                  style={{
-                    width: 88,
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "flex-end"
-                  }}
-                >
-                  <ColumnText>{t("24Hchg")}</ColumnText>
-                </View>
-              </View>
             </View>
             <ScrollView contentContainerStyle={{paddingBottom:150}}>
             {arr.map((x: any) => {
@@ -297,6 +273,53 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
                           alignItems: "center"
                         }}
                       >
+                        <TouchableOpacity
+                          onPress={async () => {
+                            let token = await AsyncStorage.getItem("token")
+                            if(token){
+                              if (favorite.includes(x.s)) {
+                                api
+                                  .deleteData("/investor/favorite", {
+                                    symbol: "BTC-USDT"
+                                  })
+                                  .then(x => {
+                                    if (x.status != 400) {
+                                      getFavorite();
+                                    } else {
+                                      alert(x.data.msg);
+                                    }
+                                  });
+                              } else {
+                                api
+                                  .postData("/investor/favorite", {
+                                    symbol: "BTC-USDT"
+                                  })
+                                  .then(x => {
+                                    if (x.status != 400) {
+                                      getFavorite();
+                                    } else {
+                                      alert(x.data.msg);
+                                    }
+                                  });
+                              }
+                            }else{
+                              alert("請先登入")
+                            }
+                            
+                          }}
+                        >
+                          {favorite.includes(x.s) ? (
+                            <Image
+                              source={require("../../assets/images/market/star-y.png")}
+                              style={{ width: 24, height: 24, marginRight: 5 }}
+                            />
+                          ) : (
+                            <Image
+                              source={require("../../assets/images/market/star.png")}
+                              style={{ width: 24, height: 24, marginRight: 5 }}
+                            />
+                          )}
+                        </TouchableOpacity>
                         <Text
                           style={{
                             color: "#F4F5F6",
@@ -306,65 +329,6 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
                         >
                           {x.s}
                         </Text>
-                      </View>
-
-                      <View style={{ display: "flex", flexDirection: "row" }}>
-                        <View
-                          style={{
-                            marginRight: 40,
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-end"
-                          }}
-                        >
-                          <Text
-                            style={{
-                              color: "#F4F5F6",
-                              fontSize: 15,
-                              fontWeight: "400"
-                            }}
-                          >
-                            {(parseFloat(x.c) < 0.006 && parseFloat(x.c) > 0) ? x.c : (parseFloat(x.c) < 0.1 && parseFloat(x.c) > 0.006)  ? x.c.slice(0, -1) : (parseFloat(x.c) < 1 && parseFloat(x.c) > 0.1) ?x.c.slice(0, -2): (parseFloat(x.c) < 50 && parseFloat(x.c) > 1) ?x.c.slice(0, -3) : x.c.slice(0, -4)}
-                          </Text>
-                          <Text
-                            style={{
-                              color: "#8D97A2",
-                              fontSize: 12,
-                              fontWeight: "400"
-                            }}
-                          >
-                            {x.v}
-                          </Text>
-                        </View>
-                        {parseFloat(x.P) > 0 ? (
-                          <View
-                            style={{
-                              width: 88,
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "center",
-                              backgroundColor: "#2FB364",
-                              borderRadius: 4,
-                              alignItems: "center"
-                            }}
-                          >
-                            <Text style={{ color: "white" }}>+{x.P}%</Text>
-                          </View>
-                        ) : (
-                          <View
-                            style={{
-                              width: 88,
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "center",
-                              backgroundColor: "#FB4C51",
-                              borderRadius: 4,
-                              alignItems: "center"
-                            }}
-                          >
-                            <Text style={{ color: "white" }}>{x.P}%</Text>
-                          </View>
-                        )}
                       </View>
                     </TouchableOpacity>
                   ) : (
@@ -388,6 +352,53 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
                           alignItems: "center"
                         }}
                       >
+                        <TouchableOpacity
+                          onPress={async () => {
+                            let token = await AsyncStorage.getItem("token")
+                            if(token){
+                            if (favorite.includes(x.s.split("-")[0]+"-USDT")) {
+                              api
+                                .deleteData("/investor/favorite", {
+                                  symbol: x.s.split("-")[0]+"-USDT"
+                                })
+                                .then(x => {
+                                  if (x.status != 400) {
+                                    getFavorite();
+                                  } else {
+                                    alert(x.data.msg);
+                                  }
+                                });
+                            } else {
+                              api
+                                .postData("/investor/favorite", {
+                                  symbol: x.s.split("-")[0]+"-USDT"
+                                })
+                                .then(x => {
+                                  if (x.status != 400) {
+                                    getFavorite();
+                                  } else {
+                                    alert(x.data.msg);
+                                  }
+                                });
+                            }
+                          }else{
+                            alert("請先登入")
+                          }
+                          }}
+                        >
+                          {favorite.includes(x.s) ? (
+                            <Image
+                              source={require("../../assets/images/market/star-y.png")}
+                              style={{ width: 24, height: 24, marginRight: 5 }}
+                            />
+                          ) : (
+                            <Image
+                              source={require("../../assets/images/market/star.png")}
+                              style={{ width: 24, height: 24, marginRight: 5 }}
+                            />
+                          )}
+                          
+                        </TouchableOpacity>
                         <Text
                           style={{
                             color: "#F4F5F6",
@@ -397,64 +408,6 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
                         >
                           {x.s}
                         </Text>
-                      </View>
-                      <View style={{ display: "flex", flexDirection: "row" }}>
-                        <View
-                          style={{
-                            marginRight: 40,
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "flex-end"
-                          }}
-                        >
-                          <Text
-                            style={{
-                              color: "#F4F5F6",
-                              fontSize: 15,
-                              fontWeight: "400"
-                            }}
-                          >
-                            {(parseFloat(x.c) < 0.006 && parseFloat(x.c) > 0) ? x.c : (parseFloat(x.c) < 0.1 && parseFloat(x.c) > 0.006)  ? x.c.slice(0, -1) : (parseFloat(x.c) < 1 && parseFloat(x.c) > 0.1) ?x.c.slice(0, -2): (parseFloat(x.c) < 50 && parseFloat(x.c) > 1) ?x.c.slice(0, -3) : x.c.slice(0, -4)}
-                          </Text>
-                          <Text
-                            style={{
-                              color: "#8D97A2",
-                              fontSize: 12,
-                              fontWeight: "400"
-                            }}
-                          >
-                            {x.v}
-                          </Text>
-                        </View>
-                        {parseFloat(x.P) > 0 ? (
-                          <View
-                            style={{
-                              width: 88,
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "center",
-                              backgroundColor: "#2FB364",
-                              borderRadius: 4,
-                              alignItems: "center"
-                            }}
-                          >
-                            <Text style={{ color: "white" }}>+{x.P}%</Text>
-                          </View>
-                        ) : (
-                          <View
-                            style={{
-                              width: 88,
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "center",
-                              backgroundColor: "#FB4C51",
-                              borderRadius: 4,
-                              alignItems: "center"
-                            }}
-                          >
-                            <Text style={{ color: "white" }}>{x.P}%</Text>
-                          </View>
-                        )}
                       </View>
                     </TouchableOpacity>
                   )}
@@ -650,4 +603,4 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
   );
 };
 
-export default AllTradeScreen;
+export default MarketTradeScreen;

@@ -28,20 +28,11 @@ import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from "react-native-loading-spinner-overlay";
 import { useIsFocused } from "@react-navigation/native";
-import { PriceContext, PositionContext, FutureContext } from "../../App";
+import { Context } from "../../App";
 import DropDownPicker from "react-native-dropdown-picker";
 import { Dropdown } from "react-native-element-dropdown";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
-
-import {
-  Appbar,
-  DarkTheme,
-  DefaultTheme,
-  Provider,
-  Surface,
-  ThemeProvider
-} from "react-native-paper";
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -1130,9 +1121,9 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
   const [remarkPrice, setRemarkPrice] = useState("");
   const [wareHousedPrice, setWareHousedPrice] = useState("");
   const [loading, setLoading] = useState(false);
-  const context = useContext(PriceContext);
-  const positionArray = useContext(PositionContext);
-  const entrustArray = useContext(FutureContext);
+  const {market:context,position:positionArray,future:entrustArray} = useContext(Context);
+//   const positionArray = useContext(PositionContext);
+//   const entrustArray = useContext(FutureContext);
   const toggleBuyTypeModal = () => {
     setIsBuyTypeModalVisible(!isBuyTypeModalVisible);
   };
@@ -1416,6 +1407,11 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
       );
     }
   }, []);
+  
+  useEffect(async ()=>{
+    let trade = await AsyncStorage.getItem("trade");
+    getfund(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade)
+  },[isFocused, nowTrade])
 
   useEffect(async () => {
     if (isFocused) {
@@ -1472,20 +1468,16 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
       if (trade) {
         setValue(trade.split("USDT")[0] + "-USDT");
       }
-
       getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
       getPrice(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
-      // const interval = setInterval(() => {
-      //     getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
-      //     getfund(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade)
-      //     if (token) {
-      //         getEntrust();
-      //         getPosition();
-      //         getBalance(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,swapBuyPosition === "Open" ? "BUY":"SELL")
-      //     }
-      // }, 2000);
-      // AsyncStorage.setItem("interval", interval.toString())
-      // return () => clearInterval(interval);
+      const interval = setInterval(() => {
+          getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+          if (token) {
+              getBalance(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,swapBuyPosition === "Open" ? "BUY":"SELL")
+          }
+      }, 2000);
+      AsyncStorage.setItem("interval", interval.toString())
+      return () => clearInterval(interval);
     } else {
       AsyncStorage.removeItem("trade");
       setValue("BTC-USDT");
@@ -2457,19 +2449,19 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                               {t("entryPrice")}
                             </TradePositionCardSmallTitleText>
                             <TradePositionCardSmallValueText>
-                              {parseFloat(x.avgPrice) < 0.006 &&
-                              parseFloat(x.avgPrice) > 0
-                                ? x.avgPrice
-                                : parseFloat(x.avgPrice) < 0.1 &&
-                                  parseFloat(x.avgPrice) > 0.006
-                                ? x.avgPrice.toString().slice(0, -1)
-                                : parseFloat(x.avgPrice) < 1 &&
-                                  parseFloat(x.avgPrice) > 0.1
-                                ? x.avgPrice.toString().slice(0, -2)
-                                : parseFloat(x.avgPrice) < 50 &&
-                                  parseFloat(x.avgPrice) > 1
-                                ? x.avgPrice.toString().slice(0, -3)
-                                : x.avgPrice.toString().slice(0, -4)}
+                              {parseFloat(x.avgPrice.toFixed(6)) < 0.006 &&
+                              parseFloat(x.avgPrice.toFixed(6)) > 0
+                                ? x.avgPrice.toFixed(6)
+                                : parseFloat(x.avgPrice.toFixed(6)) < 0.1 &&
+                                  parseFloat(x.avgPrice.toFixed(6)) > 0.006
+                                ? x.avgPrice.toFixed(6).toString().slice(0, -1)
+                                : parseFloat(x.avgPrice.toFixed(6)) < 1 &&
+                                  parseFloat(x.avgPrice.toFixed(6)) > 0.1
+                                ? x.avgPrice.toFixed(6).toString().slice(0, -2)
+                                : parseFloat(x.avgPrice.toFixed(6)) < 50 &&
+                                  parseFloat(x.avgPrice.toFixed(6)) > 1
+                                ? x.avgPrice.toFixed(6).toString().slice(0, -3)
+                                : x.avgPrice.toFixed(6).toString().slice(0, -4)}
                             </TradePositionCardSmallValueText>
                           </TradePositionCardDetailColumnContainer>
                         </TradePositionCardDetailRowContainer>

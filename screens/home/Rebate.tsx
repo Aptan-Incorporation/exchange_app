@@ -11,7 +11,6 @@ import { RootStackScreenProps } from "../../types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as React from "react";
 import { useState, useEffect, useContext } from "react";
-import { PriceContext, ThreePriceContext } from "../../App";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Clipboard from "expo-clipboard";
 import api from "../../common/api";

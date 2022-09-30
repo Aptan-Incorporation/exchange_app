@@ -7,7 +7,6 @@ import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios"
 import { WebView } from 'react-native-webview';
-import { PriceContext } from "../../App" 
 import { useTranslation } from "react-i18next";
 
 const windowHeight = Dimensions.get('window').height;

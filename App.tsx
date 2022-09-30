@@ -15,22 +15,8 @@ import { Platform } from 'react-native';
 // import { useNavigation } from '@react-navigation/native';
 import "./local/i18n"
 
-export const PriceContext = createContext(
-    [{
-      E:"",
-      P:"",
-      c:"",
-      e:"",
-      p:"",
-      s:"",
-      v:"",
-      w:"",
-      m:""
-    }],
-);
-
-export const PriceContext2 = createContext(
-  [{
+export const Context = createContext({
+  market:[{
     E:"",
     P:"",
     c:"",
@@ -41,10 +27,18 @@ export const PriceContext2 = createContext(
     w:"",
     m:""
   }],
-);
-
-export const PositionContext = createContext(
-  [{
+  market2:[{
+    E:"",
+    P:"",
+    c:"",
+    e:"",
+    p:"",
+    s:"",
+    v:"",
+    w:"",
+    m:""
+  }],
+  position:[{
     "avgPrice": 0,
     "forceClose": 0,
     "leverage": 0,
@@ -60,10 +54,7 @@ export const PositionContext = createContext(
     "symbol": "",
     "type": "",
   }],
-);
-
-export const FutureContext = createContext(
-  [{
+  future:[{
     "orderId": "",
     "investor": "",
     "symbol": "",
@@ -80,10 +71,7 @@ export const FutureContext = createContext(
     "leverage": 0,
     "createdDate": 0
   }],
-);
-
-export const ThreePriceContext = createContext(
-  {
+  three:{
     btcPrice:"123",
     btcRate:"",
     btcAmt:"",
@@ -93,16 +81,13 @@ export const ThreePriceContext = createContext(
     dogePrice:"",
     dogeRate:"",
     dogeAmt:""
-  }
-);
-
-export const OrderContext = createContext(
-  {
+  },
+  order:{
     data:{
       status:3
     }
   }
-);
+})
 
 
 export default function App() {
@@ -202,13 +187,11 @@ export default function App() {
   useEffect(() => {
     if(lastJsonMessage3){
       if(lastJsonMessage3.channel === "position"){
-        // console.log(lastJsonMessage3.data)
         setPosition(lastJsonMessage3.data)
       }else{
         setFuture(lastJsonMessage3.data)
       }
     }
-
   },[lastJsonMessage3]);
 
   useEffect(()=>{
@@ -230,12 +213,12 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-        <PositionContext.Provider value={position}>
-        <FutureContext.Provider value={future}>
-        <OrderContext.Provider value={order}>
-        <PriceContext.Provider value={market}>
-        <PriceContext2.Provider value={market2}>
-        <ThreePriceContext.Provider value={  {
+        <Context.Provider value={{
+          market:market,
+          market2:market2,
+          position:position,
+          future:future,
+          three:{
             btcPrice:btcPrice,
             btcRate:btcRate,
             btcAmt:btcAmt,
@@ -245,17 +228,14 @@ export default function App() {
             dogePrice:dogePrice,
             dogeRate:dogeRate,
             dogeAmt:dogeAmt
+          },
+          order:order
         }}>
           <ThemeProvider theme={Theme}>
             <Navigation colorScheme={colorScheme} />
             <StatusBar />
-          </ThemeProvider>
-          </ThreePriceContext.Provider>
-          </PriceContext2.Provider>
-          </PriceContext.Provider>
-          </OrderContext.Provider>
-          </FutureContext.Provider>
-          </PositionContext.Provider>
+          </ThemeProvider>      
+          </Context.Provider>
       </SafeAreaProvider>
     );
   }

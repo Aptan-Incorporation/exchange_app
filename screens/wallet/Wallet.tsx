@@ -8,7 +8,7 @@ import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay'
-import { PositionContext,PriceContext } from "../../App"
+import { Context } from "../../App"
 import { useTranslation } from "react-i18next";
 import _ from "lodash"
 
@@ -469,8 +469,8 @@ const WalletScreen = ({
     const [loading,setLoading] = useState(false);
     const [balance,setBalance] = useState(0)
     const [freeze,setFreeze] = useState(0)
-    const positionArray = useContext(PositionContext)
-    const context = useContext(PriceContext)
+    // const positionArray = useContext(PositionContext)
+    const {market:context,position:positionArray} = useContext(Context)
 
     const { t } = useTranslation();
     const getBalance = async () => {
@@ -773,7 +773,7 @@ const WalletScreen = ({
                                                                 </TradePositionCardDetailColumnContainer>
                                                                 <TradePositionCardDetailColumnContainer>
                                                                     <TradePositionCardSmallTitleText>{t("entryPrice")}</TradePositionCardSmallTitleText>
-                                                                    <TradePositionCardSmallValueText>{(parseFloat(x.avgPrice) < 0.006 && parseFloat(x.avgPrice) > 0) ? x.avgPrice : (parseFloat(x.avgPrice) < 0.1 && parseFloat(x.avgPrice) > 0.006)  ? x.avgPrice.toString().slice(0, -1) : (parseFloat(x.avgPrice) < 1 && parseFloat(x.avgPrice) > 0.1) ?x.avgPrice.toString().slice(0, -2): (parseFloat(x.avgPrice) < 50 && parseFloat(x.avgPrice) > 1) ?x.avgPrice.toString().slice(0, -3) : x.avgPrice.toString().slice(0, -4)}</TradePositionCardSmallValueText>
+                                                                    <TradePositionCardSmallValueText>{(parseFloat(x.avgPrice.toFixed(6)) < 0.006 && parseFloat(x.avgPrice.toFixed(6)) > 0) ? x.avgPrice.toFixed(6) : (parseFloat(x.avgPrice.toFixed(6)) < 0.1 && parseFloat(x.avgPrice.toFixed(6)) > 0.006)  ? x.avgPrice.toFixed(6).toString().slice(0, -1) : (parseFloat(x.avgPrice.toFixed(6)) < 1 && parseFloat(x.avgPrice.toFixed(6)) > 0.1) ?x.avgPrice.toFixed(6).toString().slice(0, -2): (parseFloat(x.avgPrice.toFixed(6)) < 50 && parseFloat(x.avgPrice.toFixed(6)) > 1) ?x.avgPrice.toFixed(6).toString().slice(0, -3) : x.avgPrice.toFixed(6).toString().slice(0, -4)}</TradePositionCardSmallValueText>
                                                                 </TradePositionCardDetailColumnContainer>
                                                             </TradePositionCardDetailRowContainer>
                                                             <TradePositionCardDetailRowContainer>

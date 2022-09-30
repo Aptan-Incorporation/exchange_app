@@ -11,7 +11,7 @@ import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
 import {useContext} from "react"
-import { OrderContext } from "../../App" 
+import { Context } from "../../App" 
 import _ from "lodash"
 import { useTranslation } from "react-i18next";
 
@@ -551,7 +551,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
     // 獲取進行中訂單
     const [waitingList, setWaitingList] = useState([]);
     const [cancelList, setCancelList] = useState([]);
-    const context = useContext(OrderContext)
+    const {order:context} = useContext(Context)
     const { t } = useTranslation();
     useEffect(()=>{    
         if(context.data){

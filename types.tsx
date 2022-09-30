@@ -20,6 +20,7 @@ export type RootStackParamList = {
   HomeScreen: undefined;
   MarketScreen: undefined;
   AllTradeScreen:undefined;
+  MarketTradeScreen:undefined;
   TradeScreen: undefined;
   StopPositionScreen: undefined;
   HistoryScreen: undefined;

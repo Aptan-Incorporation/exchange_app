@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import styled from "styled-components";
 import { RootStackScreenProps } from "../../types";
-import { ThreePriceContext,PriceContext } from "../../App";
 import * as React from "react";
 import { useContext, useState, useEffect, useRef } from "react";
 import api from "../../common/api";
