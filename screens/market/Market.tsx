@@ -138,16 +138,18 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
     });
   };
 
-  useEffect(async () => {
+  useEffect(() => {
+    (async () => {
     let token = await AsyncStorage.getItem("token");  
     if (token) {
       if(!search){
         getFavorite();
       }
-    }
+    }})()
   }, [context,search]);
 
-  useEffect(async () => {
+  useEffect(() => {
+    (async () => {
     if(search == ""){
       if(context){
         // let gfg = context.sort(function (a:any, b:any) {
@@ -164,7 +166,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
         }
         setFavorite2(a)
       }
-    }
+    }})()
   }, [context]);
 
   useEffect(() => {

@@ -42,7 +42,7 @@ const Dropdown2 = styled(Dropdown)`
   background-color: black;
 `;
 
-const Container = styled(View)<{ insets: number }>`
+const Container = styled(View) <{ insets: number }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1112,10 +1112,10 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
   const [remarkPrice, setRemarkPrice] = useState("");
   const [wareHousedPrice, setWareHousedPrice] = useState("");
   const [loading, setLoading] = useState(false);
-  const {market:context,position:positionArray,future:entrustArray} = useContext(Context);
+  const { market: context, position: positionArray, future: entrustArray } = useContext(Context);
   const [slideValue, setSlideValue] = useState(0)
-//   const positionArray = useContext(PositionContext);
-//   const entrustArray = useContext(FutureContext);
+  //   const positionArray = useContext(PositionContext);
+  //   const entrustArray = useContext(FutureContext);
   const toggleBuyTypeModal = () => {
     setIsBuyTypeModalVisible(!isBuyTypeModalVisible);
   };
@@ -1176,19 +1176,19 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
     let PercentageNum =
       balance === 0
         ? Math.round(
-            (sliderNum /
-              parseFloat(
-                ((balance * leverageViewNum) / parseFloat(wareHousedPrice))
-                  .toString()
-                  .substring(
-                    0,
-                    ((balance * leverageViewNum) / parseFloat(wareHousedPrice))
-                      .toString()
-                      .indexOf(".") + 3
-                  )
-              )) *
-              100
-          )
+          (sliderNum /
+            parseFloat(
+              ((balance * leverageViewNum) / parseFloat(wareHousedPrice))
+                .toString()
+                .substring(
+                  0,
+                  ((balance * leverageViewNum) / parseFloat(wareHousedPrice))
+                    .toString()
+                    .indexOf(".") + 3
+                )
+            )) *
+          100
+        )
         : 0;
     return (
       <View>
@@ -1280,8 +1280,7 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
   const getDepth = (trade: string) => {
     axios
       .get(
-        `https://api1.binance.com/api/v3/depth?symbol=${
-          trade.split("-")[0]
+        `https://api1.binance.com/api/v3/depth?symbol=${trade.split("-")[0]
         }USDT&limit=12`
       )
       .then(x => {
@@ -1333,149 +1332,157 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
   const isFocused = useIsFocused();
 
   const getRemark = (s: string) => {
-    const remark = _.find(context, function(o) {
+    const remark = _.find(context, function (o) {
       return o.s == s;
     });
     return remark ? remark.m : "";
   };
 
-  useEffect(async () => {
+  useEffect(() => {
     let isApiSubscribed = true;
-    if (context && isApiSubscribed) {
-      let a = [];
-      for (let i = 0; i < context.length; i++) {
-        let obj = {
-          label: context[i].s.split("USDT")[0] + "-USDT",
-          value: context[i].s.split("USDT")[0] + "-USDT"
-        };
-        a.push(obj);
-      }
-      setTrade(a);
+    (async () => {
+      if (context && isApiSubscribed) {
+        let a = [];
+        for (let i = 0; i < context.length; i++) {
+          let obj = {
+            label: context[i].s.split("USDT")[0] + "-USDT",
+            value: context[i].s.split("USDT")[0] + "-USDT"
+          };
+          a.push(obj);
+        }
+        setTrade(a);
 
-      let trade = await AsyncStorage.getItem("trade");
-      let token = await AsyncStorage.getItem("token");
-      const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade;
-      const remark = _.find(context, function(o) {
-        return o.s == t;
-      });
-      setRemarkPrice(remark!.m);
-      // setWareHousedPrice(remark!.c);
-      // setBuyPrice(remark!.c)
-      setPrice(remark!.c);
-      getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
-      if (token) {
-          getBalance(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,swapBuyPosition === "Open" ? "BUY":"SELL")
+        let trade = await AsyncStorage.getItem("trade");
+        let token = await AsyncStorage.getItem("token");
+        const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade;
+        const remark = _.find(context, function (o) {
+          return o.s == t;
+        });
+        setRemarkPrice(remark!.m);
+        // setWareHousedPrice(remark!.c);
+        // setBuyPrice(remark!.c)
+        setPrice(remark!.c);
+        getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+        if (token) {
+          getBalance(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade, swapBuyPosition === "Open" ? "BUY" : "SELL")
+        }
       }
-    }
+    })()
     return () => {
       // cancel the subscription
       isApiSubscribed = false;
     };
   }, [context]);
 
-  useEffect(async () => {
-    if (context) {
-      let trade = await AsyncStorage.getItem("trade");
-      const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade;
-      const remark = _.find(context, function(o) {
-        return o.s == t;
-      });
-      setWareHousedPrice(
-        parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
-          ? remark!.c
-          : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
-          ? remark!.c.slice(0, -1)
-          : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
-          ? remark!.c.slice(0, -2)
-          : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
-          ? remark!.c.slice(0, -3)
-          : remark!.c.slice(0, -4)
-      );
-      setBuyPrice(
-        parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
-          ? remark!.c
-          : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
-          ? remark!.c.slice(0, -1)
-          : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
-          ? remark!.c.slice(0, -2)
-          : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
-          ? remark!.c.slice(0, -3)
-          : remark!.c.slice(0, -4)
-      );
-    }
+  useEffect(() => {
+    (async () => {
+      if (context) {
+        let trade = await AsyncStorage.getItem("trade");
+        const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade;
+        const remark = _.find(context, function (o) {
+          return o.s == t;
+        });
+        setWareHousedPrice(
+          parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
+            ? remark!.c
+            : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
+              ? remark!.c.slice(0, -1)
+              : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
+                ? remark!.c.slice(0, -2)
+                : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
+                  ? remark!.c.slice(0, -3)
+                  : remark!.c.slice(0, -4)
+        );
+        setBuyPrice(
+          parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
+            ? remark!.c
+            : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
+              ? remark!.c.slice(0, -1)
+              : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
+                ? remark!.c.slice(0, -2)
+                : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
+                  ? remark!.c.slice(0, -3)
+                  : remark!.c.slice(0, -4)
+        );
+      }
+    })()
 
   }, []);
-  
-  useEffect(async ()=>{
-    let trade = await AsyncStorage.getItem("trade");
-    getfund(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade)
-  },[isFocused, nowTrade])
 
-  useEffect(async () => {
-    if (isFocused) {
-      // let inter = await AsyncStorage.getItem("interval");
-      // clearInterval(parseInt(inter!));
-      let token = await AsyncStorage.getItem("token");
+  useEffect(() => {
+    (async () => {
       let trade = await AsyncStorage.getItem("trade");
-      setNewTrade(trade);
-      if (!token) {
-        // setEntrustArray([])
-        // setPositionArray([])
-        setBalance(0);
-      }
-      getfund(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
-      if (token) {
-        getEntrust();
-        getPosition();
-        getBalance(
-          trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,
-          swapBuyPosition === "Open" ? "BUY" : "SELL"
+      getfund(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade)
+    })()
+  }, [isFocused, nowTrade])
+
+  useEffect(() => {
+    (async () => {
+      if (isFocused) {
+        // let inter = await AsyncStorage.getItem("interval");
+        // clearInterval(parseInt(inter!));
+        let token = await AsyncStorage.getItem("token");
+        let trade = await AsyncStorage.getItem("trade");
+        setNewTrade(trade);
+        if (!token) {
+          // setEntrustArray([])
+          // setPositionArray([])
+          setBalance(0);
+        }
+        getfund(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+        if (token) {
+          getEntrust();
+          getPosition();
+          getBalance(
+            trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,
+            swapBuyPosition === "Open" ? "BUY" : "SELL"
+          );
+          getleverage(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+        }
+        const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade;
+        const remark = _.find(context, function (o) {
+          return o.s == t;
+        });
+        setWareHousedPrice(
+          parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
+            ? remark!.c
+            : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
+              ? remark!.c.slice(0, -1)
+              : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
+                ? remark!.c.slice(0, -2)
+                : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
+                  ? remark!.c.slice(0, -3)
+                  : remark!.c.slice(0, -4)
         );
-        getleverage(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+        setBuyPrice(
+          parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
+            ? remark!.c
+            : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
+              ? remark!.c.slice(0, -1)
+              : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
+                ? remark!.c.slice(0, -2)
+                : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
+                  ? remark!.c.slice(0, -3)
+                  : remark!.c.slice(0, -4)
+        );
+        // let leverage = await AsyncStorage.getItem("leverage")
+        // if (leverage) {
+        //     setLeverageViewNum(parseInt(leverage))
+        // }
+        if (trade) {
+          setValue(trade.split("USDT")[0] + "-USDT");
+        }
+        // getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+        getPrice(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+
+        // AsyncStorage.setItem("interval", interval.toString())
+        // return () => clearInterval(interval);
+      } else {
+        AsyncStorage.removeItem("trade");
+        setValue("BTC-USDT");
+        setNowTrade("BTC-USDT");
       }
-      const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade;
-      const remark = _.find(context, function(o) {
-        return o.s == t;
-      });
-      setWareHousedPrice(
-        parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
-          ? remark!.c
-          : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
-          ? remark!.c.slice(0, -1)
-          : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
-          ? remark!.c.slice(0, -2)
-          : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
-          ? remark!.c.slice(0, -3)
-          : remark!.c.slice(0, -4)
-      );
-      setBuyPrice(
-        parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
-          ? remark!.c
-          : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
-          ? remark!.c.slice(0, -1)
-          : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
-          ? remark!.c.slice(0, -2)
-          : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
-          ? remark!.c.slice(0, -3)
-          : remark!.c.slice(0, -4)
-      );
-      // let leverage = await AsyncStorage.getItem("leverage")
-      // if (leverage) {
-      //     setLeverageViewNum(parseInt(leverage))
-      // }
-      if (trade) {
-        setValue(trade.split("USDT")[0] + "-USDT");
-      }
-      // getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
-      getPrice(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
-      
-      // AsyncStorage.setItem("interval", interval.toString())
-      // return () => clearInterval(interval);
-    } else {
-      AsyncStorage.removeItem("trade");
-      setValue("BTC-USDT");
-      setNowTrade("BTC-USDT");
-    }
+    })()
   }, [isFocused, nowTrade, swapBuyPosition]);
 
   const [value, setValue] = useState(null);
@@ -1632,7 +1639,7 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                       parseInt(
                         (
                           parseFloat(x[0].slice(0, 2) + x[0].slice(2, -9)) *
-                            parseFloat(x[1].slice(0, -5)) +
+                          parseFloat(x[1].slice(0, -5)) +
                           20
                         )
                           .toString()
@@ -1643,7 +1650,7 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                         parseInt(
                           (
                             parseFloat(x[0].slice(0, 2) + x[0].slice(2, -9)) *
-                              parseFloat(x[1].slice(0, -5)) +
+                            parseFloat(x[1].slice(0, -5)) +
                             20
                           )
                             .toString()
@@ -1661,18 +1668,18 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                             <TradeTableRowContainer>
                               <TradeTableSellPriceText>
                                 {parseFloat(x[0]) < 0.006 &&
-                                parseFloat(x[0]) > 0
+                                  parseFloat(x[0]) > 0
                                   ? price.slice(0, -2)
                                   : parseFloat(x[0]) < 0.1 &&
                                     parseFloat(x[0]) > 0.006
-                                  ? x[0].slice(0, -3)
-                                  : parseFloat(x[0]) < 1 &&
-                                    parseFloat(x[0]) > 0.1
-                                  ? x[0].slice(0, -4)
-                                  : parseFloat(x[0]) < 50 &&
-                                    parseFloat(x[0]) > 1
-                                  ? x[0].slice(0, -5)
-                                  : x[0].slice(0, -6)}
+                                    ? x[0].slice(0, -3)
+                                    : parseFloat(x[0]) < 1 &&
+                                      parseFloat(x[0]) > 0.1
+                                      ? x[0].slice(0, -4)
+                                      : parseFloat(x[0]) < 50 &&
+                                        parseFloat(x[0]) > 1
+                                        ? x[0].slice(0, -5)
+                                        : x[0].slice(0, -6)}
                               </TradeTableSellPriceText>
                               <TradeTableNumberText>
                                 {x[1].slice(0, -5)}
@@ -1690,42 +1697,42 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                       {parseFloat(price) < 0.006 && parseFloat(price) > 0
                         ? price
                         : parseFloat(price) < 0.1 && parseFloat(price) > 0.006
-                        ? price.slice(0, -1)
-                        : parseFloat(price) < 1 && parseFloat(price) > 0.1
-                        ? price.slice(0, -2)
-                        : parseFloat(price) < 50 && parseFloat(price) > 1
-                        ? price.slice(0, -3)
-                        : price.slice(0, -4)}
+                          ? price.slice(0, -1)
+                          : parseFloat(price) < 1 && parseFloat(price) > 0.1
+                            ? price.slice(0, -2)
+                            : parseFloat(price) < 50 && parseFloat(price) > 1
+                              ? price.slice(0, -3)
+                              : price.slice(0, -4)}
                     </TradeTableBottomTitlePriceRiseText>
                   ) : (
                     <TradeTableBottomTitlePriceFallText>
                       {parseFloat(price) < 0.006 && parseFloat(price) > 0
                         ? price
                         : parseFloat(price) < 0.1 && parseFloat(price) > 0.006
-                        ? price.slice(0, -1)
-                        : parseFloat(price) < 1 && parseFloat(price) > 0.1
-                        ? price.slice(0, -2)
-                        : parseFloat(price) < 50 && parseFloat(price) > 1
-                        ? price.slice(0, -3)
-                        : price.slice(0, -4)}
+                          ? price.slice(0, -1)
+                          : parseFloat(price) < 1 && parseFloat(price) > 0.1
+                            ? price.slice(0, -2)
+                            : parseFloat(price) < 50 && parseFloat(price) > 1
+                              ? price.slice(0, -3)
+                              : price.slice(0, -4)}
                     </TradeTableBottomTitlePriceFallText>
                   )}
                 </TradeTableBottomTitleContainer>
                 <TradeTableBottomTitleContainer>
                   <TradeTableBottomTitleOwnValueText>
                     {parseFloat(remarkPrice) < 0.006 &&
-                    parseFloat(remarkPrice) > 0
+                      parseFloat(remarkPrice) > 0
                       ? remarkPrice
                       : parseFloat(remarkPrice) < 0.1 &&
                         parseFloat(remarkPrice) > 0.006
-                      ? remarkPrice.slice(0, -1)
-                      : parseFloat(remarkPrice) < 1 &&
-                        parseFloat(remarkPrice) > 0.1
-                      ? remarkPrice.slice(0, -2)
-                      : parseFloat(remarkPrice) < 50 &&
-                        parseFloat(remarkPrice) > 1
-                      ? remarkPrice.slice(0, -3)
-                      : remarkPrice.slice(0, -4)}
+                        ? remarkPrice.slice(0, -1)
+                        : parseFloat(remarkPrice) < 1 &&
+                          parseFloat(remarkPrice) > 0.1
+                          ? remarkPrice.slice(0, -2)
+                          : parseFloat(remarkPrice) < 50 &&
+                            parseFloat(remarkPrice) > 1
+                            ? remarkPrice.slice(0, -3)
+                            : remarkPrice.slice(0, -4)}
                   </TradeTableBottomTitleOwnValueText>
                 </TradeTableBottomTitleContainer>
                 <TradeTableBuyContainer>
@@ -1735,7 +1742,7 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                       parseInt(
                         (
                           parseFloat(x[0].slice(0, 2) + x[0].slice(2, -9)) *
-                            parseFloat(x[1].slice(0, -5)) +
+                          parseFloat(x[1].slice(0, -5)) +
                           20
                         )
                           .toString()
@@ -1746,7 +1753,7 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                         parseInt(
                           (
                             parseFloat(x[0].slice(0, 2) + x[0].slice(2, -9)) *
-                              parseFloat(x[1].slice(0, -5)) +
+                            parseFloat(x[1].slice(0, -5)) +
                             20
                           )
                             .toString()
@@ -1764,18 +1771,18 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                             <TradeTableRowContainer>
                               <TradeTableBuyPriceText>
                                 {parseFloat(x[0]) < 0.006 &&
-                                parseFloat(x[0]) > 0
+                                  parseFloat(x[0]) > 0
                                   ? price.slice(0, -2)
                                   : parseFloat(x[0]) < 0.1 &&
                                     parseFloat(x[0]) > 0.006
-                                  ? x[0].slice(0, -3)
-                                  : parseFloat(x[0]) < 1 &&
-                                    parseFloat(x[0]) > 0.1
-                                  ? x[0].slice(0, -4)
-                                  : parseFloat(x[0]) < 50 &&
-                                    parseFloat(x[0]) > 1
-                                  ? x[0].slice(0, -5)
-                                  : x[0].slice(0, -6)}
+                                    ? x[0].slice(0, -3)
+                                    : parseFloat(x[0]) < 1 &&
+                                      parseFloat(x[0]) > 0.1
+                                      ? x[0].slice(0, -4)
+                                      : parseFloat(x[0]) < 50 &&
+                                        parseFloat(x[0]) > 1
+                                        ? x[0].slice(0, -5)
+                                        : x[0].slice(0, -6)}
                               </TradeTableBuyPriceText>
                               <TradeTableNumberText>
                                 {x[1].slice(0, -5)}
@@ -1975,8 +1982,8 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                       balance === 0
                         ? "0"
                         : swapCurrency === 1
-                        ? balance.toString()
-                        : canOpen.toString()
+                          ? balance.toString()
+                          : canOpen.toString()
                     }
                     onChangeSliderValue={setSliderNum}
                     swapCurrency={swapCurrency}
@@ -2059,30 +2066,30 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                               var obj =
                                 buyType === "Limit"
                                   ? {
-                                      price: parseFloat(buyPrice),
-                                      origQty:
-                                        swapCurrency === 0
-                                          ? sliderNum
-                                          : (
-                                              (sliderNum * leverageViewNum) /
-                                              parseFloat(wareHousedPrice)
-                                            ).toFixed(2),
-                                      side: "BUY",
-                                      symbol: newTrade
-                                        ? newTrade.split("USDT")[0] + "-USDT"
-                                        : nowTrade,
-                                      leverage: leverageViewNum,
-                                      type: "LIMIT"
-                                    }
+                                    price: parseFloat(buyPrice),
+                                    origQty:
+                                      swapCurrency === 0
+                                        ? sliderNum
+                                        : (
+                                          (sliderNum * leverageViewNum) /
+                                          parseFloat(wareHousedPrice)
+                                        ).toFixed(2),
+                                    side: "BUY",
+                                    symbol: newTrade
+                                      ? newTrade.split("USDT")[0] + "-USDT"
+                                      : nowTrade,
+                                    leverage: leverageViewNum,
+                                    type: "LIMIT"
+                                  }
                                   : buyType === "Market"
-                                  ? {
+                                    ? {
                                       origQty:
                                         swapCurrency === 0
                                           ? sliderNum
                                           : (
-                                              (sliderNum * leverageViewNum) /
-                                              parseFloat(wareHousedPrice)
-                                            ).toFixed(2),
+                                            (sliderNum * leverageViewNum) /
+                                            parseFloat(wareHousedPrice)
+                                          ).toFixed(2),
                                       side: "BUY",
                                       symbol: newTrade
                                         ? newTrade.split("USDT")[0] + "-USDT"
@@ -2090,40 +2097,40 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                                       leverage: leverageViewNum,
                                       type: "MARKET"
                                     }
-                                  : buyType === "Plan_Limit"
-                                  ? {
-                                      price: parseFloat(buyPrice),
-                                      origQty:
-                                        swapCurrency === 0
-                                          ? sliderNum
-                                          : (
+                                    : buyType === "Plan_Limit"
+                                      ? {
+                                        price: parseFloat(buyPrice),
+                                        origQty:
+                                          swapCurrency === 0
+                                            ? sliderNum
+                                            : (
                                               (sliderNum * leverageViewNum) /
                                               parseFloat(wareHousedPrice)
                                             ).toFixed(2),
-                                      side: "BUY",
-                                      symbol: newTrade
-                                        ? newTrade.split("USDT")[0] + "-USDT"
-                                        : nowTrade,
-                                      leverage: leverageViewNum,
-                                      type: "STOP_LIMIT",
-                                      stopPrice: stopPrice
-                                    }
-                                  : {
-                                      origQty:
-                                        swapCurrency === 0
-                                          ? sliderNum
-                                          : (
+                                        side: "BUY",
+                                        symbol: newTrade
+                                          ? newTrade.split("USDT")[0] + "-USDT"
+                                          : nowTrade,
+                                        leverage: leverageViewNum,
+                                        type: "STOP_LIMIT",
+                                        stopPrice: stopPrice
+                                      }
+                                      : {
+                                        origQty:
+                                          swapCurrency === 0
+                                            ? sliderNum
+                                            : (
                                               (sliderNum * leverageViewNum) /
                                               parseFloat(wareHousedPrice)
                                             ).toFixed(2),
-                                      side: "BUY",
-                                      symbol: newTrade
-                                        ? newTrade.split("USDT")[0] + "-USDT"
-                                        : nowTrade,
-                                      leverage: leverageViewNum,
-                                      type: "STOP_MARKET",
-                                      stopPrice: stopPrice
-                                    };
+                                        side: "BUY",
+                                        symbol: newTrade
+                                          ? newTrade.split("USDT")[0] + "-USDT"
+                                          : nowTrade,
+                                        leverage: leverageViewNum,
+                                        type: "STOP_MARKET",
+                                        stopPrice: stopPrice
+                                      };
                               setLoading(true);
                               api
                                 .postData("/order/futures/open-order", obj)
@@ -2135,15 +2142,15 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                                     getEntrust();
                                     getPosition();
                                   } else {
-                                    
+
                                     if (
                                       x.data.msg.includes("未達最低開單數量")
                                     ) {
                                       alert(
                                         t("lessQtyMin") +
-                                          x.data.msg.split(
-                                            "未達最低開單數量"
-                                          )[1]
+                                        x.data.msg.split(
+                                          "未達最低開單數量"
+                                        )[1]
                                       );
                                     } else if (
                                       x.data.msg.includes(
@@ -2152,9 +2159,9 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                                     ) {
                                       alert(
                                         t("overPositionValue") +
-                                          x.data.msg.split(
-                                            "超過合約最大持倉價值"
-                                          )[1]
+                                        x.data.msg.split(
+                                          "超過合約最大持倉價值"
+                                        )[1]
                                       );
                                     } else {
                                       alert(x.data.msg);
@@ -2193,30 +2200,30 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                               var obj =
                                 buyType === "Limit"
                                   ? {
-                                      price: parseFloat(buyPrice),
-                                      origQty:
-                                        swapCurrency === 0
-                                          ? sliderNum
-                                          : (
-                                              (sliderNum * leverageViewNum) /
-                                              parseFloat(wareHousedPrice)
-                                            ).toFixed(2),
-                                      side: "SELL",
-                                      symbol: newTrade
-                                        ? newTrade.split("USDT")[0] + "-USDT"
-                                        : nowTrade,
-                                      leverage: leverageViewNum,
-                                      type: "LIMIT"
-                                    }
+                                    price: parseFloat(buyPrice),
+                                    origQty:
+                                      swapCurrency === 0
+                                        ? sliderNum
+                                        : (
+                                          (sliderNum * leverageViewNum) /
+                                          parseFloat(wareHousedPrice)
+                                        ).toFixed(2),
+                                    side: "SELL",
+                                    symbol: newTrade
+                                      ? newTrade.split("USDT")[0] + "-USDT"
+                                      : nowTrade,
+                                    leverage: leverageViewNum,
+                                    type: "LIMIT"
+                                  }
                                   : buyType === "Market"
-                                  ? {
+                                    ? {
                                       origQty:
                                         swapCurrency === 0
                                           ? sliderNum
                                           : (
-                                              (sliderNum * leverageViewNum) /
-                                              parseFloat(wareHousedPrice)
-                                            ).toFixed(2),
+                                            (sliderNum * leverageViewNum) /
+                                            parseFloat(wareHousedPrice)
+                                          ).toFixed(2),
                                       side: "SELL",
                                       symbol: newTrade
                                         ? newTrade.split("USDT")[0] + "-USDT"
@@ -2224,40 +2231,40 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                                       leverage: leverageViewNum,
                                       type: "MARKET"
                                     }
-                                  : buyType === "Plan_Limit"
-                                  ? {
-                                      price: parseFloat(buyPrice),
-                                      origQty:
-                                        swapCurrency === 0
-                                          ? sliderNum
-                                          : (
+                                    : buyType === "Plan_Limit"
+                                      ? {
+                                        price: parseFloat(buyPrice),
+                                        origQty:
+                                          swapCurrency === 0
+                                            ? sliderNum
+                                            : (
                                               (sliderNum * leverageViewNum) /
                                               parseFloat(wareHousedPrice)
                                             ).toFixed(2),
-                                      side: "SELL",
-                                      symbol: newTrade
-                                        ? newTrade.split("USDT")[0] + "-USDT"
-                                        : nowTrade,
-                                      leverage: leverageViewNum,
-                                      type: "STOP_LIMIT",
-                                      stopPrice: stopPrice
-                                    }
-                                  : {
-                                      origQty:
-                                        swapCurrency === 0
-                                          ? sliderNum
-                                          : (
+                                        side: "SELL",
+                                        symbol: newTrade
+                                          ? newTrade.split("USDT")[0] + "-USDT"
+                                          : nowTrade,
+                                        leverage: leverageViewNum,
+                                        type: "STOP_LIMIT",
+                                        stopPrice: stopPrice
+                                      }
+                                      : {
+                                        origQty:
+                                          swapCurrency === 0
+                                            ? sliderNum
+                                            : (
                                               (sliderNum * leverageViewNum) /
                                               parseFloat(wareHousedPrice)
                                             ).toFixed(2),
-                                      side: "SELL",
-                                      symbol: newTrade
-                                        ? newTrade.split("USDT")[0] + "-USDT"
-                                        : nowTrade,
-                                      leverage: leverageViewNum,
-                                      type: "STOP_MARKET",
-                                      stopPrice: stopPrice
-                                    };
+                                        side: "SELL",
+                                        symbol: newTrade
+                                          ? newTrade.split("USDT")[0] + "-USDT"
+                                          : nowTrade,
+                                        leverage: leverageViewNum,
+                                        type: "STOP_MARKET",
+                                        stopPrice: stopPrice
+                                      };
                               setLoading(true);
                               api
                                 .postData("/order/futures/open-order", obj)
@@ -2275,9 +2282,9 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                                     ) {
                                       alert(
                                         t("lessQtyMin") +
-                                          x.data.msg.split(
-                                            "未達最低開單數量"
-                                          )[1]
+                                        x.data.msg.split(
+                                          "未達最低開單數量"
+                                        )[1]
                                       );
                                     } else if (
                                       x.data.msg.includes(
@@ -2286,9 +2293,9 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                                     ) {
                                       alert(
                                         t("overPositionValue") +
-                                          x.data.msg.split(
-                                            "超過合約最大持倉價值"
-                                          )[1]
+                                        x.data.msg.split(
+                                          "超過合約最大持倉價值"
+                                        )[1]
                                       );
                                     } else {
                                       alert(x.data.msg);
@@ -2438,18 +2445,18 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                             </TradePositionCardSmallTitleText>
                             <TradePositionCardSmallValueText>
                               {parseFloat(x.avgPrice.toFixed(6)) < 0.006 &&
-                              parseFloat(x.avgPrice.toFixed(6)) > 0
+                                parseFloat(x.avgPrice.toFixed(6)) > 0
                                 ? x.avgPrice.toFixed(6)
                                 : parseFloat(x.avgPrice.toFixed(6)) < 0.1 &&
                                   parseFloat(x.avgPrice.toFixed(6)) > 0.006
-                                ? x.avgPrice.toFixed(6).toString().slice(0, -1)
-                                : parseFloat(x.avgPrice.toFixed(6)) < 1 &&
-                                  parseFloat(x.avgPrice.toFixed(6)) > 0.1
-                                ? x.avgPrice.toFixed(6).toString().slice(0, -2)
-                                : parseFloat(x.avgPrice.toFixed(6)) < 50 &&
-                                  parseFloat(x.avgPrice.toFixed(6)) > 1
-                                ? x.avgPrice.toFixed(6).toString().slice(0, -3)
-                                : x.avgPrice.toFixed(6).toString().slice(0, -4)}
+                                  ? x.avgPrice.toFixed(6).toString().slice(0, -1)
+                                  : parseFloat(x.avgPrice.toFixed(6)) < 1 &&
+                                    parseFloat(x.avgPrice.toFixed(6)) > 0.1
+                                    ? x.avgPrice.toFixed(6).toString().slice(0, -2)
+                                    : parseFloat(x.avgPrice.toFixed(6)) < 50 &&
+                                      parseFloat(x.avgPrice.toFixed(6)) > 1
+                                      ? x.avgPrice.toFixed(6).toString().slice(0, -3)
+                                      : x.avgPrice.toFixed(6).toString().slice(0, -4)}
                             </TradePositionCardSmallValueText>
                           </TradePositionCardDetailColumnContainer>
                         </TradePositionCardDetailRowContainer>
@@ -2460,26 +2467,26 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                             </TradePositionCardSmallTitleText>
                             <TradePositionCardSmallValueText>
                               {parseFloat(getRemark(x.symbol)) < 0.006 &&
-                              parseFloat(getRemark(x.symbol)) > 0
+                                parseFloat(getRemark(x.symbol)) > 0
                                 ? getRemark(x.symbol)
                                 : parseFloat(getRemark(x.symbol)) < 0.1 &&
                                   parseFloat(getRemark(x.symbol)) > 0.006
-                                ? getRemark(x.symbol)
+                                  ? getRemark(x.symbol)
                                     .toString()
                                     .slice(0, -1)
-                                : parseFloat(getRemark(x.symbol)) < 1 &&
-                                  parseFloat(getRemark(x.symbol)) > 0.1
-                                ? getRemark(x.symbol)
-                                    .toString()
-                                    .slice(0, -2)
-                                : parseFloat(getRemark(x.symbol)) < 50 &&
-                                  parseFloat(getRemark(x.symbol)) > 1
-                                ? getRemark(x.symbol)
-                                    .toString()
-                                    .slice(0, -3)
-                                : getRemark(x.symbol)
-                                    .toString()
-                                    .slice(0, -4)}
+                                  : parseFloat(getRemark(x.symbol)) < 1 &&
+                                    parseFloat(getRemark(x.symbol)) > 0.1
+                                    ? getRemark(x.symbol)
+                                      .toString()
+                                      .slice(0, -2)
+                                    : parseFloat(getRemark(x.symbol)) < 50 &&
+                                      parseFloat(getRemark(x.symbol)) > 1
+                                      ? getRemark(x.symbol)
+                                        .toString()
+                                        .slice(0, -3)
+                                      : getRemark(x.symbol)
+                                        .toString()
+                                        .slice(0, -4)}
                             </TradePositionCardSmallValueText>
                           </TradePositionCardDetailColumnContainer>
                           <TradePositionCardDetailColumnContainer>
@@ -3043,37 +3050,37 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
         </View>
       </Modal>
       <View style={styles.centeredView}>
-      <Modal2
-        animationType="slide"
-        transparent={true}
-        visible={isLeverageViewVisible}>
-        <View style={styles.modalView}>
-        <View
-          style={{
-            backgroundColor: "#242D37",
-            borderTopLeftRadius: 8,
-            borderTopRightRadius: 8,
-            // paddingLeft: 16,
-            // paddingRight: 16,
-            // paddingBottom: 30
-          }}
-        >
-          <ModalHeaderContainer>
-            <TouchableOpacity
-              onPress={() => {
-                setIsLeverageViewVisible(false);
+        <Modal2
+          animationType="slide"
+          transparent={true}
+          visible={isLeverageViewVisible}>
+          <View style={styles.modalView}>
+            <View
+              style={{
+                backgroundColor: "#242D37",
+                borderTopLeftRadius: 8,
+                borderTopRightRadius: 8,
+                // paddingLeft: 16,
+                // paddingRight: 16,
+                // paddingBottom: 30
               }}
             >
-              <ModalLeftCancelButton
-                source={require("../../assets/images/trade/cancel.png")}
-              />
-            </TouchableOpacity>
-            <ModalHedaerTitleText>{t("leverage")}</ModalHedaerTitleText>
-            <ModalEmptyDiv></ModalEmptyDiv>
-          </ModalHeaderContainer>
+              <ModalHeaderContainer>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsLeverageViewVisible(false);
+                  }}
+                >
+                  <ModalLeftCancelButton
+                    source={require("../../assets/images/trade/cancel.png")}
+                  />
+                </TouchableOpacity>
+                <ModalHedaerTitleText>{t("leverage")}</ModalHedaerTitleText>
+                <ModalEmptyDiv></ModalEmptyDiv>
+              </ModalHeaderContainer>
 
-          <LeverageViewModalSliderContainer>
-            {/* <Slider
+              <LeverageViewModalSliderContainer>
+                {/* <Slider
                             value={sliderNum}
                             onValueChange={() => setSliderNum(sliderNum)}
                             minimumValue={0}
@@ -3089,15 +3096,15 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                             trackMarks={[1, 2, 3, 4, 5, 6]}
                             step={1}
                         /> */}
-            <SliderContainer
-              trackMarks={[1, 25, 50, 75, 100, 125]}
-              sliderValue={[leverageViewNum]}
-              onValueChangeSliderNum={setLeverageViewNum}
-              isModalVisable={setIsLeverageViewVisible}
-              positionNum={balance === 0 ? "0" : canOpen.toString()}
-              balance={balance}
-            >
-              {/* <Slider
+                <SliderContainer
+                  trackMarks={[1, 25, 50, 75, 100, 125]}
+                  sliderValue={[leverageViewNum]}
+                  onValueChangeSliderNum={setLeverageViewNum}
+                  isModalVisable={setIsLeverageViewVisible}
+                  positionNum={balance === 0 ? "0" : canOpen.toString()}
+                  balance={balance}
+                >
+                  {/* <Slider
                 renderThumbComponent={CustomThumb}
                 minimumTrackTintColor={"#F4F5F6"}
                 maximumTrackTintColor={"#333C47"}
@@ -3113,84 +3120,84 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                 minimumValue={1}
                 step={1}
               /> */}
-            </SliderContainer>
-            {/* <ModalHedaerTitleText>{sliderNum}</ModalHedaerTitleText> */}
-          </LeverageViewModalSliderContainer>
-        </View>
-        </View>
+                </SliderContainer>
+                {/* <ModalHedaerTitleText>{sliderNum}</ModalHedaerTitleText> */}
+              </LeverageViewModalSliderContainer>
+            </View>
+          </View>
 
-      </Modal2>
-      <Modal2
-        animationType="slide"
-        transparent={true}
-        visible={isBuyTypeModalVisible}>
+        </Modal2>
+        <Modal2
+          animationType="slide"
+          transparent={true}
+          visible={isBuyTypeModalVisible}>
           <View style={styles.modalView}>
-          <BuyTypeTitleContainer>
-            <BuyTypeModalTitleText>{t("orderType")}</BuyTypeModalTitleText>
-          </BuyTypeTitleContainer>
-          <BuyTypeModalPickerButton
-            onPress={() => {
-              setBuyType("Limit"), setIsBuyTypeModalVisible(false);
-            }}
-          >
-            <BuyTypeModalPickerButtonText>
-              {t("limitedOrder")}
-            </BuyTypeModalPickerButtonText>
-            {buyType === "Limit" && (
-              <ModalSelectedImage
-                source={require("../../assets/images/trade/selected.png")}
-              />
-            )}
-          </BuyTypeModalPickerButton>
-          <BuyTypeModalLineText></BuyTypeModalLineText>
-          <BuyTypeModalPickerButton
-            onPress={() => {
-              setBuyType("Market"), setIsBuyTypeModalVisible(false);
-            }}
-          >
-            <BuyTypeModalPickerButtonText>
-              {t("marketOrder")}
-            </BuyTypeModalPickerButtonText>
-            {buyType === "Market" && (
-              <ModalSelectedImage
-                source={require("../../assets/images/trade/selected.png")}
-              />
-            )}
-          </BuyTypeModalPickerButton>
-          <BuyTypeModalLineText></BuyTypeModalLineText>
-          <BuyTypeModalPickerButton
-            onPress={() => {
-              setBuyType("Plan_Limit"), setIsBuyTypeModalVisible(false);
-            }}
-          >
-            <BuyTypeModalPickerButtonText>
-              {t("stopLimitOrder")}
-            </BuyTypeModalPickerButtonText>
-            {buyType === "Plan_Limit" && (
-              <ModalSelectedImage
-                source={require("../../assets/images/trade/selected.png")}
-              />
-            )}
-          </BuyTypeModalPickerButton>
-          <BuyTypeModalLineText></BuyTypeModalLineText>
-          <BuyTypeModalPickerButton
-            onPress={() => {
-              setBuyType("Plan_Market"), setIsBuyTypeModalVisible(false);
-            }}
-          >
-            <BuyTypeModalPickerButtonText>
-              {t("stopMarketOrder")}
-            </BuyTypeModalPickerButtonText>
-            {buyType === "Plan_Market" && (
-              <ModalSelectedImage
-                source={require("../../assets/images/trade/selected.png")}
-              />
-            )}
-          </BuyTypeModalPickerButton>
+            <BuyTypeTitleContainer>
+              <BuyTypeModalTitleText>{t("orderType")}</BuyTypeModalTitleText>
+            </BuyTypeTitleContainer>
+            <BuyTypeModalPickerButton
+              onPress={() => {
+                setBuyType("Limit"), setIsBuyTypeModalVisible(false);
+              }}
+            >
+              <BuyTypeModalPickerButtonText>
+                {t("limitedOrder")}
+              </BuyTypeModalPickerButtonText>
+              {buyType === "Limit" && (
+                <ModalSelectedImage
+                  source={require("../../assets/images/trade/selected.png")}
+                />
+              )}
+            </BuyTypeModalPickerButton>
+            <BuyTypeModalLineText></BuyTypeModalLineText>
+            <BuyTypeModalPickerButton
+              onPress={() => {
+                setBuyType("Market"), setIsBuyTypeModalVisible(false);
+              }}
+            >
+              <BuyTypeModalPickerButtonText>
+                {t("marketOrder")}
+              </BuyTypeModalPickerButtonText>
+              {buyType === "Market" && (
+                <ModalSelectedImage
+                  source={require("../../assets/images/trade/selected.png")}
+                />
+              )}
+            </BuyTypeModalPickerButton>
+            <BuyTypeModalLineText></BuyTypeModalLineText>
+            <BuyTypeModalPickerButton
+              onPress={() => {
+                setBuyType("Plan_Limit"), setIsBuyTypeModalVisible(false);
+              }}
+            >
+              <BuyTypeModalPickerButtonText>
+                {t("stopLimitOrder")}
+              </BuyTypeModalPickerButtonText>
+              {buyType === "Plan_Limit" && (
+                <ModalSelectedImage
+                  source={require("../../assets/images/trade/selected.png")}
+                />
+              )}
+            </BuyTypeModalPickerButton>
+            <BuyTypeModalLineText></BuyTypeModalLineText>
+            <BuyTypeModalPickerButton
+              onPress={() => {
+                setBuyType("Plan_Market"), setIsBuyTypeModalVisible(false);
+              }}
+            >
+              <BuyTypeModalPickerButtonText>
+                {t("stopMarketOrder")}
+              </BuyTypeModalPickerButtonText>
+              {buyType === "Plan_Market" && (
+                <ModalSelectedImage
+                  source={require("../../assets/images/trade/selected.png")}
+                />
+              )}
+            </BuyTypeModalPickerButton>
           </View>
         </Modal2>
       </View>
-      
+
     </Container>
   );
 };
@@ -3200,13 +3207,13 @@ const styles = StyleSheet.create({
     // display:"flex",
     // justifyContent:"space-between",
     // marginTop: 22,
-    backgroundColor:"black"
+    backgroundColor: "black"
   },
   modalView: {
-    width:"100%",
-    backgroundColor:"#242D37",
-    position:"absolute",
-    bottom:0,
+    width: "100%",
+    backgroundColor: "#242D37",
+    position: "absolute",
+    bottom: 0,
     // display:"flex",
     // justifyContent:"space-between",
     // alignItems:"center",
@@ -3219,7 +3226,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    padding:20
+    padding: 20
   },
   container: {
     backgroundColor: "#18222D",

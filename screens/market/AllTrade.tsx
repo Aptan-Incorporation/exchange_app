@@ -116,14 +116,15 @@ const MarketTradeScreen = ({ navigation }: RootStackScreenProps<"MarketTradeScre
     });
   };
 
-  useEffect(async () => {
+  useEffect(() => {
+    (async () => {
     let token = await AsyncStorage.getItem("token");  
     if (token) {
       getFavorite();
     }
     if(context){
       setArray(_.orderBy(context,["s"]));
-    }
+    }})()
   }, []);
 
   useEffect(() => {
