@@ -86,7 +86,6 @@ const ResetPassword = ({ navigation }: RootStackScreenProps<"ResetPassword">) =>
         }else{
           setLoading(true)
           api.postData("/user/reset/password",{current:password,changed:password2}).then(x=>{
-            console.log(x)
             if(x.status === "OK"){
                 setLoading(false)
                 navigation.goBack()

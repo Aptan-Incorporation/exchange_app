@@ -153,7 +153,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
         // let gfg = context.sort(function (a:any, b:any) {
         //   return a.s > b.s;
         // });
-        setArray(_.orderBy(context,["s"]));
+        // setArray(_.orderBy(context,["s"]));
         let a = [];
         for(let i = 0;i < favorite.length;i++){
           for(let j = 0;j<context.length;j++){
@@ -181,7 +181,7 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
       // let gfg = context.sort(function (a:any, b:any) {
       //   return a.s > b.s;
       // });
-      setArray(_.orderBy(context,["s"]));
+      setArray(context);
       var filteredData = filterByName(_.orderBy(context,["s"]));
       setArray(filteredData);
     } else {

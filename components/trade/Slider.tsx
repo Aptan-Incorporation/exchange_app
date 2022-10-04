@@ -1,11 +1,12 @@
 import * as React from "react";
 import { Text, TouchableOpacity, View, Image, Alert } from "react-native"
-import { Slider } from '@miblanchard/react-native-slider';
+// import { Slider } from '@miblanchard/react-native-slider';
 import styled from "styled-components"
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from "react"
 import { useTranslation } from "react-i18next";
+import { Slider } from 'react-native';
 
 const Container = styled(View)`
 display: flex;
@@ -99,9 +100,7 @@ const SliderContainer = (props: {
     balance:number
 }) => {
     const { sliderValue, trackMarks, positionNum, onValueChangeSliderNum, isModalVisable,balance } = props;
-    const [value, setValue] = React.useState(
-        sliderValue ? sliderValue : DEFAULT_VALUE,
-    );
+    const [value, setValue] = React.useState(0);
     let renderTrackMarkComponent: React.ReactNode;
     const [trade, setTrade] = React.useState("");
     if (trackMarks?.length && (!Array.isArray(value) || value?.length === 1)) {
@@ -147,6 +146,7 @@ const SliderContainer = (props: {
     useEffect(async()=>{
         let trade = await AsyncStorage.getItem("trade")
         setTrade(trade ? trade.split("USDT")[0]+"-USDT" :"BTC-USDT")
+        setValue(sliderValue[0])
     },[])
 
     return (
@@ -175,7 +175,21 @@ const SliderContainer = (props: {
                     <LeverageViewModalAddImage source={require("../../assets/images/trade/add.png")} />
                 </TouchableOpacity>
             </LeverageViewModalRowContainer>
-            {renderChildren()}
+            {/* {renderChildren()} */}
+            <Slider
+                minimumValue={0}
+                maximumValue={125}
+                step={1}
+                minimumTrackTintColor="#F4F5F6"
+                maximumTrackTintColor="#333C47"
+                thumbImage={require("../../assets/images/trade/indicator2.png")}
+                onValueChange={(x)=>{
+                    setValue(x)
+                    // setFlag(true)
+                    // setNewInputNum(positionString) 
+                }}
+                value={value}
+            />
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                 <LeverageText>1X</LeverageText>
                 <LeverageText style={{ paddingLeft: 5 }}>25X</LeverageText>
@@ -203,7 +217,6 @@ const SliderContainer = (props: {
                     symbol:trade
                 }
                 api.postData("/order/position/adjust-leverage",obj).then(x=>{
-                    console.log(x)
                     if(x.status !== 400){
                         AsyncStorage.setItem("leverage",value.length ? value[0].toString():parseInt(value).toString())
                         sendDataLeverageModal() 

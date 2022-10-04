@@ -97,7 +97,6 @@ const Register = ({ navigation }: RootStackScreenProps<"Register">) => {
           }))
           setLoading(true)
           api.postData("/auth/account/check",{account:email}).then(x=>{
-            console.log(x)
             if(x.status === "OK"){
               api.postData("/auth/email/verify-code",{ email:email }).then(x=>{
                 setLoading(false)

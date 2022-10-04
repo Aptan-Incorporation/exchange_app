@@ -468,7 +468,6 @@ const HistoryScreen = ({
 
     const getHistoryEntrust = () => {
         api.get("/investor/future").then((x) => {
-            console.log(x)
             if(x.status != 400 && x.status != 401){
             setEntrustArray(x.data);
             }

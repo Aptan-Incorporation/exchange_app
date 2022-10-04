@@ -231,7 +231,6 @@ const Payments = ({ navigation, route }: RootStackScreenProps<"Payments">) => {
         setLoading(true)
         api.delete(`/user/payment/${paymentID}`)
             .then((x: any) => {
-                console.log(x)
                 if (x.status != 400 && x.status != 401) {
                     refreshPageAlert();
                 } else {

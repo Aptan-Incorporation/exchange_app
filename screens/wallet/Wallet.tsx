@@ -544,7 +544,6 @@ const WalletScreen = ({
             sum = sum + positionArray[i].profitAndLoss
         }
         setPosition(sum)
-        console.log(positionArray)
     },[positionArray])
     return (
         <Container insets={insets.top}>

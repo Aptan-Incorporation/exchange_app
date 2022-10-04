@@ -66,30 +66,6 @@ const MarketTradeScreen = ({ navigation }: RootStackScreenProps<"MarketTradeScre
   const [favorite, setFavorite] = useState([""]);
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
-  const [favorite2, setFavorite2] = useState([
-    {
-      E: "",
-      P: "",
-      c: "",
-      e: "",
-      p: "",
-      s: "",
-      v: "",
-      w: ""
-    }
-  ]);
-  const [favorite3, setFavorite3] = useState([
-    {
-      E: "",
-      P: "",
-      c: "",
-      e: "",
-      p: "",
-      s: "",
-      v: "",
-      w: ""
-    }
-  ]);
   const {market:context} = useContext(Context)
   const [checkedState, setCheckedState] = useState(new Array(context.length).fill(false));
 
@@ -130,8 +106,6 @@ const MarketTradeScreen = ({ navigation }: RootStackScreenProps<"MarketTradeScre
             }
           }
         }
-        setFavorite2(a)
-        setFavorite3(a)
       }else if(x.status == 401){
         AsyncStorage.removeItem("token")
       }else{
@@ -161,7 +135,6 @@ const MarketTradeScreen = ({ navigation }: RootStackScreenProps<"MarketTradeScre
     //     }
     //   }
     // }
-    setFavorite2(a)
     setArray(context);
     var filteredData = filterByName(context);
     setArray(filteredData);
@@ -253,17 +226,13 @@ const MarketTradeScreen = ({ navigation }: RootStackScreenProps<"MarketTradeScre
               return (
                 <>
                   {x.s === "BTCUSDT" ? (
-                    <TouchableOpacity
+                    <View
                       style={{
                         display: "flex",
                         flexDirection: "row",
                         justifyContent: "space-between",
                         marginTop: 24,
                         alignItems: "center"
-                      }}
-                      onPress={() => {
-                        AsyncStorage.setItem("trade","BTCUSDT")
-                        navigation.goBack();
                       }}
                     >
                       <View
@@ -330,9 +299,9 @@ const MarketTradeScreen = ({ navigation }: RootStackScreenProps<"MarketTradeScre
                           {x.s}
                         </Text>
                       </View>
-                    </TouchableOpacity>
+                    </View>
                   ) : (
-                    <TouchableOpacity
+                    <View
                       style={{
                         display: "flex",
                         flexDirection: "row",
@@ -340,10 +309,7 @@ const MarketTradeScreen = ({ navigation }: RootStackScreenProps<"MarketTradeScre
                         marginTop: 24,
                         alignItems: "center"
                       }}
-                      onPress={()=>{
-                        AsyncStorage.setItem("trade",x.s.split("-")[0]+"USDT")
-                        navigation.goBack();
-                      }}
+                      
                     >
                       <View
                         style={{
@@ -409,7 +375,7 @@ const MarketTradeScreen = ({ navigation }: RootStackScreenProps<"MarketTradeScre
                           {x.s}
                         </Text>
                       </View>
-                    </TouchableOpacity>
+                    </View>
                   )}
                 </>
               );

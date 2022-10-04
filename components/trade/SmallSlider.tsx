@@ -1,9 +1,10 @@
 import * as React from "react";
 import { View, TextInput, Text } from "react-native"
-import { Slider } from '@miblanchard/react-native-slider';
+// import { Slider } from '@miblanchard/react-native-slider';
 import styled from "styled-components"
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { Slider } from 'react-native';
 
 const Container = styled(View)`
 display: flex;
@@ -43,7 +44,7 @@ const DEFAULT_VALUE = 0;
 
 
 const SliderContainer = (props: {
-    children: React.ReactElement;
+    // children: React.ReactElement;
     sliderValue?: Array<number>;
     trackMarks?: Array<number>;
     positionNum: string;
@@ -53,9 +54,7 @@ const SliderContainer = (props: {
     trade:string
 }) => {
     const { sliderValue, trackMarks, positionNum, swapCurrency, onChangeSliderValue,balance,trade } = props;
-    const [value, setValue] = React.useState(
-        sliderValue ? sliderValue : DEFAULT_VALUE,
-    );
+    const [value, setValue] = React.useState(0);
     let renderTrackMarkComponent: React.ReactNode;
     const [flag, setFlag] = React.useState(false);
 
@@ -81,13 +80,12 @@ const SliderContainer = (props: {
                 if (!!child && child.type === Slider) {
                     return React.cloneElement(child, {
                         onValueChange: setValue,
-                        renderTrackMarkComponent,
+                        // renderTrackMarkComponent,
                         onSlidingComplete: () => { 
-                            console.log(positionString)
                             setFlag(true)
                             setNewInputNum(positionString) 
                         },
-                        trackMarks,
+                        // trackMarks,
                         value,
                     });
                 }
@@ -101,19 +99,16 @@ const SliderContainer = (props: {
     let positionString =  (parseFloat(((parseFloat(positionNum) / 100) * num).toFixed(3))).toString();
     const [newInputNum, setNewInputNum] = React.useState("");
 
-    const returnValue = (() => {
-        onChangeSliderValue(parseFloat(newInputNum))
-    });
+    // const returnValue = (() => {
+    //     onChangeSliderValue(parseFloat(newInputNum))
+    // });
     const { t } = useTranslation();
     
     useEffect(() => {
-        // console.log(positionString)
-        // if(positionString != "0" && flag){
-        //     setNewInputNum(positionString)
-        // }
         if (parseFloat(newInputNum) > parseFloat(positionNum)) {
             setValue(100)
             setNewInputNum(positionNum)
+            onChangeSliderValue(parseFloat(positionNum)) 
         }
     },[newInputNum,positionNum])
 
@@ -131,12 +126,15 @@ const SliderContainer = (props: {
                     placeholder={t("amount")}
                     value={newInputNum}
                     onChangeText={(newInputNum) => { 
-                        console.log(newInputNum)
                         setFlag(false)
                         if(newInputNum){
-                            setNewInputNum(newInputNum), setValue(Math.round(parseFloat(newInputNum) / parseFloat(positionNum) * 100)) 
+                            setNewInputNum(newInputNum), 
+                            setValue(Math.round(parseFloat(newInputNum) / parseFloat(positionNum) * 100)) 
+                            onChangeSliderValue(parseFloat(newInputNum)) 
+
                         }else{
                             setNewInputNum("")
+                            onChangeSliderValue(0)
                         }
                     }}
                     /* onChangeText={(value) => { (value != null&&undefined) && setValue(parseFloat(value))}} */
@@ -154,9 +152,27 @@ const SliderContainer = (props: {
                         </TradeFunctionNumberInputRightContainer>
                 }
             </TradeFunctionNumberInputContainer>
-
-            {renderChildren()}
-            {returnValue()}
+            <Slider
+                minimumValue={0}
+                maximumValue={100}
+                step={1}
+                minimumTrackTintColor="#F4F5F6"
+                maximumTrackTintColor="#333C47"
+                thumbImage={require("../../assets/images/trade/indicator2.png")}
+                onValueChange={(x)=>{
+                    setValue(x)
+                    // setFlag(true)
+                    // setNewInputNum(positionString) 
+                }}
+                onSlidingComplete={() => { 
+                    setFlag(true)
+                    setNewInputNum(positionString)
+                    onChangeSliderValue(parseFloat(positionString)) 
+                }}
+                value={value}
+            />
+            
+            {/* {returnValue()} */}
             <View style={{ paddingTop: 10 }}>
             </View>
 

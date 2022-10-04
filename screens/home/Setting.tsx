@@ -55,12 +55,10 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
     setEmail(JSON.parse(user!).account);
     setUserId(JSON.parse(user!).userId);
     api.getData("/user/security").then(x => {
-      // console.log(x)
       setKyc(x.data);
     });
     const interval = setInterval(() => {
       api.getData("/user/security").then(x => {
-        // console.log(x)
         setKyc(x.data);
       });
 
@@ -141,7 +139,6 @@ const Setting = ({ navigation }: RootStackScreenProps<"Setting">) => {
               justifyContent: "space-between"
             }}
             onPress={() => {
-              console.log(kyc.googleAuth)
               if(kyc.googleAuth){
                 navigation.navigate("ResetGoogle");
               }else{

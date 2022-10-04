@@ -65,8 +65,6 @@ const IdentityVerifyStep2 = ({ navigation }: RootStackScreenProps<"IdentityVerif
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
       setImage(result.uri);
     }
@@ -81,8 +79,6 @@ const IdentityVerifyStep2 = ({ navigation }: RootStackScreenProps<"IdentityVerif
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
       setImage2(result.uri);
     }
@@ -91,7 +87,6 @@ const IdentityVerifyStep2 = ({ navigation }: RootStackScreenProps<"IdentityVerif
   useEffect(async ()=>{
     let identity = await AsyncStorage.getItem("identity")
     let user = JSON.parse(identity!)
-    // console.log(user)
 
   },[])
   return (
@@ -138,19 +133,13 @@ const IdentityVerifyStep2 = ({ navigation }: RootStackScreenProps<"IdentityVerif
                 address:user.address,
                 birthday:user.birth
             }
-            // console.log(data)
-            // for (const [key, value] of Object.entries(data)) {
-            //     formData.append(key, value)
-            // }
             formData.append("idCardFront", {uri:image,name:"123"})
             formData.append("idCardBack", {uri:image2,name:"456"})
             formData.append("name", user.name)
             formData.append("address", user.address)
             formData.append("birthday", user.birth)
-            console.log(formData)
             api.postFormData("/user/kyc",formData).then(x=>{
               setLoading(false)
-              console.log(x)
               if(x.status !== 400){
                 if(x.status === 413){
                   Alert.alert("檔案太大")

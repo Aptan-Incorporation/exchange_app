@@ -82,7 +82,6 @@ function RootNavigator() {
   const navigation = useNavigation();
   
   useEffect(()=>{
-    // console.log(context)
 
     if(context.data){
       // Alert.alert(

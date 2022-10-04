@@ -246,7 +246,7 @@ const PaymentsCreate = ({ navigation, route }: RootStackScreenProps<"PaymentsCre
                 };
             })
             .catch(() => {
-                console.log(Error);
+                // console.log(Error);
             })
     };
 

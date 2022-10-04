@@ -426,7 +426,6 @@ const C2cSellSecond = (props: {
     if(status === 4){
       api.postData(`/otc/api/otcOrder/${BuyId}/check`)
       .then((x) => {
-        console.log(x)
         if(x.status === 400){
           alert(x.data.msg)
         }else{
@@ -563,7 +562,6 @@ const C2cSellSecond = (props: {
   .get(`/otc/api/otcOrder/${BuyId}`)
   .then((x: any) => {
     if(x.status){
-      console.log(x)
       setStatus2(x.status)
     }
   })
@@ -589,7 +587,6 @@ const C2cSellSecond = (props: {
         })
         .catch(Error => console.log(Error));
     }, 2000);
-    console.log(status2)
     if (status2 === 3) {
       setSubmitText("等待買家確認交易");
     }else if(status2 === 4) {
@@ -756,7 +753,6 @@ const C2cSellSecond = (props: {
                     },
                     { text: "確定", onPress: () => { 
                         api.postData(`/otc/api/otcOrder/${BuyId}/cancel`, {}).then(x => {
-                          console.log(x)
                       if (x.status != 400) {
                         alert(t("fiatOrderCanceled"));
                         navigation.goBack()
@@ -797,7 +793,6 @@ const C2cSellSecond = (props: {
                   },
                   { text: t("OK"), onPress: () => { 
                       api.postData(`/otc/api/otcOrder/${BuyId}/appeal`, {}).then(x => {
-                      console.log(x.data)
                   //   if (x.status != 400) {
                   //     alert("訂單申訴成功");
                   //     navigation.goBack()

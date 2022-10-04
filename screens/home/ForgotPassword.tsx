@@ -80,7 +80,6 @@ const ForgotPassword = ({ navigation }: RootStackScreenProps<"ForgotPassword">) 
           }))
           setLoading(true)
           api.postData("/auth/forgot-password",{account:email}).then(x=>{
-            console.log(x)
             if(x.status === "OK"){
               alert("新密碼已寄送至您的信箱")
               navigation.goBack()

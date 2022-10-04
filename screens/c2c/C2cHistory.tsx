@@ -573,24 +573,8 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                 }
             })
             .catch(() => {
-                console.log(Error)
+                // console.log(Error)
         })
-        // const interval = setInterval(() => {
-        //     api.get(`/otc/api/otcOrder/?all=false&status=-1,0,1,3,4,5`)
-        //     .then((x) => {
-        //         setLoading(false)
-        //         if (x.status != 400 && x.status != 401) {
-        //             setWaitingList(x);
-        //         } else {
-        //             Alert.alert(x.data.msg);
-        //         }
-        //     })
-        //     .catch(() => {
-        //         console.log(Error)
-        // })
-
-        // }, 2000);
-        // return () => clearInterval(interval);
     };
     const getCancelList = () => {
         setLoading(true)
@@ -604,7 +588,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                 }
             })
             .catch(() => {
-                console.log(Error)
+                // console.log(Error)
         })
         // const interval = setInterval(() => {
         //     api.get(`/otc/api/otcOrder/?all=false&status=-1,0,1,3,4,5`)
@@ -640,7 +624,7 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                 }
             })
             .catch(() => {
-                console.log(Error)
+                // console.log(Error)
             })
         // const interval = setInterval(() => {
         //     api.get(`/otc/api/otcOrder/?all=false&status=2`)
@@ -1183,7 +1167,6 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                             },
                                                             { text: "確定", onPress: () => { 
                                                                 api.postData(`/otc/api/otcOrder/${x.id}/paid`,{payment:x.payments[0]}).then(x=>{
-                                                                    console.log(x)
                                                                     getWaitingList()
                                                                     getCompleteList()
                                                                 })
@@ -1252,7 +1235,6 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                 <CardBottomStatusText></CardBottomStatusText>
                                                 <CardBottomButton onPress={
                                                     ()=>{
-                                                        console.log(x)
                                                         
                                                         // api.postData(`/otc/api/otcOrder/${x.id}/check`).then(x=>{
                                                         //     console.log(x)
@@ -1272,8 +1254,6 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                 <CardBottomStatusText></CardBottomStatusText>
                                                 <CardBottomButton onPress={
                                                     ()=>{
-                                                        console.log(x)
-
                                                         // api.postData(`/otc/api/otcOrder/${x.id}/check`).then(x=>{
                                                         //     console.log(x)
                                                         //     getWaitingList()
@@ -1311,7 +1291,6 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                             <CardBottomContainer>
                                                 <CardBottomStatusText></CardBottomStatusText>
                                                 <CardBottomButton  onPress={() => {
-                                                    console.log(x)
                                                     // api.postData(`/otc/api/otcOrder/${x.id}/confirm`).then(x=>{
                                                     //     getWaitingList()
                                                     //     getCompleteList()
@@ -1332,7 +1311,6 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
                                                     </TopContainerTimerContainer> */}
                                                 </CardBottomInRowContainer>
                                                 <CardBottomButton onPress={() => {
-                                                     console.log(x)
                                                     // api.postData(`/otc/api/otcOrder/${x.id}/confirm`).then(x=>{
                                                     //     console.log(x)
                                                     //     getWaitingList()

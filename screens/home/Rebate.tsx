@@ -106,7 +106,6 @@ const Rebate = ({ navigation }: RootStackScreenProps<"Rebate">) => {
 
   useEffect(() => {
     api.get("/investor/commission").then(x => {
-      // console.log(x.data)
       let sum = 0;
       setMemberNumber(x.data.memberNumber);
       setRecord(x.data.records.reverse());

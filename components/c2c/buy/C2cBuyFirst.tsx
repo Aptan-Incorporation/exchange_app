@@ -370,7 +370,7 @@ const C2cBuyFirst = (props: {
                 }
             })
             .catch((Error) => {
-                console.log(Error)
+                // console.log(Error)
             })
     };
 

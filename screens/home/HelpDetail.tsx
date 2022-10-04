@@ -92,7 +92,6 @@ const HelpDetail = ({ navigation,route }: RootStackScreenProps<"HelpDetail">) =>
   const [loading, setLoading] = useState(true)
   const { t } = useTranslation();
   const onProductDetailsWebViewMessage = (event:any) => {
-    console.log((parseInt(event.nativeEvent.data)/PixelRatio.get()).toString())
     setWebviewHeight((parseInt(event.nativeEvent.data)/PixelRatio.get()).toString())
   }
   const webViewScript = `

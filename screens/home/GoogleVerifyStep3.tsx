@@ -97,13 +97,11 @@ const GoogleVerifyStep3 = ({
             } else {
               setLoading(true);
               api.postData("/user/google-auth", { code: code }).then(x => {
-                console.log(x);
                 setLoading(false);
                 if (x.status !== 400) {
                   api
                     .postData("/user/google-auth/verify", { code: code })
                     .then(x => {
-                      console.log(x);
                       if (x.status !== 400) {
                         navigation.navigate("Setting");
                       } else {

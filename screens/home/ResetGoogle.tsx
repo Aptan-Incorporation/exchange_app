@@ -144,7 +144,6 @@ const ResetGoogle = ({ navigation }: RootStackScreenProps<"ResetGoogle">) => {
     setPhone(JSON.parse(user!).phone)
     setEmail(JSON.parse(user!).account)
     api.getData("/user/security").then(x => {
-      // console.log(x)
       setKyc(x.data);
     });
     if(emailSend){

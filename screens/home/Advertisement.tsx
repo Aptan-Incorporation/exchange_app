@@ -280,7 +280,7 @@ const Advertisement = ({ navigation, route }: RootStackScreenProps<"Advertisemen
                 }
             })
             .catch(() => {
-                console.log(Error)
+                // console.log(Error)
             })
     };
 

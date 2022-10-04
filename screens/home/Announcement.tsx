@@ -73,11 +73,9 @@ const Announcement = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
   const TextEl = useRef<TextInput | null>(null);
   const { t,i18n } = useTranslation();
   useEffect(() => {
-    console.log(i18n.language)
     let category = "ACTIVITY"
     if(index === -1){
       api.get("/info/announcement?lang="+ i18n.language).then(x=>{
-        console.log(x.data)
         setAnnounce(x.data)
       })
     }else{

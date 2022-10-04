@@ -60,7 +60,6 @@ const IdentityVerifyStep1 = ({ navigation }: RootStackScreenProps<"IdentityVerif
   };
 
   const handleConfirm = (date:any) => {
-    console.log(new Date(date).getTime());
     setBirth(new Date(date).getFullYear() + "年" + (new Date(date).getMonth()+1) +"月" + new Date(date).getDate() +"日")
     setBirthTime(new Date(date).getTime())
     hideDatePicker();

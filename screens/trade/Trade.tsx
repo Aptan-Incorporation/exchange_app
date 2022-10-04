@@ -8,7 +8,8 @@ import {
   ScrollView,
   Dimensions,
   Alert,
-  StyleSheet
+  StyleSheet,
+  Modal as Modal2
 } from "react-native";
 import { Slider } from "@miblanchard/react-native-slider";
 import Modal from "react-native-modal";
@@ -860,16 +861,6 @@ const ModalSelectedImage = styled(Image)`
   height: 28px;
 `;
 
-const ModalYellowSelectedImage = styled(Image)`
-  width: 28px;
-  height: 28px;
-`;
-
-const ModalNextImage = styled(Image)`
-  width: 28px;
-  height: 28px;
-`;
-
 const ModalLeftCancelButton = styled(Image)`
   width: 28px;
   height: 28px;
@@ -1122,6 +1113,7 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
   const [wareHousedPrice, setWareHousedPrice] = useState("");
   const [loading, setLoading] = useState(false);
   const {market:context,position:positionArray,future:entrustArray} = useContext(Context);
+  const [slideValue, setSlideValue] = useState(0)
 //   const positionArray = useContext(PositionContext);
 //   const entrustArray = useContext(FutureContext);
   const toggleBuyTypeModal = () => {
@@ -1296,11 +1288,6 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
         setAsksArray(x.data.asks.reverse());
         setBidsArray(x.data.bids);
       });
-    // axios
-    //     .get(`https://api1.binance.com/api/v3/ticker/price?symbol=${trade.split("-")[0]}USDT`)
-    //     .then((x) => {
-    //         setPrice(x.data.price.slice(0, -6));
-    //     });
   };
 
   const getPrice = (trade: string) => {
@@ -1339,7 +1326,6 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
 
   const getfund = (symbol: string) => {
     api.get(`/market/funding-rate?${symbol}`).then(x => {
-      console.log(x[symbol]);
       setFund(x[symbol]);
     });
   };
@@ -1354,7 +1340,8 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
   };
 
   useEffect(async () => {
-    if (context) {
+    let isApiSubscribed = true;
+    if (context && isApiSubscribed) {
       let a = [];
       for (let i = 0; i < context.length; i++) {
         let obj = {
@@ -1366,6 +1353,7 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
       setTrade(a);
 
       let trade = await AsyncStorage.getItem("trade");
+      let token = await AsyncStorage.getItem("token");
       const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade;
       const remark = _.find(context, function(o) {
         return o.s == t;
@@ -1374,8 +1362,17 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
       // setWareHousedPrice(remark!.c);
       // setBuyPrice(remark!.c)
       setPrice(remark!.c);
+      getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+      if (token) {
+          getBalance(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,swapBuyPosition === "Open" ? "BUY":"SELL")
+      }
     }
+    return () => {
+      // cancel the subscription
+      isApiSubscribed = false;
+    };
   }, [context]);
+
   useEffect(async () => {
     if (context) {
       let trade = await AsyncStorage.getItem("trade");
@@ -1406,6 +1403,7 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
           : remark!.c.slice(0, -4)
       );
     }
+
   }, []);
   
   useEffect(async ()=>{
@@ -1415,8 +1413,8 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
 
   useEffect(async () => {
     if (isFocused) {
-      let inter = await AsyncStorage.getItem("interval");
-      clearInterval(parseInt(inter!));
+      // let inter = await AsyncStorage.getItem("interval");
+      // clearInterval(parseInt(inter!));
       let token = await AsyncStorage.getItem("token");
       let trade = await AsyncStorage.getItem("trade");
       setNewTrade(trade);
@@ -1468,16 +1466,11 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
       if (trade) {
         setValue(trade.split("USDT")[0] + "-USDT");
       }
-      getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+      // getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
       getPrice(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
-      const interval = setInterval(() => {
-          getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
-          if (token) {
-              getBalance(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,swapBuyPosition === "Open" ? "BUY":"SELL")
-          }
-      }, 2000);
-      AsyncStorage.setItem("interval", interval.toString())
-      return () => clearInterval(interval);
+      
+      // AsyncStorage.setItem("interval", interval.toString())
+      // return () => clearInterval(interval);
     } else {
       AsyncStorage.removeItem("trade");
       setValue("BTC-USDT");
@@ -1485,12 +1478,7 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
     }
   }, [isFocused, nowTrade, swapBuyPosition]);
 
-  const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    { label: "Apple", value: "apple" },
-    { label: "Banana", value: "banana" }
-  ]);
   const [isFocus, setIsFocus] = useState(false);
 
   return (
@@ -1999,31 +1987,35 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                         : nowTrade.split("-")[0]
                     }
                   >
-                    <Slider
+                    {/* <Slider
                       // renderAboveThumbComponent={RenderAboveThumbComponent}
-                      onValueChange={value => {
-                        console.log("123" + value);
-                      }}
-                      onSlidingComplete={x => {
-                        console.log("234" + x);
-                      }}
                       renderThumbComponent={CustomThumb}
-                      minimumTrackTintColor={"#F4F5F6"}
-                      maximumTrackTintColor={"#333C47"}
-                      containerStyle={{
-                        alignContent: "space-between",
-                        justifyContent: "center"
-                      }}
-                      trackStyle={{
-                        justifyContent: "space-between",
-                        alignContent: "space-between"
-                      }}
-                      maximumValue={100}
+                      // minimumTrackTintColor={"#F4F5F6"}
+                      // maximumTrackTintColor={"#333C47"}
+                      // containerStyle={{
+                      //   alignContent: "space-between",
+                      //   justifyContent: "center"
+                      // }}
+                      // trackStyle={{
+                      //   justifyContent: "space-between",
+                      //   alignContent: "space-between"
+                      // }}
+                      // maximumValue={100}
+                      // minimumValue={0}
+                      // step={1}
+                      // trackClickable={true}
+                      // trackMarks={[0, 25, 50, 75, 100]}
+                      onValueChange={(x)=>{setSlideValue(x[0])}}
+                      value={slideValue}
+                    /> */}
+                    {/* <Slider2
+                      style={{ height: 40}}
                       minimumValue={0}
-                      step={1}
-                      trackClickable={true}
-                      trackMarks={[0, 25, 50, 75, 100]}
-                    />
+                      maximumValue={1}
+                      minimumTrackTintColor="#F4F5F6"
+                      maximumTrackTintColor="#333C47"
+                      thumbImage={require("../../assets/images/trade/indicator2.png")}
+                    /> */}
                   </SmallSliderContainer>
                   <TradeFunctionPositionViewContainer>
                     <TradeFunctionPositionViewTitleText>
@@ -2132,12 +2124,10 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                                       type: "STOP_MARKET",
                                       stopPrice: stopPrice
                                     };
-                              console.log(obj);
                               setLoading(true);
                               api
                                 .postData("/order/futures/open-order", obj)
                                 .then(x => {
-                                  console.log(x);
                                   setLoading(false);
                                   if (x.status != 400) {
                                     setStopPrice("");
@@ -2145,9 +2135,7 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                                     getEntrust();
                                     getPosition();
                                   } else {
-                                    console.log(
-                                      x.data.msg.includes("未達最低開單數量")
-                                    );
+                                    
                                     if (
                                       x.data.msg.includes("未達最低開單數量")
                                     ) {
@@ -2783,7 +2771,7 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
 
       {/* Leverage View Modal 槓桿比例 */}
       <Modal
-        isVisible={isLeverageViewVisible}
+        isVisible={false}
         deviceHeight={windowHeight}
         deviceWidth={windowWidth}
         animationInTiming={500}
@@ -2844,7 +2832,7 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
               positionNum={balance === 0 ? "0" : canOpen.toString()}
               balance={balance}
             >
-              <Slider
+              {/* <Slider
                 renderThumbComponent={CustomThumb}
                 minimumTrackTintColor={"#F4F5F6"}
                 maximumTrackTintColor={"#333C47"}
@@ -2859,7 +2847,7 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
                 maximumValue={125}
                 minimumValue={1}
                 step={1}
-              />
+              /> */}
             </SliderContainer>
             {/* <ModalHedaerTitleText>{sliderNum}</ModalHedaerTitleText> */}
           </LeverageViewModalSliderContainer>
@@ -2868,11 +2856,11 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
 
       {/* Buy Type Modal 下單類型*/}
       <Modal
-        isVisible={isBuyTypeModalVisible}
+        isVisible={false}
         deviceHeight={windowHeight}
         deviceWidth={windowWidth}
-        animationInTiming={500}
-        animationOutTiming={700}
+        // animationInTiming={500}
+        // animationOutTiming={700}
         backdropOpacity={0.7}
         onBackdropPress={() => setIsBuyTypeModalVisible(false)}
         onSwipeComplete={() => setIsBuyTypeModalVisible(false)}
@@ -3054,11 +3042,185 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
           })}
         </View>
       </Modal>
+      <View style={styles.centeredView}>
+      <Modal2
+        animationType="slide"
+        transparent={true}
+        visible={isLeverageViewVisible}>
+        <View style={styles.modalView}>
+        <View
+          style={{
+            backgroundColor: "#242D37",
+            borderTopLeftRadius: 8,
+            borderTopRightRadius: 8,
+            // paddingLeft: 16,
+            // paddingRight: 16,
+            // paddingBottom: 30
+          }}
+        >
+          <ModalHeaderContainer>
+            <TouchableOpacity
+              onPress={() => {
+                setIsLeverageViewVisible(false);
+              }}
+            >
+              <ModalLeftCancelButton
+                source={require("../../assets/images/trade/cancel.png")}
+              />
+            </TouchableOpacity>
+            <ModalHedaerTitleText>{t("leverage")}</ModalHedaerTitleText>
+            <ModalEmptyDiv></ModalEmptyDiv>
+          </ModalHeaderContainer>
+
+          <LeverageViewModalSliderContainer>
+            {/* <Slider
+                            value={sliderNum}
+                            onValueChange={() => setSliderNum(sliderNum)}
+                            minimumValue={0}
+                            maximumValue={6}
+                            minimumTrackTintColor={'#F4F5F6'}
+                            maximumTrackTintColor={'#333C47'}
+                            containerStyle={{ alignContent: 'center', justifyContent: 'center' }}
+                            thumbImage={require("../../assets/images/trade/indicator.png")}
+                            thumbStyle={{ justifyContent: 'center' }}
+                            thumbTouchSize={{ width: 20, height: 20 }}
+                            trackClickable={true}
+                            thumbTintColor={'#F4F5F6'}
+                            trackMarks={[1, 2, 3, 4, 5, 6]}
+                            step={1}
+                        /> */}
+            <SliderContainer
+              trackMarks={[1, 25, 50, 75, 100, 125]}
+              sliderValue={[leverageViewNum]}
+              onValueChangeSliderNum={setLeverageViewNum}
+              isModalVisable={setIsLeverageViewVisible}
+              positionNum={balance === 0 ? "0" : canOpen.toString()}
+              balance={balance}
+            >
+              {/* <Slider
+                renderThumbComponent={CustomThumb}
+                minimumTrackTintColor={"#F4F5F6"}
+                maximumTrackTintColor={"#333C47"}
+                containerStyle={{
+                  alignContent: "space-between",
+                  justifyContent: "center"
+                }}
+                trackStyle={{
+                  justifyContent: "space-between",
+                  alignContent: "space-between"
+                }}
+                maximumValue={125}
+                minimumValue={1}
+                step={1}
+              /> */}
+            </SliderContainer>
+            {/* <ModalHedaerTitleText>{sliderNum}</ModalHedaerTitleText> */}
+          </LeverageViewModalSliderContainer>
+        </View>
+        </View>
+
+      </Modal2>
+      <Modal2
+        animationType="slide"
+        transparent={true}
+        visible={isBuyTypeModalVisible}>
+          <View style={styles.modalView}>
+          <BuyTypeTitleContainer>
+            <BuyTypeModalTitleText>{t("orderType")}</BuyTypeModalTitleText>
+          </BuyTypeTitleContainer>
+          <BuyTypeModalPickerButton
+            onPress={() => {
+              setBuyType("Limit"), setIsBuyTypeModalVisible(false);
+            }}
+          >
+            <BuyTypeModalPickerButtonText>
+              {t("limitedOrder")}
+            </BuyTypeModalPickerButtonText>
+            {buyType === "Limit" && (
+              <ModalSelectedImage
+                source={require("../../assets/images/trade/selected.png")}
+              />
+            )}
+          </BuyTypeModalPickerButton>
+          <BuyTypeModalLineText></BuyTypeModalLineText>
+          <BuyTypeModalPickerButton
+            onPress={() => {
+              setBuyType("Market"), setIsBuyTypeModalVisible(false);
+            }}
+          >
+            <BuyTypeModalPickerButtonText>
+              {t("marketOrder")}
+            </BuyTypeModalPickerButtonText>
+            {buyType === "Market" && (
+              <ModalSelectedImage
+                source={require("../../assets/images/trade/selected.png")}
+              />
+            )}
+          </BuyTypeModalPickerButton>
+          <BuyTypeModalLineText></BuyTypeModalLineText>
+          <BuyTypeModalPickerButton
+            onPress={() => {
+              setBuyType("Plan_Limit"), setIsBuyTypeModalVisible(false);
+            }}
+          >
+            <BuyTypeModalPickerButtonText>
+              {t("stopLimitOrder")}
+            </BuyTypeModalPickerButtonText>
+            {buyType === "Plan_Limit" && (
+              <ModalSelectedImage
+                source={require("../../assets/images/trade/selected.png")}
+              />
+            )}
+          </BuyTypeModalPickerButton>
+          <BuyTypeModalLineText></BuyTypeModalLineText>
+          <BuyTypeModalPickerButton
+            onPress={() => {
+              setBuyType("Plan_Market"), setIsBuyTypeModalVisible(false);
+            }}
+          >
+            <BuyTypeModalPickerButtonText>
+              {t("stopMarketOrder")}
+            </BuyTypeModalPickerButtonText>
+            {buyType === "Plan_Market" && (
+              <ModalSelectedImage
+                source={require("../../assets/images/trade/selected.png")}
+              />
+            )}
+          </BuyTypeModalPickerButton>
+          </View>
+        </Modal2>
+      </View>
+      
     </Container>
   );
 };
 
 const styles = StyleSheet.create({
+  centeredView: {
+    // display:"flex",
+    // justifyContent:"space-between",
+    // marginTop: 22,
+    backgroundColor:"black"
+  },
+  modalView: {
+    width:"100%",
+    backgroundColor:"#242D37",
+    position:"absolute",
+    bottom:0,
+    // display:"flex",
+    // justifyContent:"space-between",
+    // alignItems:"center",
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    padding:20
+  },
   container: {
     backgroundColor: "#18222D",
     color: "white"

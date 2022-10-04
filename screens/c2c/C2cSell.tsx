@@ -257,7 +257,6 @@ const C2cSellScreen = ({
       api
         .get(`/otc/api/otcOrder/${buyId}`)
         .then((x: any) => {
-          // console.log(x.status);
           setStatus(x.status)
 
         })

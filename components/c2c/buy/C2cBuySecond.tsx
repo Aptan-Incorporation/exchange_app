@@ -510,7 +510,9 @@ const C2cBuySecond = (props: {
                     Alert.alert(x.data.msg)
                 }
             })
-            .catch(() => { console.log(Error) })
+            .catch(() => { 
+                // console.log(Error) 
+            })
     };
 
 
@@ -578,7 +580,9 @@ const C2cBuySecond = (props: {
                     Alert.alert(x.data.msg)
                 }
             })
-            .catch(() => { console.log(Error) })
+            .catch(() => { 
+                // console.log(Error) 
+            })
     };
 
     // 更新訂單訊息
@@ -622,7 +626,6 @@ const C2cBuySecond = (props: {
         .get(`/otc/api/otcOrder/${BuyId}`)
         .then((x: any) => {
           if(x.status){
-            console.log(x)
             setStatus2(x.status)
           }
         })
@@ -631,13 +634,11 @@ const C2cBuySecond = (props: {
        }
 
     useEffect(() => {
-        console.log(status)
         getStatus()
         const interval = setInterval(() => {
             api
               .get(`/otc/api/otcOrder/${BuyId}`)
               .then((x: any) => {
-                // console.log(x.status);
                 setStatus2(x.status)
       
               })

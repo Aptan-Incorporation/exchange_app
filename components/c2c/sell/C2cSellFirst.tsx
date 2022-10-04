@@ -488,7 +488,7 @@ const C2cSellFirst = (props: {
                 }
             })
             .catch((Error) => {
-                console.log(Error)
+                // console.log(Error)
             })
     };
 

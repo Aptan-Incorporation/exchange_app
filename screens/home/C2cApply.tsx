@@ -558,7 +558,6 @@ const C2cApply = ({ navigation }: RootStackScreenProps<"C2cApply">) => {
                   },
                   { text: '確定', onPress: () => {
                     api.put(`/otc/api/user/${userAccount}/advertiserLevel/${currentLevel.id}`).then(x=>{
-                      // console.log(x)
                       if(x.status != 400){
                         getData()
                       }else{
