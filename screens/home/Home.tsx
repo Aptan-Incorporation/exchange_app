@@ -101,12 +101,23 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
   const [index, setIndex] = useState(0);
   const [arr, setArr] = useState([]);
   const [arr2, setArr2] = useState([]);
-  const { market2:context2,market:context,three } = useContext(Context)
+  // const { market2:context2,market:context,three } = useContext(Context)
   const [imgArr, setImgArr] = useState([]);
   const { t,i18n } = useTranslation();
   const isFocused = useIsFocused();
   const [socketUrl, setSocketUrl] = useState("wss://ex-api.usefordemo.com/market/ws/latest");
-
+  const [context, setContext] = useState([]);
+  const [three,setThree] = useState({
+    btcPrice: 0,
+    btcRate: 0,
+    btcAmt: 0,
+    ethPrice: 0,
+    ethRate: 0,
+    ethAmt: 0,
+    dogePrice: 0,
+    dogeRate: 0,
+    dogeAmt: 0
+  })
   const { lastJsonMessage } = useWebSocket(socketUrl, {
     shouldReconnect: (closeEvent) => true,
     reconnectInterval: 1000,
@@ -117,7 +128,25 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
     //   return parseFloat(b.P) - parseFloat(a.P);
     // });
     setArr(lastJsonMessage)
+    setContext(lastJsonMessage)
   },[lastJsonMessage])
+//   useEffect(() => {
+//     const ws = new WebSocket(socketUrl);
+//     ws.onopen = (event) => {
+//         console.log("open")
+//     };
+//     ws.onmessage = function (event) {
+//         // console.log(event)
+//         const json = JSON.parse(event.data);
+//         try {
+//           setArr(json)
+//         } catch (err) {
+//             console.log(err);
+//         }
+//     };
+//     //clean up function
+//     return () => ws.close();
+// }, []);
 
 
   useEffect(() => {

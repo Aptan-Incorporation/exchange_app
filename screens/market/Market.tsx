@@ -18,6 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import _ from "lodash"
+import useWebSocket from "react-use-websocket";
 
 const Container = styled(View)`
   display: flex;
@@ -86,8 +87,9 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
       w: ""
     }
   ]);
-  const {market:context} = useContext(Context)
-  const [checkedState, setCheckedState] = useState(new Array(context.length).fill(false));
+  // const {market:context} = useContext(Context)
+  // const [socketUrl, setSocketUrl] = useState("wss://ex-api.usefordemo.com/market/ws/latest");
+  // const [context, setContext] = useState([]);
 
   const [arr, setArray] = useState([
     {
@@ -138,6 +140,39 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
     });
   };
 
+  const [socketUrl, setSocketUrl] = useState("wss://ex-api.usefordemo.com/market/ws/latest");
+  const [context, setContext] = useState([]);
+  const { lastJsonMessage } = useWebSocket(socketUrl, {
+    shouldReconnect: (closeEvent) => true,
+    reconnectInterval: 1000,
+  });
+
+  useEffect(()=>{
+    // let gfg = context2.sort(function (a:any, b:any) {
+    //   return parseFloat(b.P) - parseFloat(a.P);
+    // });
+    setContext(lastJsonMessage)
+  },[lastJsonMessage])
+
+  // useEffect(() => {
+  //   const ws = new WebSocket(socketUrl);
+  //   ws.onopen = (event) => {
+  //       console.log("open")
+  //   };
+  //   ws.onmessage = function (event) {
+  //       // console.log(event)
+  //       const json = JSON.parse(event.data);
+  //       try {
+  //         console.log(json)
+  //         setContext(json)
+  //       } catch (err) {
+  //           console.log(err);
+  //       }
+  //   };
+  //   //clean up function
+  //   return () => ws.close();
+  // }, [context]);
+
   useEffect(() => {
     (async () => {
     let token = await AsyncStorage.getItem("token");  
@@ -170,26 +205,29 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
   }, [context]);
 
   useEffect(() => {
-    let a = [];
-    for(let i = 0;i < favorite.length;i++){
-      for(let j = 0;j<context.length;j++){
-        if(favorite[i] == context[j].s){
-          a.push(context[j])
+    if(context){
+      let a = [];
+      for(let i = 0;i < favorite.length;i++){
+        for(let j = 0;j<context.length;j++){
+          if(favorite[i] == context[j].s){
+            a.push(context[j])
+          }
         }
       }
+      setFavorite2(a)
+      if (index === 1) {
+        // let gfg = context.sort(function (a:any, b:any) {
+        //   return a.s > b.s;
+        // });
+        setArray(context);
+        var filteredData = filterByName(_.orderBy(context,["s"]));
+        setArray(filteredData);
+      } else {
+        var filteredData = filterByName(favorite3);
+        setFavorite2(filteredData);
+      }
     }
-    setFavorite2(a)
-    if (index === 1) {
-      // let gfg = context.sort(function (a:any, b:any) {
-      //   return a.s > b.s;
-      // });
-      setArray(context);
-      var filteredData = filterByName(_.orderBy(context,["s"]));
-      setArray(filteredData);
-    } else {
-      var filteredData = filterByName(favorite3);
-      setFavorite2(filteredData);
-    }
+    
   }, [context, search]);
 
   return (
