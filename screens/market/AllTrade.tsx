@@ -10,14 +10,15 @@ import {
 } from "react-native";
 import styled from "styled-components";
 import { RootStackScreenProps } from "../../types";
-import { Context } from "../../App";
 import * as React from "react";
-import { useContext, useState, useEffect, useRef } from "react";
+import { useContext, useState, useEffect, useRef,useMemo } from "react";
 import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import _ from "lodash"
+import useWebSocket from "react-use-websocket";
+
 const Container = styled(View)`
   display: flex;
   flex-direction: column;
@@ -28,20 +29,6 @@ const Container = styled(View)`
 const ColumnText = styled(Text)`
   font-size: 12px;
   color: ${props => props.theme.color.MidGray};
-`;
-
-const HeaderTitleTextClicked = styled(Text)`
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 30px;
-  color: ${props => props.theme.color.White};
-`;
-
-const HeaderTitleText = styled(Text)`
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 24px;
-  color: ${props => props.theme.color.Gray};
 `;
 
 const Header = styled(View) <{ insets: number }>`
@@ -66,8 +53,6 @@ const MarketTradeScreen = ({ navigation }: RootStackScreenProps<"MarketTradeScre
   const [favorite, setFavorite] = useState([""]);
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
-  const {market:context} = useContext(Context)
-  const [checkedState, setCheckedState] = useState(new Array(context.length).fill(false));
 
   const [arr, setArray] = useState([
     {
@@ -93,6 +78,24 @@ const MarketTradeScreen = ({ navigation }: RootStackScreenProps<"MarketTradeScre
     );
     return filteredCars;
   };
+  const [socketUrl, setSocketUrl] = useState("wss://ex-api.usefordemo.com/market/ws/latest");
+  const [context, setContext] = useState([]);
+
+  const { lastJsonMessage } = useWebSocket(socketUrl, {
+    shouldReconnect: (closeEvent) => true,
+    reconnectInterval: 1000,
+  });
+
+  useMemo(()=>{
+    // let gfg = context2.sort(function (a:any, b:any) {
+    //   return parseFloat(b.P) - parseFloat(a.P);
+    // });
+    if(lastJsonMessage){
+      setContext(lastJsonMessage)
+      setArray(lastJsonMessage)
+    } 
+    
+  },[lastJsonMessage])
 
   const getFavorite = () => {
     api.get("/investor/favorite").then(x => {
@@ -123,7 +126,7 @@ const MarketTradeScreen = ({ navigation }: RootStackScreenProps<"MarketTradeScre
       getFavorite();
     }
     if(context){
-      setArray(_.orderBy(context,["s"]));
+      setArray(context);
     }})()
   }, []);
 
@@ -140,23 +143,6 @@ const MarketTradeScreen = ({ navigation }: RootStackScreenProps<"MarketTradeScre
     var filteredData = filterByName(context);
     setArray(filteredData);
   }, [search]);
-
-  // useEffect(async () => {
-  //   if(search == ""){
-  //     if(context){
-  //       setArray(_.orderBy(context,["s"]));
-  //       let a = [];
-  //       for(let i = 0;i < favorite.length;i++){
-  //         for(let j = 0;j<context.length;j++){
-  //           if(favorite[i].split("-")[0]+favorite[i].split("-")[1] == context[j].s){
-  //             a.push(context[j])
-  //           }
-  //         }
-  //       }
-  //       setFavorite2(a)
-  //     }
-  //   }
-  // }, [context]);
 
 
   return (

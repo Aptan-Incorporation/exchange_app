@@ -361,7 +361,6 @@ const GraphPage = (props: {
     //         });
     // };
 
-    // const {btcPrice} = useContext(PriceContext)
 
     // useEffect(() => {
     //     getPrice();

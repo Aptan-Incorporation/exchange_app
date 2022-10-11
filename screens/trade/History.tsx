@@ -442,7 +442,6 @@ const HistoryScreen = ({
     const [dealEntrustArray, setDealEntrustArray] = useState([]);
     const [positionArray, setPositionArray] = useState([]);
     const [recordArray, setRecord] = useState([]);
-    // const entrustArray = useContext(FutureContext)
     const { t } = useTranslation();
     const getPosition = () => {
         // api.get("/investor/position").then((x) => {
@@ -475,7 +474,8 @@ const HistoryScreen = ({
 
     };
 
-    useEffect(async () => {
+    useEffect(() => {
+        (async () => {
         let token = await AsyncStorage.getItem("token")
         if (token) {
             getHistoryEntrust();
@@ -483,7 +483,7 @@ const HistoryScreen = ({
             getPosition();
             getRecord()
         }
-
+    })()
     }, []);
 
     return (

@@ -2,15 +2,15 @@ import * as React from "react";
 import { Text, TextInput, TouchableOpacity, View, Image, ScrollView, SafeAreaView, Button, Alert } from "react-native"
 import styled from "styled-components"
 import { RootStackScreenProps } from "../../types";
-import { useState,useEffect,useContext } from "react";
+import { useState,useEffect,useContext,useMemo } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
 import Spinner from 'react-native-loading-spinner-overlay'
-import { Context } from "../../App"
 import { useTranslation } from "react-i18next";
 import _ from "lodash"
+import useWebSocket from "react-use-websocket";
 
 const Container = styled(View) <{ insets: number }>`
     display: flex ;
@@ -465,12 +465,51 @@ const WalletScreen = ({
     const [spotBalance,setSpotBalance] = useState(0)
     const [totalBalance,setTotalBalance] = useState(0)
     const [position,setPosition] = useState(0)
-    // const [positionArray,setPositionArray] = useState([])
+    const [positionArray,setPositionArray] = useState([])
     const [loading,setLoading] = useState(false);
     const [balance,setBalance] = useState(0)
     const [freeze,setFreeze] = useState(0)
-    // const positionArray = useContext(PositionContext)
-    const {market:context,position:positionArray} = useContext(Context)
+    const [socketUrl, setSocketUrl] = useState("wss://ex-api.usefordemo.com/market/ws/latest");
+
+    const [socketUrl3, setSocketUrl3] = useState("wss://ex-api.usefordemo.com/ws");
+    const [context, setContext] = useState([]);
+    const [token, setToken] = useState("");
+  
+    const { lastJsonMessage } = useWebSocket(socketUrl, {
+      shouldReconnect: (closeEvent) => true,
+      reconnectInterval: 1000,
+    });
+  
+    const { lastJsonMessage:lastJsonMessage3,sendJsonMessage:sendJsonMessage2 } = useWebSocket(socketUrl3, {
+      onOpen: () => {
+        sendJsonMessage2({
+          "operation": "subscribe",
+          "channel": "position"
+        })
+        sendJsonMessage2({
+          "operation": "subscribe",
+          "channel": "future"
+        })
+      },    
+      //Will attempt to reconnect on all close events, such as server shutting down
+      shouldReconnect: closeEvent => true,
+      queryParams:{token: token}
+    });
+
+    useMemo(()=>{
+        // let gfg = context2.sort(function (a:any, b:any) {
+        //   return parseFloat(b.P) - parseFloat(a.P);
+        // });
+        setContext(lastJsonMessage)
+      },[lastJsonMessage])
+
+    useMemo(() => {
+        if(lastJsonMessage3){
+          if(lastJsonMessage3.channel === "position"){
+            setPositionArray(lastJsonMessage3.data)
+          }
+        }
+      },[lastJsonMessage3]);
 
     const { t } = useTranslation();
     const getBalance = async () => {
@@ -513,7 +552,8 @@ const WalletScreen = ({
     }
     const isFocused = useIsFocused();
 
-    useEffect(async ()=>{
+    useEffect(()=>{
+        (async () => {
         if(isFocused){
             let token = await AsyncStorage.getItem("token")
             if(!token){
@@ -537,6 +577,7 @@ const WalletScreen = ({
             return () => clearInterval(interval); 
 
         }
+        })()
     },[isFocused])
     useEffect(()=>{
         let sum = 0

@@ -11,9 +11,9 @@ import api from "../../common/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Spinner from 'react-native-loading-spinner-overlay'
 import {useContext} from "react"
-import { Context } from "../../App" 
 import _ from "lodash"
 import { useTranslation } from "react-i18next";
+import useWebSocket from "react-use-websocket";
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -551,8 +551,24 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
     // 獲取進行中訂單
     const [waitingList, setWaitingList] = useState([]);
     const [cancelList, setCancelList] = useState([]);
-    const {order:context} = useContext(Context)
+    const [token, setToken] = useState("");
+    const [socketUrl2, setSocketUrl2] = useState("wss://ex-api.usefordemo.com/otc/ws");
+    const [context, setContext] = useState({data: {
+        status: 3
+      }});
     const { t } = useTranslation();
+
+    const { lastJsonMessage:lastJsonMessage2,sendJsonMessage } = useWebSocket(socketUrl2, {
+        onOpen: () => sendJsonMessage({
+          "operation": "subscribe",
+          "channel": "otcOrder"
+        }),  
+        onClose: () => console.log('close'),
+        //Will attempt to reconnect on all close events, such as server shutting down
+        shouldReconnect: closeEvent => true,
+        queryParams:{token: token}
+    });
+
     useEffect(()=>{    
         if(context.data){
             getWaitingList()
@@ -717,21 +733,22 @@ const C2cHistoryScreen = ({ navigation, route }: RootStackScreenProps<"C2cHistor
     const [userId, setUserId] = useState("");
 
 
-    useEffect(async () => {
-        let token = await AsyncStorage.getItem("token")
-        let user = await AsyncStorage.getItem("user")
-        setAccount(JSON.parse(user!).account)
-        setUserId(JSON.parse(user!).userId)
+    useEffect(() => {
+        (async () => {
+            let token = await AsyncStorage.getItem("token")
+            let user = await AsyncStorage.getItem("user")
+            setAccount(JSON.parse(user!).account)
+            setUserId(JSON.parse(user!).userId)
 
-        if (token) {
-            getWaitingList()
-            getCompleteList()
-            getCancelList()
+            if (token) {
+                getWaitingList()
+                getCompleteList()
+                getCancelList()
 
-        } else {
-            Alert.alert("請先登入")
-        }
-
+            } else {
+                Alert.alert("請先登入")
+            }
+        })()
     }, [])
 
     return (

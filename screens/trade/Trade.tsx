@@ -29,7 +29,6 @@ import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from "react-native-loading-spinner-overlay";
 import { useIsFocused } from "@react-navigation/native";
-import { Context } from "../../App";
 import DropDownPicker from "react-native-dropdown-picker";
 import { Dropdown } from "react-native-element-dropdown";
 import _ from "lodash";
@@ -1113,11 +1112,8 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
   const [remarkPrice, setRemarkPrice] = useState("");
   const [wareHousedPrice, setWareHousedPrice] = useState("");
   const [loading, setLoading] = useState(false);
-  // const {position: positionArray, future: entrustArray } = useContext(Context);
-
   const [slideValue, setSlideValue] = useState(0)
-  //   const positionArray = useContext(PositionContext);
-  //   const entrustArray = useContext(FutureContext);
+
   const toggleBuyTypeModal = () => {
     setIsBuyTypeModalVisible(!isBuyTypeModalVisible);
   };
@@ -1162,48 +1158,6 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
     } else {
       return "";
     }
-  };
-
-  const CustomThumb = () => {
-    return (
-      <View>
-        <ThumbImage
-          source={require("../../assets/images/trade/indicator.png")}
-        />
-      </View>
-    );
-  };
-
-  const RenderAboveThumbComponent = (x: any) => {
-    let PercentageNum =
-      balance === 0
-        ? Math.round(
-          (sliderNum /
-            parseFloat(
-              ((balance * leverageViewNum) / parseFloat(wareHousedPrice))
-                .toString()
-                .substring(
-                  0,
-                  ((balance * leverageViewNum) / parseFloat(wareHousedPrice))
-                    .toString()
-                    .indexOf(".") + 3
-                )
-            )) *
-          100
-        )
-        : 0;
-    return (
-      <View>
-        {PercentageNum != 0 && !isNaN(PercentageNum) && (
-          <View>
-            <RenderAboveThumbImage
-              source={require("../../assets/images/trade/sliderFloat.png")}
-            />
-            <RenderAboveThumbText>{PercentageNum}%</RenderAboveThumbText>
-          </View>
-        )}
-      </View>
-    );
   };
 
   // Position Detail
@@ -1343,9 +1297,7 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
   };
 
   const [socketUrl, setSocketUrl] = useState("wss://ex-api.usefordemo.com/market/ws/latest");
-  const [socketUrl2, setSocketUrl2] = useState("wss://ex-api.usefordemo.com/otc/ws");
   const [socketUrl3, setSocketUrl3] = useState("wss://ex-api.usefordemo.com/ws");
-
   const [context, setContext] = useState([]);
   const [token, setToken] = useState("");
 
@@ -1393,39 +1345,10 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
     setContext(lastJsonMessage)
   },[lastJsonMessage])
 
-  // useEffect(() => {
-  //   const ws = new WebSocket(socketUrl);
-  //   ws.onopen = (event) => {
-  //       console.log("open")
-  //   };
-  //   ws.onmessage = function (event) {
-  //       // console.log(event)
-  //       const json = JSON.parse(event.data);
-  //       try {
-  //         console.log(json)
-  //         setContext(json)
-  //       } catch (err) {
-  //           console.log(err);
-  //       }
-  //   };
-  //   //clean up function
-  //   return () => ws.close();
-  // }, [context]);
-
   useMemo(() => {
     let isApiSubscribed = true;
     (async () => {
       if (context && isApiSubscribed) {
-        // let a = [];
-        // for (let i = 0; i < context.length; i++) {
-        //   let obj = {
-        //     label: context[i].s.split("USDT")[0] + "-USDT",
-        //     value: context[i].s.split("USDT")[0] + "-USDT"
-        //   };
-        //   a.push(obj);
-        // }
-        // setTrade(a);
-
         let trade = await AsyncStorage.getItem("trade");
         let token = await AsyncStorage.getItem("token");
         const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade;
@@ -1448,116 +1371,116 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
     };
   }, [context]);
 
-  // useMemo(() => {
-  //   (async () => {
-  //     if (context) {
-  //       let trade = await AsyncStorage.getItem("trade");
-  //       const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade;
-  //       const remark = _.find(context, function (o) {
-  //         return o.s == t;
-  //       });
-  //       setWareHousedPrice(
-  //         parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
-  //           ? remark!.c
-  //           : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
-  //             ? remark!.c.slice(0, -1)
-  //             : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
-  //               ? remark!.c.slice(0, -2)
-  //               : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
-  //                 ? remark!.c.slice(0, -3)
-  //                 : remark!.c.slice(0, -4)
-  //       );
-  //       setBuyPrice(
-  //         parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
-  //           ? remark!.c
-  //           : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
-  //             ? remark!.c.slice(0, -1)
-  //             : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
-  //               ? remark!.c.slice(0, -2)
-  //               : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
-  //                 ? remark!.c.slice(0, -3)
-  //                 : remark!.c.slice(0, -4)
-  //       );
-  //     }
-  //   })()
+  useMemo(() => {
+    (async () => {
+      if (context) {
+        let trade = await AsyncStorage.getItem("trade");
+        const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade;
+        const remark = _.find(context, function (o) {
+          return o.s == t;
+        });
+        setWareHousedPrice(
+          parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
+            ? remark!.c
+            : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
+              ? remark!.c.slice(0, -1)
+              : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
+                ? remark!.c.slice(0, -2)
+                : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
+                  ? remark!.c.slice(0, -3)
+                  : remark!.c.slice(0, -4)
+        );
+        setBuyPrice(
+          parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
+            ? remark!.c
+            : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
+              ? remark!.c.slice(0, -1)
+              : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
+                ? remark!.c.slice(0, -2)
+                : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
+                  ? remark!.c.slice(0, -3)
+                  : remark!.c.slice(0, -4)
+        );
+      }
+    })()
 
-  // }, []);
+  }, []);
 
-  // useMemo(() => {
-  //   (async () => {
-  //     let trade = await AsyncStorage.getItem("trade");
-  //     getfund(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade)
-  //   })()
-  // }, [isFocused, nowTrade])
+  useMemo(() => {
+    (async () => {
+      let trade = await AsyncStorage.getItem("trade");
+      getfund(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade)
+    })()
+  }, [isFocused, nowTrade])
 
-  // useMemo(() => {
-  //   (async () => {
-  //     if (isFocused) {
-  //       // let inter = await AsyncStorage.getItem("interval");
-  //       // clearInterval(parseInt(inter!));
-  //       let token = await AsyncStorage.getItem("token");
-  //       let trade = await AsyncStorage.getItem("trade");
-  //       setNewTrade(trade);
-  //       if (!token) {
-  //         // setEntrustArray([])
-  //         // setPositionArray([])
-  //         setBalance(0);
-  //       }
-  //       getfund(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
-  //       if (token) {
-  //         getEntrust();
-  //         getPosition();
-  //         getBalance(
-  //           trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,
-  //           swapBuyPosition === "Open" ? "BUY" : "SELL"
-  //         );
-  //         getleverage(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
-  //       }
-  //       const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade;
-  //       const remark = _.find(context, function (o) {
-  //         return o.s == t;
-  //       });
-  //       setWareHousedPrice(
-  //         parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
-  //           ? remark!.c
-  //           : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
-  //             ? remark!.c.slice(0, -1)
-  //             : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
-  //               ? remark!.c.slice(0, -2)
-  //               : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
-  //                 ? remark!.c.slice(0, -3)
-  //                 : remark!.c.slice(0, -4)
-  //       );
-  //       setBuyPrice(
-  //         parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
-  //           ? remark!.c
-  //           : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
-  //             ? remark!.c.slice(0, -1)
-  //             : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
-  //               ? remark!.c.slice(0, -2)
-  //               : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
-  //                 ? remark!.c.slice(0, -3)
-  //                 : remark!.c.slice(0, -4)
-  //       );
-  //       // let leverage = await AsyncStorage.getItem("leverage")
-  //       // if (leverage) {
-  //       //     setLeverageViewNum(parseInt(leverage))
-  //       // }
-  //       if (trade) {
-  //         setValue(trade.split("USDT")[0] + "-USDT");
-  //       }
-  //       // getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
-  //       getPrice(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+  useMemo(() => {
+    (async () => {
+      if (isFocused) {
+        // let inter = await AsyncStorage.getItem("interval");
+        // clearInterval(parseInt(inter!));
+        let token = await AsyncStorage.getItem("token");
+        let trade = await AsyncStorage.getItem("trade");
+        setNewTrade(trade);
+        if (!token) {
+          // setEntrustArray([])
+          // setPositionArray([])
+          setBalance(0);
+        }
+        getfund(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+        if (token) {
+          getEntrust();
+          getPosition();
+          getBalance(
+            trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,
+            swapBuyPosition === "Open" ? "BUY" : "SELL"
+          );
+          getleverage(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+        }
+        const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade;
+        const remark = _.find(context, function (o) {
+          return o.s == t;
+        });
+        setWareHousedPrice(
+          parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
+            ? remark!.c
+            : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
+              ? remark!.c.slice(0, -1)
+              : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
+                ? remark!.c.slice(0, -2)
+                : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
+                  ? remark!.c.slice(0, -3)
+                  : remark!.c.slice(0, -4)
+        );
+        setBuyPrice(
+          parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
+            ? remark!.c
+            : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
+              ? remark!.c.slice(0, -1)
+              : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
+                ? remark!.c.slice(0, -2)
+                : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
+                  ? remark!.c.slice(0, -3)
+                  : remark!.c.slice(0, -4)
+        );
+        // let leverage = await AsyncStorage.getItem("leverage")
+        // if (leverage) {
+        //     setLeverageViewNum(parseInt(leverage))
+        // }
+        if (trade) {
+          setValue(trade.split("USDT")[0] + "-USDT");
+        }
+        // getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+        getPrice(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
 
-  //       // AsyncStorage.setItem("interval", interval.toString())
-  //       // return () => clearInterval(interval);
-  //     } else {
-  //       AsyncStorage.removeItem("trade");
-  //       setValue("BTC-USDT");
-  //       setNowTrade("BTC-USDT");
-  //     }
-  //   })()
-  // }, [isFocused, nowTrade, swapBuyPosition]);
+        // AsyncStorage.setItem("interval", interval.toString())
+        // return () => clearInterval(interval);
+      } else {
+        AsyncStorage.removeItem("trade");
+        setValue("BTC-USDT");
+        setNowTrade("BTC-USDT");
+      }
+    })()
+  }, [isFocused, nowTrade, swapBuyPosition]);
 
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);

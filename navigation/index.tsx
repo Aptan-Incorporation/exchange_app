@@ -48,7 +48,6 @@ import C2cHelp from "../screens/home/C2cHelp";
 import EditName from "../screens/home/EditName";
 import Rebate from "../screens/home/Rebate";
 import {useEffect,useContext} from "react"
-import { Context } from "../App" 
 import { useNavigation } from '@react-navigation/native';
 import ForgotPassword from "../screens/home/ForgotPassword";
 import ResetPassword from "../screens/home/ResetPassword";
@@ -78,29 +77,6 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
-  const {order:context} = useContext(Context)
-  const navigation = useNavigation();
-  
-  useEffect(()=>{
-
-    if(context.data){
-      // Alert.alert(
-      //   "訂單更新",
-      //   "您有一筆訂單狀態更新，是否前往查看？",
-      //   [
-      //       {
-      //           text: "取消",
-      //           onPress: () => console.log("Cancel Pressed"),
-      //           style: "cancel"
-      //       },
-      //       { text: "確定", onPress: () => { 
-      //           navigation.navigate("C2cHistoryScreen")
-      //       }}
-      //   ]
-      // );
-    }
-  },[context])
-
   return (
     <Stack.Navigator>
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />

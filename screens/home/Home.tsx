@@ -4,7 +4,6 @@ import { RootStackScreenProps } from "../../types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as React from "react";
 import { useState,useEffect,useContext } from "react";
-import { Context } from "../../App" 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from "react-i18next";
 import Swiper from "react-native-web-swiper";
@@ -12,6 +11,7 @@ import api from "../../common/api"
 import Carousel from 'react-native-snap-carousel';
 import { useIsFocused } from '@react-navigation/native';
 import useWebSocket from "react-use-websocket";
+import _ from "lodash"
 
 const width = Dimensions.get('window').width;
 
@@ -101,7 +101,6 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
   const [index, setIndex] = useState(0);
   const [arr, setArr] = useState([]);
   const [arr2, setArr2] = useState([]);
-  // const { market2:context2,market:context,three } = useContext(Context)
   const [imgArr, setImgArr] = useState([]);
   const { t,i18n } = useTranslation();
   const isFocused = useIsFocused();
@@ -118,6 +117,15 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
     dogeRate: 0,
     dogeAmt: 0
   })
+
+  const [btcPrice, setBtcPrice] = useState("");
+  const [btcRate, setBtcRate] = useState("");
+  const [btcAmt, setBtcAmt] = useState("");
+  const [ethPrice, setEthPrice] = useState("");
+  const [ethRate, setEthRate] = useState("");
+  const [ethAmt, setEthAmt] = useState("");
+
+
   const { lastJsonMessage } = useWebSocket(socketUrl, {
     shouldReconnect: (closeEvent) => true,
     reconnectInterval: 1000,
@@ -127,27 +135,23 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
     // let gfg = context2.sort(function (a:any, b:any) {
     //   return parseFloat(b.P) - parseFloat(a.P);
     // });
-    setArr(lastJsonMessage)
-    setContext(lastJsonMessage)
+   if(lastJsonMessage){
+    // let gfg = lastJsonMessage.sort(function (a: any, b: any) {
+    //     return parseFloat(a.P) - parseFloat(b.P);
+    // });
+    const eth = _.find(lastJsonMessage, function (o) { return o.s == "ETH-USDT" })
+    const btc = _.find(lastJsonMessage, function (o) { return o.s == "BTC-USDT" })
+    setEthPrice((parseFloat(eth.c) < 0.006 && parseFloat(eth.c) > 0) ? eth.c : (parseFloat(eth.c) < 0.1 && parseFloat(eth.c) > 0.006) ? eth.c.slice(0, -1) : (parseFloat(eth.c) < 1 && parseFloat(eth.c) > 0.1) ? eth.c.slice(0, -2) : (parseFloat(eth.c) < 50 && parseFloat(eth.c) > 1) ? eth.c.slice(0, -3) : eth.c.slice(0, -4));
+    setEthRate(eth.P);
+    setEthAmt(eth.v.split(".")[0]);
+    setBtcPrice((parseFloat(btc.c) < 0.006 && parseFloat(btc.c) > 0) ? btc.c : (parseFloat(btc.c) < 0.1 && parseFloat(btc.c) > 0.006) ? btc.c.slice(0, -1) : (parseFloat(btc.c) < 1 && parseFloat(btc.c) > 0.1) ? btc.c.slice(0, -2) : (parseFloat(btc.c) < 50 && parseFloat(btc.c) > 1) ? btc.c.slice(0, -3) : btc.c.slice(0, -4));
+    setBtcRate(btc.P);
+    setBtcAmt(btc.v.split(".")[0]);
+    setArr(_.orderBy(lastJsonMessage,["P"]).reverse())
+    setContext(_.orderBy(lastJsonMessage,["P"]))
+   }
+    
   },[lastJsonMessage])
-//   useEffect(() => {
-//     const ws = new WebSocket(socketUrl);
-//     ws.onopen = (event) => {
-//         console.log("open")
-//     };
-//     ws.onmessage = function (event) {
-//         // console.log(event)
-//         const json = JSON.parse(event.data);
-//         try {
-//           setArr(json)
-//         } catch (err) {
-//             console.log(err);
-//         }
-//     };
-//     //clean up function
-//     return () => ws.close();
-// }, []);
-
 
   useEffect(() => {
     api.get("/info/carousel?lang="+i18n.language).then(x => {
@@ -229,10 +233,10 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
           </GrayHeader>
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 16 }}>
             <View>
-              <PriceText>{three.btcPrice}</PriceText>
-              <USDText>≈ {three.btcPrice} USD</USDText>
+              <PriceText>{btcPrice}</PriceText>
+              <USDText>≈ {btcPrice} USD</USDText>
             </View>
-            {parseFloat(three.btcRate) > 0 ? <PercentText>{"+"+three.btcRate}%</PercentText> : <RedPercentText>{three.btcRate}%</RedPercentText>}
+            {parseFloat(btcRate) > 0 ? <PercentText>{"+"+btcRate}%</PercentText> : <RedPercentText>{btcRate}%</RedPercentText>}
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={{ width: "100%", borderRadius: 8, backgroundColor: "#242D37", marginTop: 16 }}  onPress={()=>{
@@ -245,10 +249,10 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
           </GrayHeader>
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", padding: 16 }}>
             <View>
-              <PriceText>{three.ethPrice}</PriceText>
-              <USDText>≈ {three.ethPrice} USD</USDText>
+              <PriceText>{ethPrice}</PriceText>
+              <USDText>≈ {ethPrice} USD</USDText>
             </View>
-            {parseFloat(three.ethRate) > 0 ? <PercentText>{"+"+three.ethRate}%</PercentText> : <RedPercentText>{three.ethRate}%</RedPercentText>}
+            {parseFloat(ethRate) > 0 ? <PercentText>{"+"+ethRate}%</PercentText> : <RedPercentText>{ethRate}%</RedPercentText>}
           </View>
         </TouchableOpacity>
 

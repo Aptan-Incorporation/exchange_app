@@ -10,14 +10,15 @@ import {
 } from "react-native";
 import styled from "styled-components";
 import { RootStackScreenProps } from "../../types";
-import { Context } from "../../App";
 import * as React from "react";
-import { useContext, useState, useEffect, useRef } from "react";
+import { useContext, useState, useEffect, useRef,useMemo } from "react";
 import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import _ from "lodash"
+import useWebSocket from "react-use-websocket";
+
 const Container = styled(View)`
   display: flex;
   flex-direction: column;
@@ -62,9 +63,6 @@ const IconImg = styled(Image)`
 
 const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) => {
   const [search, setSearch] = useState("");
-  const [btc, setBtc] = useState(false);
-  const [eth, setEth] = useState(false);
-  const [doge, setDoge] = useState(false);
   const [index, setIndex] = useState(1);
   const [favorite, setFavorite] = useState([""]);
   const insets = useSafeAreaInsets();
@@ -93,9 +91,8 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
       w: ""
     }
   ]);
-  const {market:context} = useContext(Context)
-  const [checkedState, setCheckedState] = useState(new Array(context.length).fill(false));
-
+  // const [checkedState, setCheckedState] = useState(new Array(context.length).fill(false));
+  
   const [arr, setArray] = useState([
     {
       E: "",
@@ -145,7 +142,27 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
     });
   };
 
-  useEffect(async () => {
+  const [socketUrl, setSocketUrl] = useState("wss://ex-api.usefordemo.com/market/ws/latest");
+  const [context, setContext] = useState([]);
+
+  const { lastJsonMessage } = useWebSocket(socketUrl, {
+    shouldReconnect: (closeEvent) => true,
+    reconnectInterval: 1000,
+  });
+
+  useMemo(()=>{
+    // let gfg = context2.sort(function (a:any, b:any) {
+    //   return parseFloat(b.P) - parseFloat(a.P);
+    // });
+    if(lastJsonMessage){
+      setContext(lastJsonMessage)
+      setArray(lastJsonMessage)
+    }
+    
+  },[lastJsonMessage])
+
+  useEffect(() => {
+    (async () => {
     let token = await AsyncStorage.getItem("token");  
     if (token) {
       getFavorite();
@@ -153,9 +170,11 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
     if(context){
       setArray(_.orderBy(context,["s"]));
     }
+  })()
   }, []);
 
-  useEffect(async () => {
+  useEffect(() => {
+    (async () => {
     if(search == ""){
       if(context){
         setArray(_.orderBy(context,["s"]));
@@ -169,7 +188,7 @@ const AllTradeScreen = ({ navigation }: RootStackScreenProps<"AllTradeScreen">) 
         }
         setFavorite2(a)
       }
-    }
+    }})()
   }, [context]);
 
 

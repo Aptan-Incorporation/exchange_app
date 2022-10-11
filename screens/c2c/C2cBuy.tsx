@@ -22,7 +22,6 @@ import axios from "axios";
 import api from "../../common/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from "react-native-loading-spinner-overlay/lib";
-import { Context } from "../../App" 
 import { useTranslation } from "react-i18next";
 
 const Container = styled(View)<{ insets: number }>`
@@ -171,7 +170,6 @@ const C2cBuyScreen = ({
   const [loading, setLoading] = useState(false);
 
   const [status, setStatus] = useState(0);
-  const {order:context} = useContext(Context)
   const { t } = useTranslation();
   const getUserInfo = async () => {
     let user = await AsyncStorage.getItem("user");

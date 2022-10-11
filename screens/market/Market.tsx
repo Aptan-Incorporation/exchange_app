@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import styled from "styled-components";
 import { RootStackScreenProps } from "../../types";
-import { Context } from "../../App";
 import * as React from "react";
 import { useContext, useState, useEffect, useRef } from "react";
 import api from "../../common/api";
@@ -87,7 +86,6 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
       w: ""
     }
   ]);
-  // const {market:context} = useContext(Context)
   // const [socketUrl, setSocketUrl] = useState("wss://ex-api.usefordemo.com/market/ws/latest");
   // const [context, setContext] = useState([]);
 
@@ -153,25 +151,6 @@ const MarketScreen = ({ navigation }: RootStackScreenProps<"MarketScreen">) => {
     // });
     setContext(lastJsonMessage)
   },[lastJsonMessage])
-
-  // useEffect(() => {
-  //   const ws = new WebSocket(socketUrl);
-  //   ws.onopen = (event) => {
-  //       console.log("open")
-  //   };
-  //   ws.onmessage = function (event) {
-  //       // console.log(event)
-  //       const json = JSON.parse(event.data);
-  //       try {
-  //         console.log(json)
-  //         setContext(json)
-  //       } catch (err) {
-  //           console.log(err);
-  //       }
-  //   };
-  //   //clean up function
-  //   return () => ws.close();
-  // }, [context]);
 
   useEffect(() => {
     (async () => {
