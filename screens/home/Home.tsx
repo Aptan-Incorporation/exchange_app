@@ -107,19 +107,6 @@ const HomeScreen = ({ navigation }: RootStackScreenProps<"HomeScreen">) => {
   const isFocused = useIsFocused();
   const [socketUrl, setSocketUrl] = useState("wss://ex-api.usefordemo.com/market/ws/latest");
 
-  const { lastJsonMessage } = useWebSocket(socketUrl, {
-    shouldReconnect: (closeEvent) => true,
-    reconnectInterval: 1000,
-  });
-
-  useEffect(()=>{
-    // let gfg = context2.sort(function (a:any, b:any) {
-    //   return parseFloat(b.P) - parseFloat(a.P);
-    // });
-    setArr(lastJsonMessage)
-  },[lastJsonMessage])
-
-
   useEffect(() => {
     api.get("/info/carousel?lang="+i18n.language).then(x => {
       setImgArr(x.data);

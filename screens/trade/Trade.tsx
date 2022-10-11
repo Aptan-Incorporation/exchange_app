@@ -1338,152 +1338,152 @@ const TradeScreen = ({ navigation }: RootStackScreenProps<"TradeScreen">) => {
     return remark ? remark.m : "";
   };
 
-  useEffect(() => {
-    let isApiSubscribed = true;
-    (async () => {
-      if (context && isApiSubscribed) {
-        let a = [];
-        for (let i = 0; i < context.length; i++) {
-          let obj = {
-            label: context[i].s.split("USDT")[0] + "-USDT",
-            value: context[i].s.split("USDT")[0] + "-USDT"
-          };
-          a.push(obj);
-        }
-        setTrade(a);
+  // useEffect(() => {
+  //   let isApiSubscribed = true;
+  //   (async () => {
+  //     if (context && isApiSubscribed) {
+  //       let a = [];
+  //       for (let i = 0; i < context.length; i++) {
+  //         let obj = {
+  //           label: context[i].s.split("USDT")[0] + "-USDT",
+  //           value: context[i].s.split("USDT")[0] + "-USDT"
+  //         };
+  //         a.push(obj);
+  //       }
+  //       setTrade(a);
 
-        let trade = await AsyncStorage.getItem("trade");
-        let token = await AsyncStorage.getItem("token");
-        const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade;
-        const remark = _.find(context, function (o) {
-          return o.s == t;
-        });
-        setRemarkPrice(remark!.m);
-        // setWareHousedPrice(remark!.c);
-        // setBuyPrice(remark!.c)
-        setPrice(remark!.c);
-        getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
-        if (token) {
-          getBalance(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade, swapBuyPosition === "Open" ? "BUY" : "SELL")
-        }
-      }
-    })()
-    return () => {
-      // cancel the subscription
-      isApiSubscribed = false;
-    };
-  }, [context]);
+  //       let trade = await AsyncStorage.getItem("trade");
+  //       let token = await AsyncStorage.getItem("token");
+  //       const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade;
+  //       const remark = _.find(context, function (o) {
+  //         return o.s == t;
+  //       });
+  //       setRemarkPrice(remark!.m);
+  //       // setWareHousedPrice(remark!.c);
+  //       // setBuyPrice(remark!.c)
+  //       setPrice(remark!.c);
+  //       getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+  //       if (token) {
+  //         getBalance(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade, swapBuyPosition === "Open" ? "BUY" : "SELL")
+  //       }
+  //     }
+  //   })()
+  //   return () => {
+  //     // cancel the subscription
+  //     isApiSubscribed = false;
+  //   };
+  // }, [context]);
 
-  useEffect(() => {
-    (async () => {
-      if (context) {
-        let trade = await AsyncStorage.getItem("trade");
-        const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade;
-        const remark = _.find(context, function (o) {
-          return o.s == t;
-        });
-        setWareHousedPrice(
-          parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
-            ? remark!.c
-            : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
-              ? remark!.c.slice(0, -1)
-              : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
-                ? remark!.c.slice(0, -2)
-                : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
-                  ? remark!.c.slice(0, -3)
-                  : remark!.c.slice(0, -4)
-        );
-        setBuyPrice(
-          parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
-            ? remark!.c
-            : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
-              ? remark!.c.slice(0, -1)
-              : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
-                ? remark!.c.slice(0, -2)
-                : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
-                  ? remark!.c.slice(0, -3)
-                  : remark!.c.slice(0, -4)
-        );
-      }
-    })()
+  // useEffect(() => {
+  //   (async () => {
+  //     if (context) {
+  //       let trade = await AsyncStorage.getItem("trade");
+  //       const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade;
+  //       const remark = _.find(context, function (o) {
+  //         return o.s == t;
+  //       });
+  //       setWareHousedPrice(
+  //         parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
+  //           ? remark!.c
+  //           : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
+  //             ? remark!.c.slice(0, -1)
+  //             : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
+  //               ? remark!.c.slice(0, -2)
+  //               : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
+  //                 ? remark!.c.slice(0, -3)
+  //                 : remark!.c.slice(0, -4)
+  //       );
+  //       setBuyPrice(
+  //         parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
+  //           ? remark!.c
+  //           : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
+  //             ? remark!.c.slice(0, -1)
+  //             : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
+  //               ? remark!.c.slice(0, -2)
+  //               : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
+  //                 ? remark!.c.slice(0, -3)
+  //                 : remark!.c.slice(0, -4)
+  //       );
+  //     }
+  //   })()
 
-  }, []);
+  // }, []);
 
-  useEffect(() => {
-    (async () => {
-      let trade = await AsyncStorage.getItem("trade");
-      getfund(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade)
-    })()
-  }, [isFocused, nowTrade])
+  // useEffect(() => {
+  //   (async () => {
+  //     let trade = await AsyncStorage.getItem("trade");
+  //     getfund(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade)
+  //   })()
+  // }, [isFocused, nowTrade])
 
-  useEffect(() => {
-    (async () => {
-      if (isFocused) {
-        // let inter = await AsyncStorage.getItem("interval");
-        // clearInterval(parseInt(inter!));
-        let token = await AsyncStorage.getItem("token");
-        let trade = await AsyncStorage.getItem("trade");
-        setNewTrade(trade);
-        if (!token) {
-          // setEntrustArray([])
-          // setPositionArray([])
-          setBalance(0);
-        }
-        getfund(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
-        if (token) {
-          getEntrust();
-          getPosition();
-          getBalance(
-            trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,
-            swapBuyPosition === "Open" ? "BUY" : "SELL"
-          );
-          getleverage(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
-        }
-        const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade;
-        const remark = _.find(context, function (o) {
-          return o.s == t;
-        });
-        setWareHousedPrice(
-          parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
-            ? remark!.c
-            : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
-              ? remark!.c.slice(0, -1)
-              : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
-                ? remark!.c.slice(0, -2)
-                : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
-                  ? remark!.c.slice(0, -3)
-                  : remark!.c.slice(0, -4)
-        );
-        setBuyPrice(
-          parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
-            ? remark!.c
-            : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
-              ? remark!.c.slice(0, -1)
-              : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
-                ? remark!.c.slice(0, -2)
-                : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
-                  ? remark!.c.slice(0, -3)
-                  : remark!.c.slice(0, -4)
-        );
-        // let leverage = await AsyncStorage.getItem("leverage")
-        // if (leverage) {
-        //     setLeverageViewNum(parseInt(leverage))
-        // }
-        if (trade) {
-          setValue(trade.split("USDT")[0] + "-USDT");
-        }
-        // getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
-        getPrice(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+  // useEffect(() => {
+  //   (async () => {
+  //     if (isFocused) {
+  //       // let inter = await AsyncStorage.getItem("interval");
+  //       // clearInterval(parseInt(inter!));
+  //       let token = await AsyncStorage.getItem("token");
+  //       let trade = await AsyncStorage.getItem("trade");
+  //       setNewTrade(trade);
+  //       if (!token) {
+  //         // setEntrustArray([])
+  //         // setPositionArray([])
+  //         setBalance(0);
+  //       }
+  //       getfund(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+  //       if (token) {
+  //         getEntrust();
+  //         getPosition();
+  //         getBalance(
+  //           trade ? trade.split("USDT")[0] + "-USDT" : nowTrade,
+  //           swapBuyPosition === "Open" ? "BUY" : "SELL"
+  //         );
+  //         getleverage(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+  //       }
+  //       const t = trade ? trade.split("USDT")[0] + "-USDT" : nowTrade;
+  //       const remark = _.find(context, function (o) {
+  //         return o.s == t;
+  //       });
+  //       setWareHousedPrice(
+  //         parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
+  //           ? remark!.c
+  //           : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
+  //             ? remark!.c.slice(0, -1)
+  //             : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
+  //               ? remark!.c.slice(0, -2)
+  //               : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
+  //                 ? remark!.c.slice(0, -3)
+  //                 : remark!.c.slice(0, -4)
+  //       );
+  //       setBuyPrice(
+  //         parseFloat(remark!.c) < 0.006 && parseFloat(remark!.c) > 0
+  //           ? remark!.c
+  //           : parseFloat(remark!.c) < 0.1 && parseFloat(remark!.c) > 0.006
+  //             ? remark!.c.slice(0, -1)
+  //             : parseFloat(remark!.c) < 1 && parseFloat(remark!.c) > 0.1
+  //               ? remark!.c.slice(0, -2)
+  //               : parseFloat(remark!.c) < 50 && parseFloat(remark!.c) > 1
+  //                 ? remark!.c.slice(0, -3)
+  //                 : remark!.c.slice(0, -4)
+  //       );
+  //       // let leverage = await AsyncStorage.getItem("leverage")
+  //       // if (leverage) {
+  //       //     setLeverageViewNum(parseInt(leverage))
+  //       // }
+  //       if (trade) {
+  //         setValue(trade.split("USDT")[0] + "-USDT");
+  //       }
+  //       // getDepth(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
+  //       getPrice(trade ? trade.split("USDT")[0] + "-USDT" : nowTrade);
 
-        // AsyncStorage.setItem("interval", interval.toString())
-        // return () => clearInterval(interval);
-      } else {
-        AsyncStorage.removeItem("trade");
-        setValue("BTC-USDT");
-        setNowTrade("BTC-USDT");
-      }
-    })()
-  }, [isFocused, nowTrade, swapBuyPosition]);
+  //       // AsyncStorage.setItem("interval", interval.toString())
+  //       // return () => clearInterval(interval);
+  //     } else {
+  //       AsyncStorage.removeItem("trade");
+  //       setValue("BTC-USDT");
+  //       setNowTrade("BTC-USDT");
+  //     }
+  //   })()
+  // }, [isFocused, nowTrade, swapBuyPosition]);
 
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);

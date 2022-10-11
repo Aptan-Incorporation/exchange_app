@@ -115,21 +115,21 @@ export default function App() {
   const [order, setOrder] = useState({ data: { status: 3 } });
   // const navigation = useNavigation();
 
-  // const { lastJsonMessage } = useWebSocket(socketUrl, {
-  //   shouldReconnect: (closeEvent) => true,
-  //   reconnectInterval: 1000,
-  // });
+  const { lastJsonMessage } = useWebSocket(socketUrl, {
+    shouldReconnect: (closeEvent) => true,
+    reconnectInterval: 1000,
+  });
 
-  // const { lastJsonMessage:lastJsonMessage2,sendJsonMessage } = useWebSocket(socketUrl2, {
-  //   onOpen: () => sendJsonMessage({
-  //     "operation": "subscribe",
-  //     "channel": "otcOrder"
-  //   }),  
-  //   onClose: () => console.log('close'),
-  //   //Will attempt to reconnect on all close events, such as server shutting down
-  //   shouldReconnect: closeEvent => true,
-  //   queryParams:{token: token}
-  // });
+  const { lastJsonMessage:lastJsonMessage2,sendJsonMessage } = useWebSocket(socketUrl2, {
+    onOpen: () => sendJsonMessage({
+      "operation": "subscribe",
+      "channel": "otcOrder"
+    }),  
+    onClose: () => console.log('close'),
+    //Will attempt to reconnect on all close events, such as server shutting down
+    shouldReconnect: closeEvent => true,
+    queryParams:{token: token}
+  });
 
   const { lastJsonMessage:lastJsonMessage3,sendJsonMessage:sendJsonMessage2 } = useWebSocket(socketUrl3, {
     onOpen: () => {
@@ -153,42 +153,43 @@ export default function App() {
     })()
   }, [])
 
-  // useEffect(() => {
-  //   (async () => {
-  //     let token = await AsyncStorage.getItem("token");
-  //     setToken(token!)
-  //     if (!token) {
-  //       setPosition([])
-  //       setFuture([])
-  //     }
-  //     if (lastJsonMessage) {
-  //       // let gfg = lastJsonMessage.sort(function (a: any, b: any) {
-  //       //   return parseFloat(a.P) - parseFloat(b.P);
-  //       // });
-  //       // setMarket(gfg.reverse())
-  //       // setMarket2(gfg)
-  //       // const bnb = _.find(lastJsonMessage, function (o) { return o.s == "BNB-USDT" })
-  //       // const eth = _.find(lastJsonMessage, function (o) { return o.s == "ETH-USDT" })
-  //       // const btc = _.find(lastJsonMessage, function (o) { return o.s == "BTC-USDT" })
-  //       // setDogePrice((parseFloat(bnb.c) < 0.006 && parseFloat(bnb.c) > 0) ? bnb.c : (parseFloat(bnb.c) < 0.1 && parseFloat(bnb.c) > 0.006) ? bnb.c.slice(0, -1) : (parseFloat(bnb.c) < 1 && parseFloat(bnb.c) > 0.1) ? bnb.c.slice(0, -2) : (parseFloat(bnb.c) < 50 && parseFloat(bnb.c) > 1) ? bnb.c.slice(0, -3) : bnb.c.slice(0, -4));
-  //       // setDogeRate(bnb.P);
-  //       // setDogeAmt(bnb.v.split(".")[0]);
-  //       // setEthPrice((parseFloat(eth.c) < 0.006 && parseFloat(eth.c) > 0) ? eth.c : (parseFloat(eth.c) < 0.1 && parseFloat(eth.c) > 0.006) ? eth.c.slice(0, -1) : (parseFloat(eth.c) < 1 && parseFloat(eth.c) > 0.1) ? eth.c.slice(0, -2) : (parseFloat(eth.c) < 50 && parseFloat(eth.c) > 1) ? eth.c.slice(0, -3) : eth.c.slice(0, -4));
-  //       // setEthRate(eth.P);
-  //       // setEthAmt(eth.v.split(".")[0]);
-  //       // setBtcPrice((parseFloat(btc.c) < 0.006 && parseFloat(btc.c) > 0) ? btc.c : (parseFloat(btc.c) < 0.1 && parseFloat(btc.c) > 0.006) ? btc.c.slice(0, -1) : (parseFloat(btc.c) < 1 && parseFloat(btc.c) > 0.1) ? btc.c.slice(0, -2) : (parseFloat(btc.c) < 50 && parseFloat(btc.c) > 1) ? btc.c.slice(0, -3) : btc.c.slice(0, -4));
-  //       // setBtcRate(btc.P);
-  //       // setBtcAmt(btc.v.split(".")[0]);
-  //       setMarket(lastJsonMessage)
-  //     }
-  //   })()
-  // }, [lastJsonMessage]);
-  // useEffect(() => {
-  //   if(lastJsonMessage2){
-  //     setOrder(lastJsonMessage2)     
-  //   }
+  useEffect(() => {
+    (async () => {
+      let token = await AsyncStorage.getItem("token");
+      setToken(token!)
+      if (!token) {
+        setPosition([])
+        setFuture([])
+      }
+      if (lastJsonMessage) {
+        // let gfg = lastJsonMessage.sort(function (a: any, b: any) {
+        //   return parseFloat(a.P) - parseFloat(b.P);
+        // });
+        // setMarket(gfg.reverse())
+        // setMarket2(gfg)
+        // const bnb = _.find(lastJsonMessage, function (o) { return o.s == "BNB-USDT" })
+        // const eth = _.find(lastJsonMessage, function (o) { return o.s == "ETH-USDT" })
+        // const btc = _.find(lastJsonMessage, function (o) { return o.s == "BTC-USDT" })
+        // setDogePrice((parseFloat(bnb.c) < 0.006 && parseFloat(bnb.c) > 0) ? bnb.c : (parseFloat(bnb.c) < 0.1 && parseFloat(bnb.c) > 0.006) ? bnb.c.slice(0, -1) : (parseFloat(bnb.c) < 1 && parseFloat(bnb.c) > 0.1) ? bnb.c.slice(0, -2) : (parseFloat(bnb.c) < 50 && parseFloat(bnb.c) > 1) ? bnb.c.slice(0, -3) : bnb.c.slice(0, -4));
+        // setDogeRate(bnb.P);
+        // setDogeAmt(bnb.v.split(".")[0]);
+        // setEthPrice((parseFloat(eth.c) < 0.006 && parseFloat(eth.c) > 0) ? eth.c : (parseFloat(eth.c) < 0.1 && parseFloat(eth.c) > 0.006) ? eth.c.slice(0, -1) : (parseFloat(eth.c) < 1 && parseFloat(eth.c) > 0.1) ? eth.c.slice(0, -2) : (parseFloat(eth.c) < 50 && parseFloat(eth.c) > 1) ? eth.c.slice(0, -3) : eth.c.slice(0, -4));
+        // setEthRate(eth.P);
+        // setEthAmt(eth.v.split(".")[0]);
+        // setBtcPrice((parseFloat(btc.c) < 0.006 && parseFloat(btc.c) > 0) ? btc.c : (parseFloat(btc.c) < 0.1 && parseFloat(btc.c) > 0.006) ? btc.c.slice(0, -1) : (parseFloat(btc.c) < 1 && parseFloat(btc.c) > 0.1) ? btc.c.slice(0, -2) : (parseFloat(btc.c) < 50 && parseFloat(btc.c) > 1) ? btc.c.slice(0, -3) : btc.c.slice(0, -4));
+        // setBtcRate(btc.P);
+        // setBtcAmt(btc.v.split(".")[0]);
+        setMarket(lastJsonMessage)
+      }
+    })()
+  }, [lastJsonMessage]);
+  useEffect(() => {
+    if(lastJsonMessage2){
+      setOrder(lastJsonMessage2)     
+    }
 
-  // },[lastJsonMessage2]);
+  },[lastJsonMessage2]);
+
   useEffect(() => {
     if(lastJsonMessage3){
       if(lastJsonMessage3.channel === "position"){
